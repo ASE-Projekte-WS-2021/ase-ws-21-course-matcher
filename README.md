@@ -4,13 +4,14 @@
 Java: 17.0.1 openjdk
 Android: 21 API Android 5.0
 
-## Lint
-Infos: https://developer.android.com/studio/write/lint
-
-## Code Style
-https://medium.com/fantageek/how-to-setup-android-projects-8c306aaeb519
-
-## MVVM Pattern
-Source: https://www.journaldev.com/20292/android-mvvm-design-pattern
-
 ## App theme
+See values/** and styles.xml
+
+## Firebase local
+Install firebase emulator:
+https://firebase.google.com/docs/emulator-suite/connect_and_prototype?database=Firestore
+
+Initilize firebaes local (if needed `firebase login`)
+```
+firebase init
+```

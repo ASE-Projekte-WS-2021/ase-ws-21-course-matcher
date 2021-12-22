@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "319301891901",
+    "project_id": "uni-course-matcher",
+    "storage_bucket": "uni-course-matcher.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319301891901:android:c12b0e21466cc05cbdf754",
+        "android_client_info": {
+          "package_name": "com.example.cm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "319301891901-6ao6unc8dktfibmbn2gbugemr0gido0v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpz016rdmCLQinlT2K1mTb5iT0X78_Nc0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "319301891901-6ao6unc8dktfibmbn2gbugemr0gido0v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
