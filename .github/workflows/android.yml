@@ -1,0 +1,68 @@
+name: build-release
+
+on:
+  push: 
+    branches: [master]
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Check Style
+      uses: nikitasavinov/checkstyle-action@master
+      with:
+        checkstyle_config: google_checks.xml
+        tool_name: Java Checkstyle
+
+    - name: Setup JDK
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.11
+
+    # Build the APK
+    - name: Build APK
+      run: bash ./gradlew assembleDebug --stacktrace
+    
+    # Upload the created APK
+    - name: Upload APK
+      uses: actions/upload-artifact@v1
+      with:
+        name: apk
+        path: app/build/outputs/apk/debug/app-debug.apk
+
+  release-apk:
+    runs-on: ubuntu-latest
+    needs: build-apk
+
+    steps:
+    # Download the previously built APK
+    - name: Download APK from build
+      uses: actions/download-artifact@v1
+      with:
+        name: apk
+    
+    # Create a release with specified Tag name
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.run_number }}
+        release_name: Release APK
+    
+    # Upload the APK to a release
+    - name: Upload Release APK
+      id: upload_release_asset
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: apk/app-debug.apk
+        asset_name: AppName.apk
+        asset_content_type: application/zip
