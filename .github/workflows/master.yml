@@ -19,9 +19,9 @@ jobs:
         checkstyle_config: google_checks.xml
         tool_name: Java Checkstyle
 
-    # Runs all unit tests
-    - name: Test with Gradle
-      run: ./gradlew test
+    # Unit Tests
+    - name: Android Test Report
+      uses: asadmansr/android-test-report-action@v1.2.0
 
     - name: Setup JDK
       uses: actions/setup-java@v1
