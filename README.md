@@ -1,5 +1,8 @@
 # Course matcher
 
+## Git Workflow
+Can be found in the Project Wiki
+
 ## Versions
 Java: 17.0.1 openjdk
 Android: 21 API Android 5.0
