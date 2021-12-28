@@ -3,4 +3,21 @@
     <string name="title_home">Test</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_activity_login_register">LoginRegisterActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="registerTitle">Register</string>
+    <string name="registerEmailEditText">Email</string>
+    <string name="registerPasswordEditText">Password</string>
+    <string name="registerLoginBtn">Register</string>
+    <string name="registerRegisterBtn">Login</string>
+    <string name="loginTitle">Login</string>
+    <string name="loginEmailEditText">Email</string>
+    <string name="loginPasswordEditText">Password</string>
+    <string name="loginLoginBtn">Login</string>
+    <string name="loginRegisterBtn">Register</string>
+    <string name="loginUserNameEditText">Username</string>
 </resources>
