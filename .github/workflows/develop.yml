@@ -1,0 +1,29 @@
+name: develop-ci-cd
+
+on:
+  pull_request:
+    branches: [develop]
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+
+      # Build the APK
+      - name: Build APK
+        run: bash ./gradlew assembleDebug --stacktrace
+
+      # Upload the created APK
+      - name: Upload APK
+        uses: actions/upload-artifact@v1
+        with:
+          name: apk
+          path: app/build/outputs/apk/debug/app-debug.apk

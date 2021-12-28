@@ -14,7 +14,12 @@ See values/** and styles.xml
 Install firebase emulator:
 https://firebase.google.com/docs/emulator-suite/connect_and_prototype?database=Firestore
 
-Initilize firebaes local (if needed `firebase login`)
+Initilize firebaes local if you want to add new emulators (if needed `firebase login`)
 ```
 firebase init
+```
+
+Starting firebase emulators
+```
+firebase emulators:start
 ```
