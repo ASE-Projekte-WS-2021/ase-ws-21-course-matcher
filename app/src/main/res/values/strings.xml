@@ -2,5 +2,9 @@
     <string name="app_name">CM</string>
     <string name="title_home">Test</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_notifications">Benachrichtigungen</string>
+    <string name="title_profile">Profil</string>
+    <string name="title_friends">Freunde</string>
+    <string name="title_find_friends">Freunde finden</string>
+    <string name="add_friend">Freunde hinzufügen</string>
 </resources>
