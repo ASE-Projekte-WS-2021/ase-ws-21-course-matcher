@@ -5,13 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.databinding.FragmentProfileBinding;
 import com.example.cm.utils.Navigator;
-import com.google.android.material.snackbar.Snackbar;
 
 public class ProfileFragment extends Fragment {
 
@@ -19,8 +20,23 @@ public class ProfileFragment extends Fragment {
 
     private ProfileViewModel profileViewModel;
     private Navigator navigator;
-
     private FragmentProfileBinding binding;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        navigator = new Navigator(requireActivity());
+
+        // Handles bottom back button
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                // prevents back button from moving to another fragment
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
@@ -37,13 +53,6 @@ public class ProfileFragment extends Fragment {
 
     private void initViewModel() {
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        /*
-        profileViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
-                Log.d(TAG, "initViewModel: " + "got user");
-            }
-        });
-         */
     }
 
     @Override
