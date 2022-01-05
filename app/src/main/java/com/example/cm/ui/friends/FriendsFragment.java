@@ -18,10 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentFriendsBinding;
 import com.example.cm.ui.adapters.FriendsListAdapter;
+import com.example.cm.ui.adapters.FriendsListAdapter.OnItemClickListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 
-public class FriendsFragment extends Fragment implements FriendsListAdapter.OnItemClickListener {
+public class FriendsFragment extends Fragment implements OnItemClickListener {
 
     private FriendsViewModel friendsViewModel;
     private FragmentFriendsBinding binding;

@@ -15,10 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.databinding.FragmentSelectFriendsBinding;
 import com.example.cm.ui.adapters.SelectFriendsAdapter;
+import com.example.cm.ui.adapters.SelectFriendsAdapter.OnItemClickListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 
-public class SelectFriendsFragment extends Fragment implements SelectFriendsAdapter.OnItemClickListener {
+public class SelectFriendsFragment extends Fragment implements OnItemClickListener {
 
     private SelectFriendsViewModel profileViewModel;
     private FragmentSelectFriendsBinding binding;
