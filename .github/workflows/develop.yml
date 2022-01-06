@@ -18,15 +18,11 @@ jobs:
         with:
           java-version: 1.11
 
-      - name: testEcho
-        env:
-          test_secret: ${{ secrets.MY_TEST_SECRET }}
-        run: |
-          echo $test_secret
-
       # Build the APK
       - name: Build APK
-        run: bash ./gradlew assembleDebug --stacktrace -PMAPBOX_DOWNLOADS_TOKEN=$MAPBOX_DOWNLOADS_TOKEN
+        env:
+          MAPBOX_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+        run: bash ./gradlew assembleDebug --stacktrace -PMAPBOX_DOWNLOADS_TOKEN=$MAPBOX_TOKEN
 
       # Upload the created APK
       - name: Upload APK
