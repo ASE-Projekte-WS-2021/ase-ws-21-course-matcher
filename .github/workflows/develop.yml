@@ -21,7 +21,8 @@ jobs:
       - name: testEcho
         env:
           test_secret: ${{ MY_TEST_SECRET }}
-        run: echo test_secret
+        run: |
+          echo $test_secret
 
       # Build the APK
       - name: Build APK
