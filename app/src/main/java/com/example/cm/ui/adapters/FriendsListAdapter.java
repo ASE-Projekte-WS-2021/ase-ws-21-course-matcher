@@ -19,11 +19,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     private final OnItemClickListener listener;
     private List<User> mUsers;
 
-    public FriendsListAdapter(FriendsListAdapter.OnItemClickListener listener) {
+    public FriendsListAdapter(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void setUsers(List<User> newUsers) {
+    public void setFriends(List<User> newUsers) {
         if (mUsers == null) {
             mUsers = newUsers;
             notifyItemRangeInserted(0, newUsers.size());

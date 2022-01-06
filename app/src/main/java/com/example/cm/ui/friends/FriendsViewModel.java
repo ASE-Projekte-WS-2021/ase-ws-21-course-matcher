@@ -5,44 +5,40 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.UserRepository;
+import com.example.cm.data.repositories.UserRepository.OnUserRepositoryListener;
 
 import java.util.List;
 
-public class FriendsViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener {
+public class FriendsViewModel extends ViewModel implements OnUserRepositoryListener {
 
-    private static final String TAG = "FriendsViewModel";
     private final UserRepository userRepository;
 
     private final MutableLiveData<User> currentUser = new MutableLiveData<>();
-    public MutableLiveData<List<User>> users = new MutableLiveData<>();
-    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+    public MutableLiveData<List<User>> friends = new MutableLiveData<>();
 
     public FriendsViewModel() {
         userRepository = new UserRepository(this);
-        // TODO: Replace with firebase auth's getCurrentUser()
-        userRepository.getUserById("0woDiT794x84PeYtXzjb");
+        if(currentUser.getValue() == null) {
+            // TODO: Replace with firebase auth's getCurrentUser()
+            userRepository.getUserById("0woDiT794x84PeYtXzjb");
+        }
     }
 
-
-    public MutableLiveData<List<User>> getUsers() {
-        return users;
-    }
-
-    public MutableLiveData<List<String>> getSelectedUsers() {
-        return selectedUsers;
+    public MutableLiveData<List<User>> getFriends() {
+        return friends;
     }
 
     public void searchUsers(String query) {
         if (query.isEmpty()) {
-            userRepository.getUsers();
+            userRepository.getUsersByIds(currentUser.getValue().getFriends());
             return;
         }
-        userRepository.getUsersByUsername(query);
+        userRepository.getFriendsByUsername(currentUser.getValue().getFriends(), query);
     }
 
     @Override
     public void onUsersRetrieved(List<User> users) {
-        this.users.postValue(users);
+        this.friends.postValue(users);
     }
 
     @Override

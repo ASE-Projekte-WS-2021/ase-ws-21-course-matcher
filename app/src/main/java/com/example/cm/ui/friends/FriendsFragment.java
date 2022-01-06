@@ -69,11 +69,11 @@ public class FriendsFragment extends Fragment implements OnItemClickListener {
     private void initViewModel() {
         friendsViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
 
-        friendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-            if (users == null) {
+        friendsViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
+            if (friends == null) {
                 return;
             }
-            friendsListAdapter.setUsers(users);
+            friendsListAdapter.setFriends(friends);
             binding.loadingCircle.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);
         });
