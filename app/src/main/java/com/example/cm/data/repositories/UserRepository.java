@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.User;
+import com.example.cm.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -24,7 +25,6 @@ public class UserRepository extends Repository {
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
 
     private OnUserRepositoryListener listener = null;
-
 
     public UserRepository() {
     }
@@ -83,6 +83,28 @@ public class UserRepository extends Repository {
     }
 
     /**
+     * Get list of friends of a user by their username
+     *
+     * @param friendsIds List of ids of friends
+     * @param query      String to search for
+     */
+    //TODO: Fix this method to only retrieve the friends of the current user
+    public void getFriendsByUsername(List<String> friendsIds, String query) {
+        userCollection
+                .whereIn(FieldPath.documentId(), friendsIds)
+                .orderBy(FieldPath.documentId())
+                .orderBy("username").startAt(query).endAt(query + "\uf8ff")
+                .get().addOnCompleteListener(executorService, task -> {
+                    if (task.isSuccessful()) {
+                        snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                    } else {
+                        Log.d(TAG, "getFriendsByUsername: " + task.getException());
+                        Log.d(TAG, "getUsers: Task is NOT successful...");
+                    }
+                });
+    }
+
+    /**
      * Covert a list of snapshots to a list of users
      *
      * @param documents List of snapshots returned from Firestore
@@ -108,7 +130,7 @@ public class UserRepository extends Repository {
         user.setEmail(document.getString("email"));
         user.setFirstName(document.getString("firstName"));
         user.setLastName(document.getString("lastName"));
-        user.setFriends((List<String>) document.get("friends"));
+        user.setFriends(Utils.castList(document.get("friends"), String.class));
 
         return user;
     }
