@@ -10,15 +10,11 @@ public class Navigator {
     NavController navController;
 
     public Navigator(FragmentActivity activity) {
-        this.navController = Utils.findNavController(activity);;
+        this.navController = Utils.findNavController(activity);
     }
 
     public void navigateToSelectFriends() {
         navController.navigate(R.id.navigateToSelectFriends);
-    }
-
-    public void navigateToProfile() {
-        navController.navigate(R.id.navigateToProfile);
     }
 
     public void navigateToFriends() {

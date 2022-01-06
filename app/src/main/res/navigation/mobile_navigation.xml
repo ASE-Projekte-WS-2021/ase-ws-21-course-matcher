@@ -45,20 +45,12 @@
 
         <action
             android:id="@+id/navigateToSelectFriends"
-            app:destination="@id/navigation_select_friends"
-            />
-        <action
-            android:id="@+id/navigateToProfile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_select_friends" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_select_friends"
         android:name="com.example.cm.ui.select_friends.SelectFriendsFragment"
         android:label="@string/title_find_friends"
-        tools:layout="@layout/fragment_select_friends">
-        <action
-            android:id="@+id/navigateToFriends"
-            app:destination="@id/navigation_friends" />
-    </fragment>
+        tools:layout="@layout/fragment_select_friends" />
 </navigation>

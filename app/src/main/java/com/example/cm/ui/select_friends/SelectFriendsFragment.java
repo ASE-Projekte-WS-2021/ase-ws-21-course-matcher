@@ -5,9 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,7 +14,6 @@ import com.example.cm.databinding.FragmentSelectFriendsBinding;
 import com.example.cm.ui.adapters.SelectFriendsAdapter;
 import com.example.cm.ui.adapters.SelectFriendsAdapter.OnItemClickListener;
 import com.example.cm.ui.select_friends.SelectFriendsViewModel.OnNotificationSentListener;
-import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -25,22 +22,6 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     private SelectFriendsViewModel selectFriendsViewModel;
     private FragmentSelectFriendsBinding binding;
     private SelectFriendsAdapter selectFriendsAdapter;
-    private Navigator navigator;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        navigator = new Navigator(requireActivity());
-
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                navigator.navigateToFriends();
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-    }
-
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSelectFriendsBinding.inflate(inflater, container, false);

@@ -8,9 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,23 +27,10 @@ public class FriendsFragment extends Fragment implements OnItemClickListener {
     private FriendsListAdapter friendsListAdapter;
     private Navigator navigator;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        navigator = new Navigator(requireActivity());
-
-        // Handles bottom back button
-        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                navigator.navigateToProfile();
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher().addCallback(this, callback);
-    }
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFriendsBinding.inflate(inflater, container, false);
+        navigator = new Navigator(requireActivity());
+
         initUI();
         initListener();
         initViewModel();
