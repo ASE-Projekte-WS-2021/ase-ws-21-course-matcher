@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -16,12 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.cm.databinding.FragmentSelectFriendsBinding;
 import com.example.cm.ui.adapters.SelectFriendsAdapter;
 import com.example.cm.ui.adapters.SelectFriendsAdapter.OnItemClickListener;
+import com.example.cm.ui.select_friends.SelectFriendsViewModel.OnNotificationSentListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
+import com.google.android.material.snackbar.Snackbar;
 
-public class SelectFriendsFragment extends Fragment implements OnItemClickListener {
+public class SelectFriendsFragment extends Fragment implements OnItemClickListener, OnNotificationSentListener {
 
-    private SelectFriendsViewModel profileViewModel;
+    private SelectFriendsViewModel selectFriendsViewModel;
     private FragmentSelectFriendsBinding binding;
     private SelectFriendsAdapter selectFriendsAdapter;
     private Navigator navigator;
@@ -64,9 +65,10 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     }
 
     private void initViewModel() {
-        profileViewModel = new ViewModelProvider(this).get(SelectFriendsViewModel.class);
+        selectFriendsViewModel = new ViewModelProvider(this).get(SelectFriendsViewModel.class);
+        selectFriendsViewModel.setOnNotificationSentListener(this);
 
-        profileViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+        selectFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
                 return;
             }
@@ -76,7 +78,7 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
             binding.rvUserList.setVisibility(View.VISIBLE);
         });
 
-        profileViewModel.getSelectedUsers().observe(getViewLifecycleOwner(), selectedUsers -> {
+        selectFriendsViewModel.getSelectedUsers().observe(getViewLifecycleOwner(), selectedUsers -> {
             if (selectedUsers == null) {
                 return;
             }
@@ -87,13 +89,12 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     }
 
     private void onSendRequestButtonClicked() {
-        profileViewModel.sendFriendRequest();
-        Toast.makeText(getContext(), "Anfragen wurden verschickt", Toast.LENGTH_SHORT).show();
+        selectFriendsViewModel.sendFriendRequest();
     }
 
     private void onSearchButtonClicked() {
         String query = binding.etUserSearch.getText().toString();
-        profileViewModel.searchUsers(query);
+        selectFriendsViewModel.searchUsers(query);
 
         Utils.hideKeyboard(requireActivity(), binding.getRoot());
     }
@@ -115,11 +116,16 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
 
     @Override
     public void onCheckBoxClicked(String id) {
-        profileViewModel.toggleSelectUser(id);
+        selectFriendsViewModel.toggleSelectUser(id);
     }
 
     @Override
     public void onItemClicked(String id) {
         // TODO: Open profile of clicked user
+    }
+
+    @Override
+    public void onNotificationSent() {
+        Snackbar.make(binding.getRoot(), "Anfragen wurden verschickt", Snackbar.LENGTH_SHORT).show();
     }
 }
