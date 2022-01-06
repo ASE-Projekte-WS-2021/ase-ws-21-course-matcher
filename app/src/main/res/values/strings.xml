@@ -3,4 +3,8 @@
     <string name="title_home">Test</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
+    <string name="accept_button_text">OK!</string>
+    <string name="decline_button_text">Nope!</string>
+    <string name="friend_accepted_text">" ist jetzt mit dir befreundet."</string>
 </resources>
