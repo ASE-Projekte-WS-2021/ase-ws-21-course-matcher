@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.cm">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.cm"
+    tools:ignore="CoarseFineLocation">
 
     <application
         android:allowBackup="true"
@@ -20,5 +22,7 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
 </manifest>
