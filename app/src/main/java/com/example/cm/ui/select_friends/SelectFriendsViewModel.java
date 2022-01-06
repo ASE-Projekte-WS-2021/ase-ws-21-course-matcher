@@ -7,15 +7,17 @@ import com.example.cm.data.models.Notification;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.UserRepository;
+import com.example.cm.data.repositories.NotificationRepository.OnNotificationRepositoryListener;
+import com.example.cm.data.repositories.UserRepository.OnUserRepositoryListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectFriendsViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener, NotificationRepository.OnNotificationRepositoryListener {
+public class SelectFriendsViewModel extends ViewModel implements OnUserRepositoryListener, OnNotificationRepositoryListener {
 
-    private static final String TAG = "ProfileViewModel";
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
+    private OnNotificationSentListener notificationSentListener;
 
     public MutableLiveData<List<User>> users = new MutableLiveData<>();
     public MutableLiveData<List<Notification>> notifications = new MutableLiveData<>();
@@ -24,7 +26,12 @@ public class SelectFriendsViewModel extends ViewModel implements UserRepository.
     public SelectFriendsViewModel() {
         userRepository = new UserRepository(this);
         notificationRepository = new NotificationRepository(this);
+
         userRepository.getUsers();
+    }
+
+    public void setOnNotificationSentListener(OnNotificationSentListener listener) {
+        this.notificationSentListener = listener;
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -67,6 +74,7 @@ public class SelectFriendsViewModel extends ViewModel implements UserRepository.
 
             boolean requestAlreadySent = false;
 
+            // TODO: check if notification already exists
             // Check if a notification already exists
             /*
             if(notifications.getValue() == null) {
@@ -84,16 +92,13 @@ public class SelectFriendsViewModel extends ViewModel implements UserRepository.
             }
              */
 
-
-            // Sender userId
-            // Receiver (List<String>)
-
             Notification notification = new Notification(
                     "Neue Freundschaftsanfrage",
                     "Hallo,\n\n" + "[CURRENTLY LOGGED IN USER]" + " möchte mit dir befreundet sein.\n\nBitte bestätige diese Anfrage, indem du auf den Button klickst.",
                     Notification.NotificationType.FRIEND_REQUEST,
                     userId);
-            notificationRepository.addNotification(notification);
+            // notificationRepository.addNotification(notification);
+            notificationSentListener.onNotificationSent();
         }
     }
 
@@ -110,5 +115,9 @@ public class SelectFriendsViewModel extends ViewModel implements UserRepository.
     @Override
     public void onNotificationsRetrieved(List<Notification> notification) {
         this.notifications.postValue(notification);
+    }
+
+    public interface OnNotificationSentListener {
+        void onNotificationSent();
     }
 }
