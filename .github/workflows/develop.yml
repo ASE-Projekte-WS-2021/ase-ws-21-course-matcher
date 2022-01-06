@@ -19,7 +19,9 @@ jobs:
           java-version: 1.11
 
       - name: testEcho
-        run: echo $MY_TEST_SECRET
+        env:
+          test_secret: ${{ MY_TEST_SECRET }}
+        run: echo test_secret
 
       # Build the APK
       - name: Build APK
