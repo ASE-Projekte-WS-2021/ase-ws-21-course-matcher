@@ -49,20 +49,24 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/searchBarWrapper"
+        >
     <Button
         android:id="@+id/btnSendFriendRequest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/searchBarWrapper"
-        android:text="Anfrage senden"
+        android:text="@string/btn_send_friend_request"
         android:visibility="gone"
         />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvUserList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
         android:visibility="gone"
         android:layout_below="@+id/btnSendFriendRequest"
@@ -78,4 +82,5 @@
         android:layout_below="@+id/btnSendFriendRequest"
         android:layout_centerInParent="true"
         />
+    </RelativeLayout>
 </RelativeLayout>

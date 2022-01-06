@@ -7,4 +7,5 @@
     <string name="title_friends">Freunde</string>
     <string name="title_find_friends">Freunde finden</string>
     <string name="add_friend">Freunde hinzufügen</string>
+    <string name="btn_send_friend_request">Anfrage senden</string>
 </resources>
