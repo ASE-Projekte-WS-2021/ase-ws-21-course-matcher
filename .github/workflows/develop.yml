@@ -20,7 +20,8 @@ jobs:
 
       # Build the APK
       - name: Build APK
-        run: bash ./gradlew assembleDebug --stacktrace -PMAPBOX_DOWNLOADS_TOKEN=$MAPBOX_DOWNLOADS_TOKEN
+        - run: echo $MY_TEST_SECRET
+        - run: bash ./gradlew assembleDebug --stacktrace -PMAPBOX_DOWNLOADS_TOKEN=$MAPBOX_DOWNLOADS_TOKEN
 
       # Upload the created APK
       - name: Upload APK
