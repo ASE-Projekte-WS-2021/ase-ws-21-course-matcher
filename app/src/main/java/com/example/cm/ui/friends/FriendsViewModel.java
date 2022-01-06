@@ -14,7 +14,7 @@ public class FriendsViewModel extends ViewModel implements OnUserRepositoryListe
     private final UserRepository userRepository;
 
     private final MutableLiveData<User> currentUser = new MutableLiveData<>();
-    public MutableLiveData<List<User>> friends = new MutableLiveData<>();
+    private final MutableLiveData<List<User>> friends = new MutableLiveData<>();
 
     public FriendsViewModel() {
         userRepository = new UserRepository(this);
