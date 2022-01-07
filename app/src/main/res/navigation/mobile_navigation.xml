@@ -22,4 +22,53 @@
         android:name="com.example.cm.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_meetup"
+        android:name="com.example.cm.ui.meetup.MeetupFragment"
+        android:label="Meetup"
+        tools:layout="@layout/fragment_meetup">
+        <action
+            android:id="@+id/navigationToInviteFriends"
+            app:destination="@+id/navigation_invite_friends"/>
+
+    </fragment>
+
+    <!--- TODO: CHANGE THE NAMES!!!!!! -->
+    <fragment
+        android:id="@+id/navigation_invite_friends"
+        android:name="com.example.cm.ui.InviteFriends.InviteFriendsFragment"
+        android:label="@string/invite_friends"
+        tools:layout="@layout/fragment_invite_friends">
+        <action
+            android:id="@+id/navigationToInfoMeetup"
+            app:destination="@+id/navigation_meetup" />
+        <action
+            android:id="@+id/action_navigation_invite_friends_to_invitationSuccess"
+            app:destination="@id/invitationSuccess" />
+        <argument
+            android:name="requestingUser"
+            app:argType="string"/>
+        <argument
+            android:name="location"
+            app:argType="string" />
+        <argument
+            android:name="time"
+            app:argType="string"/>
+        <argument
+            android:name="isPrivate"
+            app:argType="boolean"/>
+
+    </fragment>
+    <fragment
+        android:id="@+id/invitationSuccess"
+        android:name="com.example.cm.ui.InvitationSuccess.InvitationSuccessFragment"
+        android:label="fragment_invitation_success"
+        tools:layout="@layout/fragment_invitation_success" >
+        <action
+            android:id="@+id/action_invitationSuccess_to_navigation_home"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+
 </navigation>
