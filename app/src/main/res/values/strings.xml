@@ -3,4 +3,30 @@
     <string name="title_home">Test</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="meetup_header">Freunde treffen</string>
+    <string name="meetup_header_desc">Macht aus wo und wann ihr euch trefft:</string>
+    <string name="meetup_time">Wann wollt ihr euch treffen?</string>
+    <string name="meetup_private">lieber privat treffen?</string>
+    <string name="meetup_place">Wo wollt ihr euch treffen?</string>
+    <string name="meetup_submit_btn">weiter und Freunde auswählen</string>
+    <string name="meetup_info_submit_btn">weiter</string>
+    <string name="invite_friends_header_desc">Wähle aus mit wem du dich treffen möchtest:</string>
+    <string name="invite_friends_back_btn">zurück</string>
+    <string name="invite_friends_submit_btn">abschicken</string>
+    <string name="placeholder">THIS IS A BIG FAT PLACEHOLDER TO SIMULATE  THE PEOPLE YOU CAN CHOOOSE</string>
+    <string name="invite_friends">Freunde auswählen</string>
+    <string-array name="meetup_locations">
+        <item>ALEA Kaffeebar</item>
+        <item>Cafe Zentral</item>
+        <item>Chemie Cafete</item>
+        <item>Das Unikat</item>
+        <item>Mensa Cafete</item>
+        <item>Primo Cafebar</item>
+        <item>PT Cafete</item>
+        <item>Sport Cafete</item>
+        <item>Wiwi Cafete</item>
+    </string-array>
+    <string name="invitation_success_header">Geschafft!</string>
+    <string name="invitation_success_header_desc">Deine Anfrage für euer Meetup wurde erfolgreich an deine Freunde versandt! Warte auf eine Reaktion und genießt die Zeit zusammen.</string>
+    <string name="back_to_home_btn">zurück zum Homescreen</string>
 </resources>
