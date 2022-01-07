@@ -36,7 +36,7 @@ public class InvitationSuccessFragment extends Fragment {
 
     private void initListener() {
         binding.backToHomeBtn.setOnClickListener(v ->{
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_invitationSuccess_to_navigation_home);
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToHome);
         });
     }
 

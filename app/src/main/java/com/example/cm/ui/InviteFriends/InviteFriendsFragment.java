@@ -45,7 +45,7 @@ public class InviteFriendsFragment extends Fragment {
     }
 
     private void initListener() {
-        binding.inviteFriendsBackBtn.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).navigate(R.id.navigationToInfoMeetup));
+        binding.inviteFriendsBackBtn.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInfoMeetup));
 
         binding.inviteFriendsSubmitBtn.setOnClickListener(v -> {
 
@@ -56,7 +56,7 @@ public class InviteFriendsFragment extends Fragment {
             Meetup meetup = new Meetup(requestingUser, location, time, isPrivate, new ArrayList<>(Arrays.asList("Max", "Julia", "Tim")));
             sharedViewModel.createMeetup2(meetup);
 
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_navigation_invite_friends_to_invitationSuccess);
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInvitationSuccess);
 
         });
     }

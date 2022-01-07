@@ -52,7 +52,7 @@ public class MeetupFragment extends Fragment {
         binding.meetupInfoBtn.setOnClickListener(v -> {
 
             // shows the next fragment where you can choose your friends
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.navigationToInviteFriends);
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
             String location = binding.meetupLocationSpinner.getSelectedItem().toString();
             String hour = binding.meetupTimePicker.getCurrentHour().toString();
             String min = binding.meetupTimePicker.getCurrentMinute().toString();

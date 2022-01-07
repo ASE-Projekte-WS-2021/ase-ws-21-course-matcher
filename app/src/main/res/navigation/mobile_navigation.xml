@@ -29,7 +29,7 @@
         android:label="Meetup"
         tools:layout="@layout/fragment_meetup">
         <action
-            android:id="@+id/navigationToInviteFriends"
+            android:id="@+id/navigateToInviteFriends"
             app:destination="@+id/navigation_invite_friends"/>
 
     </fragment>
@@ -41,23 +41,11 @@
         android:label="@string/invite_friends"
         tools:layout="@layout/fragment_invite_friends">
         <action
-            android:id="@+id/navigationToInfoMeetup"
+            android:id="@+id/navigateToInfoMeetup"
             app:destination="@+id/navigation_meetup" />
         <action
-            android:id="@+id/action_navigation_invite_friends_to_invitationSuccess"
+            android:id="@+id/navigateToInvitationSuccess"
             app:destination="@id/invitationSuccess" />
-        <argument
-            android:name="requestingUser"
-            app:argType="string"/>
-        <argument
-            android:name="location"
-            app:argType="string" />
-        <argument
-            android:name="time"
-            app:argType="string"/>
-        <argument
-            android:name="isPrivate"
-            app:argType="boolean"/>
 
     </fragment>
     <fragment
@@ -66,7 +54,7 @@
         android:label="fragment_invitation_success"
         tools:layout="@layout/fragment_invitation_success" >
         <action
-            android:id="@+id/action_invitationSuccess_to_navigation_home"
+            android:id="@+id/navigateToHome"
             app:destination="@id/navigation_home" />
     </fragment>
 
