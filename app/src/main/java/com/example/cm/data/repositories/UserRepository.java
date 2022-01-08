@@ -1,7 +1,5 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
-
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.User;
 import com.example.cm.utils.Utils;
@@ -18,7 +16,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class UserRepository extends Repository {
-    private static final String TAG = "UserRepository";
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -40,20 +37,17 @@ public class UserRepository extends Repository {
     public void getUsers() {
         userCollection.get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
-                snapshotToUserList(Objects.requireNonNull(task.getResult()));
-            } else {
-                Log.d(TAG, "getUsers: Task is NOT successful...");
+                List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                listener.onUsersRetrieved(users);
             }
         });
     }
 
     public void getUserById(String userId) {
-        Log.d(TAG, "getUserById: " + userId);
         userCollection.document(userId).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
-                listener.onUserRetrieved(snapshotToUser(Objects.requireNonNull(task.getResult())));
-            } else {
-                Log.d(TAG, "getUserById: Task is NOT successful...");
+                User user = snapshotToUser(Objects.requireNonNull(task.getResult()));
+                listener.onUserRetrieved(user);
             }
         });
     }
@@ -61,7 +55,8 @@ public class UserRepository extends Repository {
     public void getUsersByIds(List<String> userIds) {
         userCollection.whereIn(FieldPath.documentId(), userIds).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
-                snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                listener.onUsersRetrieved(users);
             }
         });
     }
@@ -75,9 +70,8 @@ public class UserRepository extends Repository {
         userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
                 .get().addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
-                        snapshotToUserList(Objects.requireNonNull(task.getResult()));
-                    } else {
-                        Log.d(TAG, "getUsers: Task is NOT successful...");
+                        List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                        listener.onUsersRetrieved(users);
                     }
                 });
     }
@@ -90,31 +84,33 @@ public class UserRepository extends Repository {
      */
     //TODO: Fix this method to only retrieve the friends of the current user
     public void getFriendsByUsername(List<String> friendsIds, String query) {
-        userCollection
-                .whereIn(FieldPath.documentId(), friendsIds)
-                .orderBy(FieldPath.documentId())
-                .orderBy("username").startAt(query).endAt(query + "\uf8ff")
+        userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
                 .get().addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
-                        snapshotToUserList(Objects.requireNonNull(task.getResult()));
-                    } else {
-                        Log.d(TAG, "getFriendsByUsername: " + task.getException());
-                        Log.d(TAG, "getUsers: Task is NOT successful...");
+                        List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                        List<User> friends = new ArrayList<>();
+                        for (User user : users) {
+                            if (friendsIds.contains(user.getId())) {
+                                friends.add(user);
+                            }
+                        }
+                        listener.onUsersRetrieved(friends);
                     }
                 });
     }
 
     /**
-     * Covert a list of snapshots to a list of users
+     * Convert a list of snapshots to a list of users
      *
      * @param documents List of snapshots returned from Firestore
+     * @return List of users
      */
-    private void snapshotToUserList(QuerySnapshot documents) {
+    private List<User> snapshotToUserList(QuerySnapshot documents) {
         List<User> users = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
             users.add(snapshotToUser(document));
         }
-        listener.onUsersRetrieved(users);
+        return users;
     }
 
     /**

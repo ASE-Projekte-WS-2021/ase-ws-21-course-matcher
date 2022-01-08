@@ -18,7 +18,7 @@ public class FriendsViewModel extends ViewModel implements OnUserRepositoryListe
 
     public FriendsViewModel() {
         userRepository = new UserRepository(this);
-        if(currentUser.getValue() == null) {
+        if (currentUser.getValue() == null) {
             // TODO: Replace with firebase auth's getCurrentUser()
             userRepository.getUserById("0woDiT794x84PeYtXzjb");
         }
@@ -29,6 +29,10 @@ public class FriendsViewModel extends ViewModel implements OnUserRepositoryListe
     }
 
     public void searchUsers(String query) {
+        if (currentUser.getValue() == null) {
+            return;
+        }
+
         if (query.isEmpty()) {
             userRepository.getUsersByIds(currentUser.getValue().getFriends());
             return;
