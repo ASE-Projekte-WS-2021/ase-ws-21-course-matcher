@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 /**
  * inspired by https://learntodroid.com/how-to-use-firebase-authentication-in-an-android-app-using-mvvm/
- * */
+ */
 
 public class AuthViewModel extends AndroidViewModel {
     private final AuthRepository authRepository;
