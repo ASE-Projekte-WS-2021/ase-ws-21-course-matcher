@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.UserRepository;
-import com.example.cm.utils.Navigator;
 
 import java.util.List;
 
