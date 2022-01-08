@@ -13,7 +13,7 @@ import com.google.firebase.firestore.auth.User;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SharedViewModel extends ViewModel implements OnUserRepositoryListener, OnNotificationRepositoryListener {
+public class CreateMeetupViewModel extends ViewModel implements OnUserRepositoryListener, OnNotificationRepositoryListener {
 
     private final InviteFriendsRepository inviteFriendsRepository;
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
@@ -26,7 +26,7 @@ public class SharedViewModel extends ViewModel implements OnUserRepositoryListen
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
     private OnNotificationSentListener notificationSentListener;
 
-    public SharedViewModel() {
+    public CreateMeetupViewModel() {
         this.inviteFriendsRepository = new InviteFriendsRepository();
         userRepository = new UserRepository(this);
         notificationRepository = new NotificationRepository(this);

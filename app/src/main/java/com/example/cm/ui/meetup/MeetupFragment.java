@@ -13,12 +13,12 @@ import androidx.navigation.Navigation;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
-import com.example.cm.ui.SharedViewModel;
+import com.example.cm.ui.CreateMeetupViewModel;
 
 
 public class MeetupFragment extends Fragment {
 
-    private SharedViewModel sharedViewModel;
+    private CreateMeetupViewModel createMeetupViewModel;
     private FragmentMeetupBinding binding;
     ArrayAdapter<CharSequence> adapter;
 
@@ -59,15 +59,15 @@ public class MeetupFragment extends Fragment {
             String time = hour + ":" + min;
             Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
 
-            sharedViewModel.setLocation(location);
-            sharedViewModel.setTime(time);
-            sharedViewModel.setIsPrivate(isPrivate);
+            createMeetupViewModel.setLocation(location);
+            createMeetupViewModel.setTime(time);
+            createMeetupViewModel.setIsPrivate(isPrivate);
         });
     }
 
     private void initViewModel(){
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-        sharedViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location ->{
+        createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
+        createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location ->{
             binding.meetupLocationSpinner.setSelection(adapter.getPosition(location));
         });
     }
@@ -76,7 +76,7 @@ public class MeetupFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
 
     }
 

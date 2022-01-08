@@ -15,19 +15,11 @@ import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
 
-import com.example.cm.ui.SharedViewModel;
+import com.example.cm.ui.CreateMeetupViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.databinding.FragmentSelectFriendsBinding;
@@ -42,7 +34,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     String requestingUser = ("CURRENTLY LOGGED IN USER");
 
-    private SharedViewModel sharedViewModel;
+    private CreateMeetupViewModel createMeetupViewModel;
     private FragmentInviteFriendsBinding binding;
     private InviteFriendsListAdapter inviteFriendsListAdapter;
 
@@ -61,7 +53,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     }
 
     private void initUI() {
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+        createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
         inviteFriendsListAdapter = new InviteFriendsListAdapter(this);
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
@@ -73,12 +65,12 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
         binding.inviteFriendsSubmitBtn.setOnClickListener(v -> {
 
-            String location = sharedViewModel.getMeetupLocation().getValue();
-            String time = sharedViewModel.getMeetupTime().getValue();
-            Boolean isPrivate = sharedViewModel.getMeetupIsPrivate().getValue();
+            String location = createMeetupViewModel.getMeetupLocation().getValue();
+            String time = createMeetupViewModel.getMeetupTime().getValue();
+            Boolean isPrivate = createMeetupViewModel.getMeetupIsPrivate().getValue();
 
             Meetup meetup = new Meetup(requestingUser, location, time, isPrivate, new ArrayList<>(Arrays.asList("Max", "Julia", "Tim")));
-            sharedViewModel.createMeetup2(meetup);
+            createMeetupViewModel.createMeetup2(meetup);
 
             Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInvitationSuccess);
 
@@ -89,12 +81,12 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     }
 
     public void initViewModel() {
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
 
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-        sharedViewModel.setOnNotificationSentListener(this);
+        createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
+        createMeetupViewModel.setOnNotificationSentListener(this);
 
-        sharedViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+        createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
                 return;
             }
@@ -122,12 +114,12 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
 
     private void onSendRequestButtonClicked() {
-        sharedViewModel.sendFriendRequest();
+        createMeetupViewModel.sendFriendRequest();
     }
 
     private void onSearchButtonClicked() {
         String query = binding.etUserSearch.getText().toString();
-        sharedViewModel.searchUsers(query);
+        createMeetupViewModel.searchUsers(query);
 
         Utils.hideKeyboard(requireActivity(), binding.getRoot());
     }
@@ -149,7 +141,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     @Override
     public void onCheckBoxClicked(String id) {
-        sharedViewModel.toggleSelectUser(id);
+        createMeetupViewModel.toggleSelectUser(id);
     }
 
     @Override
