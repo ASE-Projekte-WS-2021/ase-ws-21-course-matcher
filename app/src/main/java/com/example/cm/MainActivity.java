@@ -1,16 +1,20 @@
 package com.example.cm;
 
 import android.os.Bundle;
-
+import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.cm.databinding.ActivityMainBinding;
+import com.example.cm.ui.auth.AuthViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     private ActivityMainBinding binding;
     private NavController navController;
 
@@ -21,10 +25,25 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+        initViewModel();
         setupBottomNavigationBar();
     }
+  
+    private void initViewModel() {
+      AuthViewModel authViewModel = new ViewModelProvider(MainActivity.this).get(AuthViewModel.class);
+        authViewModel.getUserLiveData().observe(this, firebaseUser -> {
+            if (firebaseUser != null) {
+                Log.d(TAG, "Logged in with username: " + firebaseUser.getDisplayName());
+            }
+        });
+    }
+
 
     private void setupBottomNavigationBar() {
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications, R.id.navigation_profile)
                 .build();
@@ -33,8 +52,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
+
     @Override
     public boolean onSupportNavigateUp() {
         return navController.navigateUp() || super.onSupportNavigateUp();
     }
+
 }
