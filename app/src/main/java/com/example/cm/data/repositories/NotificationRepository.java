@@ -1,7 +1,5 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
-
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Notification;
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,6 +11,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NotificationRepository extends Repository {
 
@@ -32,20 +31,16 @@ public class NotificationRepository extends Repository {
      * Get all notifications for currently signed in user
      */
     public void getNotificationsForUser() {
-        if (auth.getCurrentUser() == null) {
-            return;
+        String userId = "0woDiT794x84PeYtXzjb";
+        if (auth.getCurrentUser() != null) {
+            userId = auth.getCurrentUser().getUid();
         }
-        String userId = auth.getCurrentUser().getUid();
 
-        // Utilizing snapshotListener to listen to real time changes
-        notificationCollection.whereEqualTo("userId", userId).addSnapshotListener((queryDocumentSnapshots, e) -> {
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e);
+        notificationCollection.whereEqualTo("senderId", userId).get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
+                listener.onNotificationsRetrieved(notifications);
             }
-            if (queryDocumentSnapshots == null) {
-                return;
-            }
-            snapshotToNotificationList(queryDocumentSnapshots);
         });
     }
 
@@ -59,16 +54,26 @@ public class NotificationRepository extends Repository {
     }
 
     /**
-     * Covert a list of snapshots to a list of notifications
+     * Create multiple notifications
+     *
+     * @param notifications List of notifications to be stored
+     */
+    public void addNotifications(List<Notification> notifications) {
+        notificationCollection.add(notifications);
+    }
+
+    /**
+     * Convert a list of snapshots to a list of notifications
      *
      * @param documents List of notifications returned from Firestore
+     * @return Returns a list of notifications
      */
-    private void snapshotToNotificationList(QuerySnapshot documents) {
+    private List<Notification> snapshotToNotificationList(QuerySnapshot documents) {
         List<Notification> notifications = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
             notifications.add(snapshotToNotification(document));
         }
-        listener.onNotificationsRetrieved(notifications);
+        return notifications;
     }
 
     /**
@@ -80,10 +85,10 @@ public class NotificationRepository extends Repository {
     public Notification snapshotToNotification(DocumentSnapshot document) {
         Notification notification = new Notification();
         notification.setId(document.getId());
-        notification.setTitle(document.getString("title"));
-        notification.setContent(document.getString("content"));
         notification.setType(document.get("type", Notification.NotificationType.class));
-        notification.setUserId(document.getString("userId"));
+        notification.setSenderId(document.getString("senderId"));
+        notification.setSenderName(document.getString("senderName"));
+        notification.setReceiverId(document.getString("receiverId"));
         notification.setCreatedAt(document.getDate("createdAt"));
 
         return notification;

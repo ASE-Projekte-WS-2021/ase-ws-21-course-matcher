@@ -4,26 +4,21 @@ import java.util.Date;
 
 public class Notification {
 
-    public enum NotificationType {
-        FRIEND_REQUEST,
-        MEETUP_REQUEST,
-        MEETUP_CANCELLED
-    }
-
     private String id;
-    private String title;
-    private String content;
-    private String userId;
+    private String senderId;
+    private String senderName;
+    private String receiverId;
     private NotificationType type;
     private Date createdAt;
 
-    public Notification() {}
+    public Notification() {
+    }
 
-    public Notification(String title, String content, NotificationType type, String userId) {
-        this.title = title;
-        this.content = content;
+    public Notification(String senderId, String senderName, String receiverId, NotificationType type) {
+        this.senderId = senderId;
+        this.senderName = senderName;
+        this.receiverId = receiverId;
         this.type = type;
-        this.userId = userId;
         this.createdAt = new Date();
     }
 
@@ -35,20 +30,28 @@ public class Notification {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 
-    public String getContent() {
-        return content;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
+    }
+
+    public String getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(String receiverId) {
+        this.receiverId = receiverId;
     }
 
     public NotificationType getType() {
@@ -59,19 +62,17 @@ public class Notification {
         this.type = type;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public Date getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public enum NotificationType {
+        FRIEND_REQUEST,
+        MEETUP_REQUEST,
+        MEETUP_CANCELLED
     }
 }
