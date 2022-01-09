@@ -30,7 +30,7 @@
         tools:layout="@layout/fragment_meetup">
         <action
             android:id="@+id/navigateToInviteFriends"
-            app:destination="@+id/navigation_invite_friends"/>
+            app:destination="@+id/navigation_invite_friends" />
 
     </fragment>
 
@@ -52,13 +52,13 @@
         android:id="@+id/invitationSuccess"
         android:name="com.example.cm.ui.InvitationSuccess.InvitationSuccessFragment"
         android:label="fragment_invitation_success"
-        tools:layout="@layout/fragment_invitation_success" >
+        tools:layout="@layout/fragment_invitation_success">
         <action
             android:id="@+id/navigateToHome"
             app:destination="@id/navigation_home" />
     </fragment>
 
-
+    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.cm.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
@@ -87,5 +87,6 @@
         android:id="@+id/navigation_select_friends"
         android:name="com.example.cm.ui.select_friends.SelectFriendsFragment"
         android:label="@string/title_find_friends"
+
         tools:layout="@layout/fragment_select_friends" />
 </navigation>

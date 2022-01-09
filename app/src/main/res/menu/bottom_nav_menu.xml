@@ -21,6 +21,7 @@
         android:icon="@android:drawable/ic_menu_today"
         android:iconTint="@color/black"
         android:title="Meetup"/>
+    <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_baseline_person_24"
         android:title="@string/title_profile" />

@@ -2,7 +2,6 @@
     <string name="app_name">CM</string>
     <string name="title_home">Test</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
     <string name="meetup_header">Freunde treffen</string>
     <string name="meetup_header_desc">Macht aus wo und wann ihr euch trefft:</string>
     <string name="meetup_time">Wann wollt ihr euch treffen?</string>
@@ -29,7 +28,6 @@
     <string name="invitation_success_header">Geschafft!</string>
     <string name="invitation_success_header_desc">Deine Anfrage für euer Meetup wurde erfolgreich an deine Freunde versandt! Warte auf eine Reaktion und genießt die Zeit zusammen.</string>
     <string name="back_to_home_btn">zurück zum Homescreen</string>
-    <string name="btn_send_friend_request">send</string>
     <string name="title_notifications">Benachrichtigungen</string>
     <string name="title_profile">Profil</string>
     <string name="title_friends">Freunde</string>

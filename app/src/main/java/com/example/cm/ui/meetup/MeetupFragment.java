@@ -1,5 +1,6 @@
 package com.example.cm.ui.meetup;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,18 @@ import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
 import com.example.cm.ui.CreateMeetupViewModel;
 
+import java.util.Calendar;
+
 
 public class MeetupFragment extends Fragment {
 
+    ArrayAdapter<CharSequence> adapter;
+    Calendar calendar = Calendar.getInstance();
+    int sMin, sHour;
+    int cMin = calendar.get(Calendar.MINUTE);
+    int cHour = calendar.get(Calendar.HOUR_OF_DAY);
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentMeetupBinding binding;
-    ArrayAdapter<CharSequence> adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -38,6 +45,7 @@ public class MeetupFragment extends Fragment {
 
     private void initUI() {
         binding.meetupTimePicker.setIs24HourView(true);
+
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.meetup_locations, android.R.layout.simple_spinner_item);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
@@ -65,9 +73,9 @@ public class MeetupFragment extends Fragment {
         });
     }
 
-    private void initViewModel(){
+    private void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
-        createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location ->{
+        createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location -> {
             binding.meetupLocationSpinner.setSelection(adapter.getPosition(location));
         });
     }

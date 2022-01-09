@@ -7,13 +7,16 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.repositories.NotificationRepository;
+import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.ui.InviteFriends.InviteFriendsRepository;
+import com.example.cm.ui.select_friends.SelectFriendsViewModel;
 import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateMeetupViewModel extends ViewModel implements OnUserRepositoryListener, OnNotificationRepositoryListener {
+public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener, NotificationRepository.OnNotificationRepositoryListener {
 
     private final InviteFriendsRepository inviteFriendsRepository;
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
@@ -24,7 +27,8 @@ public class CreateMeetupViewModel extends ViewModel implements OnUserRepository
     public MutableLiveData<List<User>> users = new MutableLiveData<>();
     public MutableLiveData<List<Notification>> notifications = new MutableLiveData<>();
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
-    private OnNotificationSentListener notificationSentListener;
+    private SelectFriendsViewModel.OnNotificationSentListener notificationSentListener;
+    //private Notification notification;
 
     public CreateMeetupViewModel() {
         this.inviteFriendsRepository = new InviteFriendsRepository();
@@ -64,7 +68,7 @@ public class CreateMeetupViewModel extends ViewModel implements OnUserRepository
     }
 
 
-    public void setOnNotificationSentListener(OnNotificationSentListener listener) {
+    public void setOnNotificationSentListener(SelectFriendsViewModel.OnNotificationSentListener listener) {
         this.notificationSentListener = listener;
     }
 
@@ -99,43 +103,24 @@ public class CreateMeetupViewModel extends ViewModel implements OnUserRepository
         userRepository.getUsersByUsername(query);
     }
 
-    public void sendFriendRequest() {
-        if (selectedUsers.getValue() == null) {
-            return;
-        }
 
-        for (String userId : selectedUsers.getValue()) {
 
-            boolean requestAlreadySent = false;
+    @Override
+    public void onUsersRetrieved(List<com.example.cm.data.models.User> users) {
 
-            // TODO: check if notification already exists
-            // Check if a notification already exists
-            /*
-            if(notifications.getValue() == null) {
-                return;
-            }
-            for(Notification notification : Objects.requireNonNull(notifications.getValue())) {
-                if (notification.getUserId().equals(userId) && notification.getType().equals(Notification.NotificationType.FRIEND_REQUEST)) {
-                    requestAlreadySent = true;
-                    break;
-                }
-            }
-            if(requestAlreadySent) {
-                continue;
-            }
-             */
-
-            Notification notification = new Notification(
-                    "Neue Freundschaftsanfrage",
-                    "Hallo,\n\n" + "[CURRENTLY LOGGED IN USER]" + " möchte mit dir befreundet sein.\n\nBitte bestätige diese Anfrage, indem du auf den Button klickst.",
-                    Notification.NotificationType.FRIEND_REQUEST,
-                    userId);
-            // notificationRepository.addNotification(notification);
-            notificationSentListener.onNotificationSent();
-        }
     }
 
     @Override
+    public void onUserRetrieved(com.example.cm.data.models.User user) {
+
+    }
+
+    @Override
+    public void onNotificationsRetrieved(List<com.example.cm.data.models.Notification> notification) {
+
+    }
+
+/*    @Override
     public void onUsersRetrieved(List<User> users) {
         this.users.postValue(users);
     }
@@ -152,5 +137,5 @@ public class CreateMeetupViewModel extends ViewModel implements OnUserRepository
 
     public interface OnNotificationSentListener {
         void onNotificationSent();
-    }
+    }*/
 }

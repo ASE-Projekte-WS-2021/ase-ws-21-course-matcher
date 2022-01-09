@@ -24,6 +24,11 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<InviteFriends
         this.listener = listener;
     }
 
+    public InviteFriendsListAdapter() {
+
+        listener = null;
+    }
+
     public void setFriends(List<User> newUsers) {
         if (mUsers == null) {
             mUsers = newUsers;
@@ -102,6 +107,9 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<InviteFriends
             return 0;
         }
         return mUsers.size();
+    }
+
+    public void setUsers(List<com.google.firebase.firestore.auth.User> users) {
     }
 
     public interface OnItemClickListener {
