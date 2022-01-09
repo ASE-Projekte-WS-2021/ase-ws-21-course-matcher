@@ -22,4 +22,35 @@
         android:name="com.example.cm.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.cm.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/navigateToFriends"
+            app:destination="@id/navigation_friends"
+            app:enterAnim="@anim/nav_default_pop_enter_anim"
+            app:exitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/navigation_friends"
+        android:name="com.example.cm.ui.friends.FriendsFragment"
+        android:label="@string/title_friends"
+        tools:layout="@layout/fragment_friends">
+
+        <action
+            android:id="@+id/navigateToSelectFriends"
+            app:destination="@id/navigation_select_friends" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_select_friends"
+        android:name="com.example.cm.ui.select_friends.SelectFriendsFragment"
+        android:label="@string/title_find_friends"
+        tools:layout="@layout/fragment_select_friends" />
 </navigation>
