@@ -7,6 +7,7 @@ on:
 jobs:
   build-apk:
     runs-on: ubuntu-latest
+    environment: development
 
     steps:
       - name: Checkout
@@ -19,7 +20,9 @@ jobs:
 
       # Build the APK
       - name: Build APK
-        run: bash ./gradlew assembleDebug --stacktrace
+        env:
+          MAPBOX_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
+        run: bash ./gradlew assembleDebug --stacktrace -PMAPBOX_DOWNLOADS_TOKEN=$MAPBOX_TOKEN
 
       # Upload the created APK
       - name: Upload APK

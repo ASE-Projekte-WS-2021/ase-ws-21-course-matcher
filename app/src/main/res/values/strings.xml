@@ -2,6 +2,7 @@
     <string name="app_name">CM</string>
     <string name="title_home">Test</string>
     <string name="title_dashboard">Dashboard</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
     <string name="title_notifications">Benachrichtigungen</string>
     <string name="title_profile">Profil</string>
     <string name="title_friends">Freunde</string>
