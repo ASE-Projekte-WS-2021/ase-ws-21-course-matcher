@@ -94,6 +94,28 @@ public class NotificationRepository extends Repository {
         return notification;
     }
 
+    /**
+     * Set state of notification
+     *
+     * @param notification
+     */
+    public void accept(Notification notification){
+        notificationCollection.document(notification.getId()).
+                update("state", Notification.NotificationState.NOTIFICATION_ACCEPTED);
+        notificationCollection.document(notification.getId()).
+                update("createdAt", notification.getCreatedAt());
+    }
+
+    public void decline(Notification notification){
+        notificationCollection.document(notification.getId()).
+                update("state", Notification.NotificationState.NOTIFICATION_DECLINED);
+    }
+
+    public void undo(Notification notification){
+        notificationCollection.document(notification.getId()).
+                update("state", Notification.NotificationState.NOTIFICATION_PENDING);
+    }
+
     public interface OnNotificationRepositoryListener {
         void onNotificationsRetrieved(List<Notification> notification);
     }

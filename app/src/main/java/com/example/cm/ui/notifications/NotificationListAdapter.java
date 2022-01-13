@@ -56,14 +56,20 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
     @Override
     public void onBindViewHolder(@NonNull NotificationListAdapter.NotificationViewHolder holder, int position) {
-        String title = mNotifications.get(position).getTitle();
-        String content = mNotifications.get(position).getContent();
+        Notification notification = mNotifications.get(position);
+        int title = notification.getType() == Notification.NotificationType.FRIEND_REQUEST ?
+                R.string.friend_request_title : R.string.meetup_request_title;
+        String user = "@" + notification.getSenderName();
+        boolean isAccepted = notification.getState() == Notification.NotificationState.NOTIFICATION_ACCEPTED;
+        int content = isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text;
+        String date = notification.getCreationTimeAgo();
 
         holder.getTvTitle().setText(title);
+        holder.getTvSender().setText(user);
         holder.getTvContent().setText(content);
-
-        holder.getBtnAccept().setOnClickListener(view -> onAcceptClick(mNotifications.get(position)));
-        holder.getBtnDecline().setOnClickListener(view -> onDeclineClick(mNotifications.get(position)));
+        holder.getTvDate().setText(date);
+        holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
+        holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -95,6 +101,14 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
         public TextView getTvContent() {
             return binding.notificationContentTextView;
+        }
+
+        public TextView getTvSender() {
+            return binding.notificationSenderTextView;
+        }
+
+        public TextView getTvDate() {
+            return binding.notificationDateTextView;
         }
 
         public ImageView getIvProfilePicture(){

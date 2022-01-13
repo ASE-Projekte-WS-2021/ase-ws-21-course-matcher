@@ -8,6 +8,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -134,6 +135,11 @@ public class UserRepository extends Repository {
         user.setFriends(Utils.castList(document.get("friends"), String.class));
 
         return user;
+    }
+
+    public void addFriends(String friend1Id, String friend2Id){
+        userCollection.document(friend1Id).update("friends", FieldValue.arrayUnion(friend2Id));
+        userCollection.document(friend2Id).update("friends", FieldValue.arrayUnion(friend1Id));
     }
 
     public interface OnUserRepositoryListener {

@@ -29,6 +29,15 @@
     <string name="invitation_success_header_desc">Deine Anfrage für euer Meetup wurde erfolgreich an deine Freunde versandt! Warte auf eine Reaktion und genießt die Zeit zusammen.</string>
     <string name="back_to_home_btn">zurück zum Homescreen</string>
 
+    <string name="accept_button_text">✓</string>
+    <string name="decline_button_text">✗</string>
+    <string name="friend_request_title">"Neue Freundschaftsanfrage"</string>
+    <string name="friend_request_text">" möchte mit dir befreundet sein."</string>
+    <string name="friend_accepted_text">" ist jetzt auf deiner Freundesliste."</string>
+    <string name="decline_snackbar_text">Anfrage abgelehnt.</string>
+    <string name="undo_snackbar_text">UNDO</string>
+    <string name="meetup_request_title">"Neue Meetup-Anfrage"</string>
+
     <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
     <string name="title_notifications">Benachrichtigungen</string>
     <string name="title_profile">Profil</string>

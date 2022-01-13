@@ -4,33 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/notificationLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/small_margin_items">
 
     <Button
         android:id="@+id/notificationAcceptButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginEnd="@dimen/small_margin_items"
         android:text="@string/accept_button_text"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/notificationDeclineButton"
-        app:layout_constraintTop_toBottomOf="@+id/notificationContentTextView" />
+        app:layout_constraintTop_toTopOf="@+id/notificationDeclineButton" />
 
     <Button
         android:id="@+id/notificationDeclineButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_marginEnd="@dimen/small_margin_items"
         android:text="@string/decline_button_text"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/notificationAcceptButton" />
+        app:layout_constraintTop_toBottomOf="@+id/notificationContentTextView" />
 
     <ImageView
         android:id="@+id/notificationImageView"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:scaleType="center"
+        android:layout_height="0dp"
         android:src="@android:drawable/ic_menu_gallery"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/notificationContentTextView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,9 +40,9 @@
         android:id="@+id/notificationContentTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textStyle="italic"
-        app:layout_constraintEnd_toEndOf="@+id/notificationTitleTextView"
-        app:layout_constraintStart_toStartOf="@+id/notificationTitleTextView"
+        android:singleLine="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/notificationSenderTextView"
         app:layout_constraintTop_toBottomOf="@+id/notificationTitleTextView" />
 
     <TextView
@@ -52,5 +54,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/notificationImageView"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/notificationSenderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/purple_500"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/notificationImageView"
+        app:layout_constraintTop_toBottomOf="@+id/notificationTitleTextView" />
+
+    <TextView
+        android:id="@+id/notificationDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/small_margin_items"
+        android:textAlignment="textEnd"
+        android:textColor="@color/purple_200"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notificationDeclineButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
