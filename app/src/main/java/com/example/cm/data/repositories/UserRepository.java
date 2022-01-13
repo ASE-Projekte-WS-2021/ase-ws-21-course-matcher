@@ -4,6 +4,7 @@ import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.User;
 import com.example.cm.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
@@ -28,6 +29,10 @@ public class UserRepository extends Repository {
 
     public UserRepository(OnUserRepositoryListener listener) {
         this.listener = listener;
+    }
+
+    public FirebaseUser getCurrentUser() {
+        return auth.getCurrentUser();
     }
 
 
