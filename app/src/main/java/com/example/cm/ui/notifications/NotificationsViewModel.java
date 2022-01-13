@@ -9,12 +9,7 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositiories.NotificationRepository;
 import com.example.cm.data.repositiories.NotificationRepository.OnNotificationRepositoryListener;
 
-import java.util.List;
-
-public class NotificationsViewModel extends ViewModel implements OnNotificationRepositoryListener {
-
-    private final NotificationRepository notificationRepository;
-    private MutableLiveData<List<Notification>> notifications = new MutableLiveData<>();
+    private final MutableLiveData<String> mText;
 
     public NotificationsViewModel() {
         notificationRepository = new NotificationRepository(this);

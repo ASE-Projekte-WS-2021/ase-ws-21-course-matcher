@@ -8,7 +8,8 @@ public class User {
     private String username, firstName, lastName, email;
     private List<String> friends;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String id, String username, String firstName, String lastName, String email) {
         this.id = id;

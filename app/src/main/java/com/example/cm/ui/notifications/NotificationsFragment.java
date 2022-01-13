@@ -24,7 +24,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.cm.R;
 import com.example.cm.databinding.FragmentNotificationsBinding;
 import com.example.cm.data.models.User;
 import com.example.cm.data.models.Notification;
