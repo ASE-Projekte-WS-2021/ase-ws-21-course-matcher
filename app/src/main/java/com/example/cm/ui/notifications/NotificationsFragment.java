@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cm.databinding.FragmentNotificationsBinding;
 import com.example.cm.data.models.User;
@@ -32,11 +34,12 @@ import com.example.cm.data.models.Notification;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends Fragment implements NotificationListAdapter.OnFriendAcceptanceListener, SwipeRefreshLayout.OnRefreshListener {
 
     private NotificationsViewModel notificationsViewModel;
     private FragmentNotificationsBinding binding;
     private NotificationListAdapter notificationListAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
@@ -46,6 +49,8 @@ public class NotificationsFragment extends Fragment {
     }
 
     private void initUI() {
+        swipeRefreshLayout = binding.getRoot();
+        swipeRefreshLayout.setOnRefreshListener(this);
         notificationListAdapter = new NotificationListAdapter();
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
@@ -59,7 +64,6 @@ public class NotificationsFragment extends Fragment {
                 return;
             }
             notificationListAdapter.setNotifications(notifications);
-            //todo: Loading Circle (?)
         });
     }
 
@@ -68,5 +72,27 @@ public class NotificationsFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onAccept(Notification notification) {
+        notificationsViewModel.acceptFriendFromRequest(notification);
+    }
+
+    @Override
+    public void onDecline(Notification notification) {
+        notificationsViewModel.declineFriendFromRequest(notification);
+    }
+
+    @Override
+    public void onUndo(Notification notification, int position) {
+        notificationsViewModel.undoDeclineFriendFromRequest(notification, position);
+    }
+
+    @Override
+    public void onRefresh() {
+        notificationsViewModel.refresh();
+        notificationListAdapter.notifyDataSetChanged();
+        new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 100);
     }
 }

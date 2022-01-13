@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cm.R;
 import com.example.cm.data.models.Notification;
 import com.example.cm.databinding.ItemSingleNotificationBinding;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,6 +25,7 @@ import java.util.Objects;
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
 
     private List<Notification> mNotifications;
+    private OnFriendAcceptanceListener listener;
 
     public void setNotifications(List<Notification> newNotifications){
         if(mNotifications == null){
@@ -32,19 +34,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             return;
         }
         mNotifications = newNotifications;
-    }
-
-
-    private void onAcceptClick(Notification notification){
-        //todo: notification.accept();
-        //notification.setContent((String) context.getText(R.string.meetup_accepted_text));
-        //notifyDataSetChanged();
-    }
-
-    private void onDeclineClick(Notification notification){
-        //todo: notification.decline();
-        mNotifications.remove(notification);
-        //notifyDataSetChanged();
     }
 
     @NonNull
@@ -80,6 +69,12 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         return mNotifications.size();
     }
 
+    public interface OnFriendAcceptanceListener {
+        void onAccept(Notification notification);
+        void onDecline(Notification notification);
+        void onUndo(Notification notification, int position);
+    }
+
     /**
      * ViewHolder class for the list items
      */
@@ -90,6 +85,33 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         public NotificationViewHolder(ItemSingleNotificationBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+            setListeners();
+        }
+
+        private void setListeners() {
+            binding.notificationAcceptButton.setOnClickListener(view -> onAccept());
+            binding.notificationDeclineButton.setOnClickListener(view -> onDecline());
+        }
+
+        private void onAccept() {
+            Notification notification = mNotifications.get(getAdapterPosition());
+            listener.onAccept(notification);
+            notifyItemChanged(getAdapterPosition());
+        }
+
+        private void onUndo(Notification notification, int position){
+            listener.onUndo(notification, position);
+            notifyItemInserted(position);
+        }
+
+        private void onDecline(){
+            int position = getAdapterPosition();
+            Notification notification = mNotifications.get(position);
+            listener.onDecline(notification);
+            notifyItemRemoved(position);
+            Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.decline_snackbar_text, Snackbar.LENGTH_LONG);
+            snackbar.setAction(R.string.undo_snackbar_text, view -> onUndo(notification, position));
+            snackbar.show();
         }
 
         /**
