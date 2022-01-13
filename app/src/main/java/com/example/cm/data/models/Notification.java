@@ -22,6 +22,7 @@ public class Notification {
         this.receiverId = receiverId;
         this.type = type;
         this.createdAt = new Date();
+        this.state = NotificationState.NOTIFICATION_PENDING;
     }
 
     public String getId() {

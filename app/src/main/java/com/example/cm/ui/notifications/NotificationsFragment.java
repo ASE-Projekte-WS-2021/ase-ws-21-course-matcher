@@ -1,38 +1,21 @@
 package com.example.cm.ui.notifications;
 
-import android.app.IntentService;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cm.databinding.FragmentNotificationsBinding;
-import com.example.cm.data.models.User;
 import com.example.cm.data.models.Notification;
-
-
-import java.util.ArrayList;
-import java.util.Random;
+import com.example.cm.ui.adapters.NotificationListAdapter;
 
 public class NotificationsFragment extends Fragment implements NotificationListAdapter.OnFriendAcceptanceListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -51,7 +34,7 @@ public class NotificationsFragment extends Fragment implements NotificationListA
     private void initUI() {
         swipeRefreshLayout = binding.getRoot();
         swipeRefreshLayout.setOnRefreshListener(this);
-        notificationListAdapter = new NotificationListAdapter();
+        notificationListAdapter = new NotificationListAdapter(this);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
         binding.notificationsRecyclerView.setAdapter(notificationListAdapter);
@@ -89,6 +72,7 @@ public class NotificationsFragment extends Fragment implements NotificationListA
         notificationsViewModel.undoDeclineFriendFromRequest(notification, position);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh() {
         notificationsViewModel.refresh();

@@ -8,12 +8,13 @@ import com.example.cm.data.repositories.NotificationRepository.OnNotificationRep
 import com.example.cm.data.repositories.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 public class NotificationsViewModel extends ViewModel implements OnNotificationRepositoryListener {
 
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
-    private MutableLiveData<List<Notification>> notifications = new MutableLiveData<>();
+    private final MutableLiveData<List<Notification>> notifications = new MutableLiveData<>();
 
     public NotificationsViewModel() {
         notificationRepository = new NotificationRepository(this);
@@ -35,13 +36,13 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
     public void declineFriendFromRequest(Notification notification){
         notification.setState(Notification.NotificationState.NOTIFICATION_DECLINED);
         notificationRepository.decline(notification);
-        notifications.getValue().remove(notification);
+        Objects.requireNonNull(notifications.getValue()).remove(notification);
     }
 
     public void undoDeclineFriendFromRequest(Notification notification, int position) {
         notification.setState(Notification.NotificationState.NOTIFICATION_PENDING);
         notificationRepository.undo(notification);
-        notifications.getValue().add(position, notification);
+        Objects.requireNonNull(notifications.getValue()).add(position, notification);
     }
 
     public void refresh() {

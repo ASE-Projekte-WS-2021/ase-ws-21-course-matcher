@@ -1,17 +1,15 @@
-package com.example.cm.ui.notifications;
+package com.example.cm.ui.adapters;
 
+import android.annotation.SuppressLint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
@@ -20,13 +18,17 @@ import com.example.cm.databinding.ItemSingleNotificationBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
-import java.util.Objects;
 
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
 
     private List<Notification> mNotifications;
     private OnFriendAcceptanceListener listener;
 
+    public NotificationListAdapter(OnFriendAcceptanceListener listener) {
+        this.listener = listener;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
     public void setNotifications(List<Notification> newNotifications){
         if(mNotifications == null){
             mNotifications = newNotifications;
@@ -94,6 +96,10 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         }
 
         private void onAccept() {
+            Log.e("NOTS", String.valueOf(getAdapterPosition()));
+            for (Notification notification : mNotifications){
+                Log.e("NOTS", notification.getId());
+            }
             Notification notification = mNotifications.get(getAdapterPosition());
             listener.onAccept(notification);
             notifyItemChanged(getAdapterPosition());

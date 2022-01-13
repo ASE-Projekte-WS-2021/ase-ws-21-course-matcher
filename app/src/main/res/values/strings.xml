@@ -63,4 +63,5 @@
     <string name="loginRegisterBtn">Register</string>
     <string name="loginUserNameEditText">Username</string>
     <string name="btn_meetup_send_invite">Abschicken</string>
+    <string name="profile_picture_decription">Profilbild</string>
 </resources>
