@@ -10,34 +10,25 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
-
-import com.example.cm.R;
-import com.example.cm.data.models.Meetup;
-import com.example.cm.databinding.FragmentInviteFriendsBinding;
-
-import com.example.cm.ui.CreateMeetupViewModel;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.cm.R;
+import com.example.cm.databinding.FragmentInviteFriendsBinding;
+import com.example.cm.ui.CreateMeetupViewModel;
+import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.select_friends.SelectFriendsViewModel.OnNotificationSentListener;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 
-public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener, OnNotificationSentListener {
-
-    String requestingUser = ("CURRENTLY LOGGED IN USER");
+public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener, OnNotificationSentListener, InviteFriendsAdapter.OnItemClickListener {
 
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentInviteFriendsBinding binding;
-    private InviteFriendsListAdapter inviteFriendsListAdapter;
+    private InviteFriendsAdapter inviteFriendsListAdapter;
 
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -52,41 +43,33 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     private void initUI() {
         createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
-        inviteFriendsListAdapter = new InviteFriendsListAdapter();
+        inviteFriendsListAdapter = new InviteFriendsAdapter(this);
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(inviteFriendsListAdapter);
     }
 
     private void initListener() {
-        //binding.inviteFriendsSearchBtn.setOnClickListener(v -> onSearchButtonClicked());
-        binding.inviteFriendsBackBtn.setOnClickListener(v -> Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInfoMeetup));
+        binding.inviteFriendsSearchBtn.setOnClickListener(v -> onSearchButtonClicked());
 
-        binding.inviteFriendsSubmitBtn.setOnClickListener(v -> {
-
-            String location = createMeetupViewModel.getMeetupLocation().getValue();
-            String time = createMeetupViewModel.getMeetupTime().getValue();
-            Boolean isPrivate = createMeetupViewModel.getMeetupIsPrivate().getValue();
-
-            Meetup meetup = new Meetup(requestingUser, location, time, isPrivate, new ArrayList<>(Arrays.asList("Max", "Julia", "Tim")));
-            createMeetupViewModel.createMeetup2(meetup);
-
+        binding.btnSendInvite.setOnClickListener(v -> {
+            createMeetupViewModel.createMeetup();
             Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInvitationSuccess);
-
         });
-
-
     }
+
 
     public void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
 
-       // createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
-        createMeetupViewModel.setOnNotificationSentListener(this);
-
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
                 return;
+            }
+
+            if (users.size() == 0) {
+                Snackbar.make(binding.getRoot(), "No users found", Snackbar.LENGTH_SHORT).show();
+                binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
             }
 
             inviteFriendsListAdapter.setUsers(users);
@@ -94,14 +77,14 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
             binding.rvUserList.setVisibility(View.VISIBLE);
         });
 
-       /* createMeetupViewModel.getSelectedUsers().observe(getViewLifecycleOwner(), selectedUsers -> {
+        createMeetupViewModel.getSelectedUsers().observe(getViewLifecycleOwner(), selectedUsers -> {
             if (selectedUsers == null) {
                 return;
             }
 
-            showFriendRequestButton(selectedUsers.size() > 0);
+            showInvitationButton(selectedUsers.size() > 0);
             inviteFriendsListAdapter.setSelectedUsers(selectedUsers);
-        });*/
+        });
     }
 
 
@@ -110,12 +93,19 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     }
 
-
     private void onSearchButtonClicked() {
         String query = binding.inviteUserSearch.getText().toString();
         createMeetupViewModel.searchUsers(query);
 
         Utils.hideKeyboard(requireActivity(), binding.getRoot());
+    }
+
+    private void showInvitationButton(boolean showButton) {
+        if (showButton) {
+            binding.btnSendInvite.setVisibility(View.VISIBLE);
+            return;
+        }
+        binding.btnSendInvite.setVisibility(View.GONE);
     }
 
 
@@ -132,4 +122,13 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     }
 
 
+    @Override
+    public void onCheckBoxClicked(String id) {
+        createMeetupViewModel.toggleSelectUser(id);
+    }
+
+    @Override
+    public void onItemClicked(String id) {
+        // do nothing
+    }
 }

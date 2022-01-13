@@ -1,8 +1,8 @@
-package com.example.cm.ui.InviteFriends;
-
+package com.example.cm.ui.adapters;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,26 +10,28 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.data.models.User;
-import com.example.cm.databinding.ItemSingleFriendBinding;
+import com.example.cm.databinding.ItemSelectFriendBinding;
 
 import java.util.List;
 import java.util.Objects;
 
-public class InviteFriendsListAdapter extends RecyclerView.Adapter<InviteFriendsListAdapter.UserViewHolder> {
+public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdapter.UserViewHolder> {
 
     private final OnItemClickListener listener;
     private List<User> mUsers;
+    // Store a current selection of users in memory
+    private List<String> selectedUsers;
 
-    public InviteFriendsListAdapter(OnItemClickListener listener) {
+
+    public InviteFriendsAdapter(InviteFriendsAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public InviteFriendsListAdapter() {
-
-        listener = null;
+    public void setSelectedUsers(List<String> selectedUsers) {
+        this.selectedUsers = selectedUsers;
     }
 
-    public void setFriends(List<User> newUsers) {
+    public void setUsers(List<User> newUsers) {
         if (mUsers == null) {
             mUsers = newUsers;
             notifyItemRangeInserted(0, newUsers.size());
@@ -84,7 +86,7 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<InviteFriends
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
-        ItemSingleFriendBinding binding = ItemSingleFriendBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+        ItemSelectFriendBinding binding = ItemSelectFriendBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
 
         return new UserViewHolder(binding);
     }
@@ -98,6 +100,10 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<InviteFriends
 
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
+
+        if (selectedUsers != null) {
+            holder.getCbSelect().setChecked(selectedUsers.contains(mUsers.get(position).getId()));
+        }
     }
 
     // Return the size of the list
@@ -109,10 +115,9 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<InviteFriends
         return mUsers.size();
     }
 
-    public void setUsers(List<com.google.firebase.firestore.auth.User> users) {
-    }
-
     public interface OnItemClickListener {
+        void onCheckBoxClicked(String id);
+
         void onItemClicked(String id);
     }
 
@@ -122,9 +127,9 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<InviteFriends
      */
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemSingleFriendBinding binding;
+        private final ItemSelectFriendBinding binding;
 
-        public UserViewHolder(ItemSingleFriendBinding binding) {
+        public UserViewHolder(ItemSelectFriendBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             setListeners();
@@ -135,12 +140,19 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<InviteFriends
          */
         private void setListeners() {
             binding.getRoot().setOnClickListener(v -> onItemClicked());
+            binding.cbSelect.setOnClickListener(v -> onCheckBoxClicked());
         }
 
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
             listener.onItemClicked(mUsers.get(position).getId());
+        }
+
+        private void onCheckBoxClicked() {
+            int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION || listener == null) return;
+            listener.onCheckBoxClicked(mUsers.get(position).getId());
         }
 
 
@@ -153,6 +165,10 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<InviteFriends
 
         public TextView getTvUsername() {
             return binding.tvUsername;
+        }
+
+        public CheckBox getCbSelect() {
+            return binding.cbSelect;
         }
     }
 }

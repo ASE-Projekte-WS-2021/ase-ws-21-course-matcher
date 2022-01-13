@@ -1,6 +1,5 @@
 package com.example.cm.ui.meetup;
 
-import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,68 +15,62 @@ import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
 import com.example.cm.ui.CreateMeetupViewModel;
 
-import java.util.Calendar;
-
 
 public class MeetupFragment extends Fragment {
 
     ArrayAdapter<CharSequence> adapter;
-    Calendar calendar = Calendar.getInstance();
     int sMin, sHour;
-    int cMin = calendar.get(Calendar.MINUTE);
-    int cHour = calendar.get(Calendar.HOUR_OF_DAY);
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentMeetupBinding binding;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentMeetupBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
 
         initUI();
         initViewModel();
         initListener();
-        return root;
-
+        return binding.getRoot();
     }
 
     private void initUI() {
         binding.meetupTimePicker.setIs24HourView(true);
-
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.meetup_locations, android.R.layout.simple_spinner_item);
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding.meetupLocationSpinner.setAdapter(adapter);
-
-
     }
 
     private void initListener() {
+        binding.meetupInfoBtn.setOnClickListener(v -> onMeetupInfoBtnClicked());
+    }
 
+    private void onMeetupInfoBtnClicked() {
+        String location = binding.meetupLocationSpinner.getSelectedItem().toString();
+        String hour = binding.meetupTimePicker.getCurrentHour().toString();
+        String min = binding.meetupTimePicker.getCurrentMinute().toString();
+        String time = hour + ":" + min;
+        Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
 
-        binding.meetupInfoBtn.setOnClickListener(v -> {
+        createMeetupViewModel.setLocation(location);
+        createMeetupViewModel.setTime(time);
+        createMeetupViewModel.setIsPrivate(isPrivate);
 
-            // shows the next fragment where you can choose your friends
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
-            String location = binding.meetupLocationSpinner.getSelectedItem().toString();
-            String hour = binding.meetupTimePicker.getCurrentHour().toString();
-            String min = binding.meetupTimePicker.getCurrentMinute().toString();
-            String time = hour + ":" + min;
-            Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
-
-            createMeetupViewModel.setLocation(location);
-            createMeetupViewModel.setTime(time);
-            createMeetupViewModel.setIsPrivate(isPrivate);
-        });
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
     }
 
     private void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
-        createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location -> {
-            binding.meetupLocationSpinner.setSelection(adapter.getPosition(location));
-        });
+        createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location -> binding.meetupLocationSpinner.setSelection(adapter.getPosition(location)));
+        createMeetupViewModel.getMeetupTime().observe(getViewLifecycleOwner(), time -> setTimePickerTime(time));
+        createMeetupViewModel.getMeetupIsPrivate().observe(getViewLifecycleOwner(), isPrivate -> binding.meetupPrivateCheckBox.setChecked(isPrivate));
+    }
+
+    private void setTimePickerTime(String time) {
+        String[] timeArray = time.split(":");
+        sHour = Integer.parseInt(timeArray[0]);
+        sMin = Integer.parseInt(timeArray[1]);
+        binding.meetupTimePicker.setCurrentHour(sHour);
+        binding.meetupTimePicker.setCurrentMinute(sMin);
     }
 
 
@@ -87,7 +80,6 @@ public class MeetupFragment extends Fragment {
         createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
 
     }
-
 
     @Override
     public void onDestroyView() {
