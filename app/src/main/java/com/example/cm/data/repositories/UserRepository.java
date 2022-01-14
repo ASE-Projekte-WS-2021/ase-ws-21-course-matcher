@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class UserRepository extends Repository {
-
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
@@ -36,6 +35,12 @@ public class UserRepository extends Repository {
         return auth.getCurrentUser();
     }
 
+    /**
+     * Create a user
+     */
+    public void createUser(User user){
+        userCollection.document(user.getId()).set(user);
+    }
 
     /**
      * Get a list of all users

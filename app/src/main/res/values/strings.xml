@@ -58,6 +58,8 @@
     <string name="registerTitle">Register</string>
     <string name="registerEmailEditText">Email</string>
     <string name="registerPasswordEditText">Password</string>
+    <string name="registerFirstNameEditText">Firstname</string>
+    <string name="registerLastNameEditText">Lastname</string>
     <string name="registerLoginBtn">Register</string>
     <string name="registerRegisterBtn">Login</string>
     <string name="loginTitle">Login</string>
