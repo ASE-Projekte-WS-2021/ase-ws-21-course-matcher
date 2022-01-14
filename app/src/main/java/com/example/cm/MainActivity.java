@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
       AuthViewModel authViewModel = new ViewModelProvider(MainActivity.this).get(AuthViewModel.class);
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
-                Log.d(TAG, "Logged in with username: " + firebaseUser.getDisplayName());
+                Log.d(TAG, "Logged in with: " + firebaseUser.getEmail());
             }
         });
     }

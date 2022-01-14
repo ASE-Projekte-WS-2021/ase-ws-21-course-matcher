@@ -41,11 +41,13 @@ public class RegisterActivity extends AppCompatActivity {
         String userName = ((EditText) findViewById(R.id.registerUserNameEditText)).getText().toString();
         String email = ((EditText) findViewById(R.id.registerEmailEditText)).getText().toString();
         String password = ((EditText) findViewById(R.id.registerPasswordEditText)).getText().toString();
+        String firstName = ((EditText) findViewById(R.id.registerFirstNameEditText)).getText().toString();
+        String lastName = ((EditText) findViewById(R.id.registerLastNameEditText)).getText().toString();
 
-        if (userName.length() > 0 && email.length() > 0 && password.length() > 0) {
-            authViewModel.register(email, password, userName);
+        if (userName.length() > 0 && email.length() > 0 && password.length() > 0 && firstName.length() > 0 && lastName.length() > 0) {
+            authViewModel.register(email, password, userName, firstName, lastName);
         } else {
-            Toast.makeText(RegisterActivity.this, "Email Address and Password Must Be Entered", Toast.LENGTH_SHORT).show();
+            Toast.makeText(RegisterActivity.this, "All fields must be entered", Toast.LENGTH_SHORT).show();
         }
     }
 }
