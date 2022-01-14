@@ -1,10 +1,7 @@
 package com.example.cm.ui.auth;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.Application;
 import android.os.Build;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,8 +11,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.UserRepository;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
@@ -29,7 +26,7 @@ public class AuthViewModel extends AndroidViewModel {
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
     private final MutableLiveData<FirebaseUser> userLiveData;
-    private Application application;
+    private final Application application;
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
@@ -47,7 +44,6 @@ public class AuthViewModel extends AndroidViewModel {
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void register(String email, String password, String userName, String firstName, String lastName) {
         authRepository.register(email, password, userName).addOnCompleteListener(task -> {
-            Log.d(TAG, "oncomplete register");
             if (task.isSuccessful()) {
                 addUser(userName, firstName, lastName, email);
             } else {
@@ -57,7 +53,7 @@ public class AuthViewModel extends AndroidViewModel {
     }
 
     private void addUser(String username, String firstName, String lastName, String email) {
-        FirebaseUser authUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser authUser = authRepository.getCurrentUser();
         if (authUser != null) {
             User user = new User(authUser.getUid(), username, firstName, lastName, email, new ArrayList<String>());
             userRepository.createUser(user);

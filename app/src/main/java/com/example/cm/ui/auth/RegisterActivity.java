@@ -1,11 +1,8 @@
 package com.example.cm.ui.auth;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -41,7 +38,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void register(View view) {
-        Log.d(TAG, "register: hallo");
         String userName = ((EditText) findViewById(R.id.registerUserNameEditText)).getText().toString();
         String email = ((EditText) findViewById(R.id.registerEmailEditText)).getText().toString();
         String password = ((EditText) findViewById(R.id.registerPasswordEditText)).getText().toString();
@@ -49,10 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
         String lastName = ((EditText) findViewById(R.id.registerLastNameEditText)).getText().toString();
 
         if (userName.length() > 0 && email.length() > 0 && password.length() > 0 && firstName.length() > 0 && lastName.length() > 0) {
-            Log.d(TAG, "register: try to register");
             authViewModel.register(email, password, userName, firstName, lastName);
         } else {
-            Log.d(TAG, "register: hallo");
             Toast.makeText(RegisterActivity.this, "All fields must be entered", Toast.LENGTH_SHORT).show();
         }
     }

@@ -1,4 +1,4 @@
-package com.example.cm.ui.auth;
+package com.example.cm.data.repositories;
 
 import android.app.Application;
 import android.os.Build;
@@ -59,6 +59,10 @@ public class AuthRepository {
     public void logOut() {
         firebaseAuth.signOut();
         loggedOutLiveData.postValue(true);
+    }
+
+    public FirebaseUser getCurrentUser(){
+        return firebaseAuth.getCurrentUser();
     }
 
     public MutableLiveData<FirebaseUser> getUserLiveData() {
