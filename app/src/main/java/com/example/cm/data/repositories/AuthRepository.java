@@ -42,7 +42,6 @@ public class AuthRepository {
     public void login(String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(application.getMainExecutor(), task -> {
-                    Log.d(TAG, "login: " + task.getException());
                     if (task.isSuccessful()) {
                         userLiveData.postValue(firebaseAuth.getCurrentUser());
                     } else {
