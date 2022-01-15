@@ -31,11 +31,7 @@ public class NotificationRepository extends Repository {
      * Get all notifications for currently signed in user
      */
     public void getNotificationsForUser() {
-        String userId = "0egty7tFLQx39eqSgaAg";
-        if (auth.getCurrentUser() != null) {
-            userId = auth.getCurrentUser().getUid();
-        }
-
+        String userId = Objects.requireNonNull(auth.getCurrentUser()).getUid();
         notificationCollection.whereEqualTo("receiverId", userId).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
