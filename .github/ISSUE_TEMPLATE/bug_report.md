@@ -17,8 +17,8 @@ Kurze Beschreibung
 4. See error
 
 **Was sollte stattdessen passieren?**
-[_] Acceptance Criteria 1
-[_] Acceptance Criteria 2
-[_] Acceptance Criteria 2
+- [ ] Acceptance Criteria 1
+- [ ] Acceptance Criteria 2
+- [ ] Acceptance Criteria 3
 
 **optional: Screenshots**
