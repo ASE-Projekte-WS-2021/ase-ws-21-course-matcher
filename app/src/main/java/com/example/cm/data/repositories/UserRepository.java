@@ -37,7 +37,7 @@ public class UserRepository extends Repository {
     /**
      * Create a user
      */
-    public void createUser(User user){
+    public void createUser(User user) {
         userCollection.document(user.getId()).set(user);
     }
 

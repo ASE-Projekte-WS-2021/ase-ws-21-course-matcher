@@ -10,6 +10,7 @@ import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.NotificationRepository.OnNotificationRepositoryListener;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.data.repositories.UserRepository.OnUserRepositoryListener;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,9 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
     public SelectFriendsViewModel() {
         userRepository = new UserRepository(this);
         notificationRepository = new NotificationRepository(this);
+        FirebaseUser firebaseUser = userRepository.getCurrentUser();
+        userRepository.getUserByEmail(firebaseUser.getEmail());
         userRepository.getUsers();
-        userRepository.getUserById("0woDiT794x84PeYtXzjb");
     }
 
     public void setOnNotificationSentListener(OnNotificationSentListener listener) {
@@ -90,7 +92,7 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
             if (requestAlreadySent) continue;
             String fullName = user.getFirstName() + " " + user.getLastName();
             // TODO: Replace with actual user id of currently logged in user
-            Notification notification = new Notification("0woDiT794x84PeYtXzjb", fullName, userId, NotificationType.FRIEND_REQUEST);
+            Notification notification = new Notification(user.getId(), fullName, userId, NotificationType.FRIEND_REQUEST);
             notificationRepository.addNotification(notification);
             sentNotifications++;
         }
@@ -101,7 +103,14 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
 
     @Override
     public void onUsersRetrieved(List<User> users) {
-        this.users.postValue(users);
+        List<User> filteredUsers = new ArrayList<>();
+        for(User user : users) {
+            if (!user.getId().equals(this.user.getId())) {
+                filteredUsers.add(user);
+            }
+        }
+
+        this.users.postValue(filteredUsers);
     }
 
     @Override
