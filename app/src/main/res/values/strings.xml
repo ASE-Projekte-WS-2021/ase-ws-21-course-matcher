@@ -56,4 +56,8 @@
     <string name="loginRegisterBtn">Register</string>
     <string name="loginUserNameEditText">Username</string>
     <string name="btn_meetup_send_invite">Abschicken</string>
+    <!-- FriendsList -->
+    <string name="friendslist_tv_no_friends">Keine Freunde gefunden.</string>
+    <string name="frindslist_btn_find_friends">Freunde finden</string>
+
 </resources>

@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.data.repositories.UserRepository.OnUserRepositoryListener;
+import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsViewModel extends ViewModel implements OnUserRepositoryListener {
@@ -14,13 +16,13 @@ public class FriendsViewModel extends ViewModel implements OnUserRepositoryListe
     private final UserRepository userRepository;
 
     private final MutableLiveData<User> currentUser = new MutableLiveData<>();
-    private final MutableLiveData<List<User>> friends = new MutableLiveData<>();
+    private final MutableLiveData<List<User>> friends = new MutableLiveData<>(new ArrayList<>());
 
     public FriendsViewModel() {
         userRepository = new UserRepository(this);
         if (currentUser.getValue() == null) {
-            // TODO: Replace with firebase auth's getCurrentUser()
-            userRepository.getUserById("0woDiT794x84PeYtXzjb");
+            FirebaseUser firebaseUser = userRepository.getCurrentUser();
+            userRepository.getUserByEmail(firebaseUser.getEmail());
         }
     }
 
@@ -48,7 +50,8 @@ public class FriendsViewModel extends ViewModel implements OnUserRepositoryListe
     @Override
     public void onUserRetrieved(User user) {
         this.currentUser.postValue(user);
-        if(user.getFriends() != null){
+
+        if (user.getFriends() != null) {
             userRepository.getUsersByIds(user.getFriends());
         }
     }
