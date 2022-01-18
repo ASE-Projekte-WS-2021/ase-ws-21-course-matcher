@@ -44,6 +44,16 @@ public class NotificationRepository extends Repository {
         });
     }
 
+    public void getFriendRequestsOfSender(String senderId) {
+        notificationCollection.whereEqualTo("senderId", senderId).whereEqualTo("type", Notification.NotificationType.FRIEND_REQUEST).get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
+                listener.onNotificationsRetrieved(notifications);
+            }
+        });
+
+    }
+
     /**
      * Create a new notification
      *
