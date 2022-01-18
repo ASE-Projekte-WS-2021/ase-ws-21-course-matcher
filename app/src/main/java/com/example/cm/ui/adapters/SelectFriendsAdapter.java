@@ -1,7 +1,10 @@
 package com.example.cm.ui.adapters;
 
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -9,8 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.R;
+import com.example.cm.data.models.Notification;
 import com.example.cm.data.models.User;
-import com.example.cm.databinding.ItemSelectFriendBinding;
+import com.example.cm.databinding.ItemSendFriendRequestBinding;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,16 +24,17 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
 
     private final OnItemClickListener listener;
     private List<User> mUsers;
-    // Store a current selection of users in memory
-    private List<String> selectedUsers;
+    private List<Notification> sentFriendRequests;
 
 
     public SelectFriendsAdapter(SelectFriendsAdapter.OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void setSelectedUsers(List<String> selectedUsers) {
-        this.selectedUsers = selectedUsers;
+    public void setSentFriendRequests(List<Notification> sentFriendRequests) {
+        this.sentFriendRequests = sentFriendRequests;
+        Log.d("TAG", "setSentFriendRequests: " + sentFriendRequests.get(0).getSenderName());
+        listener.onFriendRequestsSet();
     }
 
     public void setUsers(List<User> newUsers) {
@@ -86,8 +92,7 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
-        ItemSelectFriendBinding binding = ItemSelectFriendBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
-
+        ItemSendFriendRequestBinding binding = ItemSendFriendRequestBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
         return new UserViewHolder(binding);
     }
 
@@ -100,9 +105,16 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
 
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
-
-        if (selectedUsers != null) {
-            holder.getCbSelect().setChecked(selectedUsers.contains(mUsers.get(position).getId()));
+        // Check whether a notification has been sent to this user
+        if(sentFriendRequests == null) {
+            return;
+        }
+        for (Notification notification : sentFriendRequests) {
+            if (notification.getReceiverId().equals(mUsers.get(position).getId())) {
+                Log.d("TAG", "Changing background color: ");
+                holder.getFriendRequestButton().setText(R.string.btn_send_friend_request_pending);
+                holder.getFriendRequestButton().setBackgroundColor(Color.parseColor("#FFD3D3D3"));
+            }
         }
     }
 
@@ -116,9 +128,11 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
     }
 
     public interface OnItemClickListener {
-        void onCheckBoxClicked(String id);
+        void onFriendRequestButtonClicked(String receiverId);
 
         void onItemClicked(String id);
+
+        void onFriendRequestsSet();
     }
 
 
@@ -127,9 +141,9 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
      */
     public class UserViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemSelectFriendBinding binding;
+        private final ItemSendFriendRequestBinding binding;
 
-        public UserViewHolder(ItemSelectFriendBinding binding) {
+        public UserViewHolder(ItemSendFriendRequestBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             setListeners();
@@ -140,7 +154,7 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
          */
         private void setListeners() {
             binding.getRoot().setOnClickListener(v -> onItemClicked());
-            binding.cbSelect.setOnClickListener(v -> onCheckBoxClicked());
+            binding.btnSendFriendRequest.setOnClickListener(v -> onButtonClicked());
         }
 
         private void onItemClicked() {
@@ -149,10 +163,10 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
             listener.onItemClicked(mUsers.get(position).getId());
         }
 
-        private void onCheckBoxClicked() {
+        private void onButtonClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onCheckBoxClicked(mUsers.get(position).getId());
+            listener.onFriendRequestButtonClicked(mUsers.get(position).getId());
         }
 
 
@@ -167,8 +181,8 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
             return binding.tvUsername;
         }
 
-        public CheckBox getCbSelect() {
-            return binding.cbSelect;
+        public Button getFriendRequestButton() {
+            return binding.btnSendFriendRequest;
         }
     }
 }

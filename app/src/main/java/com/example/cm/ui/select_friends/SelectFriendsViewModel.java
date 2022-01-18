@@ -1,5 +1,7 @@
 package com.example.cm.ui.select_friends;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -20,10 +22,9 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     public MutableLiveData<List<User>> users = new MutableLiveData<>();
-    public MutableLiveData<List<Notification>> notifications = new MutableLiveData<>();
-    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+    public MutableLiveData<List<Notification>> sentFriendRequests = new MutableLiveData<>();
     private OnNotificationSentListener notificationSentListener;
-    private User user;
+    private User currentUser;
 
     public SelectFriendsViewModel() {
         userRepository = new UserRepository(this);
@@ -41,23 +42,8 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         return users;
     }
 
-    public MutableLiveData<List<String>> getSelectedUsers() {
-        return selectedUsers;
-    }
-
-    public void toggleSelectUser(String id) {
-        List<String> currentlySelectedUsers = new ArrayList<>();
-
-        if (selectedUsers.getValue() != null) {
-            currentlySelectedUsers = selectedUsers.getValue();
-        }
-
-        if (currentlySelectedUsers.contains(id)) {
-            currentlySelectedUsers.remove(id);
-        } else {
-            currentlySelectedUsers.add(id);
-        }
-        selectedUsers.postValue(currentlySelectedUsers);
+    public MutableLiveData<List<Notification>> getSentFriendRequests() {
+        return sentFriendRequests;
     }
 
     public void searchUsers(String query) {
@@ -68,44 +54,20 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         userRepository.getUsersByUsername(query);
     }
 
-    public void sendFriendRequest() {
-        // Check if users have been selected
-        if (selectedUsers.getValue() == null) return;
-        // Get a list of sent notifications by the current user
-        notificationRepository.getNotificationsForUser();
+    public void sendFriendRequest(String receiverId) {
+        // Create a new notification
+        String fullName = currentUser.getFirstName() + " " + currentUser.getLastName();
 
-        int sentNotifications = 0;
-
-        for (String userId : selectedUsers.getValue()) {
-            boolean requestAlreadySent = false;
-
-            if (notifications.getValue() == null) return;
-
-            for (Notification notification : notifications.getValue()) {
-                // If a user has already received a friend request from the current user
-                if (notification.getReceiverId().equals(userId) && notification.getType().equals(NotificationType.FRIEND_REQUEST)) {
-                    requestAlreadySent = true;
-                    break;
-                }
-            }
-
-            if (requestAlreadySent) continue;
-            String fullName = user.getFirstName() + " " + user.getLastName();
-            // TODO: Replace with actual user id of currently logged in user
-            Notification notification = new Notification(user.getId(), fullName, userId, NotificationType.FRIEND_REQUEST);
-            notificationRepository.addNotification(notification);
-            sentNotifications++;
-        }
-        if (sentNotifications > 0) {
-            notificationSentListener.onNotificationSent();
-        }
+        Notification notification = new Notification(currentUser.getId(), fullName, receiverId, NotificationType.FRIEND_REQUEST);
+        notificationRepository.addNotification(notification);
+        notificationSentListener.onNotificationSent();
     }
 
     @Override
     public void onUsersRetrieved(List<User> users) {
         List<User> filteredUsers = new ArrayList<>();
-        for(User user : users) {
-            if (!user.getId().equals(this.user.getId())) {
+        for (User user : users) {
+            if (!user.getId().equals(this.currentUser.getId())) {
                 filteredUsers.add(user);
             }
         }
@@ -115,12 +77,18 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
 
     @Override
     public void onUserRetrieved(User user) {
-        this.user = user;
+        this.currentUser = user;
+        notificationRepository.getFriendRequestsOfSender(user.getId());
     }
 
     @Override
     public void onNotificationsRetrieved(List<Notification> notifications) {
-        this.notifications.postValue(notifications);
+        this.sentFriendRequests.postValue(notifications);
+
+        for (Notification notification : notifications) {
+            Log.d("SelectFriendsViewModel", "Notification: " + notification.getSenderId() + " : " + notification.getType());
+        }
+
     }
 
     public interface OnNotificationSentListener {
