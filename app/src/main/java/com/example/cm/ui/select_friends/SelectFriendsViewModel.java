@@ -54,13 +54,34 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         userRepository.getUsersByUsername(query);
     }
 
-    public void sendFriendRequest(String receiverId) {
-        // Create a new notification
-        String fullName = currentUser.getFirstName() + " " + currentUser.getLastName();
+    public void sendOrDeleteFriendRequest(String receiverId) {
+        if (hasAlreadyReceivedFriendRequest(receiverId, currentUser.getId())) {
 
-        Notification notification = new Notification(currentUser.getId(), fullName, receiverId, NotificationType.FRIEND_REQUEST);
+            notificationRepository.deleteNotification(receiverId, currentUser.getId(), NotificationType.FRIEND_REQUEST);
+            notificationSentListener.onNotificationDeleted();
+            return;
+        }
+
+        // Create a new notification
+        Notification notification = new Notification(currentUser.getId(), currentUser.getFullName(), receiverId, NotificationType.FRIEND_REQUEST);
         notificationRepository.addNotification(notification);
         notificationSentListener.onNotificationSent();
+    }
+
+
+    private Boolean hasAlreadyReceivedFriendRequest(String receiverId, String senderId) {
+        if(sentFriendRequests.getValue() == null) {
+            return false;
+        }
+
+        for (int i = 0; i < sentFriendRequests.getValue().size(); i++) {
+            Notification notification = sentFriendRequests.getValue().get(i);
+            if (notification.getReceiverId().equals(receiverId) && notification.getSenderId().equals(senderId) && notification.getType().equals(NotificationType.FRIEND_REQUEST)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -84,14 +105,10 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
     @Override
     public void onNotificationsRetrieved(List<Notification> notifications) {
         this.sentFriendRequests.postValue(notifications);
-
-        for (Notification notification : notifications) {
-            Log.d("SelectFriendsViewModel", "Notification: " + notification.getSenderId() + " : " + notification.getType());
-        }
-
     }
 
     public interface OnNotificationSentListener {
         void onNotificationSent();
+        void onNotificationDeleted();
     }
 }

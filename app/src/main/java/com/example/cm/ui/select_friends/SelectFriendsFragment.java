@@ -1,6 +1,7 @@
 package com.example.cm.ui.select_friends;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +48,11 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     private void initViewModel() {
         selectFriendsViewModel = new ViewModelProvider(this).get(SelectFriendsViewModel.class);
         selectFriendsViewModel.setOnNotificationSentListener(this);
+        observeSentFriendRequests();
 
+    }
+
+    private void observeSentFriendRequests() {
         selectFriendsViewModel.getSentFriendRequests().observe(getViewLifecycleOwner(), sentFriendRequests -> {
             if (sentFriendRequests == null) {
                 return;
@@ -72,18 +77,25 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     }
 
     @Override
-    public void onFriendRequestButtonClicked(String receiverId) {
-        selectFriendsViewModel.sendFriendRequest(receiverId);
+    public void onFriendRequestButtonClicked(String receiverId, int position) {
+        selectFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
     }
 
     @Override
     public void onItemClicked(String id) {
         // TODO: Open profile of clicked user
+        Log.d("TAG", "onItemClicked: " + id);
     }
 
     @Override
     public void onNotificationSent() {
-        Snackbar.make(binding.getRoot(), "Anfragen wurden verschickt", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), "Anfrage wurde verschickt", Snackbar.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onNotificationDeleted() {
+        Snackbar.make(binding.getRoot(), "Anfrage wurde entfernt", Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
