@@ -51,7 +51,20 @@ public class NotificationRepository extends Repository {
                 listener.onNotificationsRetrieved(notifications);
             }
         });
+    }
 
+    public void deleteNotification(String receiverId, String senderId, Notification.NotificationType type) {
+        notificationCollection
+                .whereEqualTo("receiverId", receiverId).whereEqualTo("senderId", senderId)
+                .whereEqualTo("type", type).get()
+                .addOnCompleteListener(executorService, task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult() == null || task.getResult().getDocuments().get(0) == null) {
+                            return;
+                        }
+                        task.getResult().getDocuments().get(0).getReference().delete();
+                    }
+                });
     }
 
     /**
