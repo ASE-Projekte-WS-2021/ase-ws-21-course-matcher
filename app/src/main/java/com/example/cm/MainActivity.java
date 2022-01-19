@@ -13,6 +13,8 @@ import com.example.cm.databinding.ActivityMainBinding;
 import com.example.cm.ui.auth.AuthViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import timber.log.Timber;
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private ActivityMainBinding binding;
@@ -21,19 +23,25 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
+        initTimberLogging();
         initViewModel();
         setupBottomNavigationBar();
+    }
+
+    private void initTimberLogging() {
+        if(BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
     }
   
     private void initViewModel() {
       AuthViewModel authViewModel = new ViewModelProvider(MainActivity.this).get(AuthViewModel.class);
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
-                Log.d(TAG, "Logged in with: " + firebaseUser.getEmail());
+                Timber.d("Logged in with email: %s", firebaseUser.getEmail());
             }
         });
     }
