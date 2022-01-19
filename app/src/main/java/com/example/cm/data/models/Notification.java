@@ -1,5 +1,9 @@
 package com.example.cm.data.models;
 
+import android.util.Log;
+
+import com.google.firebase.firestore.Exclude;
+
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -69,6 +73,7 @@ public class Notification {
         return createdAt;
     }
 
+    @Exclude
     public String getCreationTimeAgo(){
         String result = "vor ";
         Date now = new Date();
