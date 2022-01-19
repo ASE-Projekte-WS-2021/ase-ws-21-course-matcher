@@ -37,7 +37,7 @@ public class UserRepository extends Repository {
     /**
      * Create a user
      */
-    public void createUser(User user){
+    public void createUser(User user) {
         userCollection.document(user.getId()).set(user);
     }
 
@@ -57,6 +57,15 @@ public class UserRepository extends Repository {
         userCollection.document(userId).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 User user = snapshotToUser(Objects.requireNonNull(task.getResult()));
+                listener.onUserRetrieved(user);
+            }
+        });
+    }
+
+    public void getUserByEmail(String email) {
+        userCollection.whereEqualTo("email", email).get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                User user = snapshotToUser(Objects.requireNonNull(task.getResult()).getDocuments().get(0));
                 listener.onUserRetrieved(user);
             }
         });
@@ -92,7 +101,6 @@ public class UserRepository extends Repository {
      * @param friendsIds List of ids of friends
      * @param query      String to search for
      */
-    //TODO: Fix this method to only retrieve the friends of the current user
     public void getFriendsByUsername(List<String> friendsIds, String query) {
         userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
                 .get().addOnCompleteListener(executorService, task -> {

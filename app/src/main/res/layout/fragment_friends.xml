@@ -59,6 +59,31 @@
         android:layout_below="@+id/searchBarWrapper"
         />
 
+    <LinearLayout
+        android:id="@+id/noFriendsWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/friendslist_tv_no_friends"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"
+        />
+        <Button
+            android:id="@+id/btnAddFriends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/frindslist_btn_find_friends"
+            />
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/loadingCircle"
         style="?android:attr/progressBarStyle"

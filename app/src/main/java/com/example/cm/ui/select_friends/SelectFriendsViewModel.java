@@ -1,5 +1,7 @@
 package com.example.cm.ui.select_friends;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -10,6 +12,7 @@ import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.NotificationRepository.OnNotificationRepositoryListener;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.data.repositories.UserRepository.OnUserRepositoryListener;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +22,16 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     public MutableLiveData<List<User>> users = new MutableLiveData<>();
-    public MutableLiveData<List<Notification>> notifications = new MutableLiveData<>();
-    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+    public MutableLiveData<List<Notification>> sentFriendRequests = new MutableLiveData<>();
     private OnNotificationSentListener notificationSentListener;
-    private User user;
+    private User currentUser;
 
     public SelectFriendsViewModel() {
         userRepository = new UserRepository(this);
         notificationRepository = new NotificationRepository(this);
+        FirebaseUser firebaseUser = userRepository.getCurrentUser();
+        userRepository.getUserByEmail(firebaseUser.getEmail());
         userRepository.getUsers();
-        userRepository.getUserById("0woDiT794x84PeYtXzjb");
     }
 
     public void setOnNotificationSentListener(OnNotificationSentListener listener) {
@@ -39,23 +42,8 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         return users;
     }
 
-    public MutableLiveData<List<String>> getSelectedUsers() {
-        return selectedUsers;
-    }
-
-    public void toggleSelectUser(String id) {
-        List<String> currentlySelectedUsers = new ArrayList<>();
-
-        if (selectedUsers.getValue() != null) {
-            currentlySelectedUsers = selectedUsers.getValue();
-        }
-
-        if (currentlySelectedUsers.contains(id)) {
-            currentlySelectedUsers.remove(id);
-        } else {
-            currentlySelectedUsers.add(id);
-        }
-        selectedUsers.postValue(currentlySelectedUsers);
+    public MutableLiveData<List<Notification>> getSentFriendRequests() {
+        return sentFriendRequests;
     }
 
     public void searchUsers(String query) {
@@ -66,55 +54,61 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         userRepository.getUsersByUsername(query);
     }
 
-    public void sendFriendRequest() {
-        // Check if users have been selected
-        if (selectedUsers.getValue() == null) return;
-        // Get a list of sent notifications by the current user
-        notificationRepository.getNotificationsForUser();
+    public void sendOrDeleteFriendRequest(String receiverId) {
+        if (hasAlreadyReceivedFriendRequest(receiverId, currentUser.getId())) {
 
-        int sentNotifications = 0;
+            notificationRepository.deleteNotification(receiverId, currentUser.getId(), NotificationType.FRIEND_REQUEST);
+            notificationSentListener.onNotificationDeleted();
+            return;
+        }
 
-        for (String userId : selectedUsers.getValue()) {
-            boolean requestAlreadySent = false;
+        // Create a new notification
+        Notification notification = new Notification(currentUser.getId(), currentUser.getFullName(), receiverId, NotificationType.FRIEND_REQUEST);
+        notificationRepository.addNotification(notification);
+        notificationSentListener.onNotificationSent();
+    }
 
-            if (notifications.getValue() == null) return;
 
-            for (Notification notification : notifications.getValue()) {
-                // If a user has already received a friend request from the current user
-                if (notification.getReceiverId().equals(userId) && notification.getType().equals(NotificationType.FRIEND_REQUEST)) {
-                    requestAlreadySent = true;
-                    break;
-                }
+    private Boolean hasAlreadyReceivedFriendRequest(String receiverId, String senderId) {
+        if(sentFriendRequests.getValue() == null) {
+            return false;
+        }
+
+        for (int i = 0; i < sentFriendRequests.getValue().size(); i++) {
+            Notification notification = sentFriendRequests.getValue().get(i);
+            if (notification.getReceiverId().equals(receiverId) && notification.getSenderId().equals(senderId) && notification.getType().equals(NotificationType.FRIEND_REQUEST)) {
+                return true;
             }
+        }
 
-            if (requestAlreadySent) continue;
-            String fullName = user.getFirstName() + " " + user.getLastName();
-            // TODO: Replace with actual user id of currently logged in user
-            Notification notification = new Notification("0woDiT794x84PeYtXzjb", fullName, userId, NotificationType.FRIEND_REQUEST);
-            notificationRepository.addNotification(notification);
-            sentNotifications++;
-        }
-        if (sentNotifications > 0) {
-            notificationSentListener.onNotificationSent();
-        }
+        return false;
     }
 
     @Override
     public void onUsersRetrieved(List<User> users) {
-        this.users.postValue(users);
+        List<User> filteredUsers = new ArrayList<>();
+        for (User user : users) {
+            if (!user.getId().equals(this.currentUser.getId())) {
+                filteredUsers.add(user);
+            }
+        }
+
+        this.users.postValue(filteredUsers);
     }
 
     @Override
     public void onUserRetrieved(User user) {
-        this.user = user;
+        this.currentUser = user;
+        notificationRepository.getFriendRequestsOfSender(user.getId());
     }
 
     @Override
     public void onNotificationsRetrieved(List<Notification> notifications) {
-        this.notifications.postValue(notifications);
+        this.sentFriendRequests.postValue(notifications);
     }
 
     public interface OnNotificationSentListener {
         void onNotificationSent();
+        void onNotificationDeleted();
     }
 }
