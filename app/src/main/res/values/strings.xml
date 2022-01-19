@@ -56,4 +56,5 @@
     <string name="loginRegisterBtn">Register</string>
     <string name="loginUserNameEditText">Username</string>
     <string name="btn_meetup_send_invite">Abschicken</string>
+    <string name="friends_profile">Profil</string>
 </resources>
