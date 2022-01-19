@@ -1,5 +1,6 @@
 package com.example.cm.ui.friends;
 
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,12 +12,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentFriendsBinding;
 import com.example.cm.ui.adapters.FriendsListAdapter;
 import com.example.cm.ui.adapters.FriendsListAdapter.OnItemClickListener;
+
+
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 
@@ -93,6 +97,9 @@ public class FriendsFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onItemClicked(String id) {
-        // TODO: Open profile of clicked user
+
+        Bundle bundle = new Bundle();
+        bundle.putString("userId", id);
+        navigator.getNavController().navigate(R.id.fromFriendsToProfile, bundle);
     }
 }

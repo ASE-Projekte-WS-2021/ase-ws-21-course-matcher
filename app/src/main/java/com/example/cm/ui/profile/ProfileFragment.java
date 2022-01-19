@@ -50,8 +50,9 @@ public class ProfileFragment extends Fragment {
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         profileViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
-            if(currentUser == null) return;
+            if (currentUser == null) return;
             binding.tvName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
+            binding.tvUsername.setText(currentUser.getUsername());
         });
     }
 
@@ -59,21 +60,17 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         Bundle bundle = this.getArguments();
-        if(bundle != null) {
+        if (bundle != null) {
             if (bundle.containsKey("userId")) {
 
+                binding.btnToFriendsList.setVisibility(View.GONE);
                 String profileId = bundle.getString("userId");
                 Log.i("userID", "profileId: " + profileId);
-               profileViewModel.getUserById(profileId);
+                profileViewModel.getUserById(profileId);
 
             }
         }
-
-
     }
-
-
-
 
 
     @Override
