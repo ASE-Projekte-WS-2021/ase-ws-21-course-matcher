@@ -5,6 +5,11 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
+    <action
+        android:id="@+id/action_global_navigate_to_profile"
+        app:destination="@id/navigation_profile"
+        />
+
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.cm.ui.home.HomeFragment"
@@ -69,6 +74,7 @@
             app:destination="@id/navigation_friends"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim" />
+
     </fragment>
 
 
@@ -81,6 +87,10 @@
         <action
             android:id="@+id/navigateToSelectFriends"
             app:destination="@id/navigation_select_friends" />
+        <action
+            android:id="@+id/fromFriendsToProfile"
+            app:destination="@id/navigation_profile" />
+
     </fragment>
 
     <fragment
@@ -88,5 +98,11 @@
         android:name="com.example.cm.ui.select_friends.SelectFriendsFragment"
         android:label="@string/title_find_friends"
 
-        tools:layout="@layout/fragment_select_friends" />
+        tools:layout="@layout/fragment_select_friends" >
+        <action
+            android:id="@+id/fromSelectFriendsToProfile"
+            app:destination="@id/navigation_profile" />
+    </fragment>
+
+
 </navigation>
