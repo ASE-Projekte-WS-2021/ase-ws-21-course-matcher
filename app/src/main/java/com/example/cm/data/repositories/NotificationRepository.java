@@ -31,7 +31,7 @@ public class NotificationRepository extends Repository {
      * Get all notifications for currently signed in user
      */
     public void getNotificationsForUser() {
-        String userId = "0egty7tFLQx39eqSgaAg";
+        String userId = "";
         if (auth.getCurrentUser() != null) {
             userId = auth.getCurrentUser().getUid();
         }
