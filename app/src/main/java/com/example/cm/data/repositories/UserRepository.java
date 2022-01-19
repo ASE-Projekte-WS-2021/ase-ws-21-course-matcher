@@ -149,7 +149,6 @@ public class UserRepository extends Repository {
         user.setFirstName(document.getString("firstName"));
         user.setLastName(document.getString("lastName"));
         user.setFriends(Utils.castList(document.get("friends"), String.class));
-
         return user;
     }
 

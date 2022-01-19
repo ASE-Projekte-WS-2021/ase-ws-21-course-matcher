@@ -113,6 +113,7 @@ public class NotificationRepository extends Repository {
         notification.setSenderName(document.getString("senderName"));
         notification.setReceiverId(document.getString("receiverId"));
         notification.setCreatedAt(document.getDate("createdAt"));
+        notification.setState(document.get("state", Notification.NotificationState.class));
         return notification;
     }
 

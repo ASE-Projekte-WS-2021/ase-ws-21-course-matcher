@@ -52,6 +52,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                 R.string.friend_request_title : R.string.meetup_request_title;
         String user = "@" + notification.getSenderName();
         boolean isAccepted = notification.getState() == Notification.NotificationState.NOTIFICATION_ACCEPTED;
+        Log.e("STATE", notification.getState()+"");
         int content = isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text;
         String date = notification.getCreationTimeAgo();
 
