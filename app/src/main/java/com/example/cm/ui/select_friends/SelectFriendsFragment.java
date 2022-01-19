@@ -1,6 +1,7 @@
 package com.example.cm.ui.select_friends;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,35 +43,23 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
 
     private void initListener() {
         binding.btnSearch.setOnClickListener(v -> onSearchButtonClicked());
-        binding.btnSendFriendRequest.setOnClickListener(v -> onSendRequestButtonClicked());
     }
 
     private void initViewModel() {
         selectFriendsViewModel = new ViewModelProvider(this).get(SelectFriendsViewModel.class);
         selectFriendsViewModel.setOnNotificationSentListener(this);
+        observeSentFriendRequests();
 
-        selectFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-            if (users == null) {
-                return;
-            }
-
-            selectFriendsAdapter.setUsers(users);
-            binding.loadingCircle.setVisibility(View.GONE);
-            binding.rvUserList.setVisibility(View.VISIBLE);
-        });
-
-        selectFriendsViewModel.getSelectedUsers().observe(getViewLifecycleOwner(), selectedUsers -> {
-            if (selectedUsers == null) {
-                return;
-            }
-
-            showFriendRequestButton(selectedUsers.size() > 0);
-            selectFriendsAdapter.setSelectedUsers(selectedUsers);
-        });
     }
 
-    private void onSendRequestButtonClicked() {
-        selectFriendsViewModel.sendFriendRequest();
+    private void observeSentFriendRequests() {
+        selectFriendsViewModel.getSentFriendRequests().observe(getViewLifecycleOwner(), sentFriendRequests -> {
+            if (sentFriendRequests == null) {
+                return;
+            }
+
+            selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
+        });
     }
 
     private void onSearchButtonClicked() {
@@ -78,14 +67,6 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
         selectFriendsViewModel.searchUsers(query);
 
         Utils.hideKeyboard(requireActivity(), binding.getRoot());
-    }
-
-    private void showFriendRequestButton(boolean showButton) {
-        if (showButton) {
-            binding.btnSendFriendRequest.setVisibility(View.VISIBLE);
-            return;
-        }
-        binding.btnSendFriendRequest.setVisibility(View.GONE);
     }
 
 
@@ -96,17 +77,37 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     }
 
     @Override
-    public void onCheckBoxClicked(String id) {
-        selectFriendsViewModel.toggleSelectUser(id);
+    public void onFriendRequestButtonClicked(String receiverId, int position) {
+        selectFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
     }
 
     @Override
     public void onItemClicked(String id) {
         // TODO: Open profile of clicked user
+        Log.d("TAG", "onItemClicked: " + id);
     }
 
     @Override
     public void onNotificationSent() {
-        Snackbar.make(binding.getRoot(), "Anfragen wurden verschickt", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), "Anfrage wurde verschickt", Snackbar.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onNotificationDeleted() {
+        Snackbar.make(binding.getRoot(), "Anfrage wurde entfernt", Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFriendRequestsSet() {
+        selectFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+            if (users == null) {
+                return;
+            }
+
+            selectFriendsAdapter.setUsers(users);
+            binding.loadingCircle.setVisibility(View.GONE);
+            binding.rvUserList.setVisibility(View.VISIBLE);
+        });
     }
 }

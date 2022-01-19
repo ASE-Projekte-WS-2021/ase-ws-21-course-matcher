@@ -1,6 +1,7 @@
 package com.example.cm.ui.friends;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,17 +50,19 @@ public class FriendsFragment extends Fragment implements OnItemClickListener {
 
     private void initListener() {
         binding.btnSearch.setOnClickListener(v -> onSearchButtonClicked());
+        binding.btnAddFriends.setOnClickListener(v -> navigator.navigateToSelectFriends());
     }
 
     private void initViewModel() {
         friendsViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
 
         friendsViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
-            if (friends == null) {
-                return;
-            }
-            friendsListAdapter.setFriends(friends);
             binding.loadingCircle.setVisibility(View.GONE);
+
+            if (friends == null) return;
+            if (friends.size() == 0) binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+
+            friendsListAdapter.setFriends(friends);
             binding.rvUserList.setVisibility(View.VISIBLE);
         });
     }

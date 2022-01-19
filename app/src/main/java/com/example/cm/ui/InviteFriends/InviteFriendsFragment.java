@@ -121,6 +121,11 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         Snackbar.make(binding.getRoot(), "Anfragen wurden verschickt", Snackbar.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onNotificationDeleted() {
+
+    }
+
 
     @Override
     public void onCheckBoxClicked(String id) {

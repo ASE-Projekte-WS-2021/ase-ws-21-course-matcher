@@ -1,16 +1,14 @@
 package com.example.cm.ui;
 
-import android.app.Notification;
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.User;
-import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.data.repositories.MeetupRepository;
+import com.example.cm.data.repositories.UserRepository;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +21,15 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
-
     public MutableLiveData<List<User>> users = new MutableLiveData<>();
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+    private User user;
 
     public CreateMeetupViewModel() {
         this.meetupRepository = new MeetupRepository();
         userRepository = new UserRepository(this);
+        FirebaseUser firebaseUser = userRepository.getCurrentUser();
+        userRepository.getUserByEmail(firebaseUser.getEmail());
         userRepository.getUsers();
     }
 
@@ -100,12 +100,19 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
 
     @Override
     public void onUsersRetrieved(List<User> users) {
-        this.users.postValue(users);
+        List<User> filteredUsers = new ArrayList<>();
+        for (User user : users) {
+            if (!user.getId().equals(this.user.getId())) {
+                filteredUsers.add(user);
+            }
+        }
+
+        this.users.postValue(filteredUsers);
     }
 
     @Override
     public void onUserRetrieved(User user) {
-
+        this.user = user;
     }
 
 }

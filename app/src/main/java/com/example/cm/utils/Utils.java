@@ -8,11 +8,14 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.example.cm.R;
+import com.example.cm.data.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Utils {
 
@@ -58,6 +61,46 @@ public class Utils {
             return result;
         }
         return null;
+    }
+
+
+    /**
+     * Calculate the difference between two lists and return the result
+     * Also used to animate the changes
+     * From https://stackoverflow.com/questions/49588377/how-to-set-adapter-in-mvvm-using-databinding
+     *
+     * @param oldUsers The old list of users
+     * @param newUsers The new list of users
+     * @return The result of the calculation
+     */
+    public static DiffUtil.DiffResult calculateDiff(List<User> oldUsers, List<User> newUsers) {
+        return DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return oldUsers.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newUsers.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return Objects.equals(oldUsers.get(oldItemPosition).getId(), newUsers.get(newItemPosition).getId());
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                User newUser = newUsers.get(newItemPosition);
+                User oldUser = oldUsers.get(oldItemPosition);
+
+                return Objects.equals(newUser.getId(), oldUser.getId())
+                        && Objects.equals(newUser.getFirstName(), oldUser.getFirstName())
+                        && Objects.equals(newUser.getLastName(), oldUser.getLastName())
+                        && Objects.equals(newUser.getUsername(), oldUser.getUsername());
+            }
+        });
     }
 
 
