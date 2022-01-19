@@ -39,7 +39,6 @@
 
     </fragment>
 
-    <!--- TODO: CHANGE THE NAMES!!!!!! -->
     <fragment
         android:id="@+id/navigation_invite_friends"
         android:name="com.example.cm.ui.InviteFriends.InviteFriendsFragment"

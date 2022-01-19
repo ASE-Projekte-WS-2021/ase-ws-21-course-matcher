@@ -36,7 +36,6 @@ public class ProfileViewModel extends ViewModel implements UserRepository.OnUser
 
     @Override
     public void onUserRetrieved(User user) {
-        Log.d(TAG, "onUserRetrieved: " +  user.getLastName());
         currentUser.postValue(user);
     }
 }

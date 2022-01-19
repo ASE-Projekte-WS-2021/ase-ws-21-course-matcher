@@ -7,28 +7,20 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentSelectFriendsBinding;
 import com.example.cm.ui.adapters.SelectFriendsAdapter;
 import com.example.cm.ui.adapters.SelectFriendsAdapter.OnItemClickListener;
-import com.example.cm.ui.profile.ProfileFragment;
-import com.example.cm.ui.profile.ProfileFragmentArgs;
 import com.example.cm.ui.select_friends.SelectFriendsViewModel.OnNotificationSentListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Objects;
 
 public class SelectFriendsFragment extends Fragment implements OnItemClickListener, OnNotificationSentListener {
 
@@ -37,7 +29,6 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     private SelectFriendsAdapter selectFriendsAdapter;
     private OnItemClickListener onItemClickListener;
     private Navigator navigator;
-    private  FragmentTransaction fragmentTransaction;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSelectFriendsBinding.inflate(inflater, container, false);
