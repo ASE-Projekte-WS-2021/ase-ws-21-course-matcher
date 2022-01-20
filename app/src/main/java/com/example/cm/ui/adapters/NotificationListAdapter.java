@@ -13,9 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
+import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 import com.example.cm.databinding.ItemNotificationBinding;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -48,13 +51,24 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     @Override
     public void onBindViewHolder(@NonNull NotificationListAdapter.NotificationViewHolder holder, int position) {
         Notification notification = mNotifications.get(position);
-        int title = notification.getType() == Notification.NotificationType.FRIEND_REQUEST ?
-                R.string.friend_request_title : R.string.meetup_request_title;
+
         String user = "@" + notification.getSenderName();
         boolean isAccepted = notification.getState() == Notification.NotificationState.NOTIFICATION_ACCEPTED;
-        Log.e("STATE", notification.getState()+"");
-        int content = isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text;
         String date = notification.getCreationTimeAgo();
+
+        int content = 0;
+        int title = 0;
+        if (notification.getType() == Notification.NotificationType.FRIEND_REQUEST){
+            title = R.string.friend_request_title;
+            content = isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text;
+        } else if (notification.getType() == Notification.NotificationType.MEETUP_REQUEST){
+            title = R.string.meetup_request_title;
+            content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_text;
+            String location = ((MeetupNotification) notification).getLocation();
+            String meetupTime = ((MeetupNotification) notification).getMeetupAt();
+            holder.getTvLocation().setText(location);
+            holder.getTvMeetupTime().setText(meetupTime);
+        }
 
         holder.getTvTitle().setText(title);
         holder.getTvSender().setText(user);
@@ -150,6 +164,14 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
         public Button getBtnDecline(){
             return binding.notificationDeclineButton;
+        }
+
+        public TextView getTvLocation(){
+            return binding.notificationMeetupLocationTextView;
+        }
+
+        public TextView getTvMeetupTime(){
+            return binding.notificationMeetupTimeTextView;
         }
     }
 }

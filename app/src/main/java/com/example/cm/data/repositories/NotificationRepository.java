@@ -1,6 +1,8 @@
 package com.example.cm.data.repositories;
 
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.models.FriendsNotification;
+import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -106,16 +108,25 @@ public class NotificationRepository extends Repository {
      * @return Returns a notification
      */
     public Notification snapshotToNotification(DocumentSnapshot document) {
-        Notification notification = new Notification();
-        notification.setId(document.getId());
-        notification.setType(document.get("type", Notification.NotificationType.class));
-        notification.setSenderId(document.getString("senderId"));
-        notification.setSenderName(document.getString("senderName"));
-        notification.setReceiverId(document.getString("receiverId"));
-        notification.setCreatedAt(document.getDate("createdAt"));
-        notification.setState(document.get("state", Notification.NotificationState.class));
+        Notification notification = null;
+        if (document.get("type", Notification.NotificationType.class) == Notification.NotificationType.FRIEND_REQUEST){
+            notification = new FriendsNotification();
+        } else if (document.get("type", Notification.NotificationType.class) == Notification.NotificationType.MEETUP_REQUEST){
+            notification = new MeetupNotification();
+            notification.setReceiverId(document.getString("location"));
+            notification.setReceiverId(document.getString("meetupTime"));
+        }
+        if (notification != null){
+            notification.setId(document.getId());
+            notification.setSenderId(document.getString("senderId"));
+            notification.setSenderName(document.getString("senderName"));
+            notification.setReceiverId(document.getString("receiverId"));
+            notification.setCreatedAt(document.getDate("createdAt"));
+            notification.setState(document.get("state", Notification.NotificationState.class));
+        }
         return notification;
     }
+
 
     /**
      * Set state of notification

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
@@ -96,11 +97,14 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
         // Create notification for each invited user
         // userRepository.getUserById(userRepository.getCurrentUser().getUid());
         if(selectedUsers.getValue() != null) {
+            //ArrayList<Notification> notificationsToSend = new ArrayList<>();
             for(String invitedFriendId : selectedUsers.getValue()){
-                Notification notification = new Notification(
+                MeetupNotification notification = new MeetupNotification(
                         userRepository.getCurrentUser().getUid(),
-                        currentUser.getFullName(), invitedFriendId,
-                        Notification.NotificationType.MEETUP_REQUEST);
+                        currentUser.getFullName(),
+                        invitedFriendId,
+                        meetupLocation.getValue(),
+                        meetupTime.getValue());
                 notificationRepository.addNotification(notification);
             }
         }

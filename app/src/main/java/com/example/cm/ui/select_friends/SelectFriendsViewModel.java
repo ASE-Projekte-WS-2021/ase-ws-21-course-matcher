@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.data.models.FriendsNotification;
 import com.example.cm.data.models.Notification;
 import com.example.cm.data.models.Notification.NotificationType;
 import com.example.cm.data.models.User;
@@ -62,7 +63,7 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         }
 
         // Create a new notification
-        Notification notification = new Notification(currentUser.getId(), currentUser.getFullName(), receiverId, NotificationType.FRIEND_REQUEST);
+        FriendsNotification notification = new FriendsNotification(currentUser.getId(), currentUser.getFullName(), receiverId);
         notificationRepository.addNotification(notification);
         notificationSentListener.onNotificationSent();
     }

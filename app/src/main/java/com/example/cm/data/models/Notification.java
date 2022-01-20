@@ -1,7 +1,4 @@
 package com.example.cm.data.models;
-
-import android.util.Log;
-
 import com.google.firebase.firestore.Exclude;
 
 import java.util.Date;
@@ -9,13 +6,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Notification {
 
-    private String id;
-    private String senderId;
-    private String senderName;
-    private String receiverId;
-    private NotificationType type;
-    private Date createdAt;
-    private NotificationState state;
+    protected String id;
+    protected String senderId;
+    protected String senderName;
+    protected String receiverId;
+    protected NotificationType type;
+    protected Date createdAt;
+    protected NotificationState state;
 
     public Notification() {
     }
