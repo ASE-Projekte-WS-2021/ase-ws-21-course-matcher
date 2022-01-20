@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.Notification;
-import com.example.cm.databinding.ItemSingleNotificationBinding;
+import com.example.cm.databinding.ItemNotificationBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     @NonNull
     @Override
     public NotificationListAdapter.NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemSingleNotificationBinding binding = ItemSingleNotificationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemNotificationBinding binding = ItemNotificationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new NotificationViewHolder(binding);
     }
 
@@ -83,9 +83,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
      */
     public class NotificationViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemSingleNotificationBinding binding;
+        private final ItemNotificationBinding binding;
 
-        public NotificationViewHolder(ItemSingleNotificationBinding binding) {
+        public NotificationViewHolder(ItemNotificationBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             setListeners();
