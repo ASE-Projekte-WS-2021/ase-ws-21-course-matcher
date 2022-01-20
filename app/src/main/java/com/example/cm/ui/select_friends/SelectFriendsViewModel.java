@@ -56,7 +56,6 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
 
     public void sendOrDeleteFriendRequest(String receiverId) {
         if (hasAlreadyReceivedFriendRequest(receiverId, currentUser.getId())) {
-
             notificationRepository.deleteNotification(receiverId, currentUser.getId(), NotificationType.FRIEND_REQUEST);
             notificationSentListener.onNotificationDeleted();
             return;

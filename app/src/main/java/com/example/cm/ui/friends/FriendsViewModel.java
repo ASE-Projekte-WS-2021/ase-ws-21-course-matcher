@@ -31,7 +31,7 @@ public class FriendsViewModel extends ViewModel implements OnUserRepositoryListe
     }
 
     public void searchUsers(String query) {
-        if (currentUser.getValue() == null || currentUser.getValue().getFriends() == null) {
+        if (currentUser.getValue() == null) {
             return;
         }
 
@@ -50,9 +50,6 @@ public class FriendsViewModel extends ViewModel implements OnUserRepositoryListe
     @Override
     public void onUserRetrieved(User user) {
         this.currentUser.postValue(user);
-
-        if (user.getFriends() != null) {
-            userRepository.getUsersByIds(user.getFriends());
-        }
+        userRepository.getUsersByIds(user.getFriends());
     }
 }

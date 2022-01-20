@@ -1,6 +1,11 @@
 package com.example.cm.data.models;
 
+import android.util.Log;
+
+import com.google.firebase.firestore.Exclude;
+
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Notification {
 
@@ -10,6 +15,7 @@ public class Notification {
     private String receiverId;
     private NotificationType type;
     private Date createdAt;
+    private NotificationState state;
 
     public Notification() {
     }
@@ -20,6 +26,7 @@ public class Notification {
         this.receiverId = receiverId;
         this.type = type;
         this.createdAt = new Date();
+        this.state = NotificationState.NOTIFICATION_PENDING;
     }
 
     public String getId() {
@@ -66,13 +73,54 @@ public class Notification {
         return createdAt;
     }
 
+    @Exclude
+    public String getCreationTimeAgo(){
+        String result = "vor ";
+        Date now = new Date();
+        long seconds=TimeUnit.MILLISECONDS.toSeconds(now.getTime() - createdAt.getTime());
+        long minutes=TimeUnit.MILLISECONDS.toMinutes(now.getTime() - createdAt.getTime());
+        long hours=TimeUnit.MILLISECONDS.toHours(now.getTime() - createdAt.getTime());
+        long days= TimeUnit.MILLISECONDS.toDays(now.getTime() - createdAt.getTime());
+        long weeks = days / 7;
+        if(seconds < 60) {
+            result = "jetzt";
+        } else if(minutes < 60) {
+            result += minutes + " Minuten";
+        } else if(hours < 24) {
+            result += hours + " Stunden";
+        } else if(weeks < 2){
+            result += days + " Tagen";
+        } else {
+            result += (int) weeks + " Wochen";
+        }
+        return result;
+    }
+
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setCreatedAtToNow() {
+        this.createdAt = new Date();
+    }
+
+    public NotificationState getState() {
+        return state;
+    }
+
+    public void setState(NotificationState state) {
+        this.state = state;
     }
 
     public enum NotificationType {
         FRIEND_REQUEST,
         MEETUP_REQUEST,
         MEETUP_CANCELLED
+    }
+
+    public enum NotificationState {
+        NOTIFICATION_ACCEPTED,
+        NOTIFICATION_DECLINED,
+        NOTIFICATION_PENDING
     }
 }
