@@ -31,11 +31,11 @@
         android:id="@+id/notificationImageView"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        android:contentDescription="@string/profile_picture_decription"
         android:src="@android:drawable/ic_menu_gallery"
         app:layout_constraintBottom_toBottomOf="@+id/notificationContentTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/profile_picture_decription" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/notificationContentTextView"
@@ -75,21 +75,5 @@
         android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/notificationDeclineButton" />
-
-    <TextView
-        android:id="@+id/notificationMeetupLocationTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/notificationAcceptButton"
-        app:layout_constraintStart_toStartOf="@+id/notificationContentTextView"
-        app:layout_constraintTop_toBottomOf="@+id/notificationContentTextView" />
-
-    <TextView
-        android:id="@+id/notificationMeetupTimeTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/notificationMeetupLocationTextView"
-        app:layout_constraintStart_toStartOf="@+id/notificationMeetupLocationTextView"
-        app:layout_constraintTop_toBottomOf="@+id/notificationMeetupLocationTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

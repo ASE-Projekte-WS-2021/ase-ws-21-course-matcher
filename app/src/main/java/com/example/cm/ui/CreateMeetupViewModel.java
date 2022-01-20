@@ -95,9 +95,7 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
         meetupRepository.addMeetup(meetup);
 
         // Create notification for each invited user
-        // userRepository.getUserById(userRepository.getCurrentUser().getUid());
         if(selectedUsers.getValue() != null) {
-            //ArrayList<Notification> notificationsToSend = new ArrayList<>();
             for(String invitedFriendId : selectedUsers.getValue()){
                 MeetupNotification notification = new MeetupNotification(
                         userRepository.getCurrentUser().getUid(),

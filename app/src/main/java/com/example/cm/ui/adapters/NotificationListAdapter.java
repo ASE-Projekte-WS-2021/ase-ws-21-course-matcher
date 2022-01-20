@@ -57,20 +57,17 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         String date = notification.getCreationTimeAgo();
 
         int content = 0;
-        int title = 0;
         if (notification.getType() == Notification.NotificationType.FRIEND_REQUEST){
-            title = R.string.friend_request_title;
+            holder.getTvTitle().setText(R.string.friend_request_title);
             content = isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text;
         } else if (notification.getType() == Notification.NotificationType.MEETUP_REQUEST){
-            title = R.string.meetup_request_title;
-            content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_text;
             String location = ((MeetupNotification) notification).getLocation();
             String meetupTime = ((MeetupNotification) notification).getMeetupAt();
-            holder.getTvLocation().setText(location);
-            holder.getTvMeetupTime().setText(meetupTime);
+            String title = meetupTime + " " + location + "?";
+            holder.getTvTitle().setText(title);
+            content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_text;
         }
 
-        holder.getTvTitle().setText(title);
         holder.getTvSender().setText(user);
         holder.getTvContent().setText(content);
         holder.getTvDate().setText(date);
@@ -164,14 +161,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
         public Button getBtnDecline(){
             return binding.notificationDeclineButton;
-        }
-
-        public TextView getTvLocation(){
-            return binding.notificationMeetupLocationTextView;
-        }
-
-        public TextView getTvMeetupTime(){
-            return binding.notificationMeetupTimeTextView;
         }
     }
 }
