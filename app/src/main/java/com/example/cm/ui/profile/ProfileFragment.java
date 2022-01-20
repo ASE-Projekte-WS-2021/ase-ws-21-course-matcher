@@ -24,7 +24,6 @@ public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
     private User user;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         initListener();
@@ -36,7 +35,6 @@ public class ProfileFragment extends Fragment {
     private void initListener() {
         navigator = new Navigator(requireActivity());
         binding.btnToFriendsList.setOnClickListener(v -> navigator.navigateToFriends());
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -56,21 +54,16 @@ public class ProfileFragment extends Fragment {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             if (bundle.containsKey("userId")) {
-
                 binding.btnToFriendsList.setVisibility(View.GONE);
                 String profileId = bundle.getString("userId");
                 profileViewModel.getUserById(profileId);
-
             }
         }
     }
-
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
-
-
 }

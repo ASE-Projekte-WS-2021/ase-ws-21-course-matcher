@@ -28,11 +28,8 @@ public class ProfileViewModel extends ViewModel implements UserRepository.OnUser
         userRepository.getUserById(userId);
     }
 
-
     @Override
-    public void onUsersRetrieved(List<User> users) {
-
-    }
+    public void onUsersRetrieved(List<User> users) {}
 
     @Override
     public void onUserRetrieved(User user) {

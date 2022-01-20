@@ -100,7 +100,6 @@ public class FriendsFragment extends Fragment implements OnItemClickListener {
 
     @Override
     public void onItemClicked(String id) {
-
         Bundle bundle = new Bundle();
         bundle.putString("userId", id);
         navigator.getNavController().navigate(R.id.fromFriendsToProfile, bundle);

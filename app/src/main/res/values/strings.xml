@@ -64,5 +64,6 @@
     <string name="select_friends_search_input_placeholder">Freunde finden...</string>
     <string name="btn_send_friend_request_default">Anfragen</string>
     <string name="btn_send_friend_request_pending">Angefragt</string>
+    <string name="friendsbtntext">Freunde</string>
 
 </resources>

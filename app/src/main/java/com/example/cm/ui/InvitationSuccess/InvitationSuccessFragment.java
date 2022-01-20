@@ -31,7 +31,6 @@ public class InvitationSuccessFragment extends Fragment {
         initListener();
 
         return root;
-
     }
 
     private void initListener() {
@@ -46,6 +45,4 @@ public class InvitationSuccessFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
-
 }
