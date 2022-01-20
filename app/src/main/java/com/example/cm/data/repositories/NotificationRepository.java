@@ -31,12 +31,12 @@ public class NotificationRepository extends Repository {
      * Get all notifications for currently signed in user
      */
     public void getNotificationsForUser() {
-        String userId = "0woDiT794x84PeYtXzjb";
+        String userId = "";
         if (auth.getCurrentUser() != null) {
             userId = auth.getCurrentUser().getUid();
         }
 
-        notificationCollection.whereEqualTo("senderId", userId).get().addOnCompleteListener(executorService, task -> {
+        notificationCollection.whereEqualTo("receiverId", userId).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
                 listener.onNotificationsRetrieved(notifications);
@@ -113,8 +113,30 @@ public class NotificationRepository extends Repository {
         notification.setSenderName(document.getString("senderName"));
         notification.setReceiverId(document.getString("receiverId"));
         notification.setCreatedAt(document.getDate("createdAt"));
-
+        notification.setState(document.get("state", Notification.NotificationState.class));
         return notification;
+    }
+
+    /**
+     * Set state of notification
+     *
+     * @param notification notification to accept/decline/undo decline
+     */
+    public void accept(Notification notification){
+        notificationCollection.document(notification.getId()).
+                update("state", Notification.NotificationState.NOTIFICATION_ACCEPTED);
+        notificationCollection.document(notification.getId()).
+                update("createdAt", notification.getCreatedAt());
+    }
+
+    public void decline(Notification notification){
+        notificationCollection.document(notification.getId()).
+                update("state", Notification.NotificationState.NOTIFICATION_DECLINED);
+    }
+
+    public void undo(Notification notification){
+        notificationCollection.document(notification.getId()).
+                update("state", Notification.NotificationState.NOTIFICATION_PENDING);
     }
 
     public interface OnNotificationRepositoryListener {

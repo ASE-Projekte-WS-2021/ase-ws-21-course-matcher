@@ -2,6 +2,8 @@
     <string name="app_name">CM</string>
     <string name="title_home">Test</string>
     <string name="title_dashboard">Dashboard</string>
+
+    <!-- Meetup -->
     <string name="meetup_header">Freunde treffen</string>
     <string name="meetup_header_desc">Macht aus wo und wann ihr euch trefft:</string>
     <string name="meetup_time">Wann wollt ihr euch treffen?</string>
@@ -28,6 +30,17 @@
     <string name="invitation_success_header">Geschafft!</string>
     <string name="invitation_success_header_desc">Deine Anfrage für euer Meetup wurde erfolgreich an deine Freunde versandt! Warte auf eine Reaktion und genießt die Zeit zusammen.</string>
     <string name="back_to_home_btn">zurück zum Homescreen</string>
+
+    <!-- Notifications -->
+    <string name="accept_button_text">✓</string>
+    <string name="decline_button_text">✗</string>
+    <string name="decline_snackbar_text">Anfrage abgelehnt.</string>
+    <string name="undo_snackbar_text">UNDO</string>
+    <string name="friend_request_title">"Neue Freundschaftsanfrage"</string>
+    <string name="friend_request_text">" möchte mit dir befreundet sein."</string>
+    <string name="friend_accepted_text">" ist jetzt auf deiner Freundesliste."</string>
+    <string name="meetup_request_title">"Neue Meetup-Anfrage"</string>
+
 
     <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
     <string name="title_notifications">Benachrichtigungen</string>
@@ -56,6 +69,7 @@
     <string name="loginRegisterBtn">Register</string>
     <string name="loginUserNameEditText">Username</string>
     <string name="btn_meetup_send_invite">Abschicken</string>
+    <string name="profile_picture_decription">Profilbild</string>
     <!-- FriendsList -->
     <string name="friendslist_tv_no_friends">Keine Freunde gefunden.</string>
     <string name="frindslist_btn_find_friends">Freunde finden</string>
