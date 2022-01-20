@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class MeetupNotification extends Notification{
 
+    private String meetupId;
     private String location;
     private String meetupAt;
 
@@ -12,10 +13,19 @@ public class MeetupNotification extends Notification{
         type = NotificationType.MEETUP_REQUEST;
     }
 
-    public MeetupNotification(String senderId, String senderName, String receiverId, String location, String meetupAt) {
+    public MeetupNotification(String meetupId, String senderId, String senderName, String receiverId, String location, String meetupAt) {
         super(senderId, senderName, receiverId, NotificationType.MEETUP_REQUEST);
         this.location = location;
         this.meetupAt = meetupAt;
+        this.meetupId = meetupId;
+    }
+
+    public String getMeetupId() {
+        return meetupId;
+    }
+
+    public void setMeetupId(String meetupId) {
+        this.meetupId = meetupId;
     }
 
     public String getLocation() {

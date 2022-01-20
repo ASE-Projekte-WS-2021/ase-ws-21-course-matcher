@@ -108,10 +108,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         }
 
         private void onAccept() {
-            Log.e("NOTS", String.valueOf(getAdapterPosition()));
-            for (Notification notification : mNotifications){
-                Log.e("NOTS", notification.getId());
-            }
             Notification notification = mNotifications.get(getAdapterPosition());
             listener.onAccept(notification);
             notifyItemChanged(getAdapterPosition());

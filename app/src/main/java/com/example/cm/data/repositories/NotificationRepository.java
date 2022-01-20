@@ -113,6 +113,7 @@ public class NotificationRepository extends Repository {
             notification = new FriendsNotification();
         } else if (document.get("type", Notification.NotificationType.class) == Notification.NotificationType.MEETUP_REQUEST){
             notification = new MeetupNotification();
+            ((MeetupNotification) notification).setMeetupId(document.getString("meetupId"));
             ((MeetupNotification) notification).setLocation(document.getString("location"));
             ((MeetupNotification) notification).setMeetupAt(document.getString("meetupAt"));
         }
