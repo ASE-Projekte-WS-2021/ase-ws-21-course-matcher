@@ -8,21 +8,27 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.cm.R;
 import com.example.cm.databinding.FragmentSelectFriendsBinding;
 import com.example.cm.ui.adapters.SelectFriendsAdapter;
 import com.example.cm.ui.adapters.SelectFriendsAdapter.OnItemClickListener;
 import com.example.cm.ui.select_friends.SelectFriendsViewModel.OnNotificationSentListener;
+import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
+
 
 public class SelectFriendsFragment extends Fragment implements OnItemClickListener, OnNotificationSentListener {
 
     private SelectFriendsViewModel selectFriendsViewModel;
     private FragmentSelectFriendsBinding binding;
     private SelectFriendsAdapter selectFriendsAdapter;
+    private OnItemClickListener onItemClickListener;
+    private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSelectFriendsBinding.inflate(inflater, container, false);
@@ -42,6 +48,7 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     }
 
     private void initListener() {
+        navigator = new Navigator(requireActivity());
         binding.btnSearch.setOnClickListener(v -> onSearchButtonClicked());
     }
 
@@ -81,11 +88,17 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
         selectFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
     }
 
+
     @Override
     public void onItemClicked(String id) {
-        // TODO: Open profile of clicked user
-        Log.d("TAG", "onItemClicked: " + id);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("userId", id);
+
+        navigator.getNavController().navigate(R.id.fromSelectFriendsToProfile, bundle);
+
     }
+
 
     @Override
     public void onNotificationSent() {

@@ -38,7 +38,6 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         initListener();
 
         return root;
-
     }
 
     private void initUI() {
