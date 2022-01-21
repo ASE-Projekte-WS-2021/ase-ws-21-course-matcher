@@ -1,12 +1,9 @@
 package com.example.cm.ui.notifications;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.FriendsNotification;
-import com.example.cm.data.models.MeetupAcceptedNotification;
-import com.example.cm.data.models.MeetupDeclinedNotification;
 import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 import com.example.cm.data.models.User;
@@ -48,28 +45,30 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
             userRepository.addFriends(notification.getSenderId(), notification.getReceiverId());
         } else if (notification instanceof MeetupNotification){
             meetupRepository.addConfirmed(((MeetupNotification) notification).getMeetupId(), notification.getReceiverId());
-            MeetupAcceptedNotification notificationDeclined = new MeetupAcceptedNotification(
+            MeetupNotification notificationAccepted = new MeetupNotification(
                     ((MeetupNotification) notification).getMeetupId(),
                     currentUser.getId(),
                     currentUser.getFullName(),
                     notification.getSenderId(),
                     ((MeetupNotification) notification).getLocation(),
-                    ((MeetupNotification) notification).getMeetupAt()
+                    ((MeetupNotification) notification).getMeetupAt(),
+                    Notification.NotificationType.MEETUP_ACCEPTED
             );
-            notificationRepository.addNotification(notificationDeclined);
+            notificationRepository.addNotification(notificationAccepted);
         }
     }
 
     public void declineRequest(Notification notification){
         if (notification instanceof MeetupNotification){
             meetupRepository.addDeclined(((MeetupNotification) notification).getMeetupId(), notification.getReceiverId());
-            MeetupDeclinedNotification notificationDeclined = new MeetupDeclinedNotification(
+            MeetupNotification notificationDeclined = new MeetupNotification(
                     ((MeetupNotification) notification).getMeetupId(),
                     currentUser.getId(),
                     currentUser.getFullName(),
                     notification.getSenderId(),
                     ((MeetupNotification) notification).getLocation(),
-                    ((MeetupNotification) notification).getMeetupAt()
+                    ((MeetupNotification) notification).getMeetupAt(),
+                    Notification.NotificationType.MEETUP_DECLINED
             );
             notificationRepository.addNotification(notificationDeclined);
         }
@@ -82,7 +81,6 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
         notification.setState(Notification.NotificationState.NOTIFICATION_PENDING);
         notificationRepository.undo(notification);
         Objects.requireNonNull(notifications.getValue()).add(position, notification);
-        //todo for meetup req
     }
 
     public void refresh() {

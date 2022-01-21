@@ -2,9 +2,7 @@ package com.example.cm.data.repositories;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendsNotification;
-import com.example.cm.data.models.MeetupAcceptedNotification;
-import com.example.cm.data.models.MeetupDeclinedNotification;
-import com.example.cm.data.models.MeetupRequestNotification;
+import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -18,6 +16,9 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.example.cm.data.models.Notification.NotificationType.FRIEND_REQUEST;
+import static com.example.cm.data.models.Notification.NotificationType.MEETUP_ACCEPTED;
+import static com.example.cm.data.models.Notification.NotificationType.MEETUP_DECLINED;
+import static com.example.cm.data.models.Notification.NotificationType.MEETUP_REQUEST;
 
 public class NotificationRepository extends Repository {
 
@@ -114,28 +115,14 @@ public class NotificationRepository extends Repository {
     public Notification snapshotToNotification(DocumentSnapshot document) {
         Notification notification = null;
 
-        switch(Objects.requireNonNull(document.get("type", Notification.NotificationType.class))){
-            case FRIEND_REQUEST:
-                notification = new FriendsNotification();
-                break;
-            case MEETUP_REQUEST:
-                notification = new MeetupRequestNotification();
-                ((MeetupRequestNotification) notification).setMeetupId(document.getString("meetupId"));
-                ((MeetupRequestNotification) notification).setLocation(document.getString("location"));
-                ((MeetupRequestNotification) notification).setMeetupAt(document.getString("meetupAt"));
-                break;
-            case MEETUP_ACCEPTED:
-                notification = new MeetupAcceptedNotification();
-                ((MeetupAcceptedNotification) notification).setMeetupId(document.getString("meetupId"));
-                ((MeetupAcceptedNotification) notification).setLocation(document.getString("location"));
-                ((MeetupAcceptedNotification) notification).setMeetupAt(document.getString("meetupAt"));
-                break;
-            case MEETUP_DECLINED:
-                notification = new MeetupDeclinedNotification();
-                ((MeetupDeclinedNotification) notification).setMeetupId(document.getString("meetupId"));
-                ((MeetupDeclinedNotification) notification).setLocation(document.getString("location"));
-                ((MeetupDeclinedNotification) notification).setMeetupAt(document.getString("meetupAt"));
-                break;
+        Notification.NotificationType notType = Objects.requireNonNull(document.get("type", Notification.NotificationType.class));
+        if (notType == FRIEND_REQUEST){
+            notification = new FriendsNotification();
+        } else if (notType == MEETUP_REQUEST || notType == MEETUP_ACCEPTED || notType == MEETUP_DECLINED){
+            notification = new MeetupNotification(notType);
+            ((MeetupNotification) notification).setMeetupId(document.getString("meetupId"));
+            ((MeetupNotification) notification).setLocation(document.getString("location"));
+            ((MeetupNotification) notification).setMeetupAt(document.getString("meetupAt"));
         }
         if (notification != null){
             notification.setId(document.getId());
