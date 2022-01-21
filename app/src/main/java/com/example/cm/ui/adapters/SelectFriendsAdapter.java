@@ -5,6 +5,7 @@ import static com.example.cm.utils.Utils.calculateDiff;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
@@ -65,13 +66,13 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
 
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
+
         // Check whether a notification has been sent to this user
         if (sentFriendRequests == null) {
             return;
         }
         for (Notification notification : sentFriendRequests) {
             if (notification.getReceiverId().equals(mUsers.get(position).getId())) {
-                Log.d("TAG", "Changing background color: ");
                 holder.getFriendRequestButton().setText(R.string.btn_send_friend_request_pending);
                 holder.getFriendRequestButton().setBackgroundColor(Color.parseColor("#FFD3D3D3"));
                 break;
