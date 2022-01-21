@@ -44,4 +44,9 @@ public class MeetupNotification extends Notification{
     public void setMeetupAt(String meetupAt) {
         this.meetupAt = meetupAt;
     }
+
+    @Override
+    public String toString() {
+        return "Treffen " + meetupAt + " Uhr - " + location;
+    }
 }

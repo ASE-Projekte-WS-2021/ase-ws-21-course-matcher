@@ -64,18 +64,16 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
                 content = isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text;
                 break;
             case MEETUP_REQUEST:
-                String location = ((MeetupNotification) notification).getLocation();
-                String meetupTime = ((MeetupNotification) notification).getMeetupAt();
-                holder.getTvTitle().setText(meetupTime + " " + location + "?");
+                holder.getTvTitle().setText(notification.toString());
                 content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_text;
                 break;
             case MEETUP_ACCEPTED:
-                holder.getTvTitle().setText(getTitleForMeetupNots(notification));
+                holder.getTvTitle().setText(notification.toString());
                 isAccepted = true;
                 content = R.string.meetup_accepted_text;
                 break;
             case MEETUP_DECLINED:
-                holder.getTvTitle().setText(getTitleForMeetupNots(notification));
+                holder.getTvTitle().setText(notification.toString());
                 isAccepted = true;
                 content = R.string.meetup_declined_text;
                 break;
@@ -86,12 +84,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         holder.getTvDate().setText(date);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
         holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
-    }
-
-    private String getTitleForMeetupNots(Notification notification) {
-        String location = ((MeetupNotification) notification).getLocation();
-        String meetupTime = ((MeetupNotification) notification).getMeetupAt();
-        return "Dein Treffen: " + meetupTime + " " + location;
     }
 
     @Override

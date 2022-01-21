@@ -11,4 +11,9 @@ public class MeetupRequestNotification extends MeetupNotification {
         super(meetupId, senderId, senderName, receiverId, location, meetupAt, NotificationType.MEETUP_REQUEST);
         state = NotificationState.NOTIFICATION_DECLINED;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "?";
+    }
 }

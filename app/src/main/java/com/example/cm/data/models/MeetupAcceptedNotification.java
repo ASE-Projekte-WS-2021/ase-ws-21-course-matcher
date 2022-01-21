@@ -10,4 +10,9 @@ public class MeetupAcceptedNotification extends MeetupNotification{
                                       String receiverId, String location, String meetupAt) {
         super(meetupId, senderId, senderName, receiverId, location, meetupAt, NotificationType.MEETUP_ACCEPTED);
     }
+
+    @Override
+    public String toString() {
+        return "Zusage für " + super.toString();
+    }
 }

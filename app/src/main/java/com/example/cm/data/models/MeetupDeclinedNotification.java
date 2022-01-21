@@ -11,4 +11,9 @@ public class MeetupDeclinedNotification extends MeetupNotification{
         super(meetupId, senderId, senderName, receiverId, location, meetupAt, NotificationType.MEETUP_DECLINED);
         state = NotificationState.NOTIFICATION_DECLINED;
     }
+
+    @Override
+    public String toString() {
+        return "Absage für " + super.toString();
+    }
 }
