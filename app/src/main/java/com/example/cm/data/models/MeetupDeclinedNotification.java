@@ -1,23 +1,14 @@
 package com.example.cm.data.models;
 
-public class MeetupDeclinedNotification extends Notification{
-
-    private String meetupId;
+public class MeetupDeclinedNotification extends MeetupNotification{
 
     public MeetupDeclinedNotification() {
-        type = NotificationType.MEETUP_DECLINED;
+        super(NotificationType.MEETUP_DECLINED);
+        state = NotificationState.NOTIFICATION_DECLINED;
     }
 
-    public MeetupDeclinedNotification(String senderId, String senderName, String receiverId, String meetupId) {
-        super(senderId, senderName, receiverId, NotificationType.MEETUP_DECLINED);
-        this.meetupId = meetupId;
-    }
-
-    public String getMeetupId() {
-        return meetupId;
-    }
-
-    public void setMeetupId(String meetupId) {
-        this.meetupId = meetupId;
+    public MeetupDeclinedNotification(String meetupId, String senderId, String senderName, String receiverId, String location, String meetupAt) {
+        super(meetupId, senderId, senderName, receiverId, location, meetupAt, NotificationType.MEETUP_DECLINED);
+        state = NotificationState.NOTIFICATION_DECLINED;
     }
 }

@@ -112,12 +112,13 @@ public class Notification {
     public enum NotificationType {
         FRIEND_REQUEST,
         MEETUP_REQUEST,
-        MEETUP_DECLINED
+        MEETUP_DECLINED,
+        MEETUP_ACCEPTED,
     }
 
     public enum NotificationState {
         NOTIFICATION_ACCEPTED,
         NOTIFICATION_DECLINED,
-        NOTIFICATION_PENDING
+        NOTIFICATION_PENDING,
     }
 }

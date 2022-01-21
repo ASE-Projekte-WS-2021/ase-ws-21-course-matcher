@@ -42,6 +42,7 @@
     <string name="meetup_request_title">"Neue Meetup-Anfrage"</string>
     <string name="meetup_accepted_text">" rechnet mit dir."</string>
     <string name="meetup_request_text">" möchte sich mit dir treffen."</string>
+    <string name="meetup_declined_text">" kommt leider nicht."</string>
 
 
     <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>

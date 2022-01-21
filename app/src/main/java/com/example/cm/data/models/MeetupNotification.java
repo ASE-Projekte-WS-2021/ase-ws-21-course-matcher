@@ -8,16 +8,17 @@ public class MeetupNotification extends Notification{
     private String location;
     private String meetupAt;
 
-    public MeetupNotification() {
+    public MeetupNotification(NotificationType type) {
         super();
-        type = NotificationType.MEETUP_REQUEST;
+        this.type = type;
     }
 
-    public MeetupNotification(String meetupId, String senderId, String senderName, String receiverId, String location, String meetupAt) {
-        super(senderId, senderName, receiverId, NotificationType.MEETUP_REQUEST);
+    public MeetupNotification(String meetupId, String senderId, String senderName,
+                              String receiverId, String location, String meetupAt, NotificationType type) {
+        super(senderId, senderName, receiverId, type);
+        this.meetupId = meetupId;
         this.location = location;
         this.meetupAt = meetupAt;
-        this.meetupId = meetupId;
     }
 
     public String getMeetupId() {
