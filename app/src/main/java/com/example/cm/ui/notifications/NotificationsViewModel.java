@@ -1,11 +1,15 @@
 package com.example.cm.ui.notifications;
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.FriendsNotification;
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.MeetupDeclinedNotification;
 import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
+import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRepository.OnMeetupRepositoryListener;
 import com.example.cm.data.repositories.NotificationRepository;
@@ -15,17 +19,19 @@ import com.example.cm.data.repositories.UserRepository;
 import java.util.List;
 import java.util.Objects;
 
-public class NotificationsViewModel extends ViewModel implements OnNotificationRepositoryListener {
+public class NotificationsViewModel extends ViewModel implements OnNotificationRepositoryListener, UserRepository.OnUserRepositoryListener {
 
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
     private final MeetupRepository meetupRepository;
     private final MutableLiveData<List<Notification>> notifications = new MutableLiveData<>();
+    private User currentUser;
 
     public NotificationsViewModel() {
         notificationRepository = new NotificationRepository(this);
         notificationRepository.getNotificationsForUser();
-        userRepository = new UserRepository();
+        userRepository = new UserRepository(this);
+        userRepository.getUserById(userRepository.getCurrentUser().getUid());
         meetupRepository = new MeetupRepository();
     }
 
@@ -47,6 +53,16 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
     }
 
     public void declineRequest(Notification notification){
+        if (notification instanceof MeetupNotification){
+            meetupRepository.addDeclined(((MeetupNotification) notification).getMeetupId(), notification.getReceiverId());
+            MeetupDeclinedNotification notificationDeclined = new MeetupDeclinedNotification(
+                currentUser.getId(),
+                currentUser.getFullName(),
+                notification.getSenderId(),
+                ((MeetupNotification) notification).getMeetupId()
+            );
+            notificationRepository.addNotification(notificationDeclined);
+        }
         notification.setState(Notification.NotificationState.NOTIFICATION_DECLINED);
         notificationRepository.decline(notification);
         Objects.requireNonNull(notifications.getValue()).remove(notification);
@@ -56,6 +72,7 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
         notification.setState(Notification.NotificationState.NOTIFICATION_PENDING);
         notificationRepository.undo(notification);
         Objects.requireNonNull(notifications.getValue()).add(position, notification);
+        //todo for meetup req
     }
 
     public void refresh() {
@@ -65,5 +82,16 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
     @Override
     public void onNotificationsRetrieved(List<Notification> notifications) {
         this.notifications.postValue(notifications);
+    }
+
+    @Override
+    public void onUserRetrieved(User user) {
+        currentUser = user;
+        Log.e("AFTER", "user retrieved");
+    }
+
+    @Override
+    public void onUsersRetrieved(List<User> users) {
+
     }
 }

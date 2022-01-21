@@ -62,6 +62,10 @@ public class MeetupRepository extends Repository {
         meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayUnion(participantId));
     }
 
+    public void addDeclined(String meetupId, String participantId){
+        meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayUnion(participantId));
+    }
+
     public interface OnMeetupRepositoryListener {
         void onMeetupAdded(String meetupId);
     }
