@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.User;
 import com.example.cm.utils.Utils;
@@ -49,6 +51,25 @@ public class UserRepository extends Repository {
         userCollection.get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                listener.onUsersRetrieved(users);
+            }
+        });
+    }
+
+    /**
+     * Get list of all users who aren't friends yet
+     */
+    public void getUsersNotFriends(){
+        userCollection.get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                ArrayList<User> users = new ArrayList<>();
+                for (DocumentSnapshot doc : task.getResult().getDocuments()){
+                    if (doc.get("friends") == null){
+                        users.add(snapshotToUser(doc));
+                    } else if (!Utils.castList(doc.get("friends"), String.class).contains(auth.getCurrentUser().getUid())){
+                        users.add(snapshotToUser(doc));
+                    }
+                }
                 listener.onUsersRetrieved(users);
             }
         });
