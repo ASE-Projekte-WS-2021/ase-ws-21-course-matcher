@@ -7,8 +7,7 @@
 
     <action
         android:id="@+id/action_global_navigate_to_profile"
-        app:destination="@id/navigation_profile"
-        />
+        app:destination="@id/navigation_profile" />
 
     <fragment
         android:id="@+id/navigation_home"
@@ -48,18 +47,9 @@
             android:id="@+id/navigateToInfoMeetup"
             app:destination="@+id/navigation_meetup" />
         <action
-            android:id="@+id/navigateToInvitationSuccess"
-            app:destination="@id/invitationSuccess" />
-
-    </fragment>
-    <fragment
-        android:id="@+id/invitationSuccess"
-        android:name="com.example.cm.ui.InvitationSuccess.InvitationSuccessFragment"
-        android:label="fragment_invitation_success"
-        tools:layout="@layout/fragment_invitation_success">
-        <action
-            android:id="@+id/navigateToHome"
+            android:id="@+id/navigateToMap"
             app:destination="@id/navigation_home" />
+
     </fragment>
 
     <fragment
@@ -97,7 +87,7 @@
         android:name="com.example.cm.ui.select_friends.SelectFriendsFragment"
         android:label="@string/title_find_friends"
 
-        tools:layout="@layout/fragment_select_friends" >
+        tools:layout="@layout/fragment_select_friends">
         <action
             android:id="@+id/fromSelectFriendsToProfile"
             app:destination="@id/navigation_profile" />
