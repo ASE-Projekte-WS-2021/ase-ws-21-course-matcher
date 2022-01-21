@@ -1,21 +1,13 @@
 package com.example.cm.data.repositories;
 
 import com.example.cm.config.CollectionConfig;
-import com.example.cm.data.models.FriendsNotification;
 import com.example.cm.data.models.Meetup;
-import com.example.cm.data.models.MeetupNotification;
-import com.example.cm.data.models.Notification;
-import com.example.cm.data.models.User;
 import com.example.cm.utils.Utils;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class MeetupRepository extends Repository {
@@ -52,7 +44,7 @@ public class MeetupRepository extends Repository {
     public void addMeetup(Meetup meetup) {
         meetupCollection.add(meetup).addOnCompleteListener(executorService, task -> {
             if(task.isSuccessful()){
-                String newMeetupId = task.getResult().getId();
+                String newMeetupId = Objects.requireNonNull(task.getResult()).getId();
                 listener.onMeetupAdded(newMeetupId);
             }
         });

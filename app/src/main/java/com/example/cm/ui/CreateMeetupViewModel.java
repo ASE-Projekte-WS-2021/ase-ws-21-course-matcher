@@ -1,13 +1,10 @@
 package com.example.cm.ui;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.Meetup;
-import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.MeetupRequestNotification;
 import com.example.cm.data.models.Notification;
 import com.example.cm.data.models.User;

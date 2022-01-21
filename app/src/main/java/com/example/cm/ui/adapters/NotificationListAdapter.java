@@ -1,7 +1,6 @@
 package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
-import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 import com.example.cm.databinding.ItemNotificationBinding;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.w3c.dom.Text;
 
 import java.util.List;
 

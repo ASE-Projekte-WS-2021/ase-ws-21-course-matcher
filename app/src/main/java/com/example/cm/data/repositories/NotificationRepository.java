@@ -1,12 +1,9 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
-
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendsNotification;
 import com.example.cm.data.models.MeetupAcceptedNotification;
 import com.example.cm.data.models.MeetupDeclinedNotification;
-import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.MeetupRequestNotification;
 import com.example.cm.data.models.Notification;
 import com.google.firebase.auth.FirebaseAuth;
