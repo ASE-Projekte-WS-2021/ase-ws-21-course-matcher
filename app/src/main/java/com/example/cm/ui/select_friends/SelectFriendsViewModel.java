@@ -31,7 +31,7 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         notificationRepository = new NotificationRepository(this);
         FirebaseUser firebaseUser = userRepository.getCurrentUser();
         userRepository.getUserByEmail(firebaseUser.getEmail());
-        userRepository.getUsers();
+        userRepository.getUsersNotFriends();
     }
 
     public void setOnNotificationSentListener(OnNotificationSentListener listener) {
