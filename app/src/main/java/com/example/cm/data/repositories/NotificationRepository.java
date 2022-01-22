@@ -1,6 +1,8 @@
 package com.example.cm.data.repositories;
 
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.models.FriendsNotification;
+import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -12,6 +14,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static com.example.cm.data.models.Notification.NotificationType.FRIEND_REQUEST;
+import static com.example.cm.data.models.Notification.NotificationType.MEETUP_ACCEPTED;
+import static com.example.cm.data.models.Notification.NotificationType.MEETUP_DECLINED;
+import static com.example.cm.data.models.Notification.NotificationType.MEETUP_REQUEST;
 
 public class NotificationRepository extends Repository {
 
@@ -45,7 +52,7 @@ public class NotificationRepository extends Repository {
     }
 
     public void getFriendRequestsOfSender(String senderId) {
-        notificationCollection.whereEqualTo("senderId", senderId).whereEqualTo("type", Notification.NotificationType.FRIEND_REQUEST).get().addOnCompleteListener(executorService, task -> {
+        notificationCollection.whereEqualTo("senderId", senderId).whereEqualTo("type", FRIEND_REQUEST).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
                 listener.onNotificationsRetrieved(notifications);
@@ -106,16 +113,28 @@ public class NotificationRepository extends Repository {
      * @return Returns a notification
      */
     public Notification snapshotToNotification(DocumentSnapshot document) {
-        Notification notification = new Notification();
-        notification.setId(document.getId());
-        notification.setType(document.get("type", Notification.NotificationType.class));
-        notification.setSenderId(document.getString("senderId"));
-        notification.setSenderName(document.getString("senderName"));
-        notification.setReceiverId(document.getString("receiverId"));
-        notification.setCreatedAt(document.getDate("createdAt"));
-        notification.setState(document.get("state", Notification.NotificationState.class));
+        Notification notification = null;
+
+        Notification.NotificationType notType = Objects.requireNonNull(document.get("type", Notification.NotificationType.class));
+        if (notType == FRIEND_REQUEST){
+            notification = new FriendsNotification();
+        } else if (notType == MEETUP_REQUEST || notType == MEETUP_ACCEPTED || notType == MEETUP_DECLINED){
+            notification = new MeetupNotification(notType);
+            ((MeetupNotification) notification).setMeetupId(document.getString("meetupId"));
+            ((MeetupNotification) notification).setLocation(document.getString("location"));
+            ((MeetupNotification) notification).setMeetupAt(document.getString("meetupAt"));
+        }
+        if (notification != null){
+            notification.setId(document.getId());
+            notification.setSenderId(document.getString("senderId"));
+            notification.setSenderName(document.getString("senderName"));
+            notification.setReceiverId(document.getString("receiverId"));
+            notification.setCreatedAt(document.getDate("createdAt"));
+            notification.setState(document.get("state", Notification.NotificationState.class));
+        }
         return notification;
     }
+
 
     /**
      * Set state of notification

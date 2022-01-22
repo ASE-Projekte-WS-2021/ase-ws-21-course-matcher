@@ -1,7 +1,4 @@
 package com.example.cm.data.models;
-
-import android.util.Log;
-
 import com.google.firebase.firestore.Exclude;
 
 import java.util.Date;
@@ -9,13 +6,13 @@ import java.util.concurrent.TimeUnit;
 
 public class Notification {
 
-    private String id;
-    private String senderId;
-    private String senderName;
-    private String receiverId;
-    private NotificationType type;
-    private Date createdAt;
-    private NotificationState state;
+    protected String id;
+    protected String senderId;
+    protected String senderName;
+    protected String receiverId;
+    protected NotificationType type;
+    protected Date createdAt;
+    protected NotificationState state;
 
     public Notification() {
     }
@@ -115,12 +112,13 @@ public class Notification {
     public enum NotificationType {
         FRIEND_REQUEST,
         MEETUP_REQUEST,
-        MEETUP_CANCELLED
+        MEETUP_DECLINED,
+        MEETUP_ACCEPTED,
     }
 
     public enum NotificationState {
         NOTIFICATION_ACCEPTED,
         NOTIFICATION_DECLINED,
-        NOTIFICATION_PENDING
+        NOTIFICATION_PENDING,
     }
 }

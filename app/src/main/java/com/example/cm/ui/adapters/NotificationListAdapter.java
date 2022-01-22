@@ -1,7 +1,6 @@
 package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.Notification;
-import com.example.cm.databinding.ItemSingleNotificationBinding;
+import com.example.cm.databinding.ItemNotificationBinding;
 import com.google.android.material.snackbar.Snackbar;
+
 
 import java.util.List;
 
@@ -41,22 +41,41 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     @NonNull
     @Override
     public NotificationListAdapter.NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemSingleNotificationBinding binding = ItemSingleNotificationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemNotificationBinding binding = ItemNotificationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new NotificationViewHolder(binding);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull NotificationListAdapter.NotificationViewHolder holder, int position) {
         Notification notification = mNotifications.get(position);
-        int title = notification.getType() == Notification.NotificationType.FRIEND_REQUEST ?
-                R.string.friend_request_title : R.string.meetup_request_title;
+
         String user = "@" + notification.getSenderName();
         boolean isAccepted = notification.getState() == Notification.NotificationState.NOTIFICATION_ACCEPTED;
-        Log.e("STATE", notification.getState()+"");
-        int content = isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text;
         String date = notification.getCreationTimeAgo();
 
-        holder.getTvTitle().setText(title);
+        int content = 0;
+        switch(notification.getType()){
+            case FRIEND_REQUEST:
+                holder.getTvTitle().setText(R.string.friend_request_title);
+                content = isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text;
+                break;
+            case MEETUP_REQUEST:
+                holder.getTvTitle().setText(notification.toString());
+                content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_text;
+                break;
+            case MEETUP_ACCEPTED:
+                holder.getTvTitle().setText(notification.toString());
+                isAccepted = true;
+                content = R.string.meetup_accepted_text;
+                break;
+            case MEETUP_DECLINED:
+                holder.getTvTitle().setText(notification.toString());
+                isAccepted = true;
+                content = R.string.meetup_declined_text;
+                break;
+        }
+
         holder.getTvSender().setText(user);
         holder.getTvContent().setText(content);
         holder.getTvDate().setText(date);
@@ -83,9 +102,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
      */
     public class NotificationViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemSingleNotificationBinding binding;
+        private final ItemNotificationBinding binding;
 
-        public NotificationViewHolder(ItemSingleNotificationBinding binding) {
+        public NotificationViewHolder(ItemNotificationBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             setListeners();
@@ -97,10 +116,6 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         }
 
         private void onAccept() {
-            Log.e("NOTS", String.valueOf(getAdapterPosition()));
-            for (Notification notification : mNotifications){
-                Log.e("NOTS", notification.getId());
-            }
             Notification notification = mNotifications.get(getAdapterPosition());
             listener.onAccept(notification);
             notifyItemChanged(getAdapterPosition());
