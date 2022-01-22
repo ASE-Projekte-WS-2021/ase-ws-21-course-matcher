@@ -1,14 +1,12 @@
 package com.example.cm.ui.select_friends;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -27,7 +25,6 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     private SelectFriendsViewModel selectFriendsViewModel;
     private FragmentSelectFriendsBinding binding;
     private SelectFriendsAdapter selectFriendsAdapter;
-    private OnItemClickListener onItemClickListener;
     private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,7 +38,7 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
 
 
     private void initUI() {
-        selectFriendsAdapter = new SelectFriendsAdapter(this);
+        selectFriendsAdapter = new SelectFriendsAdapter(this, requireActivity());
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(selectFriendsAdapter);
@@ -64,7 +61,6 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
             if (sentFriendRequests == null) {
                 return;
             }
-
             selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
         });
     }
@@ -84,24 +80,21 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     }
 
     @Override
-    public void onFriendRequestButtonClicked(String receiverId, int position) {
+    public void onFriendRequestButtonClicked(String receiverId) {
         selectFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
     }
 
 
     @Override
     public void onItemClicked(String id) {
-
         Bundle bundle = new Bundle();
         bundle.putString("userId", id);
 
         navigator.getNavController().navigate(R.id.fromSelectFriendsToProfile, bundle);
-
     }
 
-
     @Override
-    public void onNotificationSent() {
+    public void onNotificationAdded() {
         Snackbar.make(binding.getRoot(), "Anfrage wurde verschickt", Snackbar.LENGTH_SHORT).show();
 
     }

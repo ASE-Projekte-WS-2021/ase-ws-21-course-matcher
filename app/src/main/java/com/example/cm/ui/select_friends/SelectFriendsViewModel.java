@@ -1,7 +1,5 @@
 package com.example.cm.ui.select_friends;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -18,13 +16,15 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class SelectFriendsViewModel extends ViewModel implements OnUserRepositoryListener, OnNotificationRepositoryListener {
 
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
     public MutableLiveData<List<User>> users = new MutableLiveData<>();
     public MutableLiveData<List<Notification>> sentFriendRequests = new MutableLiveData<>();
-    private OnNotificationSentListener notificationSentListener;
+    public OnNotificationSentListener listener;
     private User currentUser;
 
     public SelectFriendsViewModel() {
@@ -35,10 +35,6 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         userRepository.getUsersNotFriends();
     }
 
-    public void setOnNotificationSentListener(OnNotificationSentListener listener) {
-        this.notificationSentListener = listener;
-    }
-
     public MutableLiveData<List<User>> getUsers() {
         return users;
     }
@@ -47,6 +43,11 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         return sentFriendRequests;
     }
 
+    /**
+     * Search a user by their username
+     *
+     * @param query the username to search for
+     */
     public void searchUsers(String query) {
         if (query.isEmpty()) {
             userRepository.getUsers();
@@ -55,32 +56,57 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         userRepository.getUsersByUsername(query);
     }
 
+    /**
+     * Add a friend request if the user has not sent one to the receiver
+     * Otherwise delete the friend request
+     *
+     * @param receiverId the id of the receiver
+     */
     public void sendOrDeleteFriendRequest(String receiverId) {
-        if (hasAlreadyReceivedFriendRequest(receiverId, currentUser.getId())) {
-            notificationRepository.deleteNotification(receiverId, currentUser.getId(), NotificationType.FRIEND_REQUEST);
-            notificationSentListener.onNotificationDeleted();
-            return;
-        }
+        notificationRepository.getFriendRequests(currentUser.getId(), notifications -> {
+            if (notifications == null) {
+                return;
+            }
 
-        // Create a new notification
-        FriendsNotification notification = new FriendsNotification(currentUser.getId(), currentUser.getFullName(), receiverId);
-        notificationRepository.addNotification(notification);
-        notificationSentListener.onNotificationSent();
+            if (hasReceivedFriendRequest(notifications, receiverId)) {
+                onFriendRequestExists(receiverId);
+            } else {
+                onFriendRequestDoesNotExist(receiverId);
+            }
+
+            sentFriendRequests.postValue(notifications);
+        });
     }
 
+    /**
+     * Add a friend request if the user has not sent one to the receiver
+     *
+     * @param receiverId the id of the receiver
+     */
+    private void onFriendRequestDoesNotExist(String receiverId) {
+        Timber.d("Sending friend request to %s", receiverId);
+        FriendsNotification notification = new FriendsNotification(currentUser.getId(), currentUser.getFullName(), receiverId);
+        notificationRepository.addNotification(notification);
+        listener.onNotificationAdded();
+    }
 
-    private Boolean hasAlreadyReceivedFriendRequest(String receiverId, String senderId) {
-        if(sentFriendRequests.getValue() == null) {
-            return false;
-        }
+    /**
+     * Delete a friend request if the user has sent one to the receiver
+     *
+     * @param receiverId the id of the receiver
+     */
+    private void onFriendRequestExists(String receiverId) {
+        Timber.d("Deleting friend request to %s", receiverId);
+        notificationRepository.deleteNotification(receiverId, currentUser.getId(), NotificationType.FRIEND_REQUEST);
+        listener.onNotificationDeleted();
+    }
 
-        for (int i = 0; i < sentFriendRequests.getValue().size(); i++) {
-            Notification notification = sentFriendRequests.getValue().get(i);
-            if (notification.getReceiverId().equals(receiverId) && notification.getSenderId().equals(senderId) && notification.getType().equals(NotificationType.FRIEND_REQUEST)) {
+    private Boolean hasReceivedFriendRequest(List<Notification> notifications, String receiverId) {
+        for (Notification notification : notifications) {
+            if (notification.getReceiverId().equals(receiverId) && notification.getSenderId().equals(currentUser.getId()) && notification.getType().equals(NotificationType.FRIEND_REQUEST)) {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -99,7 +125,9 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
     @Override
     public void onUserRetrieved(User user) {
         this.currentUser = user;
-        notificationRepository.getFriendRequestsOfSender(user.getId());
+        notificationRepository.getFriendRequests(user.getId(), notifications -> {
+            sentFriendRequests.postValue(notifications);
+        });
     }
 
     @Override
@@ -107,8 +135,14 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
         this.sentFriendRequests.postValue(notifications);
     }
 
+    public void setOnNotificationSentListener(OnNotificationSentListener listener) {
+        this.listener = listener;
+    }
+
     public interface OnNotificationSentListener {
-        void onNotificationSent();
+
+        void onNotificationAdded();
+
         void onNotificationDeleted();
     }
 }

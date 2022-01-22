@@ -114,9 +114,8 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding = null;
     }
 
-
     @Override
-    public void onNotificationSent() {
+    public void onNotificationAdded() {
         Snackbar.make(binding.getRoot(), "Anfragen wurden verschickt", Snackbar.LENGTH_SHORT).show();
     }
 
