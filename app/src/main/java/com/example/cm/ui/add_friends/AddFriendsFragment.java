@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
-import com.example.cm.databinding.FragmentSelectFriendsBinding;
+import com.example.cm.databinding.FragmentAddFriendsBinding;
 import com.example.cm.ui.adapters.AddFriendsAdapter;
 import com.example.cm.ui.adapters.AddFriendsAdapter.OnItemClickListener;
 import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
@@ -23,12 +23,12 @@ import com.google.android.material.snackbar.Snackbar;
 public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnNotificationSentListener {
 
     private AddFriendsViewModel selectFriendsViewModel;
-    private FragmentSelectFriendsBinding binding;
+    private FragmentAddFriendsBinding binding;
     private AddFriendsAdapter selectFriendsAdapter;
     private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentSelectFriendsBinding.inflate(inflater, container, false);
+        binding = FragmentAddFriendsBinding.inflate(inflater, container, false);
         initUI();
         initListener();
         initViewModel();
