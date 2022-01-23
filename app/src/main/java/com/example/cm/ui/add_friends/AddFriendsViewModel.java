@@ -1,4 +1,4 @@
-package com.example.cm.ui.select_friends;
+package com.example.cm.ui.add_friends;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class SelectFriendsViewModel extends ViewModel implements OnUserRepositoryListener, OnNotificationRepositoryListener {
+public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryListener, OnNotificationRepositoryListener {
 
     private final UserRepository userRepository;
     private final NotificationRepository notificationRepository;
@@ -27,7 +27,7 @@ public class SelectFriendsViewModel extends ViewModel implements OnUserRepositor
     public OnNotificationSentListener listener;
     private User currentUser;
 
-    public SelectFriendsViewModel() {
+    public AddFriendsViewModel() {
         userRepository = new UserRepository(this);
         notificationRepository = new NotificationRepository(this);
         FirebaseUser firebaseUser = userRepository.getCurrentUser();

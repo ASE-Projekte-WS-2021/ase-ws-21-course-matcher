@@ -22,7 +22,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdapter.UserViewHolder> {
+public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.UserViewHolder> {
 
     private final OnItemClickListener listener;
     private final Context context;
@@ -31,7 +31,7 @@ public class SelectFriendsAdapter extends RecyclerView.Adapter<SelectFriendsAdap
     private boolean isFriendRequestLoading = false;
 
 
-    public SelectFriendsAdapter(SelectFriendsAdapter.OnItemClickListener listener, Context context) {
+    public AddFriendsAdapter(AddFriendsAdapter.OnItemClickListener listener, Context context) {
         this.listener = listener;
         this.context = context;
     }

@@ -1,4 +1,4 @@
-package com.example.cm.ui.select_friends;
+package com.example.cm.ui.add_friends;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,19 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentSelectFriendsBinding;
-import com.example.cm.ui.adapters.SelectFriendsAdapter;
-import com.example.cm.ui.adapters.SelectFriendsAdapter.OnItemClickListener;
-import com.example.cm.ui.select_friends.SelectFriendsViewModel.OnNotificationSentListener;
+import com.example.cm.ui.adapters.AddFriendsAdapter;
+import com.example.cm.ui.adapters.AddFriendsAdapter.OnItemClickListener;
+import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 
-public class SelectFriendsFragment extends Fragment implements OnItemClickListener, OnNotificationSentListener {
+public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnNotificationSentListener {
 
-    private SelectFriendsViewModel selectFriendsViewModel;
+    private AddFriendsViewModel selectFriendsViewModel;
     private FragmentSelectFriendsBinding binding;
-    private SelectFriendsAdapter selectFriendsAdapter;
+    private AddFriendsAdapter selectFriendsAdapter;
     private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
 
 
     private void initUI() {
-        selectFriendsAdapter = new SelectFriendsAdapter(this, requireActivity());
+        selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(selectFriendsAdapter);
@@ -50,7 +50,7 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     }
 
     private void initViewModel() {
-        selectFriendsViewModel = new ViewModelProvider(this).get(SelectFriendsViewModel.class);
+        selectFriendsViewModel = new ViewModelProvider(this).get(AddFriendsViewModel.class);
         selectFriendsViewModel.setOnNotificationSentListener(this);
         observeSentFriendRequests();
 
