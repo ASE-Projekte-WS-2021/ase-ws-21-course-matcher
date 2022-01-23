@@ -37,7 +37,6 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     }
 
     public void setSentFriendRequests(List<Notification> sentFriendRequests) {
-        Timber.i("Updated sent friend requests");
         this.sentFriendRequests = sentFriendRequests;
         isFriendRequestLoading = false;
         listener.onFriendRequestsSet();
@@ -77,7 +76,6 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
 
         for (Notification notification : sentFriendRequests) {
             boolean notificationExists = notification.getReceiverId().equals(users.get(position).getId());
-            Timber.d("Notification exists: %s", notificationExists);
 
             if (!notificationExists) {
                 holder.getFriendRequestButton().setText(R.string.btn_send_friend_request_default);
