@@ -94,10 +94,10 @@
 
     <fragment
         android:id="@+id/navigation_select_friends"
-        android:name="com.example.cm.ui.select_friends.SelectFriendsFragment"
+        android:name="com.example.cm.ui.add_friends.AddFriendsFragment"
         android:label="@string/title_find_friends"
 
-        tools:layout="@layout/fragment_select_friends" >
+        tools:layout="@layout/fragment_add_friends" >
         <action
             android:id="@+id/fromSelectFriendsToProfile"
             app:destination="@id/navigation_profile" />

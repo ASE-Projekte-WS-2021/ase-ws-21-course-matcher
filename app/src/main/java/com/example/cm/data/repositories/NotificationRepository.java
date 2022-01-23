@@ -1,5 +1,10 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.data.models.Notification.NotificationType.FRIEND_REQUEST;
+import static com.example.cm.data.models.Notification.NotificationType.MEETUP_ACCEPTED;
+import static com.example.cm.data.models.Notification.NotificationType.MEETUP_DECLINED;
+import static com.example.cm.data.models.Notification.NotificationType.MEETUP_REQUEST;
+
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendsNotification;
 import com.example.cm.data.models.MeetupNotification;
@@ -15,14 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.cm.data.models.Notification.NotificationType.FRIEND_REQUEST;
-import static com.example.cm.data.models.Notification.NotificationType.MEETUP_ACCEPTED;
-import static com.example.cm.data.models.Notification.NotificationType.MEETUP_DECLINED;
-import static com.example.cm.data.models.Notification.NotificationType.MEETUP_REQUEST;
-
 public class NotificationRepository extends Repository {
-
-    private final static String TAG = "NotificationRepository";
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
@@ -51,28 +49,46 @@ public class NotificationRepository extends Repository {
         });
     }
 
-    public void getFriendRequestsOfSender(String senderId) {
-        notificationCollection.whereEqualTo("senderId", senderId).whereEqualTo("type", FRIEND_REQUEST).get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
-                listener.onNotificationsRetrieved(notifications);
-            }
-        });
+
+    /**
+     * Get all friend requests for sender
+     *
+     * @param senderId Id of the sender
+     * @param listener Callback to be called when the request is completed
+     */
+    public void getFriendRequests(String senderId, OnNotificationRepositoryListener listener) {
+        notificationCollection.whereEqualTo("senderId", senderId).whereEqualTo("type", FRIEND_REQUEST)
+                .get().addOnCompleteListener(executorService, task -> {
+                    if (task.isSuccessful()) {
+                        List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
+                        listener.onNotificationsRetrieved(notifications);
+                    }
+                });
     }
 
+    /**
+     * Delete a notification
+     *
+     * @param receiverId Id of the receiver
+     * @param senderId   Id of the sender
+     * @param type       Type of the notification
+     */
     public void deleteNotification(String receiverId, String senderId, Notification.NotificationType type) {
         notificationCollection
                 .whereEqualTo("receiverId", receiverId).whereEqualTo("senderId", senderId)
                 .whereEqualTo("type", type).get()
                 .addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
-                        if (task.getResult() == null || task.getResult().getDocuments().get(0) == null) {
+                        if (task.getResult() == null) {
                             return;
                         }
-                        task.getResult().getDocuments().get(0).getReference().delete();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            document.getReference().delete();
+                        }
                     }
                 });
     }
+
 
     /**
      * Create a new notification
@@ -81,15 +97,6 @@ public class NotificationRepository extends Repository {
      */
     public void addNotification(Notification notification) {
         notificationCollection.add(notification);
-    }
-
-    /**
-     * Create multiple notifications
-     *
-     * @param notifications List of notifications to be stored
-     */
-    public void addNotifications(List<Notification> notifications) {
-        notificationCollection.add(notifications);
     }
 
     /**
@@ -116,15 +123,15 @@ public class NotificationRepository extends Repository {
         Notification notification = null;
 
         Notification.NotificationType notType = Objects.requireNonNull(document.get("type", Notification.NotificationType.class));
-        if (notType == FRIEND_REQUEST){
+        if (notType == FRIEND_REQUEST) {
             notification = new FriendsNotification();
-        } else if (notType == MEETUP_REQUEST || notType == MEETUP_ACCEPTED || notType == MEETUP_DECLINED){
+        } else if (notType == MEETUP_REQUEST || notType == MEETUP_ACCEPTED || notType == MEETUP_DECLINED) {
             notification = new MeetupNotification(notType);
             ((MeetupNotification) notification).setMeetupId(document.getString("meetupId"));
             ((MeetupNotification) notification).setLocation(document.getString("location"));
             ((MeetupNotification) notification).setMeetupAt(document.getString("meetupAt"));
         }
-        if (notification != null){
+        if (notification != null) {
             notification.setId(document.getId());
             notification.setSenderId(document.getString("senderId"));
             notification.setSenderName(document.getString("senderName"));
@@ -141,25 +148,25 @@ public class NotificationRepository extends Repository {
      *
      * @param notification notification to accept/decline/undo decline
      */
-    public void accept(Notification notification){
+    public void accept(Notification notification) {
         notificationCollection.document(notification.getId()).
                 update("state", Notification.NotificationState.NOTIFICATION_ACCEPTED);
         notificationCollection.document(notification.getId()).
                 update("createdAt", notification.getCreatedAt());
     }
 
-    public void decline(Notification notification){
+    public void decline(Notification notification) {
         notificationCollection.document(notification.getId()).
                 update("state", Notification.NotificationState.NOTIFICATION_DECLINED);
     }
 
-    public void undo(Notification notification){
+    public void undo(Notification notification) {
         notificationCollection.document(notification.getId()).
                 update("state", Notification.NotificationState.NOTIFICATION_PENDING);
     }
 
     public interface OnNotificationRepositoryListener {
-        void onNotificationsRetrieved(List<Notification> notification);
+        void onNotificationsRetrieved(List<Notification> notifications);
     }
 
 }

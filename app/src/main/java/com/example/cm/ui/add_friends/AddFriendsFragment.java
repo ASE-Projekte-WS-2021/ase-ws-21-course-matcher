@@ -1,37 +1,34 @@
-package com.example.cm.ui.select_friends;
+package com.example.cm.ui.add_friends;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
-import com.example.cm.databinding.FragmentSelectFriendsBinding;
-import com.example.cm.ui.adapters.SelectFriendsAdapter;
-import com.example.cm.ui.adapters.SelectFriendsAdapter.OnItemClickListener;
-import com.example.cm.ui.select_friends.SelectFriendsViewModel.OnNotificationSentListener;
+import com.example.cm.databinding.FragmentAddFriendsBinding;
+import com.example.cm.ui.adapters.AddFriendsAdapter;
+import com.example.cm.ui.adapters.AddFriendsAdapter.OnItemClickListener;
+import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 
-public class SelectFriendsFragment extends Fragment implements OnItemClickListener, OnNotificationSentListener {
+public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnNotificationSentListener {
 
-    private SelectFriendsViewModel selectFriendsViewModel;
-    private FragmentSelectFriendsBinding binding;
-    private SelectFriendsAdapter selectFriendsAdapter;
-    private OnItemClickListener onItemClickListener;
+    private AddFriendsViewModel selectFriendsViewModel;
+    private FragmentAddFriendsBinding binding;
+    private AddFriendsAdapter selectFriendsAdapter;
     private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentSelectFriendsBinding.inflate(inflater, container, false);
+        binding = FragmentAddFriendsBinding.inflate(inflater, container, false);
         initUI();
         initListener();
         initViewModel();
@@ -41,7 +38,7 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
 
 
     private void initUI() {
-        selectFriendsAdapter = new SelectFriendsAdapter(this);
+        selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(selectFriendsAdapter);
@@ -53,7 +50,7 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     }
 
     private void initViewModel() {
-        selectFriendsViewModel = new ViewModelProvider(this).get(SelectFriendsViewModel.class);
+        selectFriendsViewModel = new ViewModelProvider(this).get(AddFriendsViewModel.class);
         selectFriendsViewModel.setOnNotificationSentListener(this);
         observeSentFriendRequests();
 
@@ -64,7 +61,6 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
             if (sentFriendRequests == null) {
                 return;
             }
-
             selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
         });
     }
@@ -84,24 +80,21 @@ public class SelectFriendsFragment extends Fragment implements OnItemClickListen
     }
 
     @Override
-    public void onFriendRequestButtonClicked(String receiverId, int position) {
+    public void onFriendRequestButtonClicked(String receiverId) {
         selectFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
     }
 
 
     @Override
     public void onItemClicked(String id) {
-
         Bundle bundle = new Bundle();
         bundle.putString("userId", id);
 
         navigator.getNavController().navigate(R.id.fromSelectFriendsToProfile, bundle);
-
     }
 
-
     @Override
-    public void onNotificationSent() {
+    public void onNotificationAdded() {
         Snackbar.make(binding.getRoot(), "Anfrage wurde verschickt", Snackbar.LENGTH_SHORT).show();
 
     }
