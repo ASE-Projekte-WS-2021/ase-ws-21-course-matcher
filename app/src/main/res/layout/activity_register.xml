@@ -9,80 +9,87 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="@dimen/small_margin_items"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/small_margin_items"
             android:gravity="center"
             android:text="@string/registerTitle"
-            android:textSize="24sp" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_title" />
 
         <EditText
             android:id="@+id/registerUserNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="username"
             android:ems="10"
             android:hint="@string/loginUserNameEditText"
             android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:autofillHints="username" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <EditText
             android:id="@+id/registerFirstNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="Firstname"
             android:ems="10"
             android:hint="@string/registerFirstNameEditText"
             android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:autofillHints="Firstname" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <EditText
             android:id="@+id/registerLastNameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="Lastname"
             android:ems="10"
             android:hint="@string/registerLastNameEditText"
             android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:autofillHints="Lastname" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <EditText
             android:id="@+id/registerEmailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="emailAddress"
             android:ems="10"
             android:hint="@string/registerEmailEditText"
             android:inputType="textEmailAddress"
-            android:minHeight="48dp"
-            android:autofillHints="emailAddress" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <EditText
             android:id="@+id/registerPasswordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints="password"
             android:ems="10"
             android:hint="@string/registerPasswordEditText"
             android:inputType="textPassword"
-            android:minHeight="48dp"
-            android:autofillHints="password" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <Button
             android:id="@+id/registerLoginBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="register"
-            android:text="@string/registerLoginBtn"
+            android:text="@string/registerRegisterBtn"
             tools:ignore="UsingOnClickInXml" />
 
         <Button
             android:id="@+id/registerRegisterBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
             android:onClick="goToLogin"
-            android:text="@string/registerRegisterBtn"
+            android:text="@string/registerLoginBtn"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
             tools:ignore="UsingOnClickInXml" />
     </LinearLayout>
 
