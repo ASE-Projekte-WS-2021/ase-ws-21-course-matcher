@@ -10,18 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:padding="8dp"
+        android:padding="@dimen/small_margin_items"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="@dimen/small_margin_items"
             android:gravity="center"
             android:text="@string/registerTitle"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="@dimen/text_size_title" />
 
         <EditText
             android:id="@+id/registerUserNameEditText"
@@ -31,7 +31,7 @@
             android:ems="10"
             android:hint="@string/loginUserNameEditText"
             android:inputType="textPersonName"
-            android:minHeight="48dp" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <EditText
             android:id="@+id/registerFirstNameEditText"
@@ -41,7 +41,7 @@
             android:ems="10"
             android:hint="@string/registerFirstNameEditText"
             android:inputType="textPersonName"
-            android:minHeight="48dp" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <EditText
             android:id="@+id/registerLastNameEditText"
@@ -51,7 +51,7 @@
             android:ems="10"
             android:hint="@string/registerLastNameEditText"
             android:inputType="textPersonName"
-            android:minHeight="48dp" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <EditText
             android:id="@+id/registerEmailEditText"
@@ -61,7 +61,7 @@
             android:ems="10"
             android:hint="@string/registerEmailEditText"
             android:inputType="textEmailAddress"
-            android:minHeight="48dp" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <EditText
             android:id="@+id/registerPasswordEditText"
@@ -71,7 +71,7 @@
             android:ems="10"
             android:hint="@string/registerPasswordEditText"
             android:inputType="textPassword"
-            android:minHeight="48dp" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <Button
             android:id="@+id/registerLoginBtn"

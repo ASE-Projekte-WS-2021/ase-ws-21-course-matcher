@@ -12,17 +12,17 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="@dimen/small_margin_items">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="@dimen/small_margin_items"
             android:gravity="center"
             android:text="@string/loginTitle"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="@dimen/text_size_title" />
 
         <EditText
             android:id="@+id/loginEmailEditText"
@@ -32,7 +32,7 @@
             android:ems="10"
             android:hint="@string/loginEmailEditText"
             android:inputType="textEmailAddress"
-            android:minHeight="48dp" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <EditText
             android:id="@+id/loginPasswordEditText"
@@ -42,7 +42,7 @@
             android:ems="10"
             android:hint="@string/loginPasswordEditText"
             android:inputType="textPassword"
-            android:minHeight="48dp" />
+            android:minHeight="@dimen/edit_text_min_height" />
 
         <Button
             android:id="@+id/loginLoginBtn"
