@@ -12,7 +12,6 @@ import java.util.List;
 
 public class ProfileViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener {
 
-    private static final String TAG = "ProfileViewModel";
     private final UserRepository userRepository;
     public MutableLiveData<User> currentUser = new MutableLiveData<>();
 

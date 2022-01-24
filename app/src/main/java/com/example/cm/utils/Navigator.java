@@ -23,6 +23,10 @@ public class Navigator {
         navController.navigate(R.id.navigateToFriends);
     }
 
+    public void navigateToInviteFriends() {
+        navController.navigate(R.id.navigateToInviteFriends);
+    }
+
     public void globalNavigateToProfile() {
         navController.navigate(R.id.fromFriendsToProfile);
     }

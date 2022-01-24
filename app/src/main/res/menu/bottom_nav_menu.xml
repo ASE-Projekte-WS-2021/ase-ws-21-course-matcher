@@ -17,7 +17,7 @@
         android:title="@string/title_notifications" />
 
     <item
-        android:id="@+id/navigation_meetup"
+        android:id="@+id/navigation_meetup_list"
         android:icon="@android:drawable/ic_menu_today"
         android:iconTint="@color/black"
         android:title="Meetup"/>

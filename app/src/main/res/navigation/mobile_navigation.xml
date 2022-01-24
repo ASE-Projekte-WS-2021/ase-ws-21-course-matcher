@@ -29,8 +29,19 @@
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
+        android:id="@+id/navigation_meetup_list"
+        android:name="com.example.cm.ui.meetup.MeetupListFragment"
+        android:label="Meetup"
+        tools:layout="@layout/fragment_meetup_list">
+        <action
+            android:id="@+id/navigateToInviteFriends"
+            app:destination="@+id/navigation_meetup" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_meetup"
-        android:name="com.example.cm.ui.meetup.MeetupFragment"
+        android:name="com.example.cm.ui.meetup.CreateMeetupFragment"
         android:label="Meetup"
         tools:layout="@layout/fragment_meetup">
         <action

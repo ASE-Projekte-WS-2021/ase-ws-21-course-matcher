@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
-import com.example.cm.ui.CreateMeetupViewModel;
+import com.example.cm.ui.meetup.CreateMeetupViewModel;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
 import com.example.cm.utils.Utils;

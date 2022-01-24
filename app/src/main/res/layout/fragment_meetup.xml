@@ -7,7 +7,7 @@
     android:layout_margin="10dp"
     android:orientation="vertical"
     android:weightSum="2"
-    tools:context=".ui.meetup.MeetupFragment">
+    tools:context=".ui.meetup.CreateMeetupFragment">
 
 
     <TextView

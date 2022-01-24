@@ -31,14 +31,17 @@ public class MeetupRepository extends Repository {
      */
     public Meetup snapshotToMeetup(DocumentSnapshot document) {
         Meetup meetup = new Meetup();
-        meetup.setId(document.getId());
         meetup.setRequestingUser(document.getString("requestingUser"));
-        meetup.setInvitedFriends(Utils.castList(document.get("invitedFriends"), String.class));
+        meetup.setParticipants(Utils.castList(document.get("participants"), String.class));
         meetup.setLocation(document.getString("location"));
         meetup.setTime(document.getString("time"));
         meetup.setPrivate(document.getBoolean("private"));
         meetup.setConfirmedFriends(Utils.castList(document.get("confirmedFriends"), String.class));
         return meetup;
+    }
+
+    public void getMeetupsByUser(String userId) {
+
     }
 
     public void addMeetup(Meetup meetup) {

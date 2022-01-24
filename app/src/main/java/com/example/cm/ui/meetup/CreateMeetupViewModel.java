@@ -1,4 +1,4 @@
-package com.example.cm.ui;
+package com.example.cm.ui.meetup;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener, NotificationRepository.OnNotificationRepositoryListener, MeetupRepository.OnMeetupRepositoryListener {
 
@@ -87,11 +88,13 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     }
 
     public void createMeetup() {
+        String currentUserId = userRepository.getCurrentUser().getUid();
+        Objects.requireNonNull(selectedUsers.getValue()).add(currentUserId);
         meetupToAdd = new Meetup(
-                userRepository.getCurrentUser().getUid(),
+                currentUserId,
                 meetupLocation.getValue(),
                 meetupTime.getValue(),
-                Boolean.TRUE.equals(meetupIsPrivate.getValue()),
+                meetupIsPrivate.getValue(),
                 selectedUsers.getValue());
         meetupRepository.addMeetup(meetupToAdd);
     }
