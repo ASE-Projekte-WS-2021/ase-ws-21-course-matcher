@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ui.select_friends.SelectFriendsFragment">
+    tools:context=".ui.add_friends.AddFriendsFragment">
 
     <LinearLayout
         android:id="@+id/searchBarWrapper"

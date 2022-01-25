@@ -41,6 +41,9 @@
     <string name="friend_request_text">" möchte mit dir befreundet sein."</string>
     <string name="friend_accepted_text">" ist jetzt auf deiner Freundesliste."</string>
     <string name="meetup_request_title">"Neue Meetup-Anfrage"</string>
+    <string name="meetup_accepted_text">" rechnet mit dir."</string>
+    <string name="meetup_request_text">" möchte sich mit dir treffen."</string>
+    <string name="meetup_declined_text">" kommt leider nicht."</string>
 
 
     <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
@@ -56,19 +59,19 @@
     <string name="title_activity_splash_screen">SplashScreen</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="registerTitle">Register</string>
+    <string name="registerTitle">Registrieren</string>
     <string name="registerEmailEditText">Email</string>
-    <string name="registerPasswordEditText">Password</string>
-    <string name="registerFirstNameEditText">Firstname</string>
-    <string name="registerLastNameEditText">Lastname</string>
-    <string name="registerLoginBtn">Register</string>
-    <string name="registerRegisterBtn">Login</string>
+    <string name="registerPasswordEditText">Passwort</string>
+    <string name="registerFirstNameEditText">Vorname</string>
+    <string name="registerLastNameEditText">Nachname</string>
+    <string name="registerLoginBtn">Zurück zum Login</string>
+    <string name="registerRegisterBtn">Registrieren</string>
     <string name="loginTitle">Login</string>
     <string name="loginEmailEditText">Email</string>
-    <string name="loginPasswordEditText">Password</string>
-    <string name="loginLoginBtn">Login</string>
-    <string name="loginRegisterBtn">Register</string>
-    <string name="loginUserNameEditText">Username</string>
+    <string name="loginPasswordEditText">Passwort</string>
+    <string name="loginLoginBtn">Einloggen</string>
+    <string name="loginRegisterBtn">Kein Account? Hier registrieren.</string>
+    <string name="loginUserNameEditText">Benutzername</string>
     <string name="btn_meetup_send_invite">Abschicken</string>
     <string name="profile_picture_decription">Profilbild</string>
 

@@ -17,7 +17,7 @@ import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.CreateMeetupViewModel;
 import com.example.cm.ui.InvitationSuccess.InvitationSuccessDialog;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
-import com.example.cm.ui.select_friends.SelectFriendsViewModel.OnNotificationSentListener;
+import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -119,9 +119,8 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding = null;
     }
 
-
     @Override
-    public void onNotificationSent() {
+    public void onNotificationAdded() {
         Snackbar.make(binding.getRoot(), "Anfragen wurden verschickt", Snackbar.LENGTH_SHORT).show();
     }
 

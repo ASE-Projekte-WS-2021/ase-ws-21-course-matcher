@@ -79,7 +79,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         ItemSingleFriendBinding binding = ItemSingleFriendBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
-
         return new UserViewHolder(binding);
     }
 

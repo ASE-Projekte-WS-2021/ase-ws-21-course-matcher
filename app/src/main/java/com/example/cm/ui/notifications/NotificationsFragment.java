@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.cm.data.models.FriendsNotification;
+import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.databinding.FragmentNotificationsBinding;
 import com.example.cm.data.models.Notification;
 import com.example.cm.ui.adapters.NotificationListAdapter;
@@ -59,17 +61,17 @@ public class NotificationsFragment extends Fragment implements NotificationListA
 
     @Override
     public void onAccept(Notification notification) {
-        notificationsViewModel.acceptFriendFromRequest(notification);
+        notificationsViewModel.acceptRequest(notification);
     }
 
     @Override
     public void onDecline(Notification notification) {
-        notificationsViewModel.declineFriendFromRequest(notification);
+        notificationsViewModel.declineRequest(notification);
     }
 
     @Override
     public void onUndo(Notification notification, int position) {
-        notificationsViewModel.undoDeclineFriendFromRequest(notification, position);
+        notificationsViewModel.undoDeclineRequest(notification, position);
     }
 
     @SuppressLint("NotifyDataSetChanged")

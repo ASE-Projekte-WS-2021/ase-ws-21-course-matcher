@@ -5,29 +5,35 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.MeetupNotification;
+import com.example.cm.data.models.Notification;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
+import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener {
+public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener, NotificationRepository.OnNotificationRepositoryListener, MeetupRepository.OnMeetupRepositoryListener {
 
     private final MeetupRepository meetupRepository;
     private final UserRepository userRepository;
+    private final NotificationRepository notificationRepository;
 
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     public MutableLiveData<List<User>> users = new MutableLiveData<>();
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
-    private User user;
+    private User currentUser;
+    private Meetup meetupToAdd;
 
     public CreateMeetupViewModel() {
-        this.meetupRepository = new MeetupRepository();
+        this.meetupRepository = new MeetupRepository(this);
         userRepository = new UserRepository(this);
+        notificationRepository = new NotificationRepository(this);
         FirebaseUser firebaseUser = userRepository.getCurrentUser();
         userRepository.getUserByEmail(firebaseUser.getEmail());
         userRepository.getUsers();
@@ -81,13 +87,13 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     }
 
     public void createMeetup() {
-        Meetup meetup = new Meetup(
+        meetupToAdd = new Meetup(
                 userRepository.getCurrentUser().getUid(),
                 meetupLocation.getValue(),
                 meetupTime.getValue(),
                 Boolean.TRUE.equals(meetupIsPrivate.getValue()),
                 selectedUsers.getValue());
-        meetupRepository.addMeetup(meetup);
+        meetupRepository.addMeetup(meetupToAdd);
     }
 
     public void searchUsers(String query) {
@@ -102,7 +108,7 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     public void onUsersRetrieved(List<User> users) {
         List<User> filteredUsers = new ArrayList<>();
         for (User user : users) {
-            if (!user.getId().equals(this.user.getId())) {
+            if (!user.getId().equals(this.currentUser.getId())) {
                 filteredUsers.add(user);
             }
         }
@@ -112,7 +118,32 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
 
     @Override
     public void onUserRetrieved(User user) {
-        this.user = user;
+        this.currentUser = user;
     }
 
+    @Override
+    public void onNotificationsRetrieved(List<Notification> notification) {
+
+    }
+
+    @Override
+    public void onMeetupAdded(String meetupId) {
+        meetupToAdd.setId(meetupId);
+
+        // Create notifications for each invited user
+        if(selectedUsers.getValue() != null) {
+            for(String invitedFriendId : selectedUsers.getValue()){
+                MeetupNotification notification = new MeetupNotification(
+                        meetupId,
+                        userRepository.getCurrentUser().getUid(),
+                        currentUser.getFullName(),
+                        invitedFriendId,
+                        meetupLocation.getValue(),
+                        meetupTime.getValue(),
+                        Notification.NotificationType.MEETUP_REQUEST
+                );
+                notificationRepository.addNotification(notification);
+            }
+        }
+    }
 }
