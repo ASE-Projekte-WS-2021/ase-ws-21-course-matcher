@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import com.example.cm.R;
 import com.example.cm.utils.Navigator;
 
 public class InvitationSuccessDialog extends AppCompatDialogFragment {
@@ -16,8 +17,9 @@ public class InvitationSuccessDialog extends AppCompatDialogFragment {
 
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        String dialogMessage = getString(R.string.invitation_success_dialog);
         AlertDialog.Builder builder = new AlertDialog.Builder((getActivity()));
-        builder.setTitle("Meetup versendet!").setMessage("Dein Meetup wurde erfolgreich versendet. Warte auf die Reaktion deiner Freunde und viel Spaß bei eurem Treffen!").setPositiveButton("zurück zur Karte", new DialogInterface.OnClickListener() {
+        builder.setTitle("Meetup versendet!").setMessage(dialogMessage).setPositiveButton("zurück zur Karte", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
                 navigator.navigateToMap();
