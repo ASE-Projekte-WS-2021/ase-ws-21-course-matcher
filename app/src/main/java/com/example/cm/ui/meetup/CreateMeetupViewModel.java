@@ -89,13 +89,14 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
 
     public void createMeetup() {
         String currentUserId = userRepository.getCurrentUser().getUid();
-        Objects.requireNonNull(selectedUsers.getValue()).add(currentUserId);
+        Objects.requireNonNull(selectedUsers.getValue());
         meetupToAdd = new Meetup(
                 currentUserId,
                 meetupLocation.getValue(),
                 meetupTime.getValue(),
                 meetupIsPrivate.getValue(),
                 selectedUsers.getValue());
+                new ArrayList<String>();
         meetupRepository.addMeetup(meetupToAdd);
     }
 

@@ -4,10 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
     android:background="#FFFFFF"
-    android:backgroundTint="#FFFFFF"
-    android:paddingTop="@dimen/small_margin_items">
+    android:backgroundTint="#FFFFFF" >
 
     <TextView
         android:id="@+id/locationText"
@@ -27,20 +25,69 @@
         app:layout_constraintTop_toBottomOf="@+id/locationText" />
 
     <TextView
-        android:id="@+id/confirmedFriendsText"
+        android:id="@+id/confirmedTextTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:textColor="@color/orange_dark"
-        android:textStyle="italic"
+        android:text="Zusgesagt:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/timeText" />
 
+    <TextView
+        android:id="@+id/confirmedFriendsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="text"
+        android:textColor="@color/orange_dark"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirmedTextTitle" />
+
+    <TextView
+        android:id="@+id/invitedTextTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Ausstehend:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/confirmedFriendsText" />
+
+    <TextView
+        android:id="@+id/invitedFriendsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="text"
+        android:textColor="@color/orange_dark"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/invitedTextTitle" />
+
+    <TextView
+        android:id="@+id/declinedTextTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Abgesagt:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/invitedFriendsText" />
+
+    <TextView
+        android:id="@+id/declinedFriendsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="text"
+        android:textColor="@color/orange_dark"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/declinedTextTitle" />
+
     <View
         android:id="@+id/divider"
-        android:layout_width="393dp"
+        android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_margin="8dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/declinedFriendsText" />
 </androidx.constraintlayout.widget.ConstraintLayout>

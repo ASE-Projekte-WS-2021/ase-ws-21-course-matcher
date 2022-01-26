@@ -2,15 +2,21 @@ package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ItemMeetupBinding;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
@@ -49,17 +55,24 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
         // replace this ugly code with for example an expandable listview
         List<String> confirmedFrineds = meetup.getConfirmedFriends();
+        List<String> invitedFriends = meetup.getInvitedFriends();
+        List<String> declinedFriends = meetup.getDeclinedFriends();
 
-        String participants = "";
-        for (String participant: meetup.getConfirmedFriends()) {
-            participants += "@" + participant;
-            if(confirmedFrineds.contains(participant)){
-                participants += (" (zugesagt)");
-            }
-            participants += "\n";
+        //replace this ugly code also
+        setFriendsTextFields(confirmedFrineds, holder.getTvConfirmedFriends(), holder.getTvConfirmedFriendsTitle());
+        setFriendsTextFields(invitedFriends, holder.getTvInvitedFriends(), holder.getTvInvitedFriendsTitle());
+        setFriendsTextFields(declinedFriends, holder.getTvDeclinedFriends(), holder.getTvDeclinedFriendsTitle());
+    }
 
+    //replace this ugly code also :D
+    private void setFriendsTextFields(List<String> list, TextView textView, TextView textViewTitle){
+        FirebaseFirestore.getInstance().collection(CollectionConfig.USERS.toString());
+        if(list == null || list.isEmpty()){
+            textView.setVisibility(View.GONE);
+            textViewTitle.setVisibility(View.GONE);
+        }else{
+            new UserRepository().getUserByIdMeetup(list, textView);
         }
-        holder.getTvParticipants().setText(participants);
     }
 
     @Override
@@ -101,8 +114,28 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return binding.timeText;
         }
 
-        public TextView getTvParticipants() {
+        public TextView getTvConfirmedFriends() {
             return binding.confirmedFriendsText;
+        }
+
+        public TextView getTvConfirmedFriendsTitle() {
+            return binding.confirmedTextTitle;
+        }
+
+        public TextView getTvInvitedFriends() {
+            return binding.invitedFriendsText;
+        }
+
+        public TextView getTvInvitedFriendsTitle() {
+            return binding.invitedTextTitle;
+        }
+
+        public TextView getTvDeclinedFriends() {
+            return binding.declinedFriendsText;
+        }
+
+        public TextView getTvDeclinedFriendsTitle() {
+            return binding.declinedTextTitle;
         }
     }
 }

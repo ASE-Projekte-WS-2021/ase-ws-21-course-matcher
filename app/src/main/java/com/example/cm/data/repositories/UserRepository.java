@@ -1,6 +1,6 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
+import android.widget.TextView;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.User;
@@ -59,20 +59,42 @@ public class UserRepository extends Repository {
     /**
      * Get list of all users who aren't friends yet
      */
-    public void getUsersNotFriends(){
+    public void getUsersNotFriends() {
         userCollection.get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 ArrayList<User> users = new ArrayList<>();
-                for (DocumentSnapshot doc : task.getResult().getDocuments()){
-                    if (doc.get("friends") == null){
+                for (DocumentSnapshot doc : task.getResult().getDocuments()) {
+                    if (doc.get("friends") == null) {
                         users.add(snapshotToUser(doc));
-                    } else if (!Utils.castList(doc.get("friends"), String.class).contains(auth.getCurrentUser().getUid())){
+                    } else if (!Utils.castList(doc.get("friends"), String.class).contains(auth.getCurrentUser().getUid())) {
                         users.add(snapshotToUser(doc));
                     }
                 }
                 listener.onUsersRetrieved(users);
             }
         });
+    }
+
+    //replace this ugly code
+    public void getUserByIdMeetup(List<String> ids, TextView textView) {
+        userCollection.whereIn("id", ids).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ArrayList<User> users = new ArrayList<>();
+                StringBuilder text = new StringBuilder();
+                for (DocumentSnapshot doc : task.getResult().getDocuments()) {
+                    users.add(snapshotToUser(doc));
+                }
+
+                for (int i = 0; i < users.size(); i++) {
+                    text.append("@").append(users.get(i).getFullName());
+                    if (i != users.size() - 1) {
+                        text.append("\n");
+                    }
+                }
+                textView.setText(text.toString());
+            }
+        });
+
     }
 
     public void getUserById(String userId) {
@@ -94,7 +116,7 @@ public class UserRepository extends Repository {
     }
 
     public void getUsersByIds(List<String> userIds) {
-        if(userIds == null || userIds.size() == 0) {
+        if (userIds == null || userIds.size() == 0) {
             return;
         }
         userCollection.whereIn(FieldPath.documentId(), userIds).get().addOnCompleteListener(executorService, task -> {
@@ -113,11 +135,11 @@ public class UserRepository extends Repository {
     public void getUsersByUsername(String query) {
         userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
                 .get().addOnCompleteListener(executorService, task -> {
-                    if (task.isSuccessful()) {
-                        List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
-                        listener.onUsersRetrieved(users);
-                    }
-                });
+            if (task.isSuccessful()) {
+                List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                listener.onUsersRetrieved(users);
+            }
+        });
     }
 
     /**
@@ -129,17 +151,17 @@ public class UserRepository extends Repository {
     public void getFriendsByUsername(List<String> friendsIds, String query) {
         userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
                 .get().addOnCompleteListener(executorService, task -> {
-                    if (task.isSuccessful()) {
-                        List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
-                        List<User> friends = new ArrayList<>();
-                        for (User user : users) {
-                            if (friendsIds.contains(user.getId())) {
-                                friends.add(user);
-                            }
-                        }
-                        listener.onUsersRetrieved(friends);
+            if (task.isSuccessful()) {
+                List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                List<User> friends = new ArrayList<>();
+                for (User user : users) {
+                    if (friendsIds.contains(user.getId())) {
+                        friends.add(user);
                     }
-                });
+                }
+                listener.onUsersRetrieved(friends);
+            }
+        });
     }
 
     /**
@@ -173,7 +195,7 @@ public class UserRepository extends Repository {
         return user;
     }
 
-    public void addFriends(String friend1Id, String friend2Id){
+    public void addFriends(String friend1Id, String friend2Id) {
         userCollection.document(friend1Id).update("friends", FieldValue.arrayUnion(friend2Id));
         userCollection.document(friend2Id).update("friends", FieldValue.arrayUnion(friend1Id));
     }

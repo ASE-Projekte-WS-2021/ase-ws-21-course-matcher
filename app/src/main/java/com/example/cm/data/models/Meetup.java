@@ -12,6 +12,8 @@ public class Meetup {
     private boolean isPrivate;
     private List<String> invitedFriends;
     private List<String> confirmedFriends;
+
+    private List<String> declinedFriends;
     private String id;
 
     public Meetup(){
@@ -83,5 +85,13 @@ public class Meetup {
 
     public void setConfirmedFriends(List<String> confirmedFriends) {
         this.confirmedFriends = confirmedFriends;
+    }
+
+    public List<String> getDeclinedFriends() {
+        return declinedFriends;
+    }
+
+    public void setDeclinedFriends(List<String> declinedFriends) {
+        this.declinedFriends = declinedFriends;
     }
 }

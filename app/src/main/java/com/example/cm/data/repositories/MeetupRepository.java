@@ -42,6 +42,7 @@ public class MeetupRepository extends Repository {
         meetup.setLocation(document.getString("location"));
         meetup.setTime(document.getString("time"));
         meetup.setPrivate(document.getBoolean("private"));
+        meetup.setDeclinedFriends(Utils.castList(document.get("declinedFriends"), String.class));
         return meetup;
     }
 
