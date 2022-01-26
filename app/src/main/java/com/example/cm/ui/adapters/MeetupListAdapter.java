@@ -51,7 +51,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         List<String> confirmedFrineds = meetup.getConfirmedFriends();
 
         String participants = "";
-        for (String participant: meetup.getParticipants()) {
+        for (String participant: meetup.getConfirmedFriends()) {
             participants += "@" + participant;
             if(confirmedFrineds.contains(participant)){
                 participants += (" (zugesagt)");

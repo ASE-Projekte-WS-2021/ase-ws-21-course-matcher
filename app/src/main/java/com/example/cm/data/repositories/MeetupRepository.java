@@ -36,17 +36,17 @@ public class MeetupRepository extends Repository {
      */
     private Meetup snapshotToMeetup(DocumentSnapshot document) {
         Meetup meetup = new Meetup();
+        meetup.setConfirmedFriends(Utils.castList(document.get("confirmedFriends"), String.class));
         meetup.setRequestingUser(document.getString("requestingUser"));
-        meetup.setParticipants(Utils.castList(document.get("participants"), String.class));
+        meetup.setInvitedFriends(Utils.castList(document.get("invitedFriends"), String.class));
         meetup.setLocation(document.getString("location"));
         meetup.setTime(document.getString("time"));
         meetup.setPrivate(document.getBoolean("private"));
-        meetup.setConfirmedFriends(Utils.castList(document.get("confirmedFriends"), String.class));
         return meetup;
     }
 
     public void getMeetupsByCurrentUser() {
-        meetupCollection.whereArrayContains("participants", FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(executorService, task -> {
+        meetupCollection.whereArrayContains("confirmedFriends", FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<Meetup> meetups = snapshotToMeetupList(Objects.requireNonNull(task.getResult()));
                 listener.onMeetupsRetrieved(meetups);

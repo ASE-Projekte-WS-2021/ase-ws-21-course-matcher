@@ -10,19 +10,19 @@ public class Meetup {
     private String location;
     private String time;
     private boolean isPrivate;
-    private List<String> participants;
+    private List<String> invitedFriends;
     private List<String> confirmedFriends;
     private String id;
 
     public Meetup(){
     }
 
-    public Meetup(String requestingUser, String location, String time, boolean isPrivate, List<String> participants) {
+    public Meetup(String requestingUser, String location, String time, boolean isPrivate, List<String> invitedFriends) {
         this.requestingUser = requestingUser;
         this.location = location;
         this.time = time;
         this.isPrivate = isPrivate;
-        this.participants = participants;
+        this.invitedFriends = invitedFriends;
         confirmedFriends = Collections.singletonList(requestingUser);
     }
 
@@ -40,6 +40,9 @@ public class Meetup {
 
     public void setRequestingUser(String requestingUser) {
         this.requestingUser = requestingUser;
+        if(!confirmedFriends.contains(requestingUser)){
+            confirmedFriends.add(requestingUser);
+        }
     }
 
     public String getLocation() {
@@ -66,12 +69,12 @@ public class Meetup {
         isPrivate = aPrivate;
     }
 
-    public List<String> getParticipants() {
-        return participants;
+    public List<String> getInvitedFriends() {
+        return invitedFriends;
     }
 
-    public void setParticipants(List<String> participants) {
-        this.participants = participants;
+    public void setInvitedFriends(List<String> invitedFriends) {
+        this.invitedFriends = invitedFriends;
     }
 
     public List<String> getConfirmedFriends() {
