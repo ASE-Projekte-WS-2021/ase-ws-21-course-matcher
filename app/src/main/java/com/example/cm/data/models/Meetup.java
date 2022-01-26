@@ -40,7 +40,6 @@ public class Meetup {
 
     public void setRequestingUser(String requestingUser) {
         this.requestingUser = requestingUser;
-        confirmedFriends.add(requestingUser);
     }
 
     public String getLocation() {

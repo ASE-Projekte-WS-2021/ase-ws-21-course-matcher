@@ -130,6 +130,11 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     }
 
     @Override
+    public void onMeetupsRetrieved(List<Meetup> meetups) {
+
+    }
+
+    @Override
     public void onMeetupAdded(String meetupId) {
         meetupToAdd.setId(meetupId);
 

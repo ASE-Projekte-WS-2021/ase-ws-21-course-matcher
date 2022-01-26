@@ -1,19 +1,34 @@
 package com.example.cm.ui.meetup;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class MeetupListViewModel extends ViewModel {
-    private final MutableLiveData<String> mText;
+import com.example.cm.data.models.Meetup;
+import com.example.cm.data.repositories.MeetupRepository;
+
+import java.util.List;
+
+public class MeetupListViewModel extends ViewModel implements MeetupRepository.OnMeetupRepositoryListener{
+    private final MeetupRepository meetupRepository;
+    private final MutableLiveData<List<Meetup>> meetups = new MutableLiveData<>();
 
     public MeetupListViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("Meetupssss");
+        this.meetupRepository = new MeetupRepository(this);
+        meetupRepository.getMeetupsByCurrentUser();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public MutableLiveData<List<Meetup>> getMeetups() {
+        return meetups;
+    }
+
+    @Override
+    public void onMeetupsRetrieved(List<Meetup> meetups) {
+        this.meetups.postValue(meetups);
+    }
+
+    @Override
+    public void onMeetupAdded(String meetupId) {
+
     }
 }
 

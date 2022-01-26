@@ -13,10 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.cm.data.models.FriendsNotification;
-import com.example.cm.data.models.MeetupNotification;
-import com.example.cm.databinding.FragmentNotificationsBinding;
 import com.example.cm.data.models.Notification;
+import com.example.cm.databinding.FragmentNotificationsBinding;
 import com.example.cm.ui.adapters.NotificationListAdapter;
 
 public class NotificationsFragment extends Fragment implements NotificationListAdapter.OnFriendAcceptanceListener, SwipeRefreshLayout.OnRefreshListener {

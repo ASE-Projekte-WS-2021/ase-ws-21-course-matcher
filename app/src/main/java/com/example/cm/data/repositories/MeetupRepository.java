@@ -3,11 +3,16 @@ package com.example.cm.data.repositories;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.utils.Utils;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MeetupRepository extends Repository {
@@ -29,7 +34,7 @@ public class MeetupRepository extends Repository {
      * @param document Snapshot of a notification returned from Firestore
      * @return Returns a notification
      */
-    public Meetup snapshotToMeetup(DocumentSnapshot document) {
+    private Meetup snapshotToMeetup(DocumentSnapshot document) {
         Meetup meetup = new Meetup();
         meetup.setRequestingUser(document.getString("requestingUser"));
         meetup.setParticipants(Utils.castList(document.get("participants"), String.class));
@@ -40,8 +45,13 @@ public class MeetupRepository extends Repository {
         return meetup;
     }
 
-    public void getMeetupsByUser(String userId) {
-
+    public void getMeetupsByCurrentUser() {
+        meetupCollection.whereArrayContains("participants", FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                List<Meetup> meetups = snapshotToMeetupList(Objects.requireNonNull(task.getResult()));
+                listener.onMeetupsRetrieved(meetups);
+            }
+        });
     }
 
     public void addMeetup(Meetup meetup) {
@@ -62,6 +72,22 @@ public class MeetupRepository extends Repository {
     }
 
     public interface OnMeetupRepositoryListener {
+        void onMeetupsRetrieved(List<Meetup> meetups);
         void onMeetupAdded(String meetupId);
     }
+
+    /**
+     * Convert a list of snapshots to a list of meetups
+     *
+     * @param documents List of meetups returned from Firestore
+     * @return Returns a list of meetups
+     */
+    private List<Meetup> snapshotToMeetupList(QuerySnapshot documents) {
+        List<Meetup> meetups = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            meetups.add(snapshotToMeetup(document));
+        }
+        return meetups;
+    }
 }
+
