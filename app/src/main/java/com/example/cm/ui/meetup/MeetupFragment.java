@@ -58,6 +58,9 @@ public class MeetupFragment extends Fragment {
         String location = binding.meetupLocationSpinner.getSelectedItem().toString();
         String hour = binding.meetupTimePicker.getCurrentHour().toString();
         String min = binding.meetupTimePicker.getCurrentMinute().toString();
+        if(min.length() == 1){
+            min = "0" + min;
+        }
         String time = hour + ":" + min;
         Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
 
