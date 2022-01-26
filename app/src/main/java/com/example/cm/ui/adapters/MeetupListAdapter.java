@@ -102,7 +102,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         }
 
         public TextView getTvParticipants() {
-            return binding.participantsText;
+            return binding.confirmedFriendsText;
         }
     }
 }

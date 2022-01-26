@@ -35,5 +35,7 @@ public class Navigator {
         return navController;
     }
 
-
+    public void navigateToMap() {
+        navController.navigate(R.id.navigateToMap);
+    }
 }

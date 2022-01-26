@@ -53,7 +53,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         selectFriendsViewModel = new ViewModelProvider(this).get(AddFriendsViewModel.class);
         selectFriendsViewModel.setOnNotificationSentListener(this);
         observeSentFriendRequests();
-
     }
 
     private void observeSentFriendRequests() {
