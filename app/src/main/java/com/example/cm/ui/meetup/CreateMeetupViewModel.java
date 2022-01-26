@@ -1,4 +1,4 @@
-package com.example.cm.ui;
+package com.example.cm.ui.meetup;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

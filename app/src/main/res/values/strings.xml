@@ -81,4 +81,6 @@
     <string name="btn_send_friend_request_default">Anfragen</string>
     <string name="btn_send_friend_request_pending">Angefragt</string>
     <string name="friendsbtntext">Freunde</string>
+    <string name="button_color">#FFF3AC41</string>
+    <string name="button_color_disabled">#FFD3D3D3</string>
 </resources>

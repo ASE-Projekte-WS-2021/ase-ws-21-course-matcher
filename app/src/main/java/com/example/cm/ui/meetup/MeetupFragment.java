@@ -13,7 +13,6 @@ import androidx.navigation.Navigation;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
-import com.example.cm.ui.CreateMeetupViewModel;
 
 
 public class MeetupFragment extends Fragment {

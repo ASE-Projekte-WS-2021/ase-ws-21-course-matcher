@@ -2,6 +2,7 @@ package com.example.cm.ui.adapters;
 
 import static com.example.cm.utils.Utils.calculateDiff;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -60,11 +61,11 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         ItemSendFriendRequestBinding binding = ItemSendFriendRequestBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
-
         return new UserViewHolder(binding);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
         String name = users.get(position).getFullName();
@@ -79,10 +80,10 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
 
             if (!notificationExists) {
                 holder.getFriendRequestButton().setText(R.string.btn_send_friend_request_default);
-                holder.getFriendRequestButton().setBackgroundColor(Color.parseColor("#FFF3AC41"));
+                holder.getFriendRequestButton().setBackgroundColor(R.color.orange);
             } else {
                 holder.getFriendRequestButton().setText(R.string.btn_send_friend_request_pending);
-                holder.getFriendRequestButton().setBackgroundColor(Color.parseColor("#FFD3D3D3"));
+                holder.getFriendRequestButton().setBackgroundColor(R.color.grey_medium);
             }
         }
     }
@@ -132,6 +133,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             listener.onItemClicked(users.get(position).getId());
         }
 
+        @SuppressLint("ResourceAsColor")
         private void onButtonClicked() {
             isFriendRequestLoading = true;
 
@@ -141,10 +143,10 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
 
             if (binding.btnSendFriendRequest.getText().toString().equals(context.getString(R.string.btn_send_friend_request_default))) {
                 binding.btnSendFriendRequest.setText(R.string.btn_send_friend_request_pending);
-                binding.btnSendFriendRequest.setBackgroundColor(Color.parseColor("#FFD3D3D3"));
+                binding.btnSendFriendRequest.setBackgroundColor(R.color.orange);
             } else {
                 binding.btnSendFriendRequest.setText(R.string.btn_send_friend_request_default);
-                binding.btnSendFriendRequest.setBackgroundColor(Color.parseColor("#FFF3AC41"));
+                binding.btnSendFriendRequest.setBackgroundColor(R.color.grey_medium);
             }
         }
 
