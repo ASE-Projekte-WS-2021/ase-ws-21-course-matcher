@@ -94,13 +94,13 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     @Override
     public void onNotificationAdded() {
-        Snackbar.make(binding.getRoot(), "Anfrage wurde verschickt", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), R.string.snackbar_sent_request, Snackbar.LENGTH_LONG).show();
 
     }
 
     @Override
     public void onNotificationDeleted() {
-        Snackbar.make(binding.getRoot(), "Anfrage wurde entfernt", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), R.string.snackbar_remove_request, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

@@ -67,7 +67,9 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
             }
 
             if (users.size() == 0) {
-                Snackbar.make(binding.getRoot(), "No users found", Snackbar.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar.make(binding.getRoot(), getContext().getText(R.string.snackbar_no_friends_text), Snackbar.LENGTH_LONG);
+                // todo: set snackbar action -> go to add-friends-fragment
+                snackbar.show();
                 binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
             }
 
@@ -116,7 +118,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     @Override
     public void onNotificationAdded() {
-        Snackbar.make(binding.getRoot(), "Anfragen wurden verschickt", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), R.string.snackbar_sent_requests, Snackbar.LENGTH_LONG).show();
     }
 
     @Override

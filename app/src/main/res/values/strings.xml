@@ -83,4 +83,9 @@
     <string name="friendsbtntext">Freunde</string>
     <string name="button_color">#FFF3AC41</string>
     <string name="button_color_disabled">#FFD3D3D3</string>
+    <string name="snackbar_no_friends_text">Erst Freunde finden?</string>
+    <string name="add_snackbar_text">ADD</string>
+    <string name="snackbar_sent_requests">Anfragen wurden verschickt.</string>
+    <string name="snackbar_sent_request">Anfragen wurden verschickt.</string>
+    <string name="snackbar_remove_request">Anfragen wurden verschickt.</string>
 </resources>
