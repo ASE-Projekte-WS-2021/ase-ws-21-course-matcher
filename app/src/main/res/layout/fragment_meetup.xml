@@ -72,7 +72,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="@string/meetup_private" />
+        android:text="@string/meetup_private"
+        android:visibility="invisible"/>
 
     <Button
         android:id="@+id/meetup_info_btn"

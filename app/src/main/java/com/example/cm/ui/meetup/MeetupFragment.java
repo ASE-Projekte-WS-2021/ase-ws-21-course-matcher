@@ -17,7 +17,9 @@ import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
 import com.example.cm.ui.CreateMeetupViewModel;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 
@@ -55,18 +57,23 @@ public class MeetupFragment extends Fragment {
 
     private void onMeetupInfoBtnClicked() {
 
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
         String location = binding.meetupLocationSpinner.getSelectedItem().toString();
         String hour = binding.meetupTimePicker.getCurrentHour().toString();
         String min = binding.meetupTimePicker.getCurrentMinute().toString();
-        if(min.length() == 1){
+        if (min.length() == 1) {
             min = "0" + min;
         }
         String time = hour + ":" + min;
-        Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
+        //TODO den boolean wieder benutzen wenn gefiltert werden kann
+        //Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
+
+        Boolean isPrivate = true;
 
         createMeetupViewModel.setLocation(location);
         createMeetupViewModel.setTime(time);
         createMeetupViewModel.setIsPrivate(isPrivate);
+        createMeetupViewModel.setMeetupTimestamp(timeStamp);
 
         Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
     }
@@ -77,6 +84,12 @@ public class MeetupFragment extends Fragment {
         createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location -> binding.meetupLocationSpinner.setSelection(adapter.getPosition(location)));
         createMeetupViewModel.getMeetupTime().observe(getViewLifecycleOwner(), time -> setTimePickerTime(time));
         createMeetupViewModel.getMeetupIsPrivate().observe(getViewLifecycleOwner(), isPrivate -> binding.meetupPrivateCheckBox.setChecked(isPrivate));
+        createMeetupViewModel.getMeetupTimestamp().observe(getViewLifecycleOwner(), timestamp -> getTimestamp());
+
+    }
+
+    private void getTimestamp() {
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
     }
 
     private void setTimePickerTime(String time) {

@@ -1,4 +1,5 @@
 package com.example.cm.data.models;
+
 import com.google.firebase.firestore.Exclude;
 
 import java.util.Date;
@@ -70,31 +71,31 @@ public class Notification {
         return createdAt;
     }
 
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Exclude
-    public String getCreationTimeAgo(){
+    public String getCreationTimeAgo() {
         String result = "vor ";
         Date now = new Date();
-        long seconds=TimeUnit.MILLISECONDS.toSeconds(now.getTime() - createdAt.getTime());
-        long minutes=TimeUnit.MILLISECONDS.toMinutes(now.getTime() - createdAt.getTime());
-        long hours=TimeUnit.MILLISECONDS.toHours(now.getTime() - createdAt.getTime());
-        long days= TimeUnit.MILLISECONDS.toDays(now.getTime() - createdAt.getTime());
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(now.getTime() - createdAt.getTime());
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(now.getTime() - createdAt.getTime());
+        long hours = TimeUnit.MILLISECONDS.toHours(now.getTime() - createdAt.getTime());
+        long days = TimeUnit.MILLISECONDS.toDays(now.getTime() - createdAt.getTime());
         long weeks = days / 7;
-        if(seconds < 60) {
+        if (seconds < 60) {
             result = "jetzt";
-        } else if(minutes < 60) {
+        } else if (minutes < 60) {
             result += minutes + " Minuten";
-        } else if(hours < 24) {
+        } else if (hours < 24) {
             result += hours + " Stunden";
-        } else if(weeks < 2){
+        } else if (weeks < 2) {
             result += days + " Tagen";
         } else {
             result += (int) weeks + " Wochen";
         }
         return result;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public void setCreatedAtToNow() {
