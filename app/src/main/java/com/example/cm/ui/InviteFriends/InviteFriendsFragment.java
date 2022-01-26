@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.meetup.CreateMeetupViewModel;
+
+import com.example.cm.ui.InvitationSuccess.InvitationSuccessDialog;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
 import com.example.cm.utils.Utils;
@@ -53,10 +55,14 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
         binding.btnSendInvite.setOnClickListener(v -> {
             createMeetupViewModel.createMeetup();
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInvitationSuccess);
+            openDialog();
         });
     }
 
+    public void openDialog() {
+        InvitationSuccessDialog invitationSuccessDialog = new InvitationSuccessDialog();
+        invitationSuccessDialog.show(getActivity().getSupportFragmentManager(), "invitationSuccess");
+    }
 
     public void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
