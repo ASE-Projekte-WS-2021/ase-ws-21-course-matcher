@@ -1,6 +1,5 @@
 package com.example.cm.data.models;
 
-
 import java.util.Collections;
 import java.util.List;
 
@@ -13,17 +12,19 @@ public class Meetup {
     private List<String> invitedFriends;
     private List<String> confirmedFriends;
     private String id;
+    private String timestamp;
 
-    public Meetup(){
+    public Meetup() {
     }
 
-    public Meetup(String requestingUser, String location, String time, boolean isPrivate, List<String> invitedFriends) {
+    public Meetup(String requestingUser, String location, String time, boolean isPrivate, List<String> invitedFriends, String timestamp) {
         this.requestingUser = requestingUser;
         this.location = location;
         this.time = time;
         this.isPrivate = isPrivate;
         this.invitedFriends = invitedFriends;
         confirmedFriends = Collections.singletonList(requestingUser);
+        this.timestamp = timestamp;
     }
 
     public String getId() {
@@ -41,6 +42,14 @@ public class Meetup {
     public void setRequestingUser(String requestingUser) {
         this.requestingUser = requestingUser;
         confirmedFriends.add(requestingUser);
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getLocation() {
