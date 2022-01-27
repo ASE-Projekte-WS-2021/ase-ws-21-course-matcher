@@ -66,6 +66,7 @@ public class MeetupRepository extends Repository {
 
     public void addConfirmed(String meetupId, String participantId) {
         meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayUnion(participantId));
+        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
     }
 
     public void addDeclined(String meetupId, String participantId) {

@@ -54,12 +54,12 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         holder.getTvTime().setText("Um " + meetup.getTime());
 
         // replace this ugly code with for example an expandable listview
-        List<String> confirmedFrineds = meetup.getConfirmedFriends();
+        List<String> confirmedFriends = meetup.getConfirmedFriends();
         List<String> invitedFriends = meetup.getInvitedFriends();
         List<String> declinedFriends = meetup.getDeclinedFriends();
 
         //replace this ugly code also
-        setFriendsTextFields(confirmedFrineds, holder.getTvConfirmedFriends(), holder.getTvConfirmedFriendsTitle());
+        setFriendsTextFields(confirmedFriends, holder.getTvConfirmedFriends(), holder.getTvConfirmedFriendsTitle());
         setFriendsTextFields(invitedFriends, holder.getTvInvitedFriends(), holder.getTvInvitedFriendsTitle());
         setFriendsTextFields(declinedFriends, holder.getTvDeclinedFriends(), holder.getTvDeclinedFriendsTitle());
     }
