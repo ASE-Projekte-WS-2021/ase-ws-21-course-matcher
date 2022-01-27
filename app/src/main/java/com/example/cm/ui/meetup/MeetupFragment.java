@@ -15,7 +15,6 @@ import androidx.navigation.Navigation;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
-import com.example.cm.ui.CreateMeetupViewModel;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
