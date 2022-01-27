@@ -166,6 +166,7 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
                         Notification.NotificationType.MEETUP_REQUEST);
                 notificationRepository.addNotification(notification);
             }
+            selectedUsers.getValue().clear();
         }
     }
 }
