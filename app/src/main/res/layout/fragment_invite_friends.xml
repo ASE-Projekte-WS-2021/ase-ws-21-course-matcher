@@ -28,7 +28,6 @@
         android:backgroundTint="@color/grey_dark"
         android:hint="@string/searchbar_text_find_friends"
         android:inputType="text"
-        android:textSize="@dimen/text_size_description"
         app:layout_constraintEnd_toStartOf="@+id/inviteFriendsSearchBtn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/invite_friends_header_desc"
@@ -87,9 +86,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_menu_search"
-                tools:ignore="ImageContrastCheck"
-                android:contentDescription="@string/search_button_decription" />
+                android:src="@drawable/ic_round_search_24" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

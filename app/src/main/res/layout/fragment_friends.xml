@@ -30,7 +30,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_weight="0"
-            android:backgroundTint="#98A3C3"
+            android:backgroundTint="@color/grey_medium"
             app:cardCornerRadius="40dp">
 
             <LinearLayout
