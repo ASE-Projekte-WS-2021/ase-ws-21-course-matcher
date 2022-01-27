@@ -24,7 +24,7 @@
         android:id="@+id/inviteUserSearch"
         android:layout_width="0dp"
         android:layout_height="@dimen/edit_text_min_height"
-        android:layout_marginTop="@dimen/small_margin_items"
+        android:layout_marginTop="@dimen/medium_margin_items"
         android:backgroundTint="@color/grey_dark"
         android:hint="@string/searchbar_text_find_friends"
         android:inputType="text"
