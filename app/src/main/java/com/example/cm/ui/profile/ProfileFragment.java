@@ -11,18 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentProfileBinding;
 import com.example.cm.utils.Navigator;
 
 public class ProfileFragment extends Fragment {
 
-    private static final String TAG = "ProfileFragment";
-
     private ProfileViewModel profileViewModel;
     private Navigator navigator;
     private FragmentProfileBinding binding;
-    private User user;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
@@ -43,14 +39,13 @@ public class ProfileFragment extends Fragment {
 
         profileViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
             if (currentUser == null) return;
-            binding.tvName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
+            binding.tvName.setText(currentUser.getFullName());
             binding.tvUsername.setText(currentUser.getUsername());
         });
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Bundle bundle = this.getArguments();
         if (bundle != null) {
             if (bundle.containsKey("userId")) {
@@ -58,6 +53,8 @@ public class ProfileFragment extends Fragment {
                 String profileId = bundle.getString("userId");
                 profileViewModel.getUserById(profileId);
             }
+        } else {
+            profileViewModel.getLoggedInUser();
         }
     }
 

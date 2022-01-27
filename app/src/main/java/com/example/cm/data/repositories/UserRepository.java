@@ -5,6 +5,9 @@ import android.widget.TextView;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.User;
 import com.example.cm.utils.Utils;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -66,7 +69,8 @@ public class UserRepository extends Repository {
                 for (DocumentSnapshot doc : task.getResult().getDocuments()) {
                     if (doc.get("friends") == null) {
                         users.add(snapshotToUser(doc));
-                    } else if (!Utils.castList(doc.get("friends"), String.class).contains(auth.getCurrentUser().getUid())) {
+                    } else if (!Utils.castList(doc.get("friends"), String.class)
+                            .contains(auth.getCurrentUser().getUid())) {
                         users.add(snapshotToUser(doc));
                     }
                 }
@@ -75,7 +79,7 @@ public class UserRepository extends Repository {
         });
     }
 
-    //replace this ugly code
+    // replace this ugly code
     public void getUserByIdMeetup(List<String> ids, TextView textView) {
         userCollection.whereIn("id", ids).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -135,11 +139,11 @@ public class UserRepository extends Repository {
     public void getUsersByUsername(String query) {
         userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
                 .get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
-                listener.onUsersRetrieved(users);
-            }
-        });
+                    if (task.isSuccessful()) {
+                        List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                        listener.onUsersRetrieved(users);
+                    }
+                });
     }
 
     /**
@@ -149,19 +153,20 @@ public class UserRepository extends Repository {
      * @param query      String to search for
      */
     public void getFriendsByUsername(List<String> friendsIds, String query) {
-        userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
-                .get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
-                List<User> friends = new ArrayList<>();
-                for (User user : users) {
-                    if (friendsIds.contains(user.getId())) {
-                        friends.add(user);
+        userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff").get()
+                .addOnCompleteListener(executorService, task -> {
+                    if (task.isSuccessful()) {
+                        List<User> friends = new ArrayList<>();
+                        List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                        for (User user : users) {
+                            if (friendsIds.contains(user.getId())) {
+                                friends.add(user);
+                            }
+                        }
+                        listener.onUsersRetrieved(friends);
                     }
-                }
-                listener.onUsersRetrieved(friends);
-            }
-        });
+
+                });
     }
 
     /**
@@ -206,4 +211,3 @@ public class UserRepository extends Repository {
         void onUserRetrieved(User user);
     }
 }
-

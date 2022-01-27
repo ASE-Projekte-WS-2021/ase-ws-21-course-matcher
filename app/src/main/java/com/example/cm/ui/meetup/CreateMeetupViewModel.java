@@ -14,10 +14,12 @@ import com.example.cm.data.repositories.UserRepository;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener, NotificationRepository.OnNotificationRepositoryListener, MeetupRepository.OnMeetupRepositoryListener {
+public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener,
+        NotificationRepository.OnNotificationRepositoryListener, MeetupRepository.OnMeetupRepositoryListener {
 
     private final MeetupRepository meetupRepository;
     private final UserRepository userRepository;
@@ -26,8 +28,10 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
+    private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
     public MutableLiveData<List<User>> users = new MutableLiveData<>();
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+
     private User currentUser;
     private Meetup meetupToAdd;
 
@@ -75,6 +79,14 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
         return meetupIsPrivate;
     }
 
+    public LiveData<Date> getMeetupTimestamp() {
+        return meetupTimestamp;
+    }
+
+    public void setMeetupTimestamp(Date timestamp) {
+        meetupTimestamp.postValue(timestamp);
+    }
+
     public void setLocation(String location) {
         meetupLocation.postValue(location);
     }
@@ -94,9 +106,10 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
                 currentUserId,
                 meetupLocation.getValue(),
                 meetupTime.getValue(),
-                meetupIsPrivate.getValue(),
-                selectedUsers.getValue());
-                new ArrayList<String>();
+                Boolean.TRUE.equals(meetupIsPrivate.getValue()),
+                selectedUsers.getValue(),
+                meetupTimestamp.getValue());
+
         meetupRepository.addMeetup(meetupToAdd);
     }
 
@@ -112,7 +125,8 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     public void onUsersRetrieved(List<User> users) {
         List<User> filteredUsers = new ArrayList<>();
         for (User user : users) {
-            if (!user.getId().equals(this.currentUser.getId())) {
+            if (!user.getId().equals(this.currentUser.getId()) &&
+                    (user.getFriends() != null && user.getFriends().contains(currentUser.getId()))) {
                 filteredUsers.add(user);
             }
         }
@@ -140,8 +154,8 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
         meetupToAdd.setId(meetupId);
 
         // Create notifications for each invited user
-        if(selectedUsers.getValue() != null) {
-            for(String invitedFriendId : selectedUsers.getValue()){
+        if (selectedUsers.getValue() != null) {
+            for (String invitedFriendId : selectedUsers.getValue()) {
                 MeetupNotification notification = new MeetupNotification(
                         meetupId,
                         userRepository.getCurrentUser().getUid(),
@@ -149,8 +163,7 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
                         invitedFriendId,
                         meetupLocation.getValue(),
                         meetupTime.getValue(),
-                        Notification.NotificationType.MEETUP_REQUEST
-                );
+                        Notification.NotificationType.MEETUP_REQUEST);
                 notificationRepository.addNotification(notification);
             }
         }

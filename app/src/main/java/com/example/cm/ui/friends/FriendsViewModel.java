@@ -39,6 +39,7 @@ public class FriendsViewModel extends ViewModel implements OnUserRepositoryListe
             userRepository.getUsersByIds(currentUser.getValue().getFriends());
             return;
         }
+        friends.getValue().clear();
         userRepository.getFriendsByUsername(currentUser.getValue().getFriends(), query);
     }
 

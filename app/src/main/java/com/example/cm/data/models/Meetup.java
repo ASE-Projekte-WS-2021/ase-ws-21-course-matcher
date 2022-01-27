@@ -1,7 +1,7 @@
 package com.example.cm.data.models;
 
-
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class Meetup {
@@ -15,17 +15,19 @@ public class Meetup {
 
     private List<String> declinedFriends;
     private String id;
+    private Date timestamp;
 
-    public Meetup(){
+    public Meetup() {
     }
 
-    public Meetup(String requestingUser, String location, String time, boolean isPrivate, List<String> invitedFriends) {
+    public Meetup(String requestingUser, String location, String time, boolean isPrivate, List<String> invitedFriends, Date timestamp) {
         this.requestingUser = requestingUser;
         this.location = location;
         this.time = time;
         this.isPrivate = isPrivate;
         this.invitedFriends = invitedFriends;
         confirmedFriends = Collections.singletonList(requestingUser);
+        this.timestamp = new Date();
     }
 
     public String getId() {
@@ -45,6 +47,14 @@ public class Meetup {
         if(!confirmedFriends.contains(requestingUser)){
             confirmedFriends.add(requestingUser);
         }
+    }
+
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getLocation() {

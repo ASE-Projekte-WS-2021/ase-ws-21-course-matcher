@@ -18,9 +18,8 @@
 
     <item
         android:id="@+id/navigation_meetup_list"
-        android:icon="@android:drawable/ic_menu_today"
-        android:iconTint="@color/black"
-        android:title="Meetup"/>
+        android:icon="@drawable/ic_baseline_emoji_people_24"
+        android:title="@string/title_meetup"/>
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_baseline_person_24"

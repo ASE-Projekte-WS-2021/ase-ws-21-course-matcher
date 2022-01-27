@@ -20,11 +20,11 @@ public class MeetupRepository extends Repository {
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
     private OnMeetupRepositoryListener listener;
 
-    public MeetupRepository(){
+    public MeetupRepository() {
 
     }
 
-    public MeetupRepository(OnMeetupRepositoryListener listener){
+    public MeetupRepository(OnMeetupRepositoryListener listener) {
         this.listener = listener;
     }
 
@@ -57,18 +57,18 @@ public class MeetupRepository extends Repository {
 
     public void addMeetup(Meetup meetup) {
         meetupCollection.add(meetup).addOnCompleteListener(executorService, task -> {
-            if(task.isSuccessful()){
+            if (task.isSuccessful()) {
                 String newMeetupId = Objects.requireNonNull(task.getResult()).getId();
                 listener.onMeetupAdded(newMeetupId);
             }
         });
     }
 
-    public void addConfirmed(String meetupId, String participantId){
+    public void addConfirmed(String meetupId, String participantId) {
         meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayUnion(participantId));
     }
 
-    public void addDeclined(String meetupId, String participantId){
+    public void addDeclined(String meetupId, String participantId) {
         meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayUnion(participantId));
     }
 

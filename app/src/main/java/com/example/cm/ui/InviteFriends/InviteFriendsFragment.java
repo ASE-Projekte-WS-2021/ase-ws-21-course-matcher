@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
+import com.example.cm.ui.meetup.CreateMeetupViewModel;
+
 import com.example.cm.ui.InvitationSuccess.InvitationSuccessDialog;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
@@ -60,6 +62,8 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     public void openDialog() {
         InvitationSuccessDialog invitationSuccessDialog = new InvitationSuccessDialog();
         invitationSuccessDialog.show(getActivity().getSupportFragmentManager(), "invitationSuccess");
+        // hier müsste zur Eventübersicht navigiert werden
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToMap);
     }
 
     public void initViewModel() {
@@ -71,7 +75,10 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
             }
 
             if (users.size() == 0) {
-                Snackbar.make(binding.getRoot(), "No users found", Snackbar.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar.make(binding.getRoot(),
+                        getContext().getText(R.string.snackbar_no_friends_text), Snackbar.LENGTH_LONG);
+                // todo: set snackbar action -> go to add-friends-fragment
+                snackbar.show();
                 binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
             }
 
@@ -110,6 +117,10 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding.btnSendInvite.setVisibility(View.GONE);
     }
 
+    public void navToMap() {
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -118,7 +129,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     @Override
     public void onNotificationAdded() {
-        Snackbar.make(binding.getRoot(), "Anfragen wurden verschickt", Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(binding.getRoot(), R.string.snackbar_sent_requests, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
