@@ -18,10 +18,10 @@
         <EditText
             android:id="@+id/etUserSearch"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_height="@dimen/edit_text_min_height"
             android:layout_weight="1"
-            android:hint="Freunde finden..."
+            android:backgroundTint="@color/grey_dark"
+            android:hint="@string/select_friends_search_input_placeholder"
             android:inputType="text"
 
             />
@@ -32,7 +32,6 @@
             android:layout_height="40dp"
             android:layout_weight="0"
             android:backgroundTint="#98A3C3"
-            android:padding="16dp"
             app:cardCornerRadius="40dp">
 
             <LinearLayout

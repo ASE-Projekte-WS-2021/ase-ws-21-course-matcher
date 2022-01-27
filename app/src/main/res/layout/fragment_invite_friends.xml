@@ -25,13 +25,14 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/edit_text_min_height"
         android:layout_marginTop="@dimen/small_margin_items"
-        android:backgroundTint="@color/orange"
+        android:backgroundTint="@color/grey_dark"
         android:hint="@string/searchbar_text_find_friends"
         android:inputType="text"
         android:textSize="@dimen/text_size_description"
         app:layout_constraintEnd_toStartOf="@+id/inviteFriendsSearchBtn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/invite_friends_header_desc" />
+        app:layout_constraintTop_toBottomOf="@+id/invite_friends_header_desc"
+        tools:ignore="TextContrastCheck" />
 
     <ProgressBar
         android:id="@+id/inviteFriendsLoadingCircle"
@@ -72,7 +73,7 @@
         android:id="@+id/inviteFriendsSearchBtn"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:backgroundTint="@color/orange"
+        android:backgroundTint="@color/grey_medium"
         app:cardCornerRadius="40dp"
         app:layout_constraintBottom_toBottomOf="@+id/inviteUserSearch"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +88,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@android:drawable/ic_menu_search"
-                tools:ignore="ImageContrastCheck" />
+                tools:ignore="ImageContrastCheck"
+                android:contentDescription="@string/search_button_decription" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
