@@ -13,7 +13,7 @@
         android:id="@+id/searchBarWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="@dimen/small_margin_items">
 
         <EditText
             android:id="@+id/etUserSearch"
@@ -21,9 +21,8 @@
             android:layout_height="@dimen/edit_text_min_height"
             android:layout_weight="1"
             android:backgroundTint="@color/grey_dark"
-            android:hint="@string/select_friends_search_input_placeholder"
+            android:hint="@string/searchbar_text_find_friends"
             android:inputType="text"
-
             />
 
         <androidx.cardview.widget.CardView
