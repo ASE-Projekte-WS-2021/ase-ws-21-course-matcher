@@ -94,7 +94,8 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
     public void onNotificationsRetrieved(List<Notification> notifications) {
         ArrayList<Notification> notsToDisplay = new ArrayList<>();
         for (Notification notification : notifications) {
-            if (!(notification.getType() == Notification.NotificationType.MEETUP_REQUEST &&
+            if (!((notification.getType() == Notification.NotificationType.MEETUP_REQUEST ||
+                    notification.getType() == Notification.NotificationType.FRIEND_REQUEST) &&
                     notification.getState() == Notification.NotificationState.NOTIFICATION_DECLINED)) {
                 notsToDisplay.add(notification);
             }

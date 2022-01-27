@@ -73,7 +73,8 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         holder.getTvUsername().setText(username);
 
         for (Notification notification : sentFriendRequests) {
-            boolean notificationExists = notification.getReceiverId().equals(users.get(position).getId());
+            boolean notificationExists = notification.getReceiverId().equals(users.get(position).getId()) &&
+                    notification.getState() == Notification.NotificationState.NOTIFICATION_PENDING;
 
             int btnContent, btnColor;
             if (!notificationExists) {
