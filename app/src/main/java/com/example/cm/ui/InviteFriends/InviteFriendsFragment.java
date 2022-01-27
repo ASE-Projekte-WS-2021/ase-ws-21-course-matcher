@@ -14,12 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
-import com.example.cm.ui.CreateMeetupViewModel;
+import com.example.cm.ui.meetup.CreateMeetupViewModel;
+
+import com.example.cm.ui.InvitationSuccess.InvitationSuccessDialog;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
-import com.example.cm.ui.select_friends.SelectFriendsViewModel.OnNotificationSentListener;
+import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
-
 
 public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener, OnNotificationSentListener, InviteFriendsAdapter.OnItemClickListener {
 
@@ -53,10 +54,16 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
         binding.btnSendInvite.setOnClickListener(v -> {
             createMeetupViewModel.createMeetup();
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInvitationSuccess);
+            openDialog();
         });
     }
 
+    public void openDialog() {
+        InvitationSuccessDialog invitationSuccessDialog = new InvitationSuccessDialog();
+        invitationSuccessDialog.show(getActivity().getSupportFragmentManager(), "invitationSuccess");
+        //hier müsste zur Eventübersicht navigiert werden
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToMap);
+    }
 
     public void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
@@ -67,7 +74,9 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
             }
 
             if (users.size() == 0) {
-                Snackbar.make(binding.getRoot(), "No users found", Snackbar.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar.make(binding.getRoot(), getContext().getText(R.string.snackbar_no_friends_text), Snackbar.LENGTH_LONG);
+                // todo: set snackbar action -> go to add-friends-fragment
+                snackbar.show();
                 binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
             }
 
@@ -107,6 +116,10 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding.btnSendInvite.setVisibility(View.GONE);
     }
 
+    public void navToMap() {
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
+    }
+
 
     @Override
     public void onDestroyView() {
@@ -114,10 +127,9 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding = null;
     }
 
-
     @Override
-    public void onNotificationSent() {
-        Snackbar.make(binding.getRoot(), "Anfragen wurden verschickt", Snackbar.LENGTH_SHORT).show();
+    public void onNotificationAdded() {
+        Snackbar.make(binding.getRoot(), R.string.snackbar_sent_requests, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
