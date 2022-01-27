@@ -12,6 +12,8 @@ import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.NotificationRepository.OnNotificationRepositoryListener;
 import com.example.cm.data.repositories.UserRepository;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -79,6 +81,7 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
 
     public void undoDeclineRequest(Notification notification, int position) {
         notification.setState(Notification.NotificationState.NOTIFICATION_PENDING);
+        meetupRepository.addPending(((MeetupNotification) notification).getMeetupId(), notification.getReceiverId());
         notificationRepository.undo(notification);
         Objects.requireNonNull(notifications.getValue()).add(position, notification);
     }
@@ -89,7 +92,14 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
 
     @Override
     public void onNotificationsRetrieved(List<Notification> notifications) {
-        this.notifications.postValue(notifications);
+        ArrayList<Notification> notsToDisplay = new ArrayList<>();
+        for (Notification notification : notifications) {
+            if (!(notification.getType() == Notification.NotificationType.MEETUP_REQUEST &&
+                    notification.getState() == Notification.NotificationState.NOTIFICATION_DECLINED)) {
+                notsToDisplay.add(notification);
+            }
+        }
+        this.notifications.postValue(notsToDisplay);
     }
 
     @Override

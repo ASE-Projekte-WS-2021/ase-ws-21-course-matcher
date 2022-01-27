@@ -29,7 +29,6 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     private InviteFriendsAdapter inviteFriendsListAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
