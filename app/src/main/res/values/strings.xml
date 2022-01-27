@@ -5,9 +5,9 @@
 
     <!-- Meetup -->
     <string name="meetup_header">Freunde treffen</string>
-    <string name="meetup_header_desc">Macht aus wo und wann ihr euch trefft:</string>
+    <string name="meetup_header_desc">Schlage vor, wo und wann ihr euch trefft.</string>
     <string name="meetup_time">Wann wollt ihr euch treffen?</string>
-    <string name="meetup_private">lieber privat treffen?</string>
+    <string name="meetup_private">lieber privat treffen</string>
     <string name="meetup_place">Wo wollt ihr euch treffen?</string>
     <string name="meetup_submit_btn">weiter und Freunde auswählen</string>
     <string name="meetup_info_submit_btn">weiter</string>
