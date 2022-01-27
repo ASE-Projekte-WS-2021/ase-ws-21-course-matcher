@@ -22,7 +22,6 @@ import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListe
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
-
 public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener, OnNotificationSentListener, InviteFriendsAdapter.OnItemClickListener {
 
     private CreateMeetupViewModel createMeetupViewModel;
@@ -62,6 +61,8 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     public void openDialog() {
         InvitationSuccessDialog invitationSuccessDialog = new InvitationSuccessDialog();
         invitationSuccessDialog.show(getActivity().getSupportFragmentManager(), "invitationSuccess");
+        //hier müsste zur Eventübersicht navigiert werden
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToMap);
     }
 
     public void initViewModel() {
@@ -113,6 +114,10 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
             return;
         }
         binding.btnSendInvite.setVisibility(View.GONE);
+    }
+
+    public void navToMap() {
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
     }
 
 

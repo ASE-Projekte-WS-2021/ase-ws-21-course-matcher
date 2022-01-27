@@ -71,6 +71,10 @@ public class Notification {
         return createdAt;
     }
 
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Exclude
     public String getCreationTimeAgo() {
         String result = "vor ";
@@ -92,10 +96,6 @@ public class Notification {
             result += (int) weeks + " Wochen";
         }
         return result;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
     }
 
     public void setCreatedAtToNow() {

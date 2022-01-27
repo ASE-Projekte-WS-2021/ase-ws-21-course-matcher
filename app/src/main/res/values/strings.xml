@@ -31,7 +31,8 @@
     <string name="invitation_success_header_desc">Deine Anfrage für euer Meetup wurde erfolgreich an deine Freunde versandt! Warte auf eine Reaktion und genießt die Zeit zusammen.</string>
     <string name="back_to_home_btn">zurück zum Homescreen</string>
     <string name="invitation_success_dialog">Dein Meetup wurde erfolgreich versendet. Warte auf die Reaktion deiner Freunde und viel Spaß bei eurem Treffen!</string>
-
+    <string name="invitation_success_title">"Meetup versendet!"</string>
+    <string name="invitation_success_close_dialog">"ok"</string>
     <!-- Notifications -->
     <string name="accept_button_text">✓</string>
     <string name="decline_button_text">✗</string>

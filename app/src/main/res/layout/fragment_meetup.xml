@@ -28,6 +28,7 @@
         android:checked="false"
         android:text="@string/meetup_private"
         android:textSize="@dimen/text_size_description"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meetup_location_spinner" />
