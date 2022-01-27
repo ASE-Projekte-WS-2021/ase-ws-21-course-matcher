@@ -1,4 +1,4 @@
-package com.example.cm.ui;
+package com.example.cm.ui.meetup;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -120,7 +120,8 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     public void onUsersRetrieved(List<User> users) {
         List<User> filteredUsers = new ArrayList<>();
         for (User user : users) {
-            if (!user.getId().equals(this.currentUser.getId())) {
+            if (!user.getId().equals(this.currentUser.getId()) &&
+                    (user.getFriends() != null && user.getFriends().contains(currentUser.getId()))) {
                 filteredUsers.add(user);
             }
         }
