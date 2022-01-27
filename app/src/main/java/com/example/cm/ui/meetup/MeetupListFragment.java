@@ -71,7 +71,7 @@ public class MeetupListFragment extends Fragment implements MeetupListAdapter.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_meetup) {
-            navigator.navigateToInviteFriends();
+            navigator.navigateToCreateMeetup();
             return true;
         }
         return super.onOptionsItemSelected(item);

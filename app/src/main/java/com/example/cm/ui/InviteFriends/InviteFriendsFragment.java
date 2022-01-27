@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
-import com.example.cm.ui.meetup.CreateMeetupViewModel;
-
 import com.example.cm.ui.InvitationSuccess.InvitationSuccessDialog;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
@@ -62,8 +60,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     public void openDialog() {
         InvitationSuccessDialog invitationSuccessDialog = new InvitationSuccessDialog();
         invitationSuccessDialog.show(getActivity().getSupportFragmentManager(), "invitationSuccess");
-        // hier müsste zur Eventübersicht navigiert werden
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToMap);
+        navToMeetups();
     }
 
     public void initViewModel() {
@@ -117,8 +114,8 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding.btnSendInvite.setVisibility(View.GONE);
     }
 
-    public void navToMap() {
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
+    public void navToMeetups() {
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToMeetupList);
     }
 
     @Override

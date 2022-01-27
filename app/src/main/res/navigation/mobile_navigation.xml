@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_notifications">
 
     <action
         android:id="@+id/action_global_navigate_to_profile"
         app:destination="@id/navigation_profile" />
 
+    <!--
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.cm.ui.home.HomeFragment"
@@ -20,6 +21,8 @@
         android:name="com.example.cm.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
+
+        -->
 
     <fragment
         android:id="@+id/navigation_notifications"
@@ -33,7 +36,7 @@
         android:label="Meetup"
         tools:layout="@layout/fragment_meetup_list">
         <action
-            android:id="@+id/navigateToInviteFriends"
+            android:id="@+id/navigateToMeetups"
             app:destination="@+id/navigation_meetup" />
 
     </fragment>
@@ -58,8 +61,8 @@
             android:id="@+id/navigateToInfoMeetup"
             app:destination="@+id/navigation_meetup" />
         <action
-            android:id="@+id/navigateToMap"
-            app:destination="@id/navigation_home" />
+            android:id="@+id/navigateToMeetupList"
+            app:destination="@id/navigation_meetup_list" />
 
     </fragment>
 
@@ -97,7 +100,7 @@
         android:id="@+id/navigation_select_friends"
         android:name="com.example.cm.ui.add_friends.AddFriendsFragment"
         android:label="@string/title_find_friends"
-        tools:layout="@layout/fragment_add_friends" >
+        tools:layout="@layout/fragment_add_friends">
         <action
             android:id="@+id/fromSelectFriendsToProfile"
             app:destination="@id/navigation_profile" />
