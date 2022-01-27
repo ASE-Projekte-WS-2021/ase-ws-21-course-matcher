@@ -5,6 +5,9 @@ import android.util.Log;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.User;
 import com.example.cm.utils.Utils;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -127,11 +130,11 @@ public class UserRepository extends Repository {
      * @param query      String to search for
      */
     public void getFriendsByUsername(List<String> friendsIds, String query) {
-        userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
-                .get().addOnCompleteListener(executorService, task -> {
+        userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff").get()
+                .addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
-                        List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
                         List<User> friends = new ArrayList<>();
+                        List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
                         for (User user : users) {
                             if (friendsIds.contains(user.getId())) {
                                 friends.add(user);

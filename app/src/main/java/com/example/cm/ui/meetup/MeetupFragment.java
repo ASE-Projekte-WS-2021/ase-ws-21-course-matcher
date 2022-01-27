@@ -56,7 +56,7 @@ public class MeetupFragment extends Fragment {
 
     private void onMeetupInfoBtnClicked() {
 
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        Date timeStamp = new Date();
         String location = binding.meetupLocationSpinner.getSelectedItem().toString();
         String hour = binding.meetupTimePicker.getCurrentHour().toString();
         String min = binding.meetupTimePicker.getCurrentMinute().toString();

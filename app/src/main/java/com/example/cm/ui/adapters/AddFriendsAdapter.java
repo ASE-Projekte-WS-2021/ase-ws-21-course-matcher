@@ -78,13 +78,16 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         for (Notification notification : sentFriendRequests) {
             boolean notificationExists = notification.getReceiverId().equals(users.get(position).getId());
 
+            int btnContent, btnColor;
             if (!notificationExists) {
-                holder.getFriendRequestButton().setText(R.string.btn_send_friend_request_default);
-                holder.getFriendRequestButton().setBackgroundColor(R.color.orange);
+                btnContent = R.string.btn_send_friend_request_default;
+                btnColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.orange);
             } else {
-                holder.getFriendRequestButton().setText(R.string.btn_send_friend_request_pending);
-                holder.getFriendRequestButton().setBackgroundColor(R.color.grey_medium);
+                btnContent = R.string.btn_send_friend_request_pending;
+                btnColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.grey_medium);
             }
+            holder.getFriendRequestButton().setText(btnContent);
+            holder.getFriendRequestButton().setBackgroundColor(btnColor);
         }
     }
 
@@ -141,13 +144,16 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             if (position == RecyclerView.NO_POSITION || listener == null) return;
             listener.onFriendRequestButtonClicked(users.get(position).getId());
 
+            int btnContent, btnColor;
             if (binding.btnSendFriendRequest.getText().toString().equals(context.getString(R.string.btn_send_friend_request_default))) {
-                binding.btnSendFriendRequest.setText(R.string.btn_send_friend_request_pending);
-                binding.btnSendFriendRequest.setBackgroundColor(R.color.orange);
+                btnContent = R.string.btn_send_friend_request_pending;
+                btnColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.grey_medium);
             } else {
-                binding.btnSendFriendRequest.setText(R.string.btn_send_friend_request_default);
-                binding.btnSendFriendRequest.setBackgroundColor(R.color.grey_medium);
+                btnContent = R.string.btn_send_friend_request_default;
+                btnColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.orange);
             }
+            binding.btnSendFriendRequest.setText(btnContent);
+            binding.btnSendFriendRequest.setBackgroundColor(btnColor);
         }
 
         /**
