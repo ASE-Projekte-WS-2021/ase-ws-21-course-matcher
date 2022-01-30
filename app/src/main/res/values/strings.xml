@@ -90,4 +90,7 @@
     <string name="searchbar_text_find_friends">Freunde finden...</string>
     <string name="search_button_decription">Suchbutton</string>
     <string name="title_meetup">Meetup</string>
+    <string name="meetup_success_title">Du hast es geschafft!</string>
+    <string name="meetup_success_description">Euer treffen wurde erfolgreich erstellt. Genieße die Zeit mit deinen Freunden.</string>
+    <string name="meetup_success_btn_text">Zur Meetup-Übersicht</string>
 </resources>
