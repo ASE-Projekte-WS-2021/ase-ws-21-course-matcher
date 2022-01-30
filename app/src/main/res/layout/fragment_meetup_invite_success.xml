@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.meetup_invite_success.MeetupInviteSuccessFragment"
+    android:gravity="center"
+    android:padding="30dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="🙌"
+        android:textAlignment="center"
+        android:textSize="70sp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/meetup_success_title"
+        android:fontFamily="@font/readexpro_semibold"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:layout_marginBottom="8dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/meetup_success_description"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textColor="@color/gray600"
+        android:fontFamily="@font/readexpro_regular"
+        android:lineSpacingMultiplier="1.3"
+        />
+
+    <Button
+        android:id="@+id/btnToMeetupList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/meetup_success_btn_text"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:layout_marginTop="40dp"
+        />
+
+    </LinearLayout>
+
+</RelativeLayout>
