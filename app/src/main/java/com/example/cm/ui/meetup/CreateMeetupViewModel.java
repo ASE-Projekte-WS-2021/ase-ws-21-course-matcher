@@ -32,6 +32,7 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
 
     private User currentUser;
     private Meetup meetupToAdd;
+    private OnMeetupCreatedListener listener;
 
     public CreateMeetupViewModel() {
         this.meetupRepository = new MeetupRepository(this);
@@ -40,6 +41,10 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
         FirebaseUser firebaseUser = userRepository.getCurrentUser();
         userRepository.getUserByEmail(firebaseUser.getEmail());
         userRepository.getUsers();
+    }
+
+    public void setListener(OnMeetupCreatedListener listener) {
+        this.listener = listener;
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -107,6 +112,9 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
                 meetupTimestamp.getValue());
 
         meetupRepository.addMeetup(meetupToAdd);
+        if (listener != null) {
+            listener.onMeetupCreated();
+        }
     }
 
     public void searchUsers(String query) {
@@ -159,5 +167,9 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
                 notificationRepository.addNotification(notification);
             }
         }
+    }
+
+    public interface OnMeetupCreatedListener {
+        void onMeetupCreated();
     }
 }
