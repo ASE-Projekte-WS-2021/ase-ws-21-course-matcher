@@ -1,4 +1,4 @@
-package com.example.cm.ui.InviteFriends;
+package com.example.cm.ui.invite_friends;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,24 +14,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
-import com.example.cm.ui.meetup.CreateMeetupViewModel;
-
-import com.example.cm.ui.InvitationSuccess.InvitationSuccessDialog;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
+import com.example.cm.ui.meetup.CreateMeetupViewModel;
+import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
-public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener, OnNotificationSentListener, InviteFriendsAdapter.OnItemClickListener {
+public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener, OnNotificationSentListener, InviteFriendsAdapter.OnItemClickListener, CreateMeetupViewModel.OnMeetupCreatedListener {
 
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentInviteFriendsBinding binding;
     private InviteFriendsAdapter inviteFriendsListAdapter;
+    private Navigator navigator;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
+        navigator = new Navigator(requireActivity());
+
+
         View root = binding.getRoot();
 
         initUI();
@@ -42,7 +44,6 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     }
 
     private void initUI() {
-        createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
         inviteFriendsListAdapter = new InviteFriendsAdapter(this);
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
@@ -54,19 +55,12 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
         binding.btnSendInvite.setOnClickListener(v -> {
             createMeetupViewModel.createMeetup();
-            openDialog();
         });
-    }
-
-    public void openDialog() {
-        InvitationSuccessDialog invitationSuccessDialog = new InvitationSuccessDialog();
-        invitationSuccessDialog.show(getActivity().getSupportFragmentManager(), "invitationSuccess");
-        //hier müsste zur Eventübersicht navigiert werden
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToMap);
     }
 
     public void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
+        createMeetupViewModel.setListener(this);
 
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
@@ -146,5 +140,10 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     @Override
     public void onItemClicked(String id) {
         // do nothing
+    }
+
+    @Override
+    public void onMeetupCreated() {
+        navigator.getNavController().navigate(R.id.navigateToMeetupInviteSuccess);
     }
 }
