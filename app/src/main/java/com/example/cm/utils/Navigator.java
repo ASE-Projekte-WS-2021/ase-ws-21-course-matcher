@@ -1,6 +1,5 @@
 package com.example.cm.utils;
 
-import androidx.annotation.IdRes;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 
@@ -29,9 +28,5 @@ public class Navigator {
 
     public NavController getNavController() {
         return navController;
-    }
-
-    public void navigateToMap() {
-        navController.navigate(R.id.navigateToMap);
     }
 }
