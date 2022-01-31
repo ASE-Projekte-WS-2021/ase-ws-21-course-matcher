@@ -4,5 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="small_margin_items">8dp</dimen>
     <dimen name="text_size_title">24sp</dimen>
+    <dimen name="text_size_description">16sp</dimen>
     <dimen name="edit_text_min_height">48dp</dimen>
+    <dimen name="medium_margin_items">32dp</dimen>
 </resources>

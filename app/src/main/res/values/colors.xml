@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF22283A</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#191A1E</color>
+    <color name="white">#FDFDFD</color>
 
+    <!-- Primary -->
+    <color name="gray700">#2E323E</color>
+    <color name="gray600">#505971</color>
+    <color name="gray500">#98A3C3</color>
+    <color name="gray400">#CCD1E1</color>
+    <color name="gray300">#F2F3F7</color>
+
+    <!-- Accent -->
+    <color name="orange700">#8E3B1F</color>
+    <color name="orange600">#B34A24</color>
+    <color name="orange500">#E57A3A</color>
+    <color name="orange400">#E89654</color>
+    <color name="orange300">#EBBB86</color>
+
+    <!-- Legacy Colors -->
     <color name="orange">#FFF3AC41</color>
     <color name="orange_dark">#FFD67E00</color>
     <color name="grey_medium">#FF98A3C3</color>
     <color name="grey_dark">#FF4E5774</color>
-    <color name="light_blue_600">#FF039BE5</color>
-    <color name="light_blue_900">#FF01579B</color>
-    <color name="light_blue_A200">#FF40C4FF</color>
-    <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
 </resources>
