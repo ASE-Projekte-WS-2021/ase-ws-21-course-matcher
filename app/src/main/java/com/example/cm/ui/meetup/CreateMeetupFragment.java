@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 
-public class MeetupFragment extends Fragment {
+public class CreateMeetupFragment extends Fragment {
 
     ArrayAdapter<CharSequence> adapter;
     int sMin, sHour;
@@ -81,7 +81,7 @@ public class MeetupFragment extends Fragment {
     private void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
         createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location -> binding.meetupLocationSpinner.setSelection(adapter.getPosition(location)));
-        createMeetupViewModel.getMeetupTime().observe(getViewLifecycleOwner(), time -> setTimePickerTime(time));
+        createMeetupViewModel.getMeetupTime().observe(getViewLifecycleOwner(), this::setTimePickerTime);
         createMeetupViewModel.getMeetupIsPrivate().observe(getViewLifecycleOwner(), isPrivate -> binding.meetupPrivateCheckBox.setChecked(isPrivate));
         createMeetupViewModel.getMeetupTimestamp().observe(getViewLifecycleOwner(), timestamp -> getTimestamp());
 

@@ -9,6 +9,7 @@
         android:id="@+id/action_global_navigate_to_profile"
         app:destination="@id/navigation_profile" />
 
+    <!--
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.cm.ui.home.HomeFragment"
@@ -21,15 +22,28 @@
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
+        -->
+
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.cm.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_home"
+        android:name="com.example.cm.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_meetup_list"
+        android:name="com.example.cm.ui.meetup.MeetupListFragment"
+        android:label="Meetup"
+        tools:layout="@layout/fragment_meetup_list">
+        <action
+            android:id="@+id/navigateToMeetups"
+            app:destination="@+id/navigation_meetup" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_meetup"
-        android:name="com.example.cm.ui.meetup.MeetupFragment"
+        android:name="com.example.cm.ui.meetup.CreateMeetupFragment"
         android:label="Meetup"
         tools:layout="@layout/fragment_meetup">
         <action
@@ -47,8 +61,8 @@
             android:id="@+id/navigateToInfoMeetup"
             app:destination="@+id/navigation_meetup" />
         <action
-            android:id="@+id/navigateToMap"
-            app:destination="@id/navigation_home" />
+            android:id="@+id/navigateToMeetupList"
+            app:destination="@id/navigation_meetup_list" />
 
     </fragment>
 
@@ -86,7 +100,7 @@
         android:id="@+id/navigation_select_friends"
         android:name="com.example.cm.ui.add_friends.AddFriendsFragment"
         android:label="@string/title_find_friends"
-        tools:layout="@layout/fragment_add_friends" >
+        tools:layout="@layout/fragment_add_friends">
         <action
             android:id="@+id/fromSelectFriendsToProfile"
             app:destination="@id/navigation_profile" />
