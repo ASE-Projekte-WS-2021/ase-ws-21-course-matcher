@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.utils.Utils;
@@ -15,17 +17,57 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MeetupRepository extends Repository {
+public class MeetupRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
-    private OnMeetupRepositoryListener listener;
+    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
 
     public MeetupRepository() {
-
     }
 
-    public MeetupRepository(OnMeetupRepositoryListener listener) {
-        this.listener = listener;
+    public MutableLiveData<List<Meetup>> getMeetupsMLD() {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        meetupCollection.whereArrayContains("confirmedFriends", currentUserId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<Meetup> meetups = snapshotToMeetupList(Objects.requireNonNull(task.getResult()));
+                meetupListMLD.postValue(meetups);
+            }
+        });
+        return meetupListMLD;
+    }
+
+    public void addMeetup(Meetup meetup) {
+        meetupCollection.add(meetup);
+    }
+
+    public void addConfirmed(String meetupId, String participantId) {
+        meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayUnion(participantId));
+        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
+    }
+
+    public void addDeclined(String meetupId, String participantId) {
+        meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayUnion(participantId));
+        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
+    }
+
+    public void addPending(String meetupId, String participantId) {
+        meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
+    }
+
+    /**
+     * Convert a list of snapshots to a list of meetups
+     *
+     * @param documents List of meetups returned from Firestore
+     * @return Returns a list of meetups
+     */
+    private List<Meetup> snapshotToMeetupList(QuerySnapshot documents) {
+        List<Meetup> meetups = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            meetups.add(snapshotToMeetup(document));
+        }
+        return meetups;
     }
 
     /**
@@ -45,58 +87,4 @@ public class MeetupRepository extends Repository {
         meetup.setDeclinedFriends(Utils.castList(document.get("declinedFriends"), String.class));
         return meetup;
     }
-
-    public void getMeetupsByCurrentUser() {
-        meetupCollection.whereArrayContains("confirmedFriends", FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                List<Meetup> meetups = snapshotToMeetupList(Objects.requireNonNull(task.getResult()));
-                listener.onMeetupsRetrieved(meetups);
-            }
-        });
-    }
-
-    public void addMeetup(Meetup meetup) {
-        meetupCollection.add(meetup).addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                String newMeetupId = Objects.requireNonNull(task.getResult()).getId();
-                listener.onMeetupAdded(newMeetupId);
-            }
-        });
-    }
-
-    public void addConfirmed(String meetupId, String participantId) {
-        meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayUnion(participantId));
-        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
-    }
-
-    public void addDeclined(String meetupId, String participantId) {
-        meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayUnion(participantId));
-        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
-    }
-
-    public void addPending(String meetupId, String participantId) {
-        meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayRemove(participantId));
-        meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayRemove(participantId));
-        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
-    }
-
-    public interface OnMeetupRepositoryListener {
-        void onMeetupsRetrieved(List<Meetup> meetups);
-        void onMeetupAdded(String meetupId);
-    }
-
-    /**
-     * Convert a list of snapshots to a list of meetups
-     *
-     * @param documents List of meetups returned from Firestore
-     * @return Returns a list of meetups
-     */
-    private List<Meetup> snapshotToMeetupList(QuerySnapshot documents) {
-        List<Meetup> meetups = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents) {
-            meetups.add(snapshotToMeetup(document));
-        }
-        return meetups;
-    }
 }
-

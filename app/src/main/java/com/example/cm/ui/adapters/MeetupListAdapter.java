@@ -1,6 +1,5 @@
 package com.example.cm.ui.adapters;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,44 +10,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
-import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ItemMeetupBinding;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
+    List<Meetup> meetups;
 
-    private List<Meetup> mMeetups;
-    private OnMeetupClickedListener listener;
-
-    public MeetupListAdapter(OnMeetupClickedListener listener) {
-        this.listener = listener;
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    public void setMeetups(List<Meetup> meetups){
-        if(mMeetups == null){
-            mMeetups = meetups;
-            notifyDataSetChanged();
-            return;
-        }
-        mMeetups = meetups;
+    public MeetupListAdapter(List<Meetup> meetups) {
+        this.meetups = meetups;
     }
 
     @NonNull
     @Override
-    public MeetupListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MeetupListAdapter.MeetupListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        System.out.println("onCreateViewHolder");
         ItemMeetupBinding binding = ItemMeetupBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new MeetupListViewHolder(binding);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull MeetupListViewHolder holder, int position) {
-        Meetup meetup = mMeetups.get(position);
+    public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
+        Meetup meetup = meetups.get(position);
 
         holder.getTvLocation().setText("Treffen in: " + meetup.getLocation());
         holder.getTvTime().setText("Um " + meetup.getTime());
@@ -64,48 +49,35 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         setFriendsTextFields(declinedFriends, holder.getTvDeclinedFriends(), holder.getTvDeclinedFriendsTitle());
     }
 
+    public void setMeetups(List<Meetup> meetups) {
+        this.meetups = meetups;
+    }
+
     //replace this ugly code also :D
-    private void setFriendsTextFields(List<String> list, TextView textView, TextView textViewTitle){
+    private void setFriendsTextFields(List<String> list, TextView textView, TextView textViewTitle) {
         FirebaseFirestore.getInstance().collection(CollectionConfig.USERS.toString());
-        if(list == null || list.isEmpty()){
+        if (list == null || list.isEmpty()) {
             textView.setVisibility(View.GONE);
             textViewTitle.setVisibility(View.GONE);
-        }else{
+        } else {
             new UserRepository().getUserByIdMeetup(list, textView);
         }
     }
 
     @Override
     public int getItemCount() {
-        if(mMeetups == null){
-            return 0;
-        }
-        return mMeetups.size();
+        return meetups.size();
     }
 
-    public interface OnMeetupClickedListener {
-    }
-
-    /**
-     * ViewHolder class for the list items
-     */
-    public class MeetupListViewHolder extends RecyclerView.ViewHolder {
+    public static class MeetupListViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemMeetupBinding binding;
 
         public MeetupListViewHolder(ItemMeetupBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            setListeners();
         }
 
-        private void setListeners() {
-
-        }
-
-        /**
-         * Getters for the views in the list item
-         */
         public TextView getTvLocation() {
             return binding.locationText;
         }
@@ -139,4 +111,3 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         }
     }
 }
-

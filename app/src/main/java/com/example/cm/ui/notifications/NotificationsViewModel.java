@@ -12,7 +12,6 @@ import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.NotificationRepository.OnNotificationRepositoryListener;
 import com.example.cm.data.repositories.UserRepository;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -38,14 +37,14 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
     }
 
 
-    public void acceptRequest(Notification notification){
+    public void acceptRequest(Notification notification) {
         notification.setState(Notification.NotificationState.NOTIFICATION_ACCEPTED);
         notification.setCreatedAtToNow();
         notificationRepository.accept(notification);
 
-        if (notification instanceof FriendsNotification){
+        if (notification instanceof FriendsNotification) {
             userRepository.addFriends(notification.getSenderId(), notification.getReceiverId());
-        } else if (notification instanceof MeetupNotification){
+        } else if (notification instanceof MeetupNotification) {
             meetupRepository.addConfirmed(((MeetupNotification) notification).getMeetupId(), notification.getReceiverId());
             MeetupNotification notificationAccepted = new MeetupNotification(
                     ((MeetupNotification) notification).getMeetupId(),
@@ -60,8 +59,8 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
         }
     }
 
-    public void declineRequest(Notification notification){
-        if (notification instanceof MeetupNotification){
+    public void declineRequest(Notification notification) {
+        if (notification instanceof MeetupNotification) {
             meetupRepository.addDeclined(((MeetupNotification) notification).getMeetupId(), notification.getReceiverId());
             MeetupNotification notificationDeclined = new MeetupNotification(
                     ((MeetupNotification) notification).getMeetupId(),
