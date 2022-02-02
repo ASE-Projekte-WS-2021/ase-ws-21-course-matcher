@@ -23,7 +23,6 @@
         tools:layout="@layout/fragment_dashboard" />
 
         -->
-
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.cm.ui.home.HomeFragment"
@@ -31,13 +30,20 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/navigation_meetup_tabs"
+        android:name="com.example.cm.ui.meetup.MeetupTabsFragment"
+        android:label="Meetup"
+        tools:layout="@layout/fragment_meetup_tabs">
+        <action
+            android:id="@+id/navigateToMeetups"
+            app:destination="@+id/navigation_meetup" />
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_meetup_list"
         android:name="com.example.cm.ui.meetup.MeetupListFragment"
         android:label="Meetup"
         tools:layout="@layout/fragment_meetup_list">
-        <action
-            android:id="@+id/navigateToMeetups"
-            app:destination="@+id/navigation_meetup" />
 
     </fragment>
 

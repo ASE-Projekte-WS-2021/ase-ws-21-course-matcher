@@ -40,15 +40,11 @@ public class MeetupListFragment extends Fragment {
         meetupListViewModel.getLiveMeetupData().observe(getViewLifecycleOwner(), meetups -> {
             meetupListAdapter = new MeetupListAdapter(meetups);
             binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
-            System.out.println(meetupListAdapter.getItemCount());
         });
 
     }
 
     private void initUi() {
-        binding.addMeetupFab.setOnClickListener(view -> {
-            navigator.navigateToCreateMeetup();
-        });
         binding.meetupListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         binding.meetupListRecyclerView.setHasFixedSize(true);
     }
