@@ -119,10 +119,11 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
 
     @Override
     public void onUsersRetrieved(List<User> users) {
+        String currentUserId = userRepository.getCurrentUser().getUid();
         List<User> filteredUsers = new ArrayList<>();
         for (User user : users) {
-            if (!user.getId().equals(this.currentUser.getId()) &&
-                    (user.getFriends() != null && user.getFriends().contains(currentUser.getId()))) {
+            if (!user.getId().equals(currentUserId) &&
+                    (user.getFriends() != null && user.getFriends().contains(currentUserId))) {
                 filteredUsers.add(user);
             }
         }
