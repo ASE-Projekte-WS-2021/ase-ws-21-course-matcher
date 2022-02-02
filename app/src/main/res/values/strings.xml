@@ -93,5 +93,6 @@
     <string name="searchbar_text_find_friends">Freunde finden...</string>
     <string name="search_button_decription">Suchbutton</string>
     <string name="title_meetup">Meetup</string>
+    <string name="add_meeting">add meeting</string>
 
 </resources>

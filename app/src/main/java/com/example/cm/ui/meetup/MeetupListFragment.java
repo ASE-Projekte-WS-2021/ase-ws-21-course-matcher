@@ -3,18 +3,14 @@ package com.example.cm.ui.meetup;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupListBinding;
 import com.example.cm.ui.adapters.MeetupListAdapter;
 import com.example.cm.utils.Navigator;
@@ -22,7 +18,6 @@ import com.example.cm.utils.Navigator;
 public class MeetupListFragment extends Fragment {
 
     private FragmentMeetupListBinding binding;
-    private MeetupListViewModel meetupListViewModel;
     private Navigator navigator;
     private MeetupListAdapter meetupListAdapter;
 
@@ -41,7 +36,7 @@ public class MeetupListFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     private void initViewModel() {
-        meetupListViewModel = new ViewModelProvider(this).get(MeetupListViewModel.class);
+        MeetupListViewModel meetupListViewModel = new ViewModelProvider(this).get(MeetupListViewModel.class);
         meetupListViewModel.getLiveMeetupData().observe(getViewLifecycleOwner(), meetups -> {
             meetupListAdapter = new MeetupListAdapter(meetups);
             binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
@@ -51,22 +46,11 @@ public class MeetupListFragment extends Fragment {
     }
 
     private void initUi() {
-        binding.meetupListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.meetupListRecyclerView.setHasFixedSize(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_meetup_list, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add_meetup) {
+        binding.addMeetupFab.setOnClickListener(view -> {
             navigator.navigateToCreateMeetup();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        });
+        binding.meetupListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        binding.meetupListRecyclerView.setHasFixedSize(true);
     }
 
     @Override
