@@ -1,11 +1,14 @@
 package com.example.cm.ui.meetup;
 
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,17 +19,20 @@ import androidx.navigation.Navigation;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
 
+import java.sql.Time;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 
 public class MeetupFragment extends Fragment {
 
+
     ArrayAdapter<CharSequence> adapter;
-    int sMin, sHour;
-    Calendar calendar = GregorianCalendar.getInstance();
+   
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentMeetupBinding binding;
 
@@ -41,36 +47,66 @@ public class MeetupFragment extends Fragment {
     }
 
     private void initUI() {
-        binding.meetupTimePicker.setIs24HourView(true);
+        int localHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int localMin = calendar.get(Calendar.MINUTE);
+
+        String currentTime = localHour + ":" + localMin;
+        binding.meetupTimeText.setText(currentTime);
+
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.meetup_locations, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding.meetupLocationSpinner.setAdapter(adapter);
     }
 
     private void initListener() {
+
+
+        binding.meetupTimeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onTimePickerDialogClicked();
+            }
+        });
+
         binding.meetupInfoBtn.setOnClickListener(v -> {
             checkTime();
             //onMeetupInfoBtnClicked();
         });
     }
 
+
+    private void onTimePickerDialogClicked() {
+
+        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
+
+                sHour = selectedHour;
+                sMin = selectedMinute;
+                binding.meetupTimeText.setText(String.format(Locale.getDefault(), "%02d:%02d", sHour, sMin));
+            }
+        };
+
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), onTimeSetListener, sHour, sMin, true);
+        timePickerDialog.updateTime(sHour, sMin);
+        timePickerDialog.show();
+
+    }
+
+
     private void onMeetupInfoBtnClicked() {
 
         Date timeStamp = new Date();
+        String timeTest = binding.meetupTimeText.getText().toString();
         String location = binding.meetupLocationSpinner.getSelectedItem().toString();
-        String hour = binding.meetupTimePicker.getCurrentHour().toString();
-        String min = binding.meetupTimePicker.getCurrentMinute().toString();
-        if (min.length() == 1) {
-            min = "0" + min;
-        }
-        String time = hour + ":" + min;
+
         //TODO den boolean wieder benutzen wenn gefiltert werden kann
         //Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
 
         Boolean isPrivate = true;
 
         createMeetupViewModel.setLocation(location);
-        createMeetupViewModel.setTime(time);
+        createMeetupViewModel.setTime(timeTest);
         createMeetupViewModel.setIsPrivate(isPrivate);
         createMeetupViewModel.setMeetupTimestamp(timeStamp);
 
@@ -81,7 +117,7 @@ public class MeetupFragment extends Fragment {
     private void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
         createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location -> binding.meetupLocationSpinner.setSelection(adapter.getPosition(location)));
-        createMeetupViewModel.getMeetupTime().observe(getViewLifecycleOwner(), time -> setTimePickerTime(time));
+        createMeetupViewModel.getMeetupTime().observe(getViewLifecycleOwner(), time -> binding.meetupTimeText.getText());
         createMeetupViewModel.getMeetupIsPrivate().observe(getViewLifecycleOwner(), isPrivate -> binding.meetupPrivateCheckBox.setChecked(isPrivate));
         createMeetupViewModel.getMeetupTimestamp().observe(getViewLifecycleOwner(), timestamp -> getTimestamp());
 
@@ -91,20 +127,15 @@ public class MeetupFragment extends Fragment {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
     }
 
-    private void setTimePickerTime(String time) {
-        String[] timeArray = time.split(":");
-        sHour = Integer.parseInt(timeArray[0]);
-        sMin = Integer.parseInt(timeArray[1]);
-        binding.meetupTimePicker.setCurrentHour(sHour);
-        binding.meetupTimePicker.setCurrentMinute(sMin);
-    }
-
     private void checkTime() {
-        int localHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int localMin = calendar.get(Calendar.MINUTE);
+        Calendar c = Calendar.getInstance();
+        int localHour = c.get(Calendar.HOUR_OF_DAY);
+        int localMin = c.get(Calendar.MINUTE);
 
-        int selectedHour = binding.meetupTimePicker.getCurrentHour();
-        int selectedMin = binding.meetupTimePicker.getCurrentMinute();
+        String timeTest = binding.meetupTimeText.getText().toString();
+        String[] timeArray = timeTest.split(":");
+        int selectedHour = Integer.parseInt(timeArray[0]);
+        int selectedMin = Integer.parseInt(timeArray[1]);
 
         if (localHour > selectedHour) {
             delayButton();
@@ -117,8 +148,8 @@ public class MeetupFragment extends Fragment {
 
     private void delayButton() {
         binding.meetupInfoBtn.setEnabled(false);
-        Toast.makeText(getActivity(), "Die gewählte Uhrzeit liegt in der Vergangenheit. Bitte wähle eine neue Uhrzeit.", Toast.LENGTH_LONG).show();
-        new CountDownTimer(2000, 10) { //Set Timer for 5 seconds
+        Toast.makeText(getActivity(), R.string.meetup_time_in_past, Toast.LENGTH_SHORT).show();
+        new CountDownTimer(2350, 10) { //Set Timer for 5 seconds
             public void onTick(long millisUntilFinished) {
             }
 
