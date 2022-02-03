@@ -52,11 +52,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/medium_margin_items"
+        android:gravity="left"
         android:text="@string/meetup_place"
         android:textSize="@dimen/text_size_description"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meetup_time_picker" />
+        app:layout_constraintTop_toBottomOf="@+id/meetup_time_text" />
 
     <TextView
         android:id="@+id/meetup_header"
@@ -87,22 +89,41 @@
         android:id="@+id/meetup_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/medium_margin_items"
+        android:layout_marginTop="36dp"
+        android:gravity="left"
         android:text="@string/meetup_time"
         android:textSize="@dimen/text_size_description"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.017"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meetup_header_desc" />
 
-    <TimePicker
+    <TextView
+        android:id="@+id/meetup_time_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@android:drawable/editbox_background"
+        android:gravity="center"
+        android:hint="@string/select_time"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/meetup_time" />
+    />
+
+
+
+    <!--<TimePicker
         android:id="@+id/meetup_time_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:timePickerMode="spinner"
+        android:timePickerMode="clock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meetup_time" />
+        app:layout_constraintTop_toBottomOf="@+id/meetup_time"
+        android:visibility="invisible"/>-->
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
