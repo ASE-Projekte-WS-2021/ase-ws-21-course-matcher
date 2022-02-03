@@ -28,7 +28,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 
-public class MeetupFragment extends Fragment {
+public class CreateMeetupFragment extends Fragment {
 
     Calendar calendar = Calendar.getInstance();
     ArrayAdapter<CharSequence> adapter;

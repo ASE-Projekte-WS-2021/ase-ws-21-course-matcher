@@ -16,8 +16,10 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
-public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener, NotificationRepository.OnNotificationRepositoryListener, MeetupRepository.OnMeetupRepositoryListener {
+public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener,
+        NotificationRepository.OnNotificationRepositoryListener, MeetupRepository.OnMeetupRepositoryListener {
 
     private final MeetupRepository meetupRepository;
     private final UserRepository userRepository;
@@ -98,8 +100,10 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     }
 
     public void createMeetup() {
+        String currentUserId = userRepository.getCurrentUser().getUid();
+        Objects.requireNonNull(selectedUsers.getValue());
         meetupToAdd = new Meetup(
-                userRepository.getCurrentUser().getUid(),
+                currentUserId,
                 meetupLocation.getValue(),
                 meetupTime.getValue(),
                 Boolean.TRUE.equals(meetupIsPrivate.getValue()),
@@ -119,10 +123,11 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
 
     @Override
     public void onUsersRetrieved(List<User> users) {
+        String currentUserId = userRepository.getCurrentUser().getUid();
         List<User> filteredUsers = new ArrayList<>();
         for (User user : users) {
-            if (!user.getId().equals(this.currentUser.getId()) &&
-                    (user.getFriends() != null && user.getFriends().contains(currentUser.getId()))) {
+            if (!user.getId().equals(currentUserId) &&
+                    (user.getFriends() != null && user.getFriends().contains(currentUserId))) {
                 filteredUsers.add(user);
             }
         }
@@ -141,6 +146,11 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     }
 
     @Override
+    public void onMeetupsRetrieved(List<Meetup> meetups) {
+
+    }
+
+    @Override
     public void onMeetupAdded(String meetupId) {
         meetupToAdd.setId(meetupId);
 
@@ -154,10 +164,10 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
                         invitedFriendId,
                         meetupLocation.getValue(),
                         meetupTime.getValue(),
-                        Notification.NotificationType.MEETUP_REQUEST
-                );
+                        Notification.NotificationType.MEETUP_REQUEST);
                 notificationRepository.addNotification(notification);
             }
+            selectedUsers.getValue().clear();
         }
     }
 }
