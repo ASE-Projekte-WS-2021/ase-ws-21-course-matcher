@@ -29,8 +29,8 @@ import java.util.Locale;
 
 
 public class MeetupFragment extends Fragment {
-    
-    final Calendar calendar = Calendar.getInstance();
+
+    Calendar calendar = Calendar.getInstance();
     ArrayAdapter<CharSequence> adapter;
     int sMin = calendar.get(Calendar.MINUTE);
     int sHour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -48,12 +48,7 @@ public class MeetupFragment extends Fragment {
     }
 
     private void initUI() {
-        int localHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int localMin = calendar.get(Calendar.MINUTE);
-
-        String currentTime = localHour + ":" + localMin;
-        binding.meetupTimeText.setText(currentTime);
-
+        showCurrentTime();
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.meetup_locations, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding.meetupLocationSpinner.setAdapter(adapter);
@@ -75,6 +70,26 @@ public class MeetupFragment extends Fragment {
         });
     }
 
+    private void showCurrentTime() {
+        int localHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int localMin = calendar.get(Calendar.MINUTE);
+
+        String currentTime = "";
+        String formattedMin = String.format("%02d", localMin);
+        String formattedHour = String.format("%02d", localHour);
+
+        if (localMin > 9 && localHour > 9) {
+            currentTime = localHour + ":" + localMin;
+        } else if (localMin < 10 && localHour > 9) {
+            currentTime = localHour + ":" + formattedMin;
+        } else if (localMin < 10 && localHour < 10) {
+            currentTime = formattedHour + ":" + formattedMin;
+        } else if (localMin > 9 && localHour < 10) {
+            currentTime = formattedHour + ":" + localMin;
+        }
+
+        binding.meetupTimeText.setText(currentTime);
+    }
 
     private void onTimePickerDialogClicked() {
 
@@ -129,9 +144,8 @@ public class MeetupFragment extends Fragment {
     }
 
     private void checkTime() {
-        Calendar c = Calendar.getInstance();
-        int localHour = c.get(Calendar.HOUR_OF_DAY);
-        int localMin = c.get(Calendar.MINUTE);
+        int localHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int localMin = calendar.get(Calendar.MINUTE);
 
         String timeTest = binding.meetupTimeText.getText().toString();
         String[] timeArray = timeTest.split(":");
