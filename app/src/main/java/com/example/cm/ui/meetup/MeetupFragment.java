@@ -29,10 +29,11 @@ import java.util.Locale;
 
 
 public class MeetupFragment extends Fragment {
-
-
+    
+    final Calendar calendar = Calendar.getInstance();
     ArrayAdapter<CharSequence> adapter;
-   
+    int sMin = calendar.get(Calendar.MINUTE);
+    int sHour = calendar.get(Calendar.HOUR_OF_DAY);
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentMeetupBinding binding;
 
