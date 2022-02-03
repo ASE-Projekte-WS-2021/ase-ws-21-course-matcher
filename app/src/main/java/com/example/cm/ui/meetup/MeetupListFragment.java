@@ -45,7 +45,8 @@ public class MeetupListFragment extends Fragment {
     }
 
     private void initUi() {
-        binding.meetupListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        GridLayoutManager gridLayout = new GridLayoutManager(getContext(), 2);
+        binding.meetupListRecyclerView.setLayoutManager(gridLayout);
         binding.meetupListRecyclerView.setHasFixedSize(true);
     }
 

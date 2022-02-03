@@ -35,8 +35,8 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
         Meetup meetup = meetups.get(position);
 
-        holder.getTvLocation().setText("Treffen in: " + meetup.getLocation());
-        holder.getTvTime().setText("Um " + meetup.getTime());
+        holder.getTvLocation().setText(meetup.getLocation());
+        holder.getTvTime().setText(meetup.getTime());
 
         // replace this ugly code with for example an expandable listview
         List<String> confirmedFriends = meetup.getConfirmedFriends();
@@ -44,9 +44,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         List<String> declinedFriends = meetup.getDeclinedFriends();
 
         //replace this ugly code also
-        setFriendsTextFields(confirmedFriends, holder.getTvConfirmedFriends(), holder.getTvConfirmedFriendsTitle());
-        setFriendsTextFields(invitedFriends, holder.getTvInvitedFriends(), holder.getTvInvitedFriendsTitle());
-        setFriendsTextFields(declinedFriends, holder.getTvDeclinedFriends(), holder.getTvDeclinedFriendsTitle());
+        setFriendsTextFields(confirmedFriends, holder.getTvConfirmedFriends());
+        setFriendsTextFields(invitedFriends, holder.getTvInvitedFriends());
+        setFriendsTextFields(declinedFriends, holder.getTvDeclinedFriends());
     }
 
     public void setMeetups(List<Meetup> meetups) {
@@ -54,11 +54,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     }
 
     //replace this ugly code also :D
-    private void setFriendsTextFields(List<String> list, TextView textView, TextView textViewTitle) {
+    private void setFriendsTextFields(List<String> list, TextView textView) {
         FirebaseFirestore.getInstance().collection(CollectionConfig.USERS.toString());
         if (list == null || list.isEmpty()) {
             textView.setVisibility(View.GONE);
-            textViewTitle.setVisibility(View.GONE);
         } else {
             new UserRepository().getUserByIdMeetup(list, textView);
         }
@@ -90,24 +89,15 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return binding.confirmedFriendsText;
         }
 
-        public TextView getTvConfirmedFriendsTitle() {
-            return binding.confirmedTextTitle;
-        }
 
         public TextView getTvInvitedFriends() {
             return binding.invitedFriendsText;
         }
 
-        public TextView getTvInvitedFriendsTitle() {
-            return binding.invitedTextTitle;
-        }
 
         public TextView getTvDeclinedFriends() {
             return binding.declinedFriendsText;
         }
 
-        public TextView getTvDeclinedFriendsTitle() {
-            return binding.declinedTextTitle;
-        }
     }
 }
