@@ -1,18 +1,18 @@
 package com.example.cm.ui.adapters;
 
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cm.config.CollectionConfig;
+import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
-import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ItemMeetupBinding;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
 
@@ -38,29 +38,34 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         holder.getTvLocation().setText(meetup.getLocation());
         holder.getTvTime().setText(meetup.getTime());
 
-        // replace this ugly code with for example an expandable listview
         List<String> confirmedFriends = meetup.getConfirmedFriends();
         List<String> invitedFriends = meetup.getInvitedFriends();
         List<String> declinedFriends = meetup.getDeclinedFriends();
 
-        //replace this ugly code also
-        setFriendsTextFields(confirmedFriends, holder.getTvConfirmedFriends());
-        setFriendsTextFields(invitedFriends, holder.getTvInvitedFriends());
-        setFriendsTextFields(declinedFriends, holder.getTvDeclinedFriends());
+        LinearLayout imagesLayout = holder.getImagesLayout();
+        imagesLayout.setPadding(-3, 0, 0,0);
+
+        addUserImage(confirmedFriends, imagesLayout, R.color.green);
+        addUserImage(invitedFriends, imagesLayout, R.color.orange);
+        addUserImage(declinedFriends, imagesLayout, R.color.red);
+    }
+
+    public void addUserImage(List<String> friendIds, LinearLayout layout, int color){
+        if (friendIds != null){
+            for(String id: friendIds){
+                ShapeableImageView imageRounded = new ShapeableImageView(new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
+                imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
+                imageRounded.setLayoutParams(new ViewGroup.LayoutParams(80, 80));
+                imageRounded.setStrokeColorResource(color);
+                imageRounded.setStrokeWidth(4);
+                imageRounded.setPadding(5, 5, 5, 5);
+                layout.addView(imageRounded);
+            }
+        }
     }
 
     public void setMeetups(List<Meetup> meetups) {
         this.meetups = meetups;
-    }
-
-    //replace this ugly code also :D
-    private void setFriendsTextFields(List<String> list, TextView textView) {
-        FirebaseFirestore.getInstance().collection(CollectionConfig.USERS.toString());
-        if (list == null || list.isEmpty()) {
-            textView.setVisibility(View.GONE);
-        } else {
-            new UserRepository().getUserByIdMeetup(list, textView);
-        }
     }
 
     @Override
@@ -85,18 +90,8 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return binding.timeText;
         }
 
-        public TextView getTvConfirmedFriends() {
-            return binding.confirmedFriendsText;
-        }
-
-
-        public TextView getTvInvitedFriends() {
-            return binding.invitedFriendsText;
-        }
-
-
-        public TextView getTvDeclinedFriends() {
-            return binding.declinedFriendsText;
+        public LinearLayout getImagesLayout() {
+            return binding.meetupImagesLayout;
         }
 
     }
