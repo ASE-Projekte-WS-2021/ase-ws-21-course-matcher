@@ -97,5 +97,7 @@
     <string name="location">Location</string>
     <string name="time">time</string>
     <string name="location_card">location</string>
+    <string name="meetup_tabs_list">Anstehend</string>
+    <string name="meetup_tabs_notifications">Anfragen</string>
 
 </resources>

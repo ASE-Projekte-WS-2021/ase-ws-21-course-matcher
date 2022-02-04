@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MeetupListViewModel extends ViewModel {
     private MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
-    MeetupRepository meetup2Repository = new MeetupRepository();
+    private final MeetupRepository meetup2Repository = new MeetupRepository();
 
     public MeetupListViewModel() {
         meetupListMLD = meetup2Repository.getMeetupsMLD();

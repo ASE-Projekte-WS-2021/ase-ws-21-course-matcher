@@ -43,16 +43,16 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         List<String> declinedFriends = meetup.getDeclinedFriends();
 
         LinearLayout imagesLayout = holder.getImagesLayout();
-        imagesLayout.setPadding(-3, 0, 0,0);
+        imagesLayout.setPadding(-3, 0, 0, 0);
 
         addUserImage(confirmedFriends, imagesLayout, R.color.green);
         addUserImage(invitedFriends, imagesLayout, R.color.orange);
         addUserImage(declinedFriends, imagesLayout, R.color.red);
     }
 
-    public void addUserImage(List<String> friendIds, LinearLayout layout, int color){
-        if (friendIds != null){
-            for(String id: friendIds){
+    public void addUserImage(List<String> friendIds, LinearLayout layout, int color) {
+        if (friendIds != null) {
+            for (String id : friendIds) {
                 //toDo: add profile image instead of "R.drawable.ic_baseline_person_24"
                 ShapeableImageView imageRounded = new ShapeableImageView(new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
                 imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);

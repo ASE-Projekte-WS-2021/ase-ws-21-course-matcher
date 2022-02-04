@@ -30,7 +30,7 @@ public class MeetupTabsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = FragmentMeetupTabsBinding.inflate(inflater, container, false);
@@ -52,9 +52,9 @@ public class MeetupTabsFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             if (position == 0) {
-                tab.setText("Anstehend");
+                tab.setText(R.string.meetup_tabs_list);
             } else if (position == 1) {
-                tab.setText("Anfragen");
+                tab.setText(R.string.meetup_tabs_notifications);
             }
         }).attach();
     }
