@@ -26,7 +26,6 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     @NonNull
     @Override
     public MeetupListAdapter.MeetupListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        System.out.println("onCreateViewHolder");
         ItemMeetupBinding binding = ItemMeetupBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new MeetupListViewHolder(binding);
     }

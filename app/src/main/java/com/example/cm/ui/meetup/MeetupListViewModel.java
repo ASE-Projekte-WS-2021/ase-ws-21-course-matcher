@@ -9,14 +9,14 @@ import com.example.cm.data.repositories.MeetupRepository;
 import java.util.List;
 
 public class MeetupListViewModel extends ViewModel {
-    private MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
-    private final MeetupRepository meetup2Repository = new MeetupRepository();
+    private MutableLiveData<List<Meetup>> meetupList = new MutableLiveData<>();
+    private final MeetupRepository meetupRepository = new MeetupRepository();
 
     public MeetupListViewModel() {
-        meetupListMLD = meetup2Repository.getMeetupsMLD();
+        meetupList = meetupRepository.getMeetups();
     }
 
-    public MutableLiveData<List<Meetup>> getLiveMeetupData() {
-        return meetupListMLD;
+    public MutableLiveData<List<Meetup>> getMeetups() {
+        return meetupList;
     }
 }

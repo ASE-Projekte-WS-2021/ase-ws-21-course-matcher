@@ -8,20 +8,24 @@ import com.example.cm.ui.dashboard.DashboardFragment;
 import com.example.cm.ui.meetup.MeetupListFragment;
 import com.example.cm.ui.meetup.MeetupNotificationsFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MeetupTapAdapter extends FragmentStateAdapter {
 
     public MeetupTapAdapter(Fragment fragment) {
         super(fragment);
     }
+    public Fragment[] tabs = new Fragment[]{new MeetupListFragment(), new MeetupNotificationsFragment()};
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        return position == 0 ? new MeetupListFragment(): new MeetupNotificationsFragment();
+        return tabs[position];
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return tabs.length;
     }
 }

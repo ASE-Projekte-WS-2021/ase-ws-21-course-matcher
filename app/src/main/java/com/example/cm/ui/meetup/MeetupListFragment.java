@@ -13,20 +13,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.cm.databinding.FragmentMeetupListBinding;
 import com.example.cm.ui.adapters.MeetupListAdapter;
-import com.example.cm.utils.Navigator;
 
 public class MeetupListFragment extends Fragment {
 
     private FragmentMeetupListBinding binding;
-    private Navigator navigator;
     private MeetupListAdapter meetupListAdapter;
 
     @SuppressLint("NotifyDataSetChanged")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentMeetupListBinding.inflate(inflater, container, false);
-        navigator = new Navigator(requireActivity());
-        setHasOptionsMenu(true);
 
         initUi();
         initViewModel();
@@ -37,7 +33,7 @@ public class MeetupListFragment extends Fragment {
     @SuppressLint("NotifyDataSetChanged")
     private void initViewModel() {
         MeetupListViewModel meetupListViewModel = new ViewModelProvider(this).get(MeetupListViewModel.class);
-        meetupListViewModel.getLiveMeetupData().observe(getViewLifecycleOwner(), meetups -> {
+        meetupListViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
             meetupListAdapter = new MeetupListAdapter(meetups);
             binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
         });

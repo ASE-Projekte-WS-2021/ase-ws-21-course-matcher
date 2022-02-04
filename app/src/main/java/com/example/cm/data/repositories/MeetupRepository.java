@@ -25,7 +25,7 @@ public class MeetupRepository {
     public MeetupRepository() {
     }
 
-    public MutableLiveData<List<Meetup>> getMeetupsMLD() {
+    public MutableLiveData<List<Meetup>> getMeetups() {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         meetupCollection.whereArrayContains("confirmedFriends", currentUserId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -71,10 +71,10 @@ public class MeetupRepository {
     }
 
     /**
-     * Convert a single snapshot to a notification model
+     * Convert a single snapshot to a meetup model
      *
-     * @param document Snapshot of a notification returned from Firestore
-     * @return Returns a notification
+     * @param document Snapshot of a meetup returned from Firestore
+     * @return Returns a meetup
      */
     private Meetup snapshotToMeetup(DocumentSnapshot document) {
         Meetup meetup = new Meetup();
