@@ -7,4 +7,8 @@
     <dimen name="text_size_description">16sp</dimen>
     <dimen name="edit_text_min_height">48dp</dimen>
     <dimen name="medium_margin_items">32dp</dimen>
+    <dimen name="meetup_location_image_height">100dp</dimen>
+    <dimen name="meetup_corner_radius">16dp</dimen>
+    <dimen name="meetup_card_margin">8dp</dimen>
+    <dimen name="meetup_card_content_padding">16dp</dimen>
 </resources>

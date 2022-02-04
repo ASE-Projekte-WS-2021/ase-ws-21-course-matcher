@@ -53,6 +53,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     public void addUserImage(List<String> friendIds, LinearLayout layout, int color){
         if (friendIds != null){
             for(String id: friendIds){
+                //toDo: add profile image instead of "R.drawable.ic_baseline_person_24"
                 ShapeableImageView imageRounded = new ShapeableImageView(new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
                 imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
                 imageRounded.setLayoutParams(new ViewGroup.LayoutParams(80, 80));
@@ -62,10 +63,6 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
                 layout.addView(imageRounded);
             }
         }
-    }
-
-    public void setMeetups(List<Meetup> meetups) {
-        this.meetups = meetups;
     }
 
     @Override
