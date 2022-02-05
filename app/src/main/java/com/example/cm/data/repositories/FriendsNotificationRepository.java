@@ -27,14 +27,10 @@ public class FriendsNotificationRepository extends NotificationRepository {
      * @param listener Callback to be called when the request is completed
      */
     public void getFriendRequestsSentBy(String senderId, OnNotificationRepositoryListener listener) {
-        Log.e("COLLECTION", notificationCollection.getPath());
-        Log.e("COLLECTION-OWN", senderId);
-
         notificationCollection.whereEqualTo("senderId", senderId)
                 .get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
-                Log.e("COLLECTION", notifications.toString());
                 listener.onNotificationsRetrieved(notifications);
             }
         });

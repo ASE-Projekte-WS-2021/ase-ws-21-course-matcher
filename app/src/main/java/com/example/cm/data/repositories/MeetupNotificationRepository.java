@@ -1,7 +1,6 @@
 package com.example.cm.data.repositories;
 
 import com.example.cm.config.CollectionConfig;
-import com.example.cm.data.models.FriendsNotification;
 import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,7 +22,7 @@ public class MeetupNotificationRepository extends NotificationRepository {
     protected List<Notification> snapshotToNotificationList(QuerySnapshot documents) {
         List<Notification> notifications = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            Notification.NotificationType notType = Objects.requireNonNull(document.get("type", Notification.NotificationType.class));
+            MeetupNotification.NotificationType notType = Objects.requireNonNull(document.get("type", MeetupNotification.NotificationType.class));
             notifications.add(snapshotToNotification(document, new MeetupNotification(notType)));
         }
         return notifications;
@@ -34,6 +33,7 @@ public class MeetupNotificationRepository extends NotificationRepository {
         ((MeetupNotification) notification).setMeetupId(document.getString("meetupId"));
         ((MeetupNotification) notification).setLocation(document.getString("location"));
         ((MeetupNotification) notification).setMeetupAt(document.getString("meetupAt"));
+        ((MeetupNotification) notification).setType(document.get("type", MeetupNotification.NotificationType.class));
         return super.snapshotToNotification(document, notification);
     }
 

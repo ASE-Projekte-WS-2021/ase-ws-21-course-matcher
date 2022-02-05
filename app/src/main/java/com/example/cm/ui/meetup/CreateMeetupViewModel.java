@@ -165,7 +165,7 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
                         invitedFriendId,
                         meetupLocation.getValue(),
                         meetupTime.getValue(),
-                        Notification.NotificationType.MEETUP_REQUEST);
+                        MeetupNotification.NotificationType.MEETUP_REQUEST);
                 notificationRepository.addNotification(notification);
             }
             selectedUsers.getValue().clear();

@@ -11,18 +11,16 @@ public class Notification {
     protected String senderId;
     protected String senderName;
     protected String receiverId;
-    protected NotificationType type;
     protected Date createdAt;
     protected NotificationState state;
 
     public Notification() {
     }
 
-    public Notification(String senderId, String senderName, String receiverId, NotificationType type) {
+    public Notification(String senderId, String senderName, String receiverId) {
         this.senderId = senderId;
         this.senderName = senderName;
         this.receiverId = receiverId;
-        this.type = type;
         this.createdAt = new Date();
         this.state = NotificationState.NOTIFICATION_PENDING;
     }
@@ -57,14 +55,6 @@ public class Notification {
 
     public void setReceiverId(String receiverId) {
         this.receiverId = receiverId;
-    }
-
-    public NotificationType getType() {
-        return type;
-    }
-
-    public void setType(NotificationType type) {
-        this.type = type;
     }
 
     public Date getCreatedAt() {
@@ -108,13 +98,6 @@ public class Notification {
 
     public void setState(NotificationState state) {
         this.state = state;
-    }
-
-    public enum NotificationType {
-        FRIEND_REQUEST,
-        MEETUP_REQUEST,
-        MEETUP_DECLINED,
-        MEETUP_ACCEPTED,
     }
 
     public enum NotificationState {

@@ -29,7 +29,7 @@ public class MeetupNotificationsViewModel extends NotificationsViewModel {
                 notification.getSenderId(),
                 ((MeetupNotification) notification).getLocation(),
                 ((MeetupNotification) notification).getMeetupAt(),
-                Notification.NotificationType.MEETUP_ACCEPTED
+                MeetupNotification.NotificationType.MEETUP_ACCEPTED
         );
         notificationRepository.addNotification(notificationAccepted);
     }
@@ -44,7 +44,7 @@ public class MeetupNotificationsViewModel extends NotificationsViewModel {
                 notification.getSenderId(),
                 ((MeetupNotification) notification).getLocation(),
                 ((MeetupNotification) notification).getMeetupAt(),
-                Notification.NotificationType.MEETUP_DECLINED
+                MeetupNotification.NotificationType.MEETUP_DECLINED
         );
         notificationRepository.addNotification(notificationDeclined);
         super.declineRequest(notification);

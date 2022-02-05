@@ -1,13 +1,5 @@
 package com.example.cm.data.repositories;
 
-import static com.example.cm.data.models.Notification.NotificationType.FRIEND_REQUEST;
-import static com.example.cm.data.models.Notification.NotificationType.MEETUP_ACCEPTED;
-import static com.example.cm.data.models.Notification.NotificationType.MEETUP_DECLINED;
-import static com.example.cm.data.models.Notification.NotificationType.MEETUP_REQUEST;
-
-import com.example.cm.config.CollectionConfig;
-import com.example.cm.data.models.FriendsNotification;
-import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -16,7 +8,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 

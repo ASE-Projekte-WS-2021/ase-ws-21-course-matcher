@@ -5,10 +5,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.FriendsNotification;
 import com.example.cm.data.models.Notification;
-import com.example.cm.data.models.Notification.NotificationType;
+import com.example.cm.data.models.MeetupNotification.NotificationType;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendsNotificationRepository;
-import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.NotificationRepository.OnNotificationRepositoryListener;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.data.repositories.UserRepository.OnUserRepositoryListener;
@@ -104,7 +103,7 @@ public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryLi
 
     private Boolean hasReceivedFriendRequest(List<Notification> notifications, String receiverId) {
         for (Notification notification : notifications) {
-            if (notification.getReceiverId().equals(receiverId) && notification.getSenderId().equals(currentUser.getId()) && notification.getType().equals(NotificationType.FRIEND_REQUEST)) {
+            if (notification.getReceiverId().equals(receiverId) && notification.getSenderId().equals(currentUser.getId())) {
                 return true;
             }
         }

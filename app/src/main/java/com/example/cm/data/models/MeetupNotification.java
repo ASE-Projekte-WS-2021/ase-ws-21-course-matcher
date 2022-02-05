@@ -1,32 +1,37 @@
 package com.example.cm.data.models;
 
-import androidx.annotation.NonNull;
-
-import java.util.Date;
-
 public class MeetupNotification extends Notification{
 
     private String meetupId;
     private String location;
     private String meetupAt;
+    private NotificationType type;
 
     public MeetupNotification(NotificationType type) {
         super();
         this.type = type;
         if(type == NotificationType.MEETUP_ACCEPTED || type == NotificationType.MEETUP_DECLINED){
-            state = NotificationState.NOTIFICATION_DECLINED;
+            state = NotificationState.NOTIFICATION_ANSWERED;
         }
     }
 
     public MeetupNotification(String meetupId, String senderId, String senderName,
                               String receiverId, String location, String meetupAt, NotificationType type) {
-        super(senderId, senderName, receiverId, type);
+        super(senderId, senderName, receiverId);
         this.meetupId = meetupId;
         this.location = location;
         this.meetupAt = meetupAt;
         if(type == NotificationType.MEETUP_ACCEPTED || type == NotificationType.MEETUP_DECLINED){
-            state = NotificationState.NOTIFICATION_DECLINED;
+            state = NotificationState.NOTIFICATION_ANSWERED;
         }
+    }
+
+    public NotificationType getType() {
+        return type;
+    }
+
+    public void setType(NotificationType type) {
+        this.type = type;
     }
 
     public String getMeetupId() {
@@ -66,5 +71,11 @@ public class MeetupNotification extends Notification{
             default:
                 return meetupString;
         }
+    }
+
+    public enum NotificationType {
+        MEETUP_REQUEST,
+        MEETUP_DECLINED,
+        MEETUP_ACCEPTED,
     }
 }

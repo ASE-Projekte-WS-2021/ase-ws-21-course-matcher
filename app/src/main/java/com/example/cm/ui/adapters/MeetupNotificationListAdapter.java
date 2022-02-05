@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.example.cm.R;
+import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 
 public class MeetupNotificationListAdapter extends NotificationListAdapter{
@@ -24,7 +25,7 @@ public class MeetupNotificationListAdapter extends NotificationListAdapter{
     @Override
     public void onBindViewHolder(@NonNull NotificationListAdapter.NotificationViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        Notification notification = mNotifications.get(position);
+        MeetupNotification notification = (MeetupNotification) mNotifications.get(position);
         boolean isAccepted = notification.getState() == Notification.NotificationState.NOTIFICATION_ACCEPTED;
 
         int content = 0;
