@@ -22,11 +22,11 @@ import java.util.Objects;
 
 public class NotificationRepository extends Repository {
 
-    private final FirebaseAuth auth = FirebaseAuth.getInstance();
-    private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private final CollectionReference notificationCollection = firestore.collection(CollectionConfig.NOTIFICATIONS.toString());
+    protected final FirebaseAuth auth = FirebaseAuth.getInstance();
+    protected final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    protected CollectionReference notificationCollection;
 
-    private final OnNotificationRepositoryListener listener;
+    protected final OnNotificationRepositoryListener listener;
 
     public NotificationRepository(NotificationRepository.OnNotificationRepositoryListener listener) {
         this.listener = listener;
@@ -49,35 +49,16 @@ public class NotificationRepository extends Repository {
         });
     }
 
-
-    /**
-     * Get all friend requests for sender
-     *
-     * @param senderId Id of the sender
-     * @param listener Callback to be called when the request is completed
-     */
-    public void getFriendRequests(String senderId, OnNotificationRepositoryListener listener) {
-        notificationCollection.whereEqualTo("senderId", senderId).whereEqualTo("type", FRIEND_REQUEST)
-                .get().addOnCompleteListener(executorService, task -> {
-                    if (task.isSuccessful()) {
-                        List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
-                        listener.onNotificationsRetrieved(notifications);
-                    }
-                });
-    }
-
     /**
      * Delete a notification
      *
      * @param receiverId Id of the receiver
      * @param senderId   Id of the sender
-     * @param type       Type of the notification
      */
-    public void deleteNotification(String receiverId, String senderId, Notification.NotificationType type) {
+    public void deleteNotification(String receiverId, String senderId) {
         notificationCollection
                 .whereEqualTo("receiverId", receiverId).whereEqualTo("senderId", senderId)
-                .whereEqualTo("type", type).get()
-                .addOnCompleteListener(executorService, task -> {
+                .get().addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
                         if (task.getResult() == null) {
                             return;
@@ -105,13 +86,7 @@ public class NotificationRepository extends Repository {
      * @param documents List of notifications returned from Firestore
      * @return Returns a list of notifications
      */
-    private List<Notification> snapshotToNotificationList(QuerySnapshot documents) {
-        List<Notification> notifications = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents) {
-            notifications.add(snapshotToNotification(document));
-        }
-        return notifications;
-    }
+    protected List<Notification> snapshotToNotificationList(QuerySnapshot documents) {return null;}
 
     /**
      * Convert a single snapshot to a notification model
@@ -119,18 +94,7 @@ public class NotificationRepository extends Repository {
      * @param document Snapshot of a notification returned from Firestore
      * @return Returns a notification
      */
-    public Notification snapshotToNotification(DocumentSnapshot document) {
-        Notification notification = null;
-
-        Notification.NotificationType notType = Objects.requireNonNull(document.get("type", Notification.NotificationType.class));
-        if (notType == FRIEND_REQUEST) {
-            notification = new FriendsNotification();
-        } else if (notType == MEETUP_REQUEST || notType == MEETUP_ACCEPTED || notType == MEETUP_DECLINED) {
-            notification = new MeetupNotification(notType);
-            ((MeetupNotification) notification).setMeetupId(document.getString("meetupId"));
-            ((MeetupNotification) notification).setLocation(document.getString("location"));
-            ((MeetupNotification) notification).setMeetupAt(document.getString("meetupAt"));
-        }
+    protected Notification snapshotToNotification(DocumentSnapshot document, Notification notification) {
         if (notification != null) {
             notification.setId(document.getId());
             notification.setSenderId(document.getString("senderId"));

@@ -21,8 +21,8 @@ import java.util.List;
 
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
 
-    private List<Notification> mNotifications;
-    private OnFriendAcceptanceListener listener;
+    protected List<Notification> mNotifications;
+    protected OnFriendAcceptanceListener listener;
 
     public NotificationListAdapter(OnFriendAcceptanceListener listener) {
         this.listener = listener;
@@ -51,36 +51,10 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         Notification notification = mNotifications.get(position);
 
         String user = "@" + notification.getSenderName();
-        boolean isAccepted = notification.getState() == Notification.NotificationState.NOTIFICATION_ACCEPTED;
         String date = notification.getCreationTimeAgo();
 
-        int content = 0;
-        switch(notification.getType()){
-            case FRIEND_REQUEST:
-                holder.getTvTitle().setText(R.string.friend_request_title);
-                content = isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text;
-                break;
-            case MEETUP_REQUEST:
-                holder.getTvTitle().setText(notification.toString());
-                content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_text;
-                break;
-            case MEETUP_ACCEPTED:
-                holder.getTvTitle().setText(notification.toString());
-                isAccepted = true;
-                content = R.string.meetup_accepted_text;
-                break;
-            case MEETUP_DECLINED:
-                holder.getTvTitle().setText(notification.toString());
-                isAccepted = true;
-                content = R.string.meetup_declined_text;
-                break;
-        }
-
         holder.getTvSender().setText(user);
-        holder.getTvContent().setText(content);
         holder.getTvDate().setText(date);
-        holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
-        holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
     }
 
     @Override

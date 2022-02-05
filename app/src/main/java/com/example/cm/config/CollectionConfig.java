@@ -4,7 +4,8 @@ public enum CollectionConfig {
 
     USERS("users"),
     MEETUPS("meetups"),
-    NOTIFICATIONS("notifications");
+    FRIENDS_NOTIFICATIONS("friends-notifications"),
+    MEETUP_NOTIFICATIONS("meetup-notifications");
 
     private final String collection;
 

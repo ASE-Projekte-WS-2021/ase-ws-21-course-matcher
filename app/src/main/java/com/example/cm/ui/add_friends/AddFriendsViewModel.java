@@ -7,6 +7,7 @@ import com.example.cm.data.models.FriendsNotification;
 import com.example.cm.data.models.Notification;
 import com.example.cm.data.models.Notification.NotificationType;
 import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.FriendsNotificationRepository;
 import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.NotificationRepository.OnNotificationRepositoryListener;
 import com.example.cm.data.repositories.UserRepository;
@@ -21,7 +22,7 @@ import timber.log.Timber;
 public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryListener, OnNotificationRepositoryListener {
 
     private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
+    private final FriendsNotificationRepository notificationRepository;
     public MutableLiveData<List<User>> users = new MutableLiveData<>();
     public MutableLiveData<List<Notification>> sentFriendRequests = new MutableLiveData<>();
     public OnNotificationSentListener listener;
@@ -29,7 +30,7 @@ public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryLi
 
     public AddFriendsViewModel() {
         userRepository = new UserRepository(this);
-        notificationRepository = new NotificationRepository(this);
+        notificationRepository = new FriendsNotificationRepository(this);
         FirebaseUser firebaseUser = userRepository.getCurrentUser();
         userRepository.getUserByEmail(firebaseUser.getEmail());
         userRepository.getUsersNotFriends();
@@ -63,7 +64,7 @@ public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryLi
      * @param receiverId the id of the receiver
      */
     public void sendOrDeleteFriendRequest(String receiverId) {
-        notificationRepository.getFriendRequests(currentUser.getId(), notifications -> {
+        notificationRepository.getFriendRequestsSentBy(currentUser.getId(), notifications -> {
             if (notifications == null) {
                 return;
             }
@@ -97,7 +98,7 @@ public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryLi
      */
     private void onFriendRequestExists(String receiverId) {
         Timber.d("Deleting friend request to %s", receiverId);
-        notificationRepository.deleteNotification(receiverId, currentUser.getId(), NotificationType.FRIEND_REQUEST);
+        notificationRepository.deleteNotification(receiverId, currentUser.getId());
         listener.onNotificationDeleted();
     }
 
@@ -125,7 +126,7 @@ public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryLi
     @Override
     public void onUserRetrieved(User user) {
         this.currentUser = user;
-        notificationRepository.getFriendRequests(user.getId(), notifications -> {
+        notificationRepository.getFriendRequestsSentBy(user.getId(), notifications -> {
             sentFriendRequests.postValue(notifications);
         });
     }

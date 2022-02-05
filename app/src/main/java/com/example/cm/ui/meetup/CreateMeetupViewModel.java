@@ -8,6 +8,7 @@ import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupNotification;
 import com.example.cm.data.models.Notification;
 import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.MeetupNotificationRepository;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.UserRepository;
@@ -38,7 +39,7 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     public CreateMeetupViewModel() {
         this.meetupRepository = new MeetupRepository(this);
         userRepository = new UserRepository(this);
-        notificationRepository = new NotificationRepository(this);
+        notificationRepository = new MeetupNotificationRepository(this);
         FirebaseUser firebaseUser = userRepository.getCurrentUser();
         userRepository.getUserByEmail(firebaseUser.getEmail());
         userRepository.getUsers();

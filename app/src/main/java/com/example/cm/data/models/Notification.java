@@ -121,5 +121,6 @@ public class Notification {
         NOTIFICATION_ACCEPTED,
         NOTIFICATION_DECLINED,
         NOTIFICATION_PENDING,
+        NOTIFICATION_ANSWERED
     }
 }
