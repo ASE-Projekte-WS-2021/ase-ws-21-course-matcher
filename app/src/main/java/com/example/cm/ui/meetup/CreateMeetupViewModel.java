@@ -20,11 +20,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener,
-        NotificationRepository.OnNotificationRepositoryListener, MeetupRepository.OnMeetupRepositoryListener {
+        NotificationRepository.OnNotificationRepositoryListener {
 
     private final MeetupRepository meetupRepository;
     private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
+    private final MeetupNotificationRepository notificationRepository;
 
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
@@ -37,7 +37,7 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     private Meetup meetupToAdd;
 
     public CreateMeetupViewModel() {
-        this.meetupRepository = new MeetupRepository(this);
+        this.meetupRepository = new MeetupRepository();
         userRepository = new UserRepository(this);
         notificationRepository = new MeetupNotificationRepository(this);
         FirebaseUser firebaseUser = userRepository.getCurrentUser();
@@ -101,10 +101,10 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     }
 
     public void createMeetup() {
-        String currentUserId = userRepository.getCurrentUser().getUid();
+        FirebaseUser currentUser = userRepository.getCurrentUser();
         Objects.requireNonNull(selectedUsers.getValue());
         meetupToAdd = new Meetup(
-                currentUserId,
+                currentUser.getUid(),
                 meetupLocation.getValue(),
                 meetupTime.getValue(),
                 Boolean.TRUE.equals(meetupIsPrivate.getValue()),
@@ -112,6 +112,25 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
                 meetupTimestamp.getValue());
 
         meetupRepository.addMeetup(meetupToAdd);
+
+        sendMeetupNotification();
+    }
+
+    private void sendMeetupNotification() {
+        if (selectedUsers.getValue() != null) {
+            for (String invitedFriendId : selectedUsers.getValue()) {
+                MeetupNotification notification = new MeetupNotification(
+                        meetupToAdd.getId(),
+                        userRepository.getCurrentUser().getUid(),
+                        currentUser.getFullName(),
+                        invitedFriendId,
+                        meetupLocation.getValue(),
+                        meetupTime.getValue(),
+                        Notification.NotificationType.MEETUP_REQUEST);
+                notificationRepository.addNotification(notification);
+            }
+            selectedUsers.getValue().clear();
+        }
     }
 
     public void searchUsers(String query) {

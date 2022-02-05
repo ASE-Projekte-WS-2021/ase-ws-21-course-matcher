@@ -79,28 +79,6 @@ public class UserRepository extends Repository {
         });
     }
 
-    // replace this ugly code
-    public void getUserByIdMeetup(List<String> ids, TextView textView) {
-        userCollection.whereIn("id", ids).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                ArrayList<User> users = new ArrayList<>();
-                StringBuilder text = new StringBuilder();
-                for (DocumentSnapshot doc : task.getResult().getDocuments()) {
-                    users.add(snapshotToUser(doc));
-                }
-
-                for (int i = 0; i < users.size(); i++) {
-                    text.append("@").append(users.get(i).getFullName());
-                    if (i != users.size() - 1) {
-                        text.append("\n");
-                    }
-                }
-                textView.setText(text.toString());
-            }
-        });
-
-    }
-
     public void getUserById(String userId) {
         userCollection.document(userId).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {

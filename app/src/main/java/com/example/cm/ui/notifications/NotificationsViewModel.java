@@ -12,7 +12,6 @@ import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.NotificationRepository.OnNotificationRepositoryListener;
 import com.example.cm.data.repositories.UserRepository;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +33,7 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
     }
 
 
-    public void acceptRequest(Notification notification){
+    public void acceptRequest(Notification notification) {
         notification.setState(Notification.NotificationState.NOTIFICATION_ACCEPTED);
         notification.setCreatedAtToNow();
         notificationRepository.accept(notification);
@@ -54,8 +53,7 @@ public class NotificationsViewModel extends ViewModel implements OnNotificationR
     public void onNotificationsRetrieved(List<Notification> notifications) {
         ArrayList<Notification> notsToDisplay = new ArrayList<>();
         for (Notification notification : notifications) {
-            if (notification.getState() != Notification.NotificationState.NOTIFICATION_DECLINED ||
-                    notification.getState() != Notification.NotificationState.NOTIFICATION_ANSWERED) {
+            if (notification.getState() != Notification.NotificationState.NOTIFICATION_DECLINED) {
                 notsToDisplay.add(notification);
             }
         }
