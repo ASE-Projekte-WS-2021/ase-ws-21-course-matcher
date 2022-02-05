@@ -8,27 +8,15 @@ import com.example.cm.data.repositories.MeetupRepository;
 
 import java.util.List;
 
-public class MeetupListViewModel extends ViewModel implements MeetupRepository.OnMeetupRepositoryListener{
-    private final MeetupRepository meetupRepository;
-    private final MutableLiveData<List<Meetup>> meetups = new MutableLiveData<>();
+public class MeetupListViewModel extends ViewModel {
+    private MutableLiveData<List<Meetup>> meetupList = new MutableLiveData<>();
+    private final MeetupRepository meetupRepository = new MeetupRepository();
 
     public MeetupListViewModel() {
-        this.meetupRepository = new MeetupRepository(this);
-        meetupRepository.getMeetupsByCurrentUser();
+        meetupList = meetupRepository.getMeetups();
     }
 
     public MutableLiveData<List<Meetup>> getMeetups() {
-        return meetups;
-    }
-
-    @Override
-    public void onMeetupsRetrieved(List<Meetup> meetups) {
-        this.meetups.postValue(meetups);
-    }
-
-    @Override
-    public void onMeetupAdded(String meetupId) {
-
+        return meetupList;
     }
 }
-
