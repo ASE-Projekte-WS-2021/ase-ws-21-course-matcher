@@ -2,13 +2,10 @@ package com.example.cm.ui.meetup;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,12 +16,9 @@ import androidx.navigation.Navigation;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
 
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 
@@ -56,7 +50,6 @@ public class CreateMeetupFragment extends Fragment {
 
     private void initListener() {
 
-
         binding.meetupTimeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,20 +75,18 @@ public class CreateMeetupFragment extends Fragment {
 
     private void onTimePickerDialogClicked() {
 
-        TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int selectedHour, int selectedMinute) {
+        binding.meetupInfoBtn.setEnabled(true);
 
-                sHour = selectedHour;
-                sMin = selectedMinute;
-                binding.meetupTimeText.setText(String.format(Locale.getDefault(), "%02d:%02d", sHour, sMin));
-            }
+        TimePickerDialog.OnTimeSetListener onTimeSetListener = (view, selectedHour, selectedMinute) -> {
+
+            sHour = selectedHour;
+            sMin = selectedMinute;
+            binding.meetupTimeText.setText(String.format(Locale.getDefault(), "%02d:%02d", sHour, sMin));
         };
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), onTimeSetListener, sHour, sMin, true);
         timePickerDialog.updateTime(sHour, sMin);
         timePickerDialog.show();
-
     }
 
 
@@ -137,27 +128,14 @@ public class CreateMeetupFragment extends Fragment {
         int selectedMin = Integer.parseInt(timeArray[1]);
 
         if (localHour > selectedHour) {
-            delayButton();
+            binding.meetupInfoBtn.setEnabled(false);
+            Toast.makeText(getActivity(), R.string.meetup_time_in_past, Toast.LENGTH_SHORT).show();
         } else if (localHour == selectedHour && localMin > selectedMin) {
-            delayButton();
+            binding.meetupInfoBtn.setEnabled(false);
+            Toast.makeText(getActivity(), R.string.meetup_time_in_past, Toast.LENGTH_SHORT).show();
         } else {
             onMeetupInfoBtnClicked();
         }
-    }
-
-    private void delayButton() {
-        binding.meetupInfoBtn.setEnabled(false);
-        Toast.makeText(getActivity(), R.string.meetup_time_in_past, Toast.LENGTH_SHORT).show();
-        new CountDownTimer(2350, 10) { //Set Timer for 5 seconds
-            public void onTick(long millisUntilFinished) {
-            }
-
-            @Override
-            public void onFinish() {
-                binding.meetupInfoBtn.setEnabled(true);
-            }
-        }.start();
-        return;
     }
 
     @Override
