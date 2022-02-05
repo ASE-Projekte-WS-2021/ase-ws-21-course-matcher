@@ -21,6 +21,7 @@ public class MeetupNotification extends Notification{
         this.meetupId = meetupId;
         this.location = location;
         this.meetupAt = meetupAt;
+        this.type = type;
         if(type == NotificationType.MEETUP_ACCEPTED || type == NotificationType.MEETUP_DECLINED){
             state = NotificationState.NOTIFICATION_ANSWERED;
         }

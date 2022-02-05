@@ -21,8 +21,13 @@ public class MeetupRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
     private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
+    private OnMeetupRepositoryListener listener;
 
     public MeetupRepository() {
+    }
+
+    public MeetupRepository(OnMeetupRepositoryListener listener) {
+        this.listener = listener;
     }
 
     public MutableLiveData<List<Meetup>> getMeetups() {
@@ -37,7 +42,11 @@ public class MeetupRepository {
     }
 
     public void addMeetup(Meetup meetup) {
-        meetupCollection.add(meetup);
+        meetupCollection.add(meetup).addOnCompleteListener(task -> {
+            if(task.isSuccessful() && listener != null){
+                listener.onMeetupAdded(task.getResult().getId());
+            }
+        });
     }
 
     public void addConfirmed(String meetupId, String participantId) {
@@ -86,5 +95,10 @@ public class MeetupRepository {
         meetup.setPrivate(document.getBoolean("private"));
         meetup.setDeclinedFriends(Utils.castList(document.get("declinedFriends"), String.class));
         return meetup;
+    }
+
+    public interface OnMeetupRepositoryListener {
+        void onMeetupsRetrieved(List<Meetup> meetups);
+        void onMeetupAdded(String meetupId);
     }
 }
