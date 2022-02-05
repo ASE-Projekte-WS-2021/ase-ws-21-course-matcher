@@ -23,4 +23,10 @@
     <color name="grey_medium">#FF98A3C3</color>
     <color name="grey_dark">#FF4E5774</color>
     <color name="black_overlay">#66000000</color>
+    <color name="light_blue_400">#FF29B6F6</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="gray_400">#FFBDBDBD</color>
+    <color name="gray_600">#FF757575</color>
+    <color name="green">#009944</color>
+    <color name="red">#cf000f</color>
 </resources>

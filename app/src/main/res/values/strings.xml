@@ -95,4 +95,10 @@
     <string name="title_meetup">Meetup</string>
     <string name="select_time">wähle eine Zeit aus</string>
     <string name="meetup_time_desc">Wann soll das Treffen stattfinden?</string>
+    <string name="add_meeting">add meeting</string>
+    <string name="location">Location</string>
+    <string name="time">time</string>
+    <string name="location_card">location</string>
+    <string name="meetup_tabs_list">Anstehend</string>
+    <string name="meetup_tabs_notifications">Anfragen</string>
 </resources>

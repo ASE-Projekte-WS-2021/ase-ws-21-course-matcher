@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.utils.Utils;
@@ -15,53 +17,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MeetupRepository extends Repository {
+public class MeetupRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
-    private OnMeetupRepositoryListener listener;
+    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
 
     public MeetupRepository() {
-
     }
 
-    public MeetupRepository(OnMeetupRepositoryListener listener) {
-        this.listener = listener;
-    }
-
-    /**
-     * Convert a single snapshot to a notification model
-     *
-     * @param document Snapshot of a notification returned from Firestore
-     * @return Returns a notification
-     */
-    private Meetup snapshotToMeetup(DocumentSnapshot document) {
-        Meetup meetup = new Meetup();
-        meetup.setConfirmedFriends(Utils.castList(document.get("confirmedFriends"), String.class));
-        meetup.setRequestingUser(document.getString("requestingUser"));
-        meetup.setInvitedFriends(Utils.castList(document.get("invitedFriends"), String.class));
-        meetup.setLocation(document.getString("location"));
-        meetup.setTime(document.getString("time"));
-        meetup.setPrivate(document.getBoolean("private"));
-        meetup.setDeclinedFriends(Utils.castList(document.get("declinedFriends"), String.class));
-        return meetup;
-    }
-
-    public void getMeetupsByCurrentUser() {
-        meetupCollection.whereArrayContains("confirmedFriends", FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(executorService, task -> {
+    public MutableLiveData<List<Meetup>> getMeetups() {
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        meetupCollection.whereArrayContains("confirmedFriends", currentUserId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<Meetup> meetups = snapshotToMeetupList(Objects.requireNonNull(task.getResult()));
-                listener.onMeetupsRetrieved(meetups);
+                meetupListMLD.postValue(meetups);
             }
         });
+        return meetupListMLD;
     }
 
     public void addMeetup(Meetup meetup) {
-        meetupCollection.add(meetup).addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                String newMeetupId = Objects.requireNonNull(task.getResult()).getId();
-                listener.onMeetupAdded(newMeetupId);
-            }
-        });
+        meetupCollection.add(meetup);
     }
 
     public void addConfirmed(String meetupId, String participantId) {
@@ -80,11 +56,6 @@ public class MeetupRepository extends Repository {
         meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
     }
 
-    public interface OnMeetupRepositoryListener {
-        void onMeetupsRetrieved(List<Meetup> meetups);
-        void onMeetupAdded(String meetupId);
-    }
-
     /**
      * Convert a list of snapshots to a list of meetups
      *
@@ -98,5 +69,22 @@ public class MeetupRepository extends Repository {
         }
         return meetups;
     }
-}
 
+    /**
+     * Convert a single snapshot to a meetup model
+     *
+     * @param document Snapshot of a meetup returned from Firestore
+     * @return Returns a meetup
+     */
+    private Meetup snapshotToMeetup(DocumentSnapshot document) {
+        Meetup meetup = new Meetup();
+        meetup.setConfirmedFriends(Utils.castList(document.get("confirmedFriends"), String.class));
+        meetup.setRequestingUser(document.getString("requestingUser"));
+        meetup.setInvitedFriends(Utils.castList(document.get("invitedFriends"), String.class));
+        meetup.setLocation(document.getString("location"));
+        meetup.setTime(document.getString("time"));
+        meetup.setPrivate(document.getBoolean("private"));
+        meetup.setDeclinedFriends(Utils.castList(document.get("declinedFriends"), String.class));
+        return meetup;
+    }
+}
