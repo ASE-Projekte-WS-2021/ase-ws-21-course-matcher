@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener,
         NotificationRepository.OnNotificationRepositoryListener {
@@ -102,7 +103,9 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     public void createMeetup() {
         FirebaseUser currentUser = userRepository.getCurrentUser();
         Objects.requireNonNull(selectedUsers.getValue());
+        String meetupId = UUID.randomUUID().toString();
         meetupToAdd = new Meetup(
+                meetupId,
                 currentUser.getUid(),
                 meetupLocation.getValue(),
                 meetupTime.getValue(),

@@ -46,7 +46,7 @@ public class MeetupTabsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         meetupTabAdapter = new MeetupTapAdapter(this);
-        viewPager = view.findViewById(R.id.pager);
+        viewPager = view.findViewById(R.id.meetup_tab_pager);
         viewPager.setAdapter(meetupTabAdapter);
 
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);

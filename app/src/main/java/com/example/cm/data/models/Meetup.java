@@ -20,7 +20,8 @@ public class Meetup {
     public Meetup() {
     }
 
-    public Meetup(String requestingUser, String location, String time, boolean isPrivate, List<String> invitedFriends, Date timestamp) {
+    public Meetup(String id, String requestingUser, String location, String time, boolean isPrivate, List<String> invitedFriends, Date timestamp) {
+        this.id = id;
         this.requestingUser = requestingUser;
         this.location = location;
         this.time = time;
