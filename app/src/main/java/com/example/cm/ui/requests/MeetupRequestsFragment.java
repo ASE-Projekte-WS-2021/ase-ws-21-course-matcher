@@ -1,4 +1,4 @@
-package com.example.cm.ui.notifications;
+package com.example.cm.ui.requests;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -13,16 +13,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.cm.data.models.MeetupNotification;
-import com.example.cm.data.models.Notification;
+import com.example.cm.data.models.MeetupRequest;
+import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentMeetupNotificationsBinding;
-import com.example.cm.ui.adapters.MeetupNotificationListAdapter;
-import com.example.cm.ui.adapters.NotificationListAdapter;
+import com.example.cm.ui.adapters.MeetupRequestListAdapter;
+import com.example.cm.ui.adapters.RequestListAdapter;
 
-public class MeetupNotificationsFragment extends Fragment implements NotificationListAdapter.OnFriendAcceptanceListener, SwipeRefreshLayout.OnRefreshListener {
+import java.util.ArrayList;
 
-    private MeetupNotificationsViewModel notificationsViewModel;
-    private MeetupNotificationListAdapter notificationListAdapter;
+public class MeetupRequestsFragment extends Fragment implements
+        RequestListAdapter.OnRequestAcceptanceListener,
+        SwipeRefreshLayout.OnRefreshListener {
+
+    private MeetupRequestsViewModel requestsViewModel;
+    private MeetupRequestListAdapter requestsListAdapter;
     private FragmentMeetupNotificationsBinding binding;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -37,19 +41,23 @@ public class MeetupNotificationsFragment extends Fragment implements Notificatio
     private void initUI() {
         swipeRefreshLayout = binding.getRoot();
         swipeRefreshLayout.setOnRefreshListener(this);
-        notificationListAdapter = new MeetupNotificationListAdapter(this);
+        requestsListAdapter = new MeetupRequestListAdapter(this);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
-        binding.notificationsRecyclerView.setAdapter(notificationListAdapter);
+        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
     }
 
     private void initViewModel() {
-        notificationsViewModel = new ViewModelProvider(this).get(MeetupNotificationsViewModel.class);
-        notificationsViewModel.getNotifications().observe(getViewLifecycleOwner(), notifications -> {
-            if(notifications == null){
+        requestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
+        requestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), requests -> {
+            if(requests == null){
                 return;
             }
-            notificationListAdapter.setNotifications(notifications);
+            ArrayList<Request> requestsToSet = new ArrayList<>();
+            for(MeetupRequest request : requests) {
+                requestsToSet.add((Request) request);
+            }
+            requestsListAdapter.setNotifications(requestsToSet);
         });
     }
 
@@ -62,23 +70,23 @@ public class MeetupNotificationsFragment extends Fragment implements Notificatio
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh() {
-        notificationsViewModel.refresh();
-        notificationListAdapter.notifyDataSetChanged();
+        requestsViewModel.refresh();
+        requestsListAdapter.notifyDataSetChanged();
         new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 100);
     }
 
     @Override
-    public void onAccept(Notification notification) {
-        notificationsViewModel.acceptRequest(notification);
+    public void onAccept(Request request) {
+        requestsViewModel.acceptMeetupRequest((MeetupRequest) request);
     }
 
     @Override
-    public void onDecline(Notification notification) {
-        notificationsViewModel.declineRequest(notification);
+    public void onDecline(Request request) {
+        requestsViewModel.declineMeetupRequest((MeetupRequest) request);
     }
 
     @Override
-    public void onUndo(Notification notification, int position) {
-        notificationsViewModel.undoDeclineRequest((MeetupNotification) notification, position);
+    public void onUndo(Request request, int position) {
+        requestsViewModel.undoDeclineMeetupRequest((MeetupRequest) request, position);
     }
 }

@@ -6,27 +6,27 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.example.cm.R;
-import com.example.cm.data.models.MeetupNotification;
-import com.example.cm.data.models.Notification;
+import com.example.cm.data.models.MeetupRequest;
+import com.example.cm.data.models.Request;
 
-public class MeetupNotificationListAdapter extends NotificationListAdapter{
+public class MeetupRequestListAdapter extends RequestListAdapter {
 
-    public MeetupNotificationListAdapter(OnFriendAcceptanceListener listener) {
+    public MeetupRequestListAdapter(OnRequestAcceptanceListener listener) {
         super(listener);
     }
 
     @NonNull
     @Override
     //todo
-    public NotificationListAdapter.NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RequestListAdapter.NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return super.onCreateViewHolder(parent, viewType);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotificationListAdapter.NotificationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RequestListAdapter.NotificationViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        MeetupNotification notification = (MeetupNotification) mNotifications.get(position);
-        boolean isAccepted = notification.getState() == Notification.NotificationState.NOTIFICATION_ACCEPTED;
+        MeetupRequest notification = (MeetupRequest) mRequests.get(position);
+        boolean isAccepted = notification.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
         int content = 0;
         switch(notification.getType()){
@@ -34,12 +34,12 @@ public class MeetupNotificationListAdapter extends NotificationListAdapter{
                 holder.getTvTitle().setText(notification.toString());
                 content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_text;
                 break;
-            case MEETUP_ACCEPTED:
+            case MEETUP_INFO_ACCEPTED:
                 holder.getTvTitle().setText(notification.toString());
                 isAccepted = true;
                 content = R.string.meetup_accepted_text;
                 break;
-            case MEETUP_DECLINED:
+            case MEETUP_INFO_DECLINED:
                 holder.getTvTitle().setText(notification.toString());
                 isAccepted = true;
                 content = R.string.meetup_declined_text;

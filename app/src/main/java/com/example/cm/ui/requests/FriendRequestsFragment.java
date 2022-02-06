@@ -1,4 +1,4 @@
-package com.example.cm.ui.notifications;
+package com.example.cm.ui.requests;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -13,16 +13,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.cm.data.models.Notification;
-import com.example.cm.databinding.FragmentFriendsBinding;
+import com.example.cm.data.models.FriendRequest;
+import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentFriendsNotificationsBinding;
-import com.example.cm.ui.adapters.FriendsNotificationListAdapter;
-import com.example.cm.ui.adapters.NotificationListAdapter;
+import com.example.cm.ui.adapters.FriendRequestListAdapter;
+import com.example.cm.ui.adapters.RequestListAdapter;
 
-public class FriendsNotificationsFragment extends Fragment implements NotificationListAdapter.OnFriendAcceptanceListener, SwipeRefreshLayout.OnRefreshListener {
+import java.util.ArrayList;
 
-    private FriendsNotificationsViewModel notificationsViewModel;
-    private FriendsNotificationListAdapter notificationListAdapter;
+public class FriendRequestsFragment extends Fragment implements
+        RequestListAdapter.OnRequestAcceptanceListener,
+        SwipeRefreshLayout.OnRefreshListener {
+
+    private FriendRequestsViewModel requestsViewModel;
+    private FriendRequestListAdapter requestsListAdapter;
     private FragmentFriendsNotificationsBinding binding;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -37,19 +41,23 @@ public class FriendsNotificationsFragment extends Fragment implements Notificati
     private void initUI() {
         swipeRefreshLayout = binding.getRoot();
         swipeRefreshLayout.setOnRefreshListener(this);
-        notificationListAdapter = new FriendsNotificationListAdapter(this);
+        requestsListAdapter = new FriendRequestListAdapter(this);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
-        binding.notificationsRecyclerView.setAdapter(notificationListAdapter);
+        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
     }
 
     private void initViewModel() {
-        notificationsViewModel = new ViewModelProvider(this).get(FriendsNotificationsViewModel.class);
-        notificationsViewModel.getNotifications().observe(getViewLifecycleOwner(), notifications -> {
-            if(notifications == null){
+        requestsViewModel = new ViewModelProvider(this).get(FriendRequestsViewModel.class);
+        requestsViewModel.getFriendRequests().observe(getViewLifecycleOwner(), requests -> {
+            if(requests == null){
                 return;
             }
-            notificationListAdapter.setNotifications(notifications);
+            ArrayList<Request> requestsToSet = new ArrayList<>();
+            for(FriendRequest request : requests) {
+                requestsToSet.add((Request) request);
+            }
+            requestsListAdapter.setNotifications(requestsToSet);
         });
     }
 
@@ -62,23 +70,22 @@ public class FriendsNotificationsFragment extends Fragment implements Notificati
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh() {
-        notificationsViewModel.refresh();
-        notificationListAdapter.notifyDataSetChanged();
+        requestsViewModel.refresh();
+        requestsListAdapter.notifyDataSetChanged();
         new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 100);
     }
 
     @Override
-    public void onAccept(Notification notification) {
-        notificationsViewModel.acceptRequest(notification);
+    public void onAccept(Request request) {
+        requestsViewModel.acceptFriendRequest((FriendRequest) request);
     }
 
     @Override
-    public void onDecline(Notification notification) {
-        notificationsViewModel.declineRequest(notification);
+    public void onDecline(Request request) {
+        requestsViewModel.declineFriendRequest((FriendRequest) request);
     }
 
-    @Override
-    public void onUndo(Notification notification, int position) {
+    public void onUndo(Request request, int position) {
 
     }
 }

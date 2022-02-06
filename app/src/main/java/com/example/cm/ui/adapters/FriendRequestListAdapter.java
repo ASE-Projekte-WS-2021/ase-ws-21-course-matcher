@@ -6,10 +6,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 
 import com.example.cm.R;
-import com.example.cm.data.models.Notification;
+import com.example.cm.data.models.Request;
 
-public class FriendsNotificationListAdapter extends NotificationListAdapter{
-    public FriendsNotificationListAdapter(OnFriendAcceptanceListener listener) {
+public class FriendRequestListAdapter extends RequestListAdapter {
+    public FriendRequestListAdapter(OnRequestAcceptanceListener listener) {
         super(listener);
     }
 
@@ -23,8 +23,8 @@ public class FriendsNotificationListAdapter extends NotificationListAdapter{
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        Notification notification = mNotifications.get(position);
-        boolean isAccepted = notification.getState() == Notification.NotificationState.NOTIFICATION_ACCEPTED;
+        Request request = mRequests.get(position);
+        boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
         holder.getTvTitle().setText(R.string.friend_request_title);
         holder.getTvContent().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);

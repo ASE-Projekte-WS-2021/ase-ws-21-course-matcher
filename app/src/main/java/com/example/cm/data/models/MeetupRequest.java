@@ -1,37 +1,37 @@
 package com.example.cm.data.models;
 
-public class MeetupNotification extends Notification{
+public class MeetupRequest extends Request {
 
     private String meetupId;
     private String location;
     private String meetupAt;
-    private NotificationType type;
+    private MeetupRequestType type;
 
-    public MeetupNotification(NotificationType type) {
+    public MeetupRequest(MeetupRequestType type) {
         super();
         this.type = type;
-        if(type == NotificationType.MEETUP_ACCEPTED || type == NotificationType.MEETUP_DECLINED){
-            state = NotificationState.NOTIFICATION_ANSWERED;
+        if(type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED){
+            state = RequestState.REQUEST_ANSWERED;
         }
     }
 
-    public MeetupNotification(String meetupId, String senderId, String senderName,
-                              String receiverId, String location, String meetupAt, NotificationType type) {
+    public MeetupRequest(String meetupId, String senderId, String senderName,
+                         String receiverId, String location, String meetupAt, MeetupRequestType type) {
         super(senderId, senderName, receiverId);
         this.meetupId = meetupId;
         this.location = location;
         this.meetupAt = meetupAt;
         this.type = type;
-        if(type == NotificationType.MEETUP_ACCEPTED || type == NotificationType.MEETUP_DECLINED){
-            state = NotificationState.NOTIFICATION_ANSWERED;
+        if(type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED){
+            state = RequestState.REQUEST_ANSWERED;
         }
     }
 
-    public NotificationType getType() {
+    public MeetupRequestType getType() {
         return type;
     }
 
-    public void setType(NotificationType type) {
+    public void setType(MeetupRequestType type) {
         this.type = type;
     }
 
@@ -65,18 +65,18 @@ public class MeetupNotification extends Notification{
         switch(type){
             case MEETUP_REQUEST:
                 return meetupString + "?";
-            case MEETUP_ACCEPTED:
+            case MEETUP_INFO_ACCEPTED:
                 return "Zusage für " + meetupString;
-            case MEETUP_DECLINED:
+            case MEETUP_INFO_DECLINED:
                 return "Absage für " + meetupString;
             default:
                 return meetupString;
         }
     }
 
-    public enum NotificationType {
+    public enum MeetupRequestType {
         MEETUP_REQUEST,
-        MEETUP_DECLINED,
-        MEETUP_ACCEPTED,
+        MEETUP_INFO_DECLINED,
+        MEETUP_INFO_ACCEPTED,
     }
 }

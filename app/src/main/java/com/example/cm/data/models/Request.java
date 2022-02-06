@@ -5,24 +5,24 @@ import com.google.firebase.firestore.Exclude;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class Notification {
+public class Request {
 
     protected String id;
     protected String senderId;
     protected String senderName;
     protected String receiverId;
     protected Date createdAt;
-    protected NotificationState state;
+    protected RequestState state;
 
-    public Notification() {
+    public Request() {
     }
 
-    public Notification(String senderId, String senderName, String receiverId) {
+    public Request(String senderId, String senderName, String receiverId) {
         this.senderId = senderId;
         this.senderName = senderName;
         this.receiverId = receiverId;
         this.createdAt = new Date();
-        this.state = NotificationState.NOTIFICATION_PENDING;
+        this.state = RequestState.REQUEST_PENDING;
     }
 
     public String getId() {
@@ -92,18 +92,18 @@ public class Notification {
         this.createdAt = new Date();
     }
 
-    public NotificationState getState() {
+    public RequestState getState() {
         return state;
     }
 
-    public void setState(NotificationState state) {
+    public void setState(RequestState state) {
         this.state = state;
     }
 
-    public enum NotificationState {
-        NOTIFICATION_ACCEPTED,
-        NOTIFICATION_DECLINED,
-        NOTIFICATION_PENDING,
-        NOTIFICATION_ANSWERED
+    public enum RequestState {
+        REQUEST_ACCEPTED,
+        REQUEST_DECLINED,
+        REQUEST_PENDING,
+        REQUEST_ANSWERED
     }
 }

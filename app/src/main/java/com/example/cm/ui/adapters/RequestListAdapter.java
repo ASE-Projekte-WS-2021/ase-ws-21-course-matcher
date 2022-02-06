@@ -2,7 +2,6 @@ package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,46 +11,46 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
-import com.example.cm.data.models.Notification;
+import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemNotificationBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 
 import java.util.List;
 
-public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
+public class RequestListAdapter extends RecyclerView.Adapter<RequestListAdapter.NotificationViewHolder> {
 
-    protected List<Notification> mNotifications;
-    protected OnFriendAcceptanceListener listener;
+    protected List<Request> mRequests;
+    protected OnRequestAcceptanceListener listener;
 
-    public NotificationListAdapter(OnFriendAcceptanceListener listener) {
+    public RequestListAdapter(OnRequestAcceptanceListener listener) {
         this.listener = listener;
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setNotifications(List<Notification> newNotifications){
-        if(mNotifications == null){
-            mNotifications = newNotifications;
+    public void setNotifications(List<Request> newRequests){
+        if(mRequests == null){
+            mRequests = newRequests;
             notifyDataSetChanged();
             return;
         }
-        mNotifications = newNotifications;
+        mRequests = newRequests;
     }
 
     @NonNull
     @Override
-    public NotificationListAdapter.NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RequestListAdapter.NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemNotificationBinding binding = ItemNotificationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new NotificationViewHolder(binding);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull NotificationListAdapter.NotificationViewHolder holder, int position) {
-        Notification notification = mNotifications.get(position);
+    public void onBindViewHolder(@NonNull RequestListAdapter.NotificationViewHolder holder, int position) {
+        Request request = mRequests.get(position);
 
-        String user = "@" + notification.getSenderName();
-        String date = notification.getCreationTimeAgo();
+        String user = "@" + request.getSenderName();
+        String date = request.getCreationTimeAgo();
 
         holder.getTvSender().setText(user);
         holder.getTvDate().setText(date);
@@ -59,16 +58,16 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
     @Override
     public int getItemCount() {
-        if(mNotifications == null){
+        if(mRequests == null){
             return 0;
         }
-        return mNotifications.size();
+        return mRequests.size();
     }
 
-    public interface OnFriendAcceptanceListener {
-        void onAccept(Notification notification);
-        void onDecline(Notification notification);
-        void onUndo(Notification notification, int position);
+    public interface OnRequestAcceptanceListener {
+        void onAccept(Request request);
+        void onDecline(Request request);
+        void onUndo(Request request, int position);
     }
 
     /**
@@ -90,23 +89,23 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         }
 
         private void onAccept() {
-            Notification notification = mNotifications.get(getAdapterPosition());
-            listener.onAccept(notification);
+            Request request = mRequests.get(getAdapterPosition());
+            listener.onAccept(request);
             notifyItemChanged(getAdapterPosition());
         }
 
-        private void onUndo(Notification notification, int position){
-            listener.onUndo(notification, position);
+        private void onUndo(Request request, int position){
+            listener.onUndo(request, position);
             notifyItemInserted(position);
         }
 
         private void onDecline(){
             int position = getAdapterPosition();
-            Notification notification = mNotifications.get(position);
-            listener.onDecline(notification);
+            Request request = mRequests.get(position);
+            listener.onDecline(request);
             notifyItemRemoved(position);
             Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.decline_snackbar_text, Snackbar.LENGTH_LONG);
-            snackbar.setAction(R.string.undo_snackbar_text, view -> onUndo(notification, position));
+            snackbar.setAction(R.string.undo_snackbar_text, view -> onUndo(request, position));
             snackbar.show();
         }
 
