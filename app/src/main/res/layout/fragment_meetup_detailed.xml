@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MeetupDetailedFragment"
+    tools:context=".ui.meetup.MeetupDetailed.MeetupDetailedFragment"
     android:orientation="vertical"
     android:weightSum="13">
 
@@ -30,7 +30,7 @@
         android:layout_weight="8">
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
+            android:id="@+id/meetup_detailed_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabGravity="fill"
@@ -39,10 +39,9 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/meetup_tab_pager"
+            android:id="@+id/meetup_detailed_tab_pager"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:layout_height="fill_parent" />
 
     </LinearLayout>
 

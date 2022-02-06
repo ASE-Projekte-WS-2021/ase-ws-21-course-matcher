@@ -12,14 +12,14 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupTabsBinding;
-import com.example.cm.ui.adapters.MeetupTapAdapter;
+import com.example.cm.ui.adapters.MeetupTabAdapter;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MeetupTabsFragment extends Fragment {
 
-    MeetupTapAdapter meetupTabAdapter;
+    MeetupTabAdapter meetupTabAdapter;
     ViewPager2 viewPager;
     private FragmentMeetupTabsBinding binding;
     private Navigator navigator;
@@ -45,7 +45,7 @@ public class MeetupTabsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        meetupTabAdapter = new MeetupTapAdapter(this);
+        meetupTabAdapter = new MeetupTabAdapter(this);
         viewPager = view.findViewById(R.id.meetup_tab_pager);
         viewPager.setAdapter(meetupTabAdapter);
 

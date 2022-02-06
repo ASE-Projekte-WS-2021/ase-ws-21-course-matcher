@@ -1,4 +1,4 @@
-package com.example.cm;
+package com.example.cm.ui.meetup.MeetupDetailed;
 
 import android.os.Bundle;
 
@@ -8,12 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.cm.R;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MeetupDetailedFragment#newInstance} factory method to
+ * Use the {@link MeetupDetailedFriendsListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MeetupDetailedFragment extends Fragment {
+public class MeetupDetailedFriendsListFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +26,7 @@ public class MeetupDetailedFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public MeetupDetailedFragment() {
+    public MeetupDetailedFriendsListFragment() {
         // Required empty public constructor
     }
 
@@ -34,11 +36,11 @@ public class MeetupDetailedFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment MeetupDetailedFragment.
+     * @return A new instance of fragment MeetupDetailedFriendsListFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static MeetupDetailedFragment newInstance(String param1, String param2) {
-        MeetupDetailedFragment fragment = new MeetupDetailedFragment();
+    public static MeetupDetailedFriendsListFragment newInstance(String param1, String param2) {
+        MeetupDetailedFriendsListFragment fragment = new MeetupDetailedFriendsListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +61,6 @@ public class MeetupDetailedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_meetup_detailed, container, false);
+        return inflater.inflate(R.layout.fragment_meetup_detailed_friends_list, container, false);
     }
 }

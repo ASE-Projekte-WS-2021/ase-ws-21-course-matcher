@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/navigation_meetup"
-        android:name="com.example.cm.ui.meetup.CreateMeetupFragment"
+        android:name="com.example.cm.ui.meetup.CreateMeetup.CreateMeetupFragment"
         android:label="Meetup"
         tools:layout="@layout/fragment_meetup">
         <action
@@ -42,7 +42,7 @@
     <!-- meetup detailed view -->
     <fragment
         android:id="@+id/navigation_meetup_detailed"
-        android:name="com.example.cm.MeetupDetailedFragment"
+        android:name="com.example.cm.ui.meetup.MeetupDetailed.MeetupDetailedFragment"
         android:label="Meetupinfo"
         tools:layout="@layout/fragment_meetup_detailed" />
 
