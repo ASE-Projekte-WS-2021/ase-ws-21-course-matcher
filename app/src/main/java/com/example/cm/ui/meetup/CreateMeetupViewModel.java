@@ -36,7 +36,7 @@ public class CreateMeetupViewModel extends ViewModel implements MeetupRepository
         userRepository = new UserRepository();
         notificationRepository = new NotificationRepository();
         currentUser = userRepository.getCurrentUser();
-        users = userRepository.getUsers();
+        users = userRepository.getFriends();
     }
 
     public MutableLiveData<List<User>> getUsers() {
