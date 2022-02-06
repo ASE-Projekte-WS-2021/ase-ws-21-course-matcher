@@ -5,6 +5,8 @@ import static com.example.cm.data.models.Notification.NotificationType.MEETUP_AC
 import static com.example.cm.data.models.Notification.NotificationType.MEETUP_DECLINED;
 import static com.example.cm.data.models.Notification.NotificationType.MEETUP_REQUEST;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendsNotification;
 import com.example.cm.data.models.MeetupNotification;
@@ -20,22 +22,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import timber.log.Timber;
+
 public class NotificationRepository extends Repository {
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference notificationCollection = firestore.collection(CollectionConfig.NOTIFICATIONS.toString());
+    private final MutableLiveData<List<Notification>> mutableNotifications = new MutableLiveData<>();
 
-    private final OnNotificationRepositoryListener listener;
-
-    public NotificationRepository(NotificationRepository.OnNotificationRepositoryListener listener) {
-        this.listener = listener;
+    public NotificationRepository() {
     }
 
     /**
      * Get all notifications for currently signed in user
      */
-    public void getNotificationsForUser() {
+    public MutableLiveData<List<Notification>> getNotificationsForUser() {
         String userId = "";
         if (auth.getCurrentUser() != null) {
             userId = auth.getCurrentUser().getUid();
@@ -44,38 +46,48 @@ public class NotificationRepository extends Repository {
         notificationCollection.whereEqualTo("receiverId", userId).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
-                listener.onNotificationsRetrieved(notifications);
+                mutableNotifications.postValue(notifications);
             }
         });
+
+        return mutableNotifications;
     }
 
 
     /**
      * Get all friend requests for sender
-     *
-     * @param senderId Id of the sender
-     * @param listener Callback to be called when the request is completed
      */
-    public void getFriendRequests(String senderId, OnNotificationRepositoryListener listener) {
-        notificationCollection.whereEqualTo("senderId", senderId).whereEqualTo("type", FRIEND_REQUEST)
+    public MutableLiveData<List<Notification>> getFriendRequests() {
+        if (auth.getCurrentUser() == null) {
+            return mutableNotifications;
+        }
+        String currentUserId = auth.getCurrentUser().getUid();
+
+        notificationCollection.whereEqualTo("senderId", currentUserId).whereEqualTo("type", FRIEND_REQUEST)
                 .get().addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
+                        Timber.d("GetFriendRequests: Success");
                         List<Notification> notifications = snapshotToNotificationList(Objects.requireNonNull(task.getResult()));
-                        listener.onNotificationsRetrieved(notifications);
+                        mutableNotifications.postValue(notifications);
                     }
                 });
+        return mutableNotifications;
     }
 
     /**
      * Delete a notification
      *
      * @param receiverId Id of the receiver
-     * @param senderId   Id of the sender
      * @param type       Type of the notification
      */
-    public void deleteNotification(String receiverId, String senderId, Notification.NotificationType type) {
+    public void deleteNotification(String receiverId, Notification.NotificationType type) {
+        if (auth.getCurrentUser() == null) {
+            return;
+        }
+        String currentUserId = auth.getCurrentUser().getUid();
+
         notificationCollection
-                .whereEqualTo("receiverId", receiverId).whereEqualTo("senderId", senderId)
+                .whereEqualTo("receiverId", receiverId).whereEqualTo("senderId", currentUserId)
                 .whereEqualTo("type", type).get()
                 .addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
@@ -164,9 +176,4 @@ public class NotificationRepository extends Repository {
         notificationCollection.document(notification.getId()).
                 update("state", Notification.NotificationState.NOTIFICATION_PENDING);
     }
-
-    public interface OnNotificationRepositoryListener {
-        void onNotificationsRetrieved(List<Notification> notifications);
-    }
-
 }
