@@ -1,4 +1,4 @@
-package com.example.cm.ui.requests;
+package com.example.cm.ui.friends;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -14,11 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentFriendRequestsBinding;
 import com.example.cm.ui.adapters.FriendRequestListAdapter;
 
-import java.util.ArrayList;
 
 public class FriendRequestsFragment extends Fragment implements
         FriendRequestListAdapter.OnFriendRequestAcceptanceListener,

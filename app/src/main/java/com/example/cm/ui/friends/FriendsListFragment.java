@@ -15,21 +15,21 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
-import com.example.cm.databinding.FragmentFriendsBinding;
+import com.example.cm.databinding.FragmentFriendsListBinding;
 import com.example.cm.ui.adapters.FriendsListAdapter;
 import com.example.cm.ui.adapters.FriendsListAdapter.OnItemClickListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 
-public class FriendsFragment extends Fragment implements OnItemClickListener {
+public class FriendsListFragment extends Fragment implements OnItemClickListener {
 
     private FriendsViewModel friendsViewModel;
-    private FragmentFriendsBinding binding;
+    private FragmentFriendsListBinding binding;
     private FriendsListAdapter friendsListAdapter;
     private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentFriendsBinding.inflate(inflater, container, false);
+        binding = FragmentFriendsListBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
 
         initUI();

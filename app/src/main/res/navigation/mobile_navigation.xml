@@ -64,12 +64,21 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/navigation_friends_tabs"
+        android:name="com.example.cm.ui.friends.FriendsTabsFragment"
+        android:label="@string/title_friends"
+        tools:layout="@layout/fragment_friends_tabs">
+        <action
+            android:id="@+id/navigateToSelectFriends"
+            app:destination="@+id/navigation_select_friends" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_friends"
-        android:name="com.example.cm.ui.friends.FriendsFragment"
+        android:name="com.example.cm.ui.friends.FriendsListFragment"
         android:label="@string/title_friends"
-        tools:layout="@layout/fragment_friends">
+        tools:layout="@layout/fragment_friends_list">
 
         <action
             android:id="@+id/navigateToSelectFriends"
