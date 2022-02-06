@@ -1,4 +1,4 @@
-package com.example.cm.ui.requests;
+package com.example.cm.ui.friends;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -14,28 +14,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.Request;
-import com.example.cm.databinding.FragmentFriendsNotificationsBinding;
+import com.example.cm.databinding.FragmentFriendRequestsBinding;
 import com.example.cm.ui.adapters.FriendRequestListAdapter;
-import com.example.cm.ui.adapters.RequestListAdapter;
 
-import java.util.ArrayList;
 
 public class FriendRequestsFragment extends Fragment implements
-        RequestListAdapter.OnRequestAcceptanceListener,
+        FriendRequestListAdapter.OnFriendRequestAcceptanceListener,
         SwipeRefreshLayout.OnRefreshListener {
 
     private FriendRequestsViewModel requestsViewModel;
     private FriendRequestListAdapter requestsListAdapter;
-    private FragmentFriendsNotificationsBinding binding;
+    private FragmentFriendRequestsBinding binding;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentFriendsNotificationsBinding.inflate(inflater, container, false);
+        binding = FragmentFriendRequestsBinding.inflate(inflater, container, false);
         initUI();
         initViewModel();
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return binding.getRoot();
     }
 
     private void initUI() {
@@ -53,11 +50,7 @@ public class FriendRequestsFragment extends Fragment implements
             if(requests == null){
                 return;
             }
-            ArrayList<Request> requestsToSet = new ArrayList<>();
-            for(FriendRequest request : requests) {
-                requestsToSet.add((Request) request);
-            }
-            requestsListAdapter.setNotifications(requestsToSet);
+            requestsListAdapter.setRequests(requests);
         });
     }
 
@@ -76,16 +69,17 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     @Override
-    public void onAccept(Request request) {
-        requestsViewModel.acceptFriendRequest((FriendRequest) request);
+    public void onAccept(FriendRequest request) {
+        requestsViewModel.acceptFriendRequest(request);
     }
 
     @Override
-    public void onDecline(Request request) {
-        requestsViewModel.declineFriendRequest((FriendRequest) request);
+    public void onDecline(FriendRequest request) {
+        requestsViewModel.declineFriendRequest(request);
     }
 
-    public void onUndo(Request request, int position) {
-
+    @Override
+    public void onUndo(FriendRequest request, int position) {
+        requestsViewModel.undoDeclineFriendRequest(request, position);
     }
 }

@@ -3,9 +3,6 @@ package com.example.cm.ui.friends;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,21 +12,21 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
-import com.example.cm.databinding.FragmentFriendsBinding;
+import com.example.cm.databinding.FragmentFriendsListBinding;
 import com.example.cm.ui.adapters.FriendsListAdapter;
 import com.example.cm.ui.adapters.FriendsListAdapter.OnItemClickListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 
-public class FriendsFragment extends Fragment implements OnItemClickListener {
+public class FriendsListFragment extends Fragment implements OnItemClickListener {
 
     private FriendsViewModel friendsViewModel;
-    private FragmentFriendsBinding binding;
+    private FragmentFriendsListBinding binding;
     private FriendsListAdapter friendsListAdapter;
     private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentFriendsBinding.inflate(inflater, container, false);
+        binding = FragmentFriendsListBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
 
         initUI();
@@ -86,20 +83,6 @@ public class FriendsFragment extends Fragment implements OnItemClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_friends, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_add_friend) {
-            navigator.navigateToSelectFriends();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

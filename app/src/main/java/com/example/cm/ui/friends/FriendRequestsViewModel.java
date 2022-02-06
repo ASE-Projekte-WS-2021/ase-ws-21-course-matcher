@@ -1,9 +1,10 @@
-package com.example.cm.ui.requests;
+package com.example.cm.ui.friends;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.FriendRequest;
+import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendRequestRepository;
@@ -44,6 +45,12 @@ public class FriendRequestsViewModel extends ViewModel implements
         request.setState(Request.RequestState.REQUEST_DECLINED);
         friendRequestRepository.decline(request);
         Objects.requireNonNull(requests.getValue()).remove(request);
+    }
+
+    public void undoDeclineFriendRequest(FriendRequest request, int position) {
+        request.setState(Request.RequestState.REQUEST_PENDING);
+        friendRequestRepository.undo(request);
+        Objects.requireNonNull(requests.getValue()).add(position, request);
     }
 
     public void refresh() {

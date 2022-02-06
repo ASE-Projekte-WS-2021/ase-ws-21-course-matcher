@@ -17,10 +17,9 @@
         android:title="@string/title_meetup"/>
 
     <item
-        android:id="@+id/navigation_friends"
+        android:id="@+id/navigation_friends_tabs"
         android:icon="@drawable/ic_friends"
         android:title="@string/title_friends" />
-
 
     <item
         android:id="@+id/navigation_profile"
