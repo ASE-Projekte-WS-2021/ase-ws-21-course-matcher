@@ -33,12 +33,13 @@ public class ProfileFragment extends Fragment {
         binding.btnToFriendsList.setOnClickListener(v -> navigator.navigateToFriends());
     }
 
-    @SuppressLint("SetTextI18n")
     private void initViewModel() {
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         profileViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
-            if (currentUser == null) return;
+            if (currentUser == null) {
+                return;
+            }
             binding.tvName.setText(currentUser.getFullName());
             binding.tvUsername.setText(currentUser.getUsername());
         });

@@ -5,17 +5,15 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.UserRepository;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.util.List;
-
-public class ProfileViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener {
+public class ProfileViewModel extends ViewModel {
 
     private final UserRepository userRepository;
-    public MutableLiveData<User> currentUser = new MutableLiveData<>();
+    public MutableLiveData<User> currentUser;
 
     public ProfileViewModel() {
-        userRepository = new UserRepository(this);
+        userRepository = new UserRepository();
+        currentUser = userRepository.getCurrentUser();
     }
 
     public MutableLiveData<User> getCurrentUser() {
@@ -23,20 +21,10 @@ public class ProfileViewModel extends ViewModel implements UserRepository.OnUser
     }
 
     public void getLoggedInUser() {
-        FirebaseUser firebaseUser = userRepository.getCurrentUser();
-        userRepository.getUserByEmail(firebaseUser.getEmail());
+        currentUser = userRepository.getCurrentUser();
     }
 
     public void getUserById(String userId) {
-        userRepository.getUserById(userId);
-    }
-
-    @Override
-    public void onUsersRetrieved(List<User> users) {
-    }
-
-    @Override
-    public void onUserRetrieved(User user) {
-        currentUser.postValue(user);
+        currentUser = userRepository.getUserById(userId);
     }
 }

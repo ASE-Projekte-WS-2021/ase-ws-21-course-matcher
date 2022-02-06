@@ -5,25 +5,17 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.UserRepository;
-import com.example.cm.data.repositories.UserRepository.OnUserRepositoryListener;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class FriendsViewModel extends ViewModel implements OnUserRepositoryListener {
+public class FriendsViewModel extends ViewModel {
 
     private final UserRepository userRepository;
-
-    private final MutableLiveData<User> currentUser = new MutableLiveData<>();
-    private final MutableLiveData<List<User>> friends = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<List<User>> friends;
 
     public FriendsViewModel() {
-        userRepository = new UserRepository(this);
-        if (currentUser.getValue() == null) {
-            FirebaseUser firebaseUser = userRepository.getCurrentUser();
-            userRepository.getUserByEmail(firebaseUser.getEmail());
-        }
+        userRepository = new UserRepository();
+        friends = userRepository.getFriends();
     }
 
     public MutableLiveData<List<User>> getFriends() {
@@ -31,26 +23,12 @@ public class FriendsViewModel extends ViewModel implements OnUserRepositoryListe
     }
 
     public void searchUsers(String query) {
-        if (currentUser.getValue() == null) {
-            return;
-        }
 
         if (query.isEmpty()) {
-            userRepository.getUsersByIds(currentUser.getValue().getFriends());
+            friends = userRepository.getFriends();
             return;
         }
         friends.getValue().clear();
-        userRepository.getFriendsByUsername(currentUser.getValue().getFriends(), query);
-    }
-
-    @Override
-    public void onUsersRetrieved(List<User> users) {
-        this.friends.postValue(users);
-    }
-
-    @Override
-    public void onUserRetrieved(User user) {
-        this.currentUser.postValue(user);
-        userRepository.getUsersByIds(user.getFriends());
+        friends = userRepository.getFriendsByUsername(query);
     }
 }
