@@ -1,4 +1,4 @@
-package com.example.cm.ui.requests;
+package com.example.cm.ui.meetup;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -18,11 +18,12 @@ import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentMeetupNotificationsBinding;
 import com.example.cm.ui.adapters.MeetupRequestListAdapter;
 import com.example.cm.ui.adapters.RequestListAdapter;
+import com.example.cm.ui.requests.MeetupRequestsViewModel;
 
 import java.util.ArrayList;
 
 public class MeetupRequestsFragment extends Fragment implements
-        RequestListAdapter.OnRequestAcceptanceListener,
+        MeetupRequestListAdapter.OnMeetupRequestAcceptanceListener,
         SwipeRefreshLayout.OnRefreshListener {
 
     private MeetupRequestsViewModel requestsViewModel;
@@ -35,7 +36,7 @@ public class MeetupRequestsFragment extends Fragment implements
         binding = FragmentMeetupNotificationsBinding.inflate(inflater, container, false);
         initUI();
         initViewModel();
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return binding.getRoot();
     }
 
     private void initUI() {
@@ -53,11 +54,7 @@ public class MeetupRequestsFragment extends Fragment implements
             if(requests == null){
                 return;
             }
-            ArrayList<Request> requestsToSet = new ArrayList<>();
-            for(MeetupRequest request : requests) {
-                requestsToSet.add((Request) request);
-            }
-            requestsListAdapter.setNotifications(requestsToSet);
+            requestsListAdapter.setRequests(requests);
         });
     }
 
@@ -76,17 +73,17 @@ public class MeetupRequestsFragment extends Fragment implements
     }
 
     @Override
-    public void onAccept(Request request) {
-        requestsViewModel.acceptMeetupRequest((MeetupRequest) request);
+    public void onAccept(MeetupRequest request) {
+        requestsViewModel.acceptMeetupRequest(request);
     }
 
     @Override
-    public void onDecline(Request request) {
-        requestsViewModel.declineMeetupRequest((MeetupRequest) request);
+    public void onDecline(MeetupRequest request) {
+        requestsViewModel.declineMeetupRequest(request);
     }
 
     @Override
-    public void onUndo(Request request, int position) {
-        requestsViewModel.undoDeclineMeetupRequest((MeetupRequest) request, position);
+    public void onUndo(MeetupRequest request, int position) {
+        requestsViewModel.undoDeclineMeetupRequest(request, position);
     }
 }

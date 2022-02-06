@@ -35,7 +35,7 @@ public class FriendRequestsFragment extends Fragment implements
         binding = FragmentFriendsNotificationsBinding.inflate(inflater, container, false);
         initUI();
         initViewModel();
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return binding.getRoot();
     }
 
     private void initUI() {
