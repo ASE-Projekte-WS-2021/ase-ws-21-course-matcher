@@ -4,13 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.cm.ui.dashboard.DashboardFragment;
 import com.example.cm.ui.meetup.MeetupListFragment;
-import com.example.cm.ui.meetup.MeetupNotificationsFragment;
 import com.example.cm.ui.meetup.MeetupRequestsFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MeetupTapAdapter extends FragmentStateAdapter {
 

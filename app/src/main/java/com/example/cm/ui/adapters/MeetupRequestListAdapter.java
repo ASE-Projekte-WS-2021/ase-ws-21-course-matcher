@@ -15,7 +15,6 @@ import com.example.cm.R;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
-import com.example.cm.databinding.ItemNotificationBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
