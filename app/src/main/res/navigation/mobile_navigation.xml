@@ -72,6 +72,9 @@
         <action
             android:id="@+id/navigateToSelectFriends"
             app:destination="@+id/navigation_select_friends" />
+        <action
+            android:id="@+id/fromFriendsToProfile"
+            app:destination="@id/navigation_profile" />
     </fragment>
 
     <fragment
@@ -86,7 +89,6 @@
         <action
             android:id="@+id/fromFriendsToProfile"
             app:destination="@id/navigation_profile" />
-
     </fragment>
 
     <fragment
