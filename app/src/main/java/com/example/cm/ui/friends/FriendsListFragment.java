@@ -3,9 +3,6 @@ package com.example.cm.ui.friends;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -86,20 +83,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_fragment_friends, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_add_friend) {
-            navigator.navigateToSelectFriends();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
