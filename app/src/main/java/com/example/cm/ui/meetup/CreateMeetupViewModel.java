@@ -5,11 +5,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.Meetup;
-import com.example.cm.data.models.MeetupNotification;
-import com.example.cm.data.models.Notification;
+import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.MeetupRepository;
-import com.example.cm.data.repositories.NotificationRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -18,12 +17,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class CreateMeetupViewModel extends ViewModel implements UserRepository.OnUserRepositoryListener,
-        NotificationRepository.OnNotificationRepositoryListener {
+import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
+
+public class CreateMeetupViewModel extends ViewModel implements
+        UserRepository.OnUserRepositoryListener,
+        MeetupRepository.OnMeetupRepositoryListener,
+        MeetupRequestRepository.OnMeetupRequestRepositoryListener {
 
     private final MeetupRepository meetupRepository;
     private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
+    private final MeetupRequestRepository notificationRepository;
 
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
@@ -36,9 +39,9 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     private Meetup meetupToAdd;
 
     public CreateMeetupViewModel() {
-        this.meetupRepository = new MeetupRepository();
+        this.meetupRepository = new MeetupRepository(this);
         userRepository = new UserRepository(this);
-        notificationRepository = new NotificationRepository(this);
+        notificationRepository = new MeetupRequestRepository(this);
         FirebaseUser firebaseUser = userRepository.getCurrentUser();
         userRepository.getUserByEmail(firebaseUser.getEmail());
         userRepository.getUsers();
@@ -111,25 +114,6 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
                 meetupTimestamp.getValue());
 
         meetupRepository.addMeetup(meetupToAdd);
-
-        sendMeetupNotification();
-    }
-
-    private void sendMeetupNotification() {
-        if (selectedUsers.getValue() != null) {
-            for (String invitedFriendId : selectedUsers.getValue()) {
-                MeetupNotification notification = new MeetupNotification(
-                        meetupToAdd.getId(),
-                        userRepository.getCurrentUser().getUid(),
-                        currentUser.getFullName(),
-                        invitedFriendId,
-                        meetupLocation.getValue(),
-                        meetupTime.getValue(),
-                        Notification.NotificationType.MEETUP_REQUEST);
-                notificationRepository.addNotification(notification);
-            }
-            selectedUsers.getValue().clear();
-        }
     }
 
     public void searchUsers(String query) {
@@ -160,7 +144,33 @@ public class CreateMeetupViewModel extends ViewModel implements UserRepository.O
     }
 
     @Override
-    public void onNotificationsRetrieved(List<Notification> notification) {
+    public void onMeetupsRetrieved(List<Meetup> meetups) {
+
+    }
+
+    @Override
+    public void onMeetupAdded(String meetupId) {
+        meetupToAdd.setId(meetupId);
+
+        // Create notifications for each invited user
+        if (selectedUsers.getValue() != null) {
+            for (String invitedFriendId : selectedUsers.getValue()) {
+                MeetupRequest notification = new MeetupRequest(
+                        meetupId,
+                        userRepository.getCurrentUser().getUid(),
+                        currentUser.getFullName(),
+                        invitedFriendId,
+                        meetupLocation.getValue(),
+                        meetupTime.getValue(),
+                        MEETUP_REQUEST);
+                notificationRepository.addMeetupRequest(notification);
+            }
+            selectedUsers.getValue().clear();
+        }
+    }
+
+    @Override
+    public void onMeetupRequestsRetrieved(List<MeetupRequest> requests) {
 
     }
 }
