@@ -2,6 +2,8 @@ package com.example.cm.data.repositories;
 
 import android.widget.TextView;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.User;
 import com.example.cm.utils.Utils;
@@ -26,6 +28,8 @@ public class UserRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
+
+    private final MutableLiveData<List<User>> usersMLD = new MutableLiveData<>();
 
     private OnUserRepositoryListener listener = null;
 
@@ -107,6 +111,20 @@ public class UserRepository extends Repository {
                 listener.onUsersRetrieved(users);
             }
         });
+    }
+
+    // replace this later when this repository is listener free
+    public MutableLiveData<List<User>> getUsersByIdsWithoutListener(List<String> userIds) {
+        if (userIds == null || userIds.size() == 0) {
+            return usersMLD;
+        }
+        userCollection.whereIn(FieldPath.documentId(), userIds).get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                usersMLD.postValue(users);
+            }
+        });
+        return usersMLD;
     }
 
     /**

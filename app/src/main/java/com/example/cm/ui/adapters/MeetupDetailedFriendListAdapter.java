@@ -1,36 +1,22 @@
 package com.example.cm.ui.adapters;
 
-import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cm.Constants;
-import com.example.cm.R;
-import com.example.cm.data.models.Meetup;
-import com.example.cm.databinding.ItemMeetupBinding;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemMeetupFriendBinding;
-import com.example.cm.ui.meetup.MeetupDetailed.MeetupFriendsListState;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.imageview.ShapeableImageView;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
 public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
-    private List<String> friends;
-    private MeetupFriendsListState status;
+    private final List<User> friends;
 
-    public MeetupDetailedFriendListAdapter(List<String> friends, MeetupFriendsListState status) {
+    public MeetupDetailedFriendListAdapter(List<User> friends) {
         this.friends = friends;
-        this.status = status;
     }
 
     @NonNull
@@ -43,17 +29,21 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
 
     @Override
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
-        if (friends != null){
-            String id = friends.get(position);
+        if (friends != null) {
+            String fullName = friends.get(position).getFullName();
+            String username = friends.get(position).getUsername();
             TextView tvUserName = holder.getTvUserName();
-            tvUserName.setText(id);
+            TextView tvFullName = holder.getTvFullName();
+
+            tvFullName.setText(fullName);
+            tvUserName.setText(username);
         }
     }
 
 
     @Override
     public int getItemCount() {
-        if(friends == null) {
+        if (friends == null) {
             return 0;
         }
         return friends.size();
@@ -69,6 +59,10 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
         }
 
         public TextView getTvUserName() {
+            return binding.tvMeetupFriendUserName;
+        }
+
+        public TextView getTvFullName() {
             return binding.tvMeetupFriendName;
         }
     }

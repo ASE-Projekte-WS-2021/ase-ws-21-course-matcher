@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -41,14 +40,13 @@ public class MeetupDetailedFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentMeetupDetailedBinding.inflate(inflater, container, false);
 
-
-        initViewModel();
+        initUI();
 
         return binding.getRoot();
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void initViewModel() {
+    private void initUI() {
         MeetupDetailedViewModel meetupDetailedViewModel = new ViewModelProvider(this, new MeetupDetailedFactory(meetupId)).get(MeetupDetailedViewModel.class);
         meetupDetailedViewModel.getMeetup().observe(getViewLifecycleOwner(), meetup -> {
             tabAdapter = new MeetupDetailedTabAdapter(this, meetup);
@@ -68,13 +66,10 @@ public class MeetupDetailedFragment extends Fragment {
             });
 
             tabLayoutMediator.attach();
+
+            binding.meetupDetailedLocation.setText(meetup.getLocation());
+            binding.meetupDetailedTime.setText(meetup.getTime());
         });
-
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
 
     }
 }

@@ -64,7 +64,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="Username"
                 android:textColor="#98A3C3"
                 tools:text="Username" />
 

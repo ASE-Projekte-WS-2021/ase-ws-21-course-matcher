@@ -1,39 +1,32 @@
 package com.example.cm.ui.meetup.MeetupDetailed;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.example.cm.Constants;
-import com.example.cm.R;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.example.cm.databinding.FragmentMeetupDetailedFriendsListBinding;
 import com.example.cm.ui.adapters.MeetupDetailedFriendListAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MeetupDetailedFriendsListFragment extends Fragment {
 
-    private MeetupFriendsListState status;
-    private List<String> friends;
+    private final List<String> friends;
     private FragmentMeetupDetailedFriendsListBinding binding;
 
-    public MeetupDetailedFriendsListFragment(List<String> friends, MeetupFriendsListState status) {
+    public MeetupDetailedFriendsListFragment(List<String> friends) {
         this.friends = friends;
-        this.status = status;
     }
 
     private void initUI() {
-        MeetupDetailedFriendListAdapter adapter = new MeetupDetailedFriendListAdapter(friends, status);
         binding.meetupDetailedFriendsList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.meetupDetailedFriendsList.setHasFixedSize(true);
-        binding.meetupDetailedFriendsList.setAdapter(adapter);
     }
 
 
@@ -43,11 +36,22 @@ public class MeetupDetailedFriendsListFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentMeetupDetailedFriendsListBinding.inflate(inflater, container, false);
 
         initUI();
+        initViewModel();
+
         return binding.getRoot();
+    }
+
+    private void initViewModel() {
+        MeetupDetailedFriendsListViewModel viewModel = new ViewModelProvider(this, new MeetupDetailedFriendsListFactory(friends)).get(MeetupDetailedFriendsListViewModel.class);
+        viewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+            MeetupDetailedFriendListAdapter adapter = new MeetupDetailedFriendListAdapter(users);
+            binding.meetupDetailedFriendsList.setAdapter(adapter);
+        });
+
     }
 }
