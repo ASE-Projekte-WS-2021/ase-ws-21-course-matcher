@@ -10,6 +10,7 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.UserRepository;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,7 +25,7 @@ public class CreateMeetupViewModel extends ViewModel implements
 
     private final MeetupRepository meetupRepository;
     private final UserRepository userRepository;
-    private final MeetupRequestRepository notificationRepository;
+    private final MeetupRequestRepository meetupRequestRepository;
 
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
@@ -36,9 +37,10 @@ public class CreateMeetupViewModel extends ViewModel implements
     private Meetup meetupToAdd;
 
     public CreateMeetupViewModel() {
-        this.meetupRepository = new MeetupRepository(this);
+        meetupRepository = new MeetupRepository(this);
+        meetupRequestRepository = new MeetupRequestRepository(this);
         userRepository = new UserRepository();
-        notificationRepository = new NotificationRepository();
+
         currentUser = userRepository.getCurrentUser();
         users = userRepository.getFriends();
     }
@@ -99,7 +101,6 @@ public class CreateMeetupViewModel extends ViewModel implements
     }
 
     public void createMeetup() {
-        FirebaseUser currentUser = userRepository.getCurrentUser();
         Objects.requireNonNull(selectedUsers.getValue());
         meetupToAdd = new Meetup(
                 userRepository.getFirebaseUser().getUid(),
@@ -121,6 +122,11 @@ public class CreateMeetupViewModel extends ViewModel implements
     }
 
     @Override
+    public void onMeetupsRetrieved(List<Meetup> meetups) {
+
+    }
+
+    @Override
     public void onMeetupAdded(String meetupId) {
         meetupToAdd.setId(meetupId);
 
@@ -135,7 +141,7 @@ public class CreateMeetupViewModel extends ViewModel implements
                         meetupLocation.getValue(),
                         meetupTime.getValue(),
                         MEETUP_REQUEST);
-                notificationRepository.addMeetupRequest(notification);
+                meetupRequestRepository.addMeetupRequest(notification);
             }
             selectedUsers.getValue().clear();
         }
