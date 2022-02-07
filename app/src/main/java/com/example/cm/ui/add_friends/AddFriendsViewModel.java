@@ -25,6 +25,7 @@ public class AddFriendsViewModel extends ViewModel
     public AddFriendsViewModel() {
         userRepository = new UserRepository();
         requestRepository = new FriendRequestRepository(this);
+        requestRepository.getFriendRequestsForUser();
         users = userRepository.getUsersNotFriends();
         currentUser = userRepository.getCurrentUser();
     }
