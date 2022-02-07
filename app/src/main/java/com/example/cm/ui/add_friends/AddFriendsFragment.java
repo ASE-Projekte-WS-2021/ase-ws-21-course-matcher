@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnRequestSentListener {
 
-    private AddFriendsViewModel selectFriendsViewModel;
+    private AddFriendsViewModel addFriendsViewModel;
     private FragmentAddFriendsBinding binding;
     private AddFriendsAdapter selectFriendsAdapter;
     private Navigator navigator;
@@ -54,13 +54,13 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void initViewModel() {
-        selectFriendsViewModel = new ViewModelProvider(this).get(AddFriendsViewModel.class);
-        selectFriendsViewModel.setOnRequestSentListener(this);
+        addFriendsViewModel = new ViewModelProvider(this).get(AddFriendsViewModel.class);
+        addFriendsViewModel.setOnRequestSentListener(this);
         observeSentFriendRequests();
     }
 
     private void observeSentFriendRequests() {
-        selectFriendsViewModel.getSentFriendRequests().observe(getViewLifecycleOwner(), sentFriendRequests -> {
+        addFriendsViewModel.getSentFriendRequests().observe(getViewLifecycleOwner(), sentFriendRequests -> {
             if (sentFriendRequests == null) {
                 return;
             }
@@ -74,7 +74,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     private void onSearchButtonClicked() {
         String query = binding.etUserSearch.getText().toString();
-        selectFriendsViewModel.searchUsers(query);
+        addFriendsViewModel.searchUsers(query);
 
         Utils.hideKeyboard(requireActivity(), binding.getRoot());
     }
@@ -88,7 +88,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     @Override
     public void onFriendRequestButtonClicked(String receiverId) {
-        selectFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
+        addFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
     }
 
 
@@ -113,7 +113,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     @Override
     public void onFriendRequestsSet() {
-        selectFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+        addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
                 return;
             }

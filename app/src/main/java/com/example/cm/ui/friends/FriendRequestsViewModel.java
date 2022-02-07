@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendRequestRepository;
@@ -15,17 +14,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class FriendRequestsViewModel extends ViewModel implements
-        UserRepository.OnUserRepositoryListener,
         FriendRequestRepository.OnFriendRequestRepositoryListener {
 
-    private User currentUser;
     private final UserRepository userRepository;
-    private FriendRequestRepository friendRequestRepository;
     private final MutableLiveData<List<FriendRequest>> requests = new MutableLiveData<>();
+    private FriendRequestRepository friendRequestRepository;
 
     public FriendRequestsViewModel() {
-        userRepository = new UserRepository(this);
-        userRepository.getUserById(userRepository.getCurrentUser().getUid());
+        userRepository = new UserRepository();
         friendRequestRepository = new FriendRequestRepository(this);
         friendRequestRepository.getFriendRequestsForUser();
     }
@@ -41,7 +37,7 @@ public class FriendRequestsViewModel extends ViewModel implements
         userRepository.addFriends(request.getSenderId(), request.getReceiverId());
     }
 
-    public void declineFriendRequest(FriendRequest request){
+    public void declineFriendRequest(FriendRequest request) {
         request.setState(Request.RequestState.REQUEST_DECLINED);
         friendRequestRepository.decline(request);
         Objects.requireNonNull(requests.getValue()).remove(request);
@@ -66,15 +62,5 @@ public class FriendRequestsViewModel extends ViewModel implements
             }
         }
         this.requests.postValue(displayedRequests);
-    }
-
-    @Override
-    public void onUserRetrieved(User user) {
-        currentUser = user;
-    }
-
-    @Override
-    public void onUsersRetrieved(List<User> users) {
-
     }
 }
