@@ -1,5 +1,6 @@
 package com.example.cm.ui.adapters;
 
+import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.ItemMeetupBinding;
@@ -40,7 +42,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         MaterialCardView meetupCard = holder.getMeetupCard();
 
         meetupCard.setOnClickListener(view -> {
-            Navigation.findNavController(view).navigate(R.id.navigateToMeetupDetailed);
+            Bundle bundle = new Bundle();
+            System.out.println("in listadapter: " + meetup.getId());
+            bundle.putString(Constants.KEY_MEETUP_ID, meetup.getId());
+            Navigation.findNavController(view).navigate(R.id.navigateToMeetupDetailed, bundle);
         });
 
         holder.getTvLocation().setText(meetup.getLocation());

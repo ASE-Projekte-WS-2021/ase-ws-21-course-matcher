@@ -1,10 +1,13 @@
 package com.example.cm.data.repositories;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.utils.Utils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,6 +24,7 @@ public class MeetupRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
     private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
+    private final MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
 
     public MeetupRepository() {
     }
@@ -34,6 +38,18 @@ public class MeetupRepository {
             }
         });
         return meetupListMLD;
+    }
+
+    public MutableLiveData<Meetup> getMeetup(String id){
+        meetupCollection.document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                meetupMLD.postValue(snapshotToMeetup(document));
+            }
+        });
+
+        return meetupMLD;
     }
 
     public void addMeetup(Meetup meetup) {
@@ -78,6 +94,7 @@ public class MeetupRepository {
      */
     private Meetup snapshotToMeetup(DocumentSnapshot document) {
         Meetup meetup = new Meetup();
+        meetup.setId(document.getId());
         meetup.setConfirmedFriends(Utils.castList(document.get("confirmedFriends"), String.class));
         meetup.setRequestingUser(document.getString("requestingUser"));
         meetup.setInvitedFriends(Utils.castList(document.get("invitedFriends"), String.class));

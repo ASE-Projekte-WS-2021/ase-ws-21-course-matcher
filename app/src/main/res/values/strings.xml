@@ -99,5 +99,6 @@
     <string name="location_card">location</string>
     <string name="meetup_tabs_list">Anstehend</string>
     <string name="meetup_tabs_notifications">Anfragen</string>
+    <string name="user_image">User Image</string>
 
 </resources>
