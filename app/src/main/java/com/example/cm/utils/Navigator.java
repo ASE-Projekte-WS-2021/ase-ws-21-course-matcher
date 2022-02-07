@@ -1,6 +1,5 @@
 package com.example.cm.utils;
 
-import androidx.annotation.IdRes;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 
@@ -23,6 +22,14 @@ public class Navigator {
         navController.navigate(R.id.navigateToFriends);
     }
 
+    public void navigateToInviteFriends() {
+        navController.navigate(R.id.navigateToInviteFriends);
+    }
+
+    public void navigateToCreateMeetup() {
+        navController.navigate(R.id.navigateToMeetups);
+    }
+
     public void globalNavigateToProfile() {
         navController.navigate(R.id.fromFriendsToProfile);
     }
@@ -31,7 +38,4 @@ public class Navigator {
         return navController;
     }
 
-    public void navigateToMap() {
-        navController.navigate(R.id.navigateToMap);
-    }
 }

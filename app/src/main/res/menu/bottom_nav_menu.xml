@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--<item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_map"
+        android:title="@string/title_home" />-->
+
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_map"
         android:title="@string/title_home" />
 
     <item
-        android:id="@+id/navigation_meetup"
+        android:id="@+id/navigation_meetup_tabs"
         android:icon="@drawable/ic_meetup"
         android:title="@string/title_meetup"/>
 
     <item
-        android:id="@+id/navigation_friends"
+        android:id="@+id/navigation_friends_tabs"
         android:icon="@drawable/ic_friends"
         android:title="@string/title_friends" />
-
 
     <item
         android:id="@+id/navigation_profile"

@@ -83,7 +83,8 @@ public class UserRepository extends Repository {
                 for (DocumentSnapshot doc : task.getResult().getDocuments()) {
                     if (doc.get("friends") == null) {
                         users.add(snapshotToUser(doc));
-                    } else if (!Utils.castList(doc.get("friends"), String.class).contains(auth.getCurrentUser().getUid())) {
+                    } else if (!Utils.castList(doc.get("friends"), String.class)
+                            .contains(auth.getCurrentUser().getUid())) {
                         users.add(snapshotToUser(doc));
                     }
                 }
@@ -113,7 +114,6 @@ public class UserRepository extends Repository {
         return mutableUser;
     }
 
-
     public MutableLiveData<List<User>> getFriends() {
         if (auth.getCurrentUser() == null) {
             return mutableUsers;
@@ -130,7 +130,6 @@ public class UserRepository extends Repository {
 
         return mutableUsers;
     }
-
 
     public MutableLiveData<List<User>> getUsersByIds(List<String> userIds) {
         userCollection.whereIn(FieldPath.documentId(), userIds).get().addOnCompleteListener(executorService, task -> {
@@ -174,7 +173,6 @@ public class UserRepository extends Repository {
             if (task.isSuccessful()) {
                 User user = snapshotToUser(Objects.requireNonNull(task.getResult()));
                 List<String> friends = user.getFriends();
-
 
                 mutableUsers = getUsersByIdsAndName(friends, query);
             }
@@ -240,4 +238,3 @@ public class UserRepository extends Repository {
         userCollection.document(friend2Id).update("friends", FieldValue.arrayUnion(friend1Id));
     }
 }
-
