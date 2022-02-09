@@ -15,14 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
-import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
 import com.example.cm.ui.meetup.CreateMeetupViewModel;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 public class InviteFriendsFragment extends Fragment
-        implements AdapterView.OnItemClickListener, OnNotificationSentListener,
+        implements AdapterView.OnItemClickListener,
         InviteFriendsAdapter.OnItemClickListener, CreateMeetupViewModel.OnMeetupCreatedListener {
 
     private CreateMeetupViewModel createMeetupViewModel;
@@ -110,24 +109,10 @@ public class InviteFriendsFragment extends Fragment
         binding.btnSendInvite.setVisibility(View.GONE);
     }
 
-    public void navToMeetups() {
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToMeetupList);
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onRequestAdded() {
-        Snackbar.make(binding.getRoot(), R.string.snackbar_sent_requests, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onRequestDeleted() {
-
     }
 
     @Override

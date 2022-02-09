@@ -10,7 +10,6 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.UserRepository;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -153,6 +152,11 @@ public class CreateMeetupViewModel extends ViewModel implements
             }
             selectedUsers.getValue().clear();
         }
+    }
+
+    @Override
+    public void onMeetupRequestsRetrieved(List<MeetupRequest> requests) {
+
     }
 
     public interface OnMeetupCreatedListener {

@@ -11,7 +11,7 @@
 
     <action
         android:id="@+id/action_global_navigate_to_meetups"
-        app:destination="@+id/navigation_meetup" />
+        app:destination="@+id/navigation_meetup_tabs" />
 
     <fragment
         android:id="@+id/navigation_meetup_tabs"
