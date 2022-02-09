@@ -24,7 +24,7 @@ public class UserRepository extends Repository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
-    private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
+    private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>(new ArrayList<>());
 
     public UserRepository() {
     }
@@ -132,6 +132,10 @@ public class UserRepository extends Repository {
     }
 
     public MutableLiveData<List<User>> getUsersByIds(List<String> userIds) {
+        if (userIds.isEmpty()) {
+            return mutableUsers;
+        }
+
         userCollection.whereIn(FieldPath.documentId(), userIds).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
