@@ -15,20 +15,13 @@ import com.example.cm.utils.Navigator;
 public class ProfileFragment extends Fragment {
 
     private ProfileViewModel profileViewModel;
-    private Navigator navigator;
     private FragmentProfileBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-        initListener();
         initViewModel();
 
         return binding.getRoot();
-    }
-
-    private void initListener() {
-        navigator = new Navigator(requireActivity());
-        binding.btnToFriendsList.setOnClickListener(v -> navigator.navigateToFriends());
     }
 
     private void initViewModel() {
@@ -52,7 +45,6 @@ public class ProfileFragment extends Fragment {
         }
 
         if (bundle.containsKey("userId")) {
-            binding.btnToFriendsList.setVisibility(View.GONE);
             String profileId = bundle.getString("userId");
             profileViewModel.getUserById(profileId);
         }
