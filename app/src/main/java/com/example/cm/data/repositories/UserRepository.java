@@ -19,12 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import timber.log.Timber;
+
 public class UserRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
-    private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>(new ArrayList<>());
+    private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
 
     public UserRepository() {
     }
@@ -132,7 +134,8 @@ public class UserRepository extends Repository {
     }
 
     public MutableLiveData<List<User>> getUsersByIds(List<String> userIds) {
-        if (userIds.isEmpty()) {
+        if (userIds == null || userIds.isEmpty()) {
+            mutableUsers.postValue(new ArrayList<>());
             return mutableUsers;
         }
 
