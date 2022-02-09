@@ -11,18 +11,22 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
+import com.example.cm.data.models.FriendRequest;
+import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentAddFriendsBinding;
 import com.example.cm.ui.adapters.AddFriendsAdapter;
 import com.example.cm.ui.adapters.AddFriendsAdapter.OnItemClickListener;
-import com.example.cm.ui.add_friends.AddFriendsViewModel.OnNotificationSentListener;
+import com.example.cm.ui.add_friends.AddFriendsViewModel.OnRequestSentListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 
-public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnNotificationSentListener {
 
-    private AddFriendsViewModel selectFriendsViewModel;
+public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnRequestSentListener {
+
+    private AddFriendsViewModel addFriendsViewModel;
     private FragmentAddFriendsBinding binding;
     private AddFriendsAdapter selectFriendsAdapter;
     private Navigator navigator;
@@ -50,23 +54,27 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void initViewModel() {
-        selectFriendsViewModel = new ViewModelProvider(this).get(AddFriendsViewModel.class);
-        selectFriendsViewModel.setOnNotificationSentListener(this);
+        addFriendsViewModel = new ViewModelProvider(this).get(AddFriendsViewModel.class);
+        addFriendsViewModel.setOnRequestSentListener(this);
         observeSentFriendRequests();
     }
 
     private void observeSentFriendRequests() {
-        selectFriendsViewModel.getSentFriendRequests().observe(getViewLifecycleOwner(), sentFriendRequests -> {
+        addFriendsViewModel.getSentFriendRequests().observe(getViewLifecycleOwner(), sentFriendRequests -> {
             if (sentFriendRequests == null) {
                 return;
             }
-            selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
+            ArrayList<Request> requestsToSet = new ArrayList<>();
+            for(FriendRequest request : sentFriendRequests) {
+                requestsToSet.add((Request) request);
+            }
+            selectFriendsAdapter.setSentFriendRequests(requestsToSet);
         });
     }
 
     private void onSearchButtonClicked() {
         String query = binding.etUserSearch.getText().toString();
-        selectFriendsViewModel.searchUsers(query);
+        addFriendsViewModel.searchUsers(query);
 
         Utils.hideKeyboard(requireActivity(), binding.getRoot());
     }
@@ -80,7 +88,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     @Override
     public void onFriendRequestButtonClicked(String receiverId) {
-        selectFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
+        addFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
     }
 
 
@@ -93,19 +101,19 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     @Override
-    public void onNotificationAdded() {
+    public void onRequestAdded() {
         Snackbar.make(binding.getRoot(), R.string.snackbar_sent_request, Snackbar.LENGTH_LONG).show();
 
     }
 
     @Override
-    public void onNotificationDeleted() {
+    public void onRequestDeleted() {
         Snackbar.make(binding.getRoot(), R.string.snackbar_remove_request, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
     public void onFriendRequestsSet() {
-        selectFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+        addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
                 return;
             }

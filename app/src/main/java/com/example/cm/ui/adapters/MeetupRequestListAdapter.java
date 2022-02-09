@@ -12,99 +12,93 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
-import com.example.cm.data.models.Notification;
-import com.example.cm.databinding.ItemNotificationBinding;
+import com.example.cm.data.models.MeetupRequest;
+import com.example.cm.data.models.Request;
+import com.example.cm.databinding.ItemMeetupRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
-
 
 import java.util.List;
 
-public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder> {
+public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
-    private List<Notification> mNotifications;
-    private OnFriendAcceptanceListener listener;
+    private List<MeetupRequest> mRequests;
+    private OnMeetupRequestAcceptanceListener listener;
 
-    public NotificationListAdapter(OnFriendAcceptanceListener listener) {
+    public MeetupRequestListAdapter(OnMeetupRequestAcceptanceListener listener) {
         this.listener = listener;
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setNotifications(List<Notification> newNotifications){
-        if(mNotifications == null){
-            mNotifications = newNotifications;
+    public void setRequests(List<MeetupRequest> newRequests){
+        if(mRequests == null){
+            mRequests = newRequests;
             notifyDataSetChanged();
             return;
         }
-        mNotifications = newNotifications;
+        mRequests = newRequests;
     }
 
     @NonNull
     @Override
-    public NotificationListAdapter.NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemNotificationBinding binding = ItemNotificationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new NotificationViewHolder(binding);
+    public MeetupRequestListAdapter.MeetupRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ItemMeetupRequestBinding binding = ItemMeetupRequestBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new MeetupRequestListAdapter.MeetupRequestViewHolder(binding);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull NotificationListAdapter.NotificationViewHolder holder, int position) {
-        Notification notification = mNotifications.get(position);
+    public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
+        MeetupRequest request = mRequests.get(position);
 
-        String user = "@" + notification.getSenderName();
-        boolean isAccepted = notification.getState() == Notification.NotificationState.NOTIFICATION_ACCEPTED;
-        String date = notification.getCreationTimeAgo();
+        String user = "@" + request.getSenderName();
+        String date = request.getCreationTimeAgo();
+
+        holder.getTvSender().setText(user);
+        holder.getTvDate().setText(date);
+
+        boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
         int content = 0;
-        switch(notification.getType()){
-            case FRIEND_REQUEST:
-                holder.getTvTitle().setText(R.string.friend_request_title);
-                content = isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text;
-                break;
+        switch(request.getType()){
             case MEETUP_REQUEST:
-                holder.getTvTitle().setText(notification.toString());
+                holder.getTvTitle().setText(request.toString());
                 content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_text;
                 break;
-            case MEETUP_ACCEPTED:
-                holder.getTvTitle().setText(notification.toString());
+            case MEETUP_INFO_ACCEPTED:
+                holder.getTvTitle().setText(request.toString());
                 isAccepted = true;
                 content = R.string.meetup_accepted_text;
                 break;
-            case MEETUP_DECLINED:
-                holder.getTvTitle().setText(notification.toString());
+            case MEETUP_INFO_DECLINED:
+                holder.getTvTitle().setText(request.toString());
                 isAccepted = true;
                 content = R.string.meetup_declined_text;
                 break;
         }
 
-        holder.getTvSender().setText(user);
         holder.getTvContent().setText(content);
-        holder.getTvDate().setText(date);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
         holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
     }
 
     @Override
     public int getItemCount() {
-        if(mNotifications == null){
+        if(mRequests == null){
             return 0;
         }
-        return mNotifications.size();
+        return mRequests.size();
     }
 
-    public interface OnFriendAcceptanceListener {
-        void onAccept(Notification notification);
-        void onDecline(Notification notification);
-        void onUndo(Notification notification, int position);
+    public interface OnMeetupRequestAcceptanceListener {
+        void onAccept(MeetupRequest request);
+        void onDecline(MeetupRequest request);
+        void onUndo(MeetupRequest request, int position);
     }
 
-    /**
-     * ViewHolder class for the list items
-     */
-    public class NotificationViewHolder extends RecyclerView.ViewHolder {
+    public class MeetupRequestViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemNotificationBinding binding;
+        private final ItemMeetupRequestBinding binding;
 
-        public NotificationViewHolder(ItemNotificationBinding binding) {
+        public MeetupRequestViewHolder(ItemMeetupRequestBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             setListeners();
@@ -116,23 +110,23 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
         }
 
         private void onAccept() {
-            Notification notification = mNotifications.get(getAdapterPosition());
-            listener.onAccept(notification);
+            MeetupRequest request = mRequests.get(getAdapterPosition());
+            listener.onAccept(request);
             notifyItemChanged(getAdapterPosition());
         }
 
-        private void onUndo(Notification notification, int position){
-            listener.onUndo(notification, position);
+        private void onUndo(MeetupRequest request, int position){
+            listener.onUndo(request, position);
             notifyItemInserted(position);
         }
 
         private void onDecline(){
             int position = getAdapterPosition();
-            Notification notification = mNotifications.get(position);
-            listener.onDecline(notification);
+            MeetupRequest request = mRequests.get(position);
+            listener.onDecline(request);
             notifyItemRemoved(position);
             Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.decline_snackbar_text, Snackbar.LENGTH_LONG);
-            snackbar.setAction(R.string.undo_snackbar_text, view -> onUndo(notification, position));
+            snackbar.setAction(R.string.undo_snackbar_text, view -> onUndo(request, position));
             snackbar.show();
         }
 

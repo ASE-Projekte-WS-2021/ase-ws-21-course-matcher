@@ -21,18 +21,18 @@ import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
-public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener, OnNotificationSentListener, InviteFriendsAdapter.OnItemClickListener, CreateMeetupViewModel.OnMeetupCreatedListener {
+public class InviteFriendsFragment extends Fragment
+        implements AdapterView.OnItemClickListener, OnNotificationSentListener,
+        InviteFriendsAdapter.OnItemClickListener, CreateMeetupViewModel.OnMeetupCreatedListener {
 
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentInviteFriendsBinding binding;
     private InviteFriendsAdapter inviteFriendsListAdapter;
     private Navigator navigator;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-
 
         View root = binding.getRoot();
 
@@ -68,7 +68,8 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
             }
 
             if (users.size() == 0) {
-                Snackbar snackbar = Snackbar.make(binding.getRoot(), getContext().getText(R.string.snackbar_no_friends_text), Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(binding.getRoot(),
+                        getContext().getText(R.string.snackbar_no_friends_text), Snackbar.LENGTH_LONG);
                 // todo: set snackbar action -> go to add-friends-fragment
                 snackbar.show();
                 binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
@@ -88,7 +89,6 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
             inviteFriendsListAdapter.setSelectedUsers(selectedUsers);
         });
     }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -110,10 +110,9 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding.btnSendInvite.setVisibility(View.GONE);
     }
 
-    public void navToMap() {
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
+    public void navToMeetups() {
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToMeetupList);
     }
-
 
     @Override
     public void onDestroyView() {
@@ -122,15 +121,14 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     }
 
     @Override
-    public void onNotificationAdded() {
+    public void onRequestAdded() {
         Snackbar.make(binding.getRoot(), R.string.snackbar_sent_requests, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
-    public void onNotificationDeleted() {
+    public void onRequestDeleted() {
 
     }
-
 
     @Override
     public void onCheckBoxClicked(String id) {

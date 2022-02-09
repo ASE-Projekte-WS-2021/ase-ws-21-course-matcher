@@ -4,7 +4,6 @@ import static com.example.cm.utils.Utils.calculateDiff;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -15,31 +14,27 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
-import com.example.cm.data.models.Notification;
+import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSendFriendRequestBinding;
+import com.example.cm.ui.add_friends.AddFriendsViewModel;
 
 import java.util.List;
-
-import timber.log.Timber;
 
 public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.UserViewHolder> {
 
     private final OnItemClickListener listener;
     private final Context context;
     private List<User> users;
-    private List<Notification> sentFriendRequests;
-    private boolean isFriendRequestLoading = false;
-
+    private List<Request> sentFriendRequests;
 
     public AddFriendsAdapter(AddFriendsAdapter.OnItemClickListener listener, Context context) {
         this.listener = listener;
         this.context = context;
     }
 
-    public void setSentFriendRequests(List<Notification> sentFriendRequests) {
+    public void setSentFriendRequests(List<Request> sentFriendRequests) {
         this.sentFriendRequests = sentFriendRequests;
-        isFriendRequestLoading = false;
         listener.onFriendRequestsSet();
     }
 
@@ -60,7 +55,8 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     @Override
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
-        ItemSendFriendRequestBinding binding = ItemSendFriendRequestBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+        ItemSendFriendRequestBinding binding = ItemSendFriendRequestBinding
+                .inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
         return new UserViewHolder(binding);
     }
 
@@ -73,10 +69,11 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
 
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
-        holder.getFriendRequestButton().setEnabled(!isFriendRequestLoading);
+        holder.getFriendRequestButton().setEnabled(true);
 
-        for (Notification notification : sentFriendRequests) {
-            boolean notificationExists = notification.getReceiverId().equals(users.get(position).getId());
+        for (Request request : sentFriendRequests) {
+            boolean notificationExists = request.getReceiverId().equals(users.get(position).getId()) &&
+                    request.getState() == Request.RequestState.REQUEST_PENDING;
 
             int btnContent, btnColor;
             if (!notificationExists) {
@@ -108,11 +105,11 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         void onFriendRequestsSet();
     }
 
-
     /**
      * ViewHolder class for the list items
      */
-    public class UserViewHolder extends RecyclerView.ViewHolder {
+    public class UserViewHolder extends RecyclerView.ViewHolder
+            implements AddFriendsViewModel.OnRequestSentListener {
 
         private final ItemSendFriendRequestBinding binding;
 
@@ -132,20 +129,23 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
 
         private void onItemClicked() {
             int position = getAdapterPosition();
-            if (position == RecyclerView.NO_POSITION || listener == null) return;
+            if (position == RecyclerView.NO_POSITION || listener == null)
+                return;
             listener.onItemClicked(users.get(position).getId());
         }
 
         @SuppressLint("ResourceAsColor")
         private void onButtonClicked() {
-            isFriendRequestLoading = true;
+            binding.btnSendFriendRequest.setEnabled(false);
 
             int position = getAdapterPosition();
-            if (position == RecyclerView.NO_POSITION || listener == null) return;
+            if (position == RecyclerView.NO_POSITION || listener == null)
+                return;
             listener.onFriendRequestButtonClicked(users.get(position).getId());
 
             int btnContent, btnColor;
-            if (binding.btnSendFriendRequest.getText().toString().equals(context.getString(R.string.btn_send_friend_request_default))) {
+            if (binding.btnSendFriendRequest.getText().toString()
+                    .equals(context.getString(R.string.btn_send_friend_request_default))) {
                 btnContent = R.string.btn_send_friend_request_pending;
                 btnColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.grey_medium);
             } else {
@@ -169,6 +169,16 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
 
         public Button getFriendRequestButton() {
             return binding.btnSendFriendRequest;
+        }
+
+        @Override
+        public void onRequestAdded() {
+            binding.btnSendFriendRequest.setEnabled(true);
+        }
+
+        @Override
+        public void onRequestDeleted() {
+            binding.btnSendFriendRequest.setEnabled(true);
         }
     }
 }

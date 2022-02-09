@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".ui.friends.FriendsFragment">
+    tools:context=".ui.friends.FriendsListFragment">
 
     <LinearLayout
         android:id="@+id/searchBarWrapper"
@@ -21,7 +21,7 @@
             android:layout_height="@dimen/edit_text_min_height"
             android:layout_weight="1"
             android:backgroundTint="@color/grey_dark"
-            android:hint="@string/searchbar_text_find_friends"
+            android:hint="@string/searchbar_text_search_through_friends"
             android:inputType="text"
             />
 

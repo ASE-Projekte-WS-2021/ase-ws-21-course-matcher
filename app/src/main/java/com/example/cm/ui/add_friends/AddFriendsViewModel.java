@@ -3,44 +3,43 @@ package com.example.cm.ui.add_friends;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.cm.data.models.FriendsNotification;
-import com.example.cm.data.models.Notification;
-import com.example.cm.data.models.Notification.NotificationType;
+import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.User;
-import com.example.cm.data.repositories.NotificationRepository;
-import com.example.cm.data.repositories.NotificationRepository.OnNotificationRepositoryListener;
+import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
-import com.example.cm.data.repositories.UserRepository.OnUserRepositoryListener;
-import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import timber.log.Timber;
 
-public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryListener, OnNotificationRepositoryListener {
+public class AddFriendsViewModel extends ViewModel
+        implements FriendRequestRepository.OnFriendRequestRepositoryListener {
 
     private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
-    public MutableLiveData<List<User>> users = new MutableLiveData<>();
-    public MutableLiveData<List<Notification>> sentFriendRequests = new MutableLiveData<>();
-    public OnNotificationSentListener listener;
-    private User currentUser;
+    private final FriendRequestRepository requestRepository;
+    public MutableLiveData<List<User>> users;
+    public MutableLiveData<List<FriendRequest>> sentFriendRequests = new MutableLiveData<>();
+    public MutableLiveData<User> currentUser;
+    public OnRequestSentListener listener;
 
     public AddFriendsViewModel() {
-        userRepository = new UserRepository(this);
-        notificationRepository = new NotificationRepository(this);
-        FirebaseUser firebaseUser = userRepository.getCurrentUser();
-        userRepository.getUserByEmail(firebaseUser.getEmail());
-        userRepository.getUsersNotFriends();
+        userRepository = new UserRepository();
+        requestRepository = new FriendRequestRepository(this);
+        requestRepository.getFriendRequestsForUser();
+        users = userRepository.getUsersNotFriends();
+        currentUser = userRepository.getCurrentUser();
     }
 
     public MutableLiveData<List<User>> getUsers() {
         return users;
     }
 
-    public MutableLiveData<List<Notification>> getSentFriendRequests() {
+    public MutableLiveData<List<FriendRequest>> getSentFriendRequests() {
         return sentFriendRequests;
+    }
+
+    public void setOnRequestSentListener(OnRequestSentListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -50,10 +49,10 @@ public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryLi
      */
     public void searchUsers(String query) {
         if (query.isEmpty()) {
-            userRepository.getUsers();
+            users = userRepository.getUsersNotFriends();
             return;
         }
-        userRepository.getUsersByUsername(query);
+        users = userRepository.getUsersByUsername(query);
     }
 
     /**
@@ -63,18 +62,27 @@ public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryLi
      * @param receiverId the id of the receiver
      */
     public void sendOrDeleteFriendRequest(String receiverId) {
-        notificationRepository.getFriendRequests(currentUser.getId(), notifications -> {
-            if (notifications == null) {
+        if (sentFriendRequests.getValue() == null) {
+            return;
+        }
+
+        if (hasReceivedFriendRequest(sentFriendRequests.getValue(), receiverId)) {
+            onFriendRequestExists(receiverId);
+        } else {
+            onFriendRequestDoesNotExist(receiverId);
+        }
+        requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid(), requests -> {
+            if (requests == null) {
                 return;
             }
 
-            if (hasReceivedFriendRequest(notifications, receiverId)) {
+            if (hasReceivedFriendRequest(requests, receiverId)) {
                 onFriendRequestExists(receiverId);
             } else {
                 onFriendRequestDoesNotExist(receiverId);
             }
 
-            sentFriendRequests.postValue(notifications);
+            sentFriendRequests.postValue(requests);
         });
     }
 
@@ -85,9 +93,13 @@ public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryLi
      */
     private void onFriendRequestDoesNotExist(String receiverId) {
         Timber.d("Sending friend request to %s", receiverId);
-        FriendsNotification notification = new FriendsNotification(currentUser.getId(), currentUser.getFullName(), receiverId);
-        notificationRepository.addNotification(notification);
-        listener.onNotificationAdded();
+        if (currentUser.getValue() == null) {
+            return;
+        }
+
+        FriendRequest request = new FriendRequest(currentUser.getValue().getId(), currentUser.getValue().getFullName(), receiverId);
+        requestRepository.addFriendRequest(request);
+        listener.onRequestAdded();
     }
 
     /**
@@ -97,13 +109,13 @@ public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryLi
      */
     private void onFriendRequestExists(String receiverId) {
         Timber.d("Deleting friend request to %s", receiverId);
-        notificationRepository.deleteNotification(receiverId, currentUser.getId(), NotificationType.FRIEND_REQUEST);
-        listener.onNotificationDeleted();
+        requestRepository.deleteFriendRequest(receiverId, userRepository.getFirebaseUser().getUid());
+        listener.onRequestDeleted();
     }
 
-    private Boolean hasReceivedFriendRequest(List<Notification> notifications, String receiverId) {
-        for (Notification notification : notifications) {
-            if (notification.getReceiverId().equals(receiverId) && notification.getSenderId().equals(currentUser.getId()) && notification.getType().equals(NotificationType.FRIEND_REQUEST)) {
+    private Boolean hasReceivedFriendRequest(List<FriendRequest> requests, String receiverId) {
+        for (FriendRequest request : requests) {
+            if (request.getReceiverId().equals(receiverId) && request.getSenderId().equals(userRepository.getFirebaseUser().getUid())) {
                 return true;
             }
         }
@@ -111,38 +123,13 @@ public class AddFriendsViewModel extends ViewModel implements OnUserRepositoryLi
     }
 
     @Override
-    public void onUsersRetrieved(List<User> users) {
-        List<User> filteredUsers = new ArrayList<>();
-        for (User user : users) {
-            if (!user.getId().equals(this.currentUser.getId())) {
-                filteredUsers.add(user);
-            }
-        }
-
-        this.users.postValue(filteredUsers);
+    public void onFriendRequestsRetrieved(List<FriendRequest> requests) {
+        sentFriendRequests.postValue(requests);
     }
 
-    @Override
-    public void onUserRetrieved(User user) {
-        this.currentUser = user;
-        notificationRepository.getFriendRequests(user.getId(), notifications -> {
-            sentFriendRequests.postValue(notifications);
-        });
-    }
+    public interface OnRequestSentListener {
+        void onRequestAdded();
 
-    @Override
-    public void onNotificationsRetrieved(List<Notification> notifications) {
-        this.sentFriendRequests.postValue(notifications);
-    }
-
-    public void setOnNotificationSentListener(OnNotificationSentListener listener) {
-        this.listener = listener;
-    }
-
-    public interface OnNotificationSentListener {
-
-        void onNotificationAdded();
-
-        void onNotificationDeleted();
+        void onRequestDeleted();
     }
 }

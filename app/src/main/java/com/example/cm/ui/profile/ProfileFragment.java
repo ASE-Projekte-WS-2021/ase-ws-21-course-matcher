@@ -1,13 +1,11 @@
 package com.example.cm.ui.profile;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -33,28 +31,30 @@ public class ProfileFragment extends Fragment {
         binding.btnToFriendsList.setOnClickListener(v -> navigator.navigateToFriends());
     }
 
-    @SuppressLint("SetTextI18n")
     private void initViewModel() {
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        Bundle bundle = this.getArguments();
+        getProfileInformation(bundle);
 
         profileViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
-            if (currentUser == null) return;
+            if (currentUser == null) {
+                return;
+            }
             binding.tvName.setText(currentUser.getFullName());
             binding.tvUsername.setText(currentUser.getUsername());
         });
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            if (bundle.containsKey("userId")) {
-                binding.btnToFriendsList.setVisibility(View.GONE);
-                String profileId = bundle.getString("userId");
-                profileViewModel.getUserById(profileId);
-            }
-        } else {
+    private void getProfileInformation(Bundle bundle) {
+        if (bundle == null) {
             profileViewModel.getLoggedInUser();
+            return;
+        }
+
+        if (bundle.containsKey("userId")) {
+            binding.btnToFriendsList.setVisibility(View.GONE);
+            String profileId = bundle.getString("userId");
+            profileViewModel.getUserById(profileId);
         }
     }
 
