@@ -1,9 +1,12 @@
 package com.example.cm.data.repositories;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
+import com.example.cm.data.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,11 +24,10 @@ public class FriendRequestRepository extends Repository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private CollectionReference friendRequestCollection = firestore.collection(CollectionConfig.FRIEND_REQUESTS.toString());;
 
-    private final OnFriendRequestRepositoryListener listener;
+    private MutableLiveData<List<FriendRequest>> mutableReceivedRequestList = new MutableLiveData<>();
+    private MutableLiveData<List<FriendRequest>> mutableSentRequestList = new MutableLiveData<>();
 
-    public FriendRequestRepository(OnFriendRequestRepositoryListener listener) {
-        this.listener = listener;
-    }
+    public FriendRequestRepository() {}
 
     /**
      * Add a new Friend Request to collection
@@ -60,18 +62,37 @@ public class FriendRequestRepository extends Repository {
     /**
      * Get all friend requests for currently signed in user
      */
-    public void getFriendRequestsForUser() {
-        String userId = "";
-        if (auth.getCurrentUser() != null) {
-            userId = auth.getCurrentUser().getUid();
+    public MutableLiveData<List<FriendRequest>> getFriendRequestsForUser() {
+        if (auth.getCurrentUser() == null) {
+            return null;
         }
 
-        friendRequestCollection.whereEqualTo("receiverId", userId).get().addOnCompleteListener(executorService, task -> {
+        String userId = auth.getCurrentUser().getUid();
+        friendRequestCollection.whereEqualTo("receiverId", userId)
+                .whereNotEqualTo("state", Request.RequestState.REQUEST_DECLINED)
+                .get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<FriendRequest> requests = snapshotToFriendRequestList(Objects.requireNonNull(task.getResult()));
-                listener.onFriendRequestsRetrieved(requests);
+                mutableReceivedRequestList.postValue(requests);
             }
         });
+
+        return mutableReceivedRequestList;
+    }
+
+    /**
+     * Get all friend requests for sender
+     * @param senderId Id of the sender
+     */
+    public MutableLiveData<List<FriendRequest>> getFriendRequestsSentBy(String senderId) {
+        friendRequestCollection.whereEqualTo("senderId", senderId).get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                List<FriendRequest> requests = snapshotToFriendRequestList(Objects.requireNonNull(task.getResult()));
+                mutableSentRequestList.postValue(requests);
+            }
+        });
+
+        return mutableSentRequestList;
     }
 
     private List<FriendRequest> snapshotToFriendRequestList(QuerySnapshot documents) {
@@ -119,22 +140,6 @@ public class FriendRequestRepository extends Repository {
     public void undo(FriendRequest request) {
         friendRequestCollection.document(request.getId()).
                 update("state", Request.RequestState.REQUEST_PENDING);
-    }
-
-    /**
-     * Get all friend requests for sender
-     *
-     * @param senderId Id of the sender
-     * @param listener Callback to be called when the request is completed
-     */
-    public void getFriendRequestsSentBy(String senderId, OnFriendRequestRepositoryListener listener) {
-        friendRequestCollection.whereEqualTo("senderId", senderId)
-                .get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                List<FriendRequest> requests = snapshotToFriendRequestList(Objects.requireNonNull(task.getResult()));
-                listener.onFriendRequestsRetrieved(requests);
-            }
-        });
     }
 
 
