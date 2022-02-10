@@ -1,5 +1,7 @@
 package com.example.cm.ui.add_friends;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -29,10 +31,11 @@ public class AddFriendsViewModel extends ViewModel {
         userRepository = new UserRepository();
         users = userRepository.getUsersNotFriends();
         currentUser = userRepository.getCurrentUser();
+        Log.e("CURR_USER", currentUser.getValue()+"");
 
         requestRepository = new FriendRequestRepository();
         receivedFriendRequests = requestRepository.getFriendRequestsForUser();
-        sentFriendRequests = requestRepository.getFriendRequestsSentBy(currentUser.getValue().getId());
+        sentFriendRequests = requestRepository.getFriendRequestsSentBy((currentUser.getValue()).getId());
     }
 
     public MutableLiveData<List<User>> getUsers() {

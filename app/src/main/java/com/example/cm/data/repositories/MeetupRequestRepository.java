@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.MeetupRequest;
@@ -21,27 +23,28 @@ public class MeetupRequestRepository extends Repository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());;
 
-    private final OnMeetupRequestRepositoryListener listener;
+    private MutableLiveData<List<MeetupRequest>> mutableReceivedRequestList = new MutableLiveData<>();
 
-    public MeetupRequestRepository(OnMeetupRequestRepositoryListener listener) {
-        this.listener = listener;
-    }
+    public MeetupRequestRepository() {}
 
     /**
      * Get all meetup requests for currently signed in user
      */
-    public void getMeetupRequestsForUser() {
-        String userId = "";
-        if (auth.getCurrentUser() != null) {
-            userId = auth.getCurrentUser().getUid();
+    public MutableLiveData<List<MeetupRequest>> getMeetupRequestsForUser() {
+        if (auth.getCurrentUser() == null) {
+            return null;
         }
 
-        meetupRequestCollection.whereEqualTo("receiverId", userId).get().addOnCompleteListener(executorService, task -> {
+        String userId = auth.getCurrentUser().getUid();
+        meetupRequestCollection.whereEqualTo("receiverId", userId)
+                .whereNotEqualTo("state", Request.RequestState.REQUEST_DECLINED)
+                .get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<MeetupRequest> requests = snapshotToMeetupRequestList(Objects.requireNonNull(task.getResult()));
-                listener.onMeetupRequestsRetrieved(requests);
+                mutableReceivedRequestList.postValue(requests);
             }
         });
+        return mutableReceivedRequestList;
     }
 
     private List<MeetupRequest> snapshotToMeetupRequestList(QuerySnapshot documents) {
@@ -103,9 +106,4 @@ public class MeetupRequestRepository extends Repository {
         meetupRequestCollection.document(request.getId()).
                 update("state", Request.RequestState.REQUEST_PENDING);
     }
-
-    public interface OnMeetupRequestRepositoryListener {
-        void onMeetupRequestsRetrieved(List<MeetupRequest> requests);
-    }
-
 }

@@ -20,29 +20,29 @@ import java.util.Objects;
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
 public class CreateMeetupViewModel extends ViewModel implements
-        MeetupRepository.OnMeetupRepositoryListener,
-        MeetupRequestRepository.OnMeetupRequestRepositoryListener {
+        MeetupRepository.OnMeetupRepositoryListener {
+
+    private final UserRepository userRepository;
+    private final MutableLiveData<User> currentUser;
+    public MutableLiveData<List<User>> users;
+    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
 
     private final MeetupRepository meetupRepository;
-    private final UserRepository userRepository;
-    private final MeetupRequestRepository meetupRequestRepository;
-
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
-    public MutableLiveData<List<User>> users;
-    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
-    private final MutableLiveData<User> currentUser;
     private Meetup meetupToAdd;
 
-    public CreateMeetupViewModel() {
-        meetupRepository = new MeetupRepository(this);
-        meetupRequestRepository = new MeetupRequestRepository(this);
-        userRepository = new UserRepository();
+    private final MeetupRequestRepository meetupRequestRepository;
 
+    public CreateMeetupViewModel() {
+        userRepository = new UserRepository();
         currentUser = userRepository.getCurrentUser();
         users = userRepository.getFriends();
+
+        meetupRepository = new MeetupRepository(this);
+        meetupRequestRepository = new MeetupRequestRepository();
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -145,10 +145,5 @@ public class CreateMeetupViewModel extends ViewModel implements
             }
             selectedUsers.getValue().clear();
         }
-    }
-
-    @Override
-    public void onMeetupRequestsRetrieved(List<MeetupRequest> requests) {
-
     }
 }

@@ -17,21 +17,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MeetupRequestsViewModel extends ViewModel implements
-        MeetupRequestRepository.OnMeetupRequestRepositoryListener {
+public class MeetupRequestsViewModel extends ViewModel {
 
     private final UserRepository userRepository;
-    private final MeetupRepository meetupRepository;
-    private final MutableLiveData<List<MeetupRequest>> requests = new MutableLiveData<>();
     private MutableLiveData<User> currentUser;
+
+    private final MeetupRepository meetupRepository;
     private MeetupRequestRepository meetupRequestRepository;
+    private MutableLiveData<List<MeetupRequest>> requests;
 
     public MeetupRequestsViewModel() {
         userRepository = new UserRepository();
         currentUser = userRepository.getCurrentUser();
+
         meetupRepository = new MeetupRepository();
-        meetupRequestRepository = new MeetupRequestRepository(this);
-        meetupRequestRepository.getMeetupRequestsForUser();
+        meetupRequestRepository = new MeetupRequestRepository();
+        requests = meetupRequestRepository.getMeetupRequestsForUser();
     }
 
     public MutableLiveData<List<MeetupRequest>> getMeetupRequests() {
@@ -88,17 +89,6 @@ public class MeetupRequestsViewModel extends ViewModel implements
     }
 
     public void refresh() {
-        meetupRequestRepository.getMeetupRequestsForUser();
-    }
-
-    @Override
-    public void onMeetupRequestsRetrieved(List<MeetupRequest> requests) {
-        ArrayList<MeetupRequest> requestsDisplayed = new ArrayList<>();
-        for (MeetupRequest request : requests) {
-            if (request.getState() != Request.RequestState.REQUEST_DECLINED) {
-                requestsDisplayed.add(request);
-            }
-        }
-        this.requests.postValue(requestsDisplayed);
+        requests = meetupRequestRepository.getMeetupRequestsForUser();
     }
 }
