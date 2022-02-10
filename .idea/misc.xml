@@ -42,6 +42,9 @@
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/activity_register.xml" value="0.2713541666666667" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/activity_splash_screen.xml" value="0.264" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_login.xml" value="0.40896739130434784" />
+        <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed.xml" value="0.23550724637681159" />
+        <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed_friends_list.xml" value="0.23550724637681159" />
+        <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup_friend.xml" value="0.23550724637681159" />
         <entry key="app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.2355" />
         <entry key="app/src/main/res/drawable/ic_round_search_24.xml" value="0.2355" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.296195652173913" />
@@ -61,7 +64,7 @@
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../.." />
+    <option name="OUTPUT_DIRECTORY" value="$USER_HOME$" />
     <option name="OPTION_SCOPE" value="public" />
     <option name="OPTION_INCLUDE_LIBS" value="true" />
   </component>

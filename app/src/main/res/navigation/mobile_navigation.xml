@@ -23,11 +23,20 @@
         <action
             android:id="@+id/navigateToMeetups"
             app:destination="@+id/navigation_meetup" />
+        <action
+            android:id="@+id/navigateToMeetupDetailed"
+            app:destination="@+id/navigation_meetup_detailed" />
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_meetup_detailed"
+        android:name="com.example.cm.ui.meetup.MeetupDetailed.MeetupDetailedFragment"
+        android:label="@string/MeetupDetailedTitle"
+        tools:layout="@layout/fragment_meetup_detailed" />
+
+    <fragment
         android:id="@+id/navigation_meetup"
-        android:name="com.example.cm.ui.meetup.CreateMeetupFragment"
+        android:name="com.example.cm.ui.meetup.CreateMeetup.CreateMeetupFragment"
         android:label="Meetup"
         tools:layout="@layout/fragment_meetup">
         <action

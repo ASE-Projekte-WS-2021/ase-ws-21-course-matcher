@@ -1,4 +1,4 @@
-package com.example.cm.ui.meetup;
+package com.example.cm.ui.meetup.CreateMeetup;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;

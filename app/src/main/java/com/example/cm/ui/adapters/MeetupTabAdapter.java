@@ -4,12 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.cm.ui.meetup.MeetupListFragment;
+import com.example.cm.ui.meetup.MeetupList.MeetupListFragment;
 import com.example.cm.ui.meetup.MeetupRequestsFragment;
 
-public class MeetupTapAdapter extends FragmentStateAdapter {
+public class MeetupTabAdapter extends FragmentStateAdapter {
 
-    public MeetupTapAdapter(Fragment fragment) {
+    public MeetupTabAdapter(Fragment fragment) {
         super(fragment);
     }
     public Fragment[] tabs = new Fragment[]{new MeetupListFragment(), new MeetupRequestsFragment()};
