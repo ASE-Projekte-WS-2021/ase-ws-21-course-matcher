@@ -10,17 +10,16 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.UserRepository;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
-public class CreateMeetupViewModel extends ViewModel implements
-        MeetupRepository.OnMeetupRepositoryListener {
+public class CreateMeetupViewModel extends ViewModel {
 
     private final UserRepository userRepository;
     private final MutableLiveData<User> currentUser;
@@ -32,7 +31,6 @@ public class CreateMeetupViewModel extends ViewModel implements
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
-    private Meetup meetupToAdd;
 
     private final MeetupRequestRepository meetupRequestRepository;
 
@@ -41,7 +39,7 @@ public class CreateMeetupViewModel extends ViewModel implements
         currentUser = userRepository.getCurrentUser();
         users = userRepository.getFriends();
 
-        meetupRepository = new MeetupRepository(this);
+        meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
     }
 
@@ -102,7 +100,9 @@ public class CreateMeetupViewModel extends ViewModel implements
 
     public void createMeetup() {
         Objects.requireNonNull(selectedUsers.getValue());
-        meetupToAdd = new Meetup(
+        String meetupId = UUID.randomUUID().toString();
+        Meetup meetupToAdd = new Meetup(
+                meetupId,
                 userRepository.getFirebaseUser().getUid(),
                 meetupLocation.getValue(),
                 meetupTime.getValue(),
@@ -111,29 +111,15 @@ public class CreateMeetupViewModel extends ViewModel implements
                 meetupTimestamp.getValue());
 
         meetupRepository.addMeetup(meetupToAdd);
+
+        sendMeetupRequest(meetupToAdd.getId());
     }
 
-    public void searchUsers(String query) {
-        if (query.isEmpty()) {
-            userRepository.getUsers();
-            return;
-        }
-        userRepository.getUsersByUsername(query);
-    }
-
-    @Override
-    public void onMeetupsRetrieved(List<Meetup> meetups) {
-
-    }
-
-    @Override
-    public void onMeetupAdded(String meetupId) {
-        meetupToAdd.setId(meetupId);
-
+    private void sendMeetupRequest(String meetupId) {
         // Create notifications for each invited user
         if (selectedUsers.getValue() != null && currentUser.getValue() != null) {
             for (String invitedFriendId : selectedUsers.getValue()) {
-                MeetupRequest notification = new MeetupRequest(
+                MeetupRequest request = new MeetupRequest(
                         meetupId,
                         userRepository.getFirebaseUser().getUid(),
                         currentUser.getValue().getFullName(),
@@ -141,9 +127,17 @@ public class CreateMeetupViewModel extends ViewModel implements
                         meetupLocation.getValue(),
                         meetupTime.getValue(),
                         MEETUP_REQUEST);
-                meetupRequestRepository.addMeetupRequest(notification);
+                meetupRequestRepository.addMeetupRequest(request);
             }
             selectedUsers.getValue().clear();
         }
+    }
+
+    public void searchFriends(String query) {
+        if (query.isEmpty()) {
+            userRepository.getFriends();
+            return;
+        }
+        userRepository.getFriendsByUsername(query);
     }
 }

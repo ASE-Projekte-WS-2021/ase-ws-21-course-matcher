@@ -7,9 +7,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.cm.ui.meetup.MeetupList.MeetupListFragment;
 import com.example.cm.ui.meetup.MeetupRequests.MeetupRequestsFragment;
 
-public class MeetupTapAdapter extends FragmentStateAdapter {
+public class MeetupTabAdapter extends FragmentStateAdapter {
 
-    public MeetupTapAdapter(Fragment fragment) {
+    public MeetupTabAdapter(Fragment fragment) {
         super(fragment);
     }
     public Fragment[] tabs = new Fragment[]{new MeetupListFragment(), new MeetupRequestsFragment()};

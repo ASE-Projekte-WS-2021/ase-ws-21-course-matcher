@@ -12,9 +12,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentFriendsTabsBinding;
-import com.example.cm.databinding.FragmentMeetupTabsBinding;
 import com.example.cm.ui.adapters.FriendsTapAdapter;
-import com.example.cm.ui.adapters.MeetupTapAdapter;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
