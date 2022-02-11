@@ -100,7 +100,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     private void onSearchButtonClicked() {
         String query = binding.inviteUserSearch.getText().toString();
-        createMeetupViewModel.searchUsers(query);
+        createMeetupViewModel.searchFriends(query);
 
         Utils.hideKeyboard(requireActivity(), binding.getRoot());
     }

@@ -134,12 +134,12 @@ public class CreateMeetupViewModel extends ViewModel implements
         }
     }
 
-    public void searchUsers(String query) {
+    public void searchFriends(String query) {
         if (query.isEmpty()) {
-            userRepository.getUsers();
+            userRepository.getFriends();
             return;
         }
-        userRepository.getUsersByUsername(query);
+        userRepository.getFriendsByUsername(query);
     }
 
     @Override
