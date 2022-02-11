@@ -138,7 +138,7 @@ public class UserRepository extends Repository {
             mutableUsers.postValue(new ArrayList<>());
             return mutableUsers;
         }
-
+      
         userCollection.whereIn(FieldPath.documentId(), userIds).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));

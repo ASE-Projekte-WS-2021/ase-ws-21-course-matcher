@@ -1,4 +1,4 @@
-package com.example.cm.ui.meetup;
+package com.example.cm.ui.meetup.CreateMeetup;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
 public class CreateMeetupViewModel extends ViewModel implements
-        MeetupRepository.OnMeetupRepositoryListener,
         MeetupRequestRepository.OnMeetupRequestRepositoryListener {
 
     private final MeetupRepository meetupRepository;
@@ -31,18 +31,17 @@ public class CreateMeetupViewModel extends ViewModel implements
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
-    public MutableLiveData<List<User>> users;
+    public MutableLiveData<List<User>> users = new MutableLiveData<>();;
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
     private final MutableLiveData<User> currentUser;
-    private Meetup meetupToAdd;
+
 
     public CreateMeetupViewModel() {
-        meetupRepository = new MeetupRepository(this);
+        meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository(this);
         userRepository = new UserRepository();
-
-        currentUser = userRepository.getCurrentUser();
         users = userRepository.getFriends();
+        currentUser = userRepository.getCurrentUser();
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -102,7 +101,9 @@ public class CreateMeetupViewModel extends ViewModel implements
 
     public void createMeetup() {
         Objects.requireNonNull(selectedUsers.getValue());
-        meetupToAdd = new Meetup(
+        String meetupId = UUID.randomUUID().toString();
+        Meetup meetupToAdd = new Meetup(
+                meetupId,
                 userRepository.getFirebaseUser().getUid(),
                 meetupLocation.getValue(),
                 meetupTime.getValue(),
@@ -111,29 +112,15 @@ public class CreateMeetupViewModel extends ViewModel implements
                 meetupTimestamp.getValue());
 
         meetupRepository.addMeetup(meetupToAdd);
+
+        sendMeetupRequest(meetupToAdd.getId());
     }
 
-    public void searchUsers(String query) {
-        if (query.isEmpty()) {
-            userRepository.getUsers();
-            return;
-        }
-        userRepository.getUsersByUsername(query);
-    }
-
-    @Override
-    public void onMeetupsRetrieved(List<Meetup> meetups) {
-
-    }
-
-    @Override
-    public void onMeetupAdded(String meetupId) {
-        meetupToAdd.setId(meetupId);
-
+    private void sendMeetupRequest(String meetupId) {
         // Create notifications for each invited user
         if (selectedUsers.getValue() != null && currentUser.getValue() != null) {
             for (String invitedFriendId : selectedUsers.getValue()) {
-                MeetupRequest notification = new MeetupRequest(
+                MeetupRequest request = new MeetupRequest(
                         meetupId,
                         userRepository.getFirebaseUser().getUid(),
                         currentUser.getValue().getFullName(),
@@ -141,10 +128,18 @@ public class CreateMeetupViewModel extends ViewModel implements
                         meetupLocation.getValue(),
                         meetupTime.getValue(),
                         MEETUP_REQUEST);
-                meetupRequestRepository.addMeetupRequest(notification);
+                meetupRequestRepository.addMeetupRequest(request);
             }
             selectedUsers.getValue().clear();
         }
+    }
+
+    public void searchFriends(String query) {
+        if (query.isEmpty()) {
+            userRepository.getFriends();
+            return;
+        }
+        userRepository.getFriendsByUsername(query);
     }
 
     @Override

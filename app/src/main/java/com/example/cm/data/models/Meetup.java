@@ -1,5 +1,7 @@
 package com.example.cm.data.models;
 
+import com.google.firebase.firestore.DocumentId;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -14,13 +16,15 @@ public class Meetup {
     private List<String> confirmedFriends;
 
     private List<String> declinedFriends;
+    @DocumentId
     private String id;
     private Date timestamp;
 
     public Meetup() {
     }
 
-    public Meetup(String requestingUser, String location, String time, boolean isPrivate, List<String> invitedFriends, Date timestamp) {
+    public Meetup(String id, String requestingUser, String location, String time, boolean isPrivate, List<String> invitedFriends, Date timestamp) {
+        this.id = id;
         this.requestingUser = requestingUser;
         this.location = location;
         this.time = time;

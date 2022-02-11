@@ -6,8 +6,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.cm.ui.friends.FriendRequestsFragment;
 import com.example.cm.ui.friends.FriendsListFragment;
-import com.example.cm.ui.meetup.MeetupListFragment;
-import com.example.cm.ui.meetup.MeetupRequestsFragment;
 
 public class FriendsTapAdapter extends FragmentStateAdapter {
 
