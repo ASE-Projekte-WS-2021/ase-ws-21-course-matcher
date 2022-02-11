@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class UserRepository extends Repository {
+
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
@@ -45,10 +46,8 @@ public class UserRepository extends Repository {
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
-        // todo: fix this when FAB-Button in FriendsFragment clicked
         userCollection.document(currentUserId).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
-                Log.e("SUCCESS", "Get-User");
                 User user = snapshotToUser(task.getResult());
                 mutableUser.postValue(user);
             }

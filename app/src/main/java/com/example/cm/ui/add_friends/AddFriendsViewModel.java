@@ -34,11 +34,11 @@ public class AddFriendsViewModel extends ViewModel {
         userRepository = new UserRepository();
         users = userRepository.getUsersNotFriends();
         currentUser = userRepository.getCurrentUser();
-        Log.e("CURR_USER", currentUser.getValue()+"");
 
         requestRepository = new FriendRequestRepository();
         receivedFriendRequests = requestRepository.getFriendRequestsForUser();
-        // todo: currentUser is null, so used auth instead
+        // todo: talk about:
+        //  currentUser is null, so used auth instead
         //  before: sentFriendRequests = requestRepository.getFriendRequestsSentBy(currentUser.getValue().getId());
         //  fix:
         sentFriendRequests = requestRepository.getFriendRequestsSentBy(auth.getCurrentUser().getUid());
