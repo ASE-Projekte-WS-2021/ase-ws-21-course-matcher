@@ -1,4 +1,4 @@
-package com.example.cm.ui.meetup;
+package com.example.cm.ui.meetup.MeetupRequests;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_ACCEPTED;
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_DECLINED;
@@ -13,7 +13,6 @@ import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
