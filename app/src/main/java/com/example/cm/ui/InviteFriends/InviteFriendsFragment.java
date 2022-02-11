@@ -17,7 +17,7 @@ import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.InvitationSuccess.InvitationSuccessDialog;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.add_friends.AddFriendsViewModel.OnRequestSentListener;
-import com.example.cm.ui.meetup.CreateMeetupViewModel;
+import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -100,7 +100,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     private void onSearchButtonClicked() {
         String query = binding.inviteUserSearch.getText().toString();
-        createMeetupViewModel.searchUsers(query);
+        createMeetupViewModel.searchFriends(query);
 
         Utils.hideKeyboard(requireActivity(), binding.getRoot());
     }
