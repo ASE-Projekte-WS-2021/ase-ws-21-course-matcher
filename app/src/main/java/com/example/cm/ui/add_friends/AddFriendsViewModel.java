@@ -9,6 +9,7 @@ import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +17,8 @@ import java.util.Objects;
 import timber.log.Timber;
 
 public class AddFriendsViewModel extends ViewModel {
+
+    private final FirebaseAuth auth = FirebaseAuth.getInstance(); // only used for fix
 
     private final UserRepository userRepository;
     private final FriendRequestRepository requestRepository;
@@ -35,7 +38,11 @@ public class AddFriendsViewModel extends ViewModel {
 
         requestRepository = new FriendRequestRepository();
         receivedFriendRequests = requestRepository.getFriendRequestsForUser();
-        sentFriendRequests = requestRepository.getFriendRequestsSentBy((currentUser.getValue()).getId());
+        // todo: currentUser is null, so used auth instead
+        //  before: sentFriendRequests = requestRepository.getFriendRequestsSentBy(currentUser.getValue().getId());
+        //  fix:
+        sentFriendRequests = requestRepository.getFriendRequestsSentBy(auth.getCurrentUser().getUid());
+
     }
 
     public MutableLiveData<List<User>> getUsers() {
