@@ -1,4 +1,4 @@
-package com.example.cm.ui.meetup.MeetupRequests;
+package com.example.cm.ui.meetup;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

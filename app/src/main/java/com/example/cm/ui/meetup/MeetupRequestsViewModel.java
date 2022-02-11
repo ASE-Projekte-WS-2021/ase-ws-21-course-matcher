@@ -1,4 +1,4 @@
-package com.example.cm.ui.meetup.MeetupRequests;
+package com.example.cm.ui.meetup;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_ACCEPTED;
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_DECLINED;
