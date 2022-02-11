@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -37,7 +39,6 @@ public class MeetupRequestRepository extends Repository {
 
         String userId = auth.getCurrentUser().getUid();
         meetupRequestCollection.whereEqualTo("receiverId", userId)
-                .whereNotEqualTo("state", Request.RequestState.REQUEST_DECLINED)
                 .get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<MeetupRequest> requests = snapshotToMeetupRequestList(Objects.requireNonNull(task.getResult()));

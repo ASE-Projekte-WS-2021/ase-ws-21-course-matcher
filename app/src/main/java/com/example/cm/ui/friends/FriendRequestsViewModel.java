@@ -17,7 +17,7 @@ public class FriendRequestsViewModel extends ViewModel {
 
     private final UserRepository userRepository;
     private MutableLiveData<List<FriendRequest>> receivedRequests;
-    private final MutableLiveData<List<FriendRequest>> sentRequests = new MutableLiveData<>();
+    private MutableLiveData<List<FriendRequest>> sentRequests = new MutableLiveData<>();
     private FriendRequestRepository friendRequestRepository;
 
     public FriendRequestsViewModel() {

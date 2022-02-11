@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -18,6 +20,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class UserRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -25,6 +29,7 @@ public class UserRepository extends Repository {
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
+
 
     public UserRepository() {
     }
@@ -42,9 +47,11 @@ public class UserRepository extends Repository {
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
-        userCollection.document(currentUserId).get().addOnCompleteListener(executorService, task -> {
+        // todo: fix this when FAB-Button in FriendsFragment clicked
+        userCollection.whereEqualTo("id", currentUserId).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
-                User user = snapshotToUser(Objects.requireNonNull(task.getResult()));
+                Log.e("SUCCESS", "Get-User");
+                User user = snapshotToUser(task.getResult().getDocuments().get(0));
                 mutableUser.postValue(user);
             }
         });

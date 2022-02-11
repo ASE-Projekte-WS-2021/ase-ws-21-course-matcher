@@ -69,7 +69,6 @@ public class FriendRequestRepository extends Repository {
 
         String userId = auth.getCurrentUser().getUid();
         friendRequestCollection.whereEqualTo("receiverId", userId)
-                .whereNotEqualTo("state", Request.RequestState.REQUEST_DECLINED)
                 .get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<FriendRequest> requests = snapshotToFriendRequestList(Objects.requireNonNull(task.getResult()));
