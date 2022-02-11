@@ -1,4 +1,4 @@
-package com.example.cm.ui.friends;
+package com.example.cm.ui.friends.FriendRequests;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

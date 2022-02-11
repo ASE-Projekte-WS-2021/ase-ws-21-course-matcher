@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/navigation_meetup"
-        android:name="com.example.cm.ui.meetup.CreateMeetupFragment"
+        android:name="com.example.cm.ui.meetup.CreateMeetup.CreateMeetupFragment"
         android:label="Meetup"
         tools:layout="@layout/fragment_meetup">
         <action

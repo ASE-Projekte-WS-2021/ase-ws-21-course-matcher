@@ -1,7 +1,5 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -48,7 +46,7 @@ public class UserRepository extends Repository {
         String currentUserId = auth.getCurrentUser().getUid();
         userCollection.document(currentUserId).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
-                User user = snapshotToUser(task.getResult());
+                User user = snapshotToUser(Objects.requireNonNull(task.getResult()));
                 mutableUser.postValue(user);
             }
         });
