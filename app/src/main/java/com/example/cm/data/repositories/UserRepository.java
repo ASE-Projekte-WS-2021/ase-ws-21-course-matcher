@@ -38,6 +38,10 @@ public class UserRepository extends Repository {
         return auth.getCurrentUser();
     }
 
+    public FirebaseUser getCurrentAuthUser() {
+        return auth.getCurrentUser();
+    }
+
     public MutableLiveData<User> getCurrentUser() {
         if (auth.getCurrentUser() == null) {
             return null;
