@@ -1,13 +1,10 @@
 package com.example.cm.data.repositories;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.utils.Utils;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class MeetupRepository {
+
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
     private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
@@ -41,12 +39,9 @@ public class MeetupRepository {
     }
 
     public MutableLiveData<Meetup> getMeetup(String id){
-        meetupCollection.document(id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                DocumentSnapshot document = task.getResult();
-                meetupMLD.postValue(snapshotToMeetup(document));
-            }
+        meetupCollection.document(id).get().addOnCompleteListener(task -> {
+            DocumentSnapshot document = task.getResult();
+            meetupMLD.postValue(snapshotToMeetup(Objects.requireNonNull(document)));
         });
 
         return meetupMLD;

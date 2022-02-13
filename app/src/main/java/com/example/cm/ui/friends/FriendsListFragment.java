@@ -18,6 +18,8 @@ import com.example.cm.ui.adapters.FriendsListAdapter.OnItemClickListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 
+import timber.log.Timber;
+
 public class FriendsListFragment extends Fragment implements OnItemClickListener {
 
     private FriendsViewModel friendsViewModel;
@@ -56,12 +58,7 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
         friendsViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
             binding.loadingCircle.setVisibility(View.GONE);
 
-            if (friends == null) {
-                binding.noFriendsWrapper.setVisibility(View.VISIBLE);
-                return;
-            }
-
-            if (friends.size() == 0) {
+            if (friends.isEmpty()) {
                 binding.noFriendsWrapper.setVisibility(View.VISIBLE);
                 return;
             }

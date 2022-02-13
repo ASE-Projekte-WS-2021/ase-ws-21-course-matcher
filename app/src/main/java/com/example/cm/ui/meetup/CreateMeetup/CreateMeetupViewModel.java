@@ -10,7 +10,6 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.UserRepository;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,28 +19,28 @@ import java.util.UUID;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
-public class CreateMeetupViewModel extends ViewModel implements
-        MeetupRequestRepository.OnMeetupRequestRepositoryListener {
+public class CreateMeetupViewModel extends ViewModel {
+
+    private final UserRepository userRepository;
+    private final MutableLiveData<User> currentUser;
+    public MutableLiveData<List<User>> users;
+    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
 
     private final MeetupRepository meetupRepository;
-    private final UserRepository userRepository;
-    private final MeetupRequestRepository meetupRequestRepository;
-
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
-    public MutableLiveData<List<User>> users = new MutableLiveData<>();;
-    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
-    private final MutableLiveData<User> currentUser;
 
+    private final MeetupRequestRepository meetupRequestRepository;
 
     public CreateMeetupViewModel() {
-        meetupRepository = new MeetupRepository();
-        meetupRequestRepository = new MeetupRequestRepository(this);
         userRepository = new UserRepository();
-        users = userRepository.getFriends();
         currentUser = userRepository.getCurrentUser();
+        users = userRepository.getFriends();
+
+        meetupRepository = new MeetupRepository();
+        meetupRequestRepository = new MeetupRequestRepository();
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -140,10 +139,5 @@ public class CreateMeetupViewModel extends ViewModel implements
             return;
         }
         userRepository.getFriendsByUsername(query);
-    }
-
-    @Override
-    public void onMeetupRequestsRetrieved(List<MeetupRequest> requests) {
-
     }
 }

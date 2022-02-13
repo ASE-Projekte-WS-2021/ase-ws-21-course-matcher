@@ -32,6 +32,13 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     @SuppressLint("NotifyDataSetChanged")
     public void setRequests(List<FriendRequest> newRequests){
+        // filter out declined request to not display them again
+        for (FriendRequest request : newRequests) {
+            if (request.getState() == Request.RequestState.REQUEST_DECLINED) {
+                newRequests.remove(request);
+            }
+        }
+
         if(mRequests == null){
             mRequests = newRequests;
             notifyDataSetChanged();
