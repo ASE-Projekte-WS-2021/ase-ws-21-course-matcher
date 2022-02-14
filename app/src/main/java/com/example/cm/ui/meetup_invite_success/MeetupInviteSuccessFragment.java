@@ -34,7 +34,6 @@ public class MeetupInviteSuccessFragment extends Fragment {
         binding.btnToMeetupList.setOnClickListener(view -> {
             navigator.getNavController().navigate(R.id.action_global_navigate_to_meetups);
         });
-
     }
 
     @SuppressLint("RestrictedApi")
