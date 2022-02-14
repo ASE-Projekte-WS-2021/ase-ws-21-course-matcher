@@ -38,7 +38,7 @@ public class MeetupRepository {
         return meetupListMLD;
     }
 
-    public MutableLiveData<Meetup> getMeetup(String id){
+    public MutableLiveData<Meetup> getMeetup(String id) {
         meetupCollection.document(id).get().addOnCompleteListener(task -> {
             DocumentSnapshot document = task.getResult();
             meetupMLD.postValue(snapshotToMeetup(Objects.requireNonNull(document)));
@@ -47,8 +47,13 @@ public class MeetupRepository {
         return meetupMLD;
     }
 
-    public void addMeetup(Meetup meetup) {
-        meetupCollection.add(meetup);
+    public boolean addMeetup(Meetup meetup) {
+        try {
+            meetupCollection.add(meetup);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void addConfirmed(String meetupId, String participantId) {

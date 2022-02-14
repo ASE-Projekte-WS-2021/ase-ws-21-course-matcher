@@ -1,5 +1,7 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
+import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -7,9 +9,10 @@ import androidx.lifecycle.ViewModel;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.User;
-import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.MeetupRepository;
+import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
+import com.example.cm.utils.Navigator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,22 +20,19 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
-
 public class CreateMeetupViewModel extends ViewModel {
 
     private final UserRepository userRepository;
     private final MutableLiveData<User> currentUser;
-    public MutableLiveData<List<User>> users;
-    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
-
     private final MeetupRepository meetupRepository;
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
-
     private final MeetupRequestRepository meetupRequestRepository;
+    public MutableLiveData<List<User>> users;
+    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+    private Navigator navigator;
 
     public CreateMeetupViewModel() {
         userRepository = new UserRepository();
@@ -42,6 +42,7 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
     }
+
 
     public MutableLiveData<List<User>> getUsers() {
         return users;
@@ -98,7 +99,7 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupIsPrivate.postValue(isPrivate);
     }
 
-    public void createMeetup() {
+    public boolean createMeetup() {
         Objects.requireNonNull(selectedUsers.getValue());
         String meetupId = UUID.randomUUID().toString();
         Meetup meetupToAdd = new Meetup(
@@ -110,9 +111,14 @@ public class CreateMeetupViewModel extends ViewModel {
                 selectedUsers.getValue(),
                 meetupTimestamp.getValue());
 
-        meetupRepository.addMeetup(meetupToAdd);
+        boolean isSuccessful = meetupRepository.addMeetup(meetupToAdd);
 
-        sendMeetupRequest(meetupToAdd.getId());
+        if (isSuccessful) {
+            sendMeetupRequest(meetupToAdd.getId());
+            return true;
+        }
+
+        return false;
     }
 
     private void sendMeetupRequest(String meetupId) {

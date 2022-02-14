@@ -3,11 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_home">
 
     <action
         android:id="@+id/action_global_navigate_to_profile"
         app:destination="@id/navigation_profile" />
+
+    <action
+        android:id="@+id/action_global_navigate_to_meetups"
+        app:destination="@+id/navigation_meetup_tabs" />
 
     <fragment
         android:id="@+id/navigation_home"
@@ -47,15 +51,18 @@
 
     <fragment
         android:id="@+id/navigation_invite_friends"
-        android:name="com.example.cm.ui.InviteFriends.InviteFriendsFragment"
+        android:name="com.example.cm.ui.invite_friends.InviteFriendsFragment"
         android:label="@string/invite_friends"
         tools:layout="@layout/fragment_invite_friends">
         <action
             android:id="@+id/navigateToInfoMeetup"
             app:destination="@+id/navigation_meetup" />
+
         <action
-            android:id="@+id/navigateToMeetupList"
-            app:destination="@id/navigation_meetup_tabs" />
+            android:id="@+id/navigateToMeetupInviteSuccess"
+            app:destination="@+id/navigation_meetup_success"
+            app:popUpTo="@id/navigation_meetup"
+            app:popUpToInclusive="false" />
 
     </fragment>
 
@@ -109,5 +116,10 @@
             android:id="@+id/fromSelectFriendsToProfile"
             app:destination="@id/navigation_profile" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_meetup_success"
+        android:name="com.example.cm.ui.meetup_invite_success.MeetupInviteSuccessFragment"
+        android:label="fragment_meetup_invite_success"
+        tools:layout="@layout/fragment_meetup_invite_success" />
 
 </navigation>

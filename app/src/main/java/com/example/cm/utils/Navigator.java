@@ -8,7 +8,7 @@ import com.example.cm.R;
 public class Navigator {
 
     NavController navController;
-    //TODO hier alle navigator rein damit übersichtlicher & einheitlicher
+    // TODO hier alle navigator rein damit übersichtlicher & einheitlicher
 
     public Navigator(FragmentActivity activity) {
         this.navController = Utils.findNavController(activity);
@@ -37,5 +37,4 @@ public class Navigator {
     public NavController getNavController() {
         return navController;
     }
-
 }

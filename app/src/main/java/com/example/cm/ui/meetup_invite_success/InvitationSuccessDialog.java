@@ -1,4 +1,4 @@
-package com.example.cm.ui.InvitationSuccess;
+package com.example.cm.ui.meetup_invite_success;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
