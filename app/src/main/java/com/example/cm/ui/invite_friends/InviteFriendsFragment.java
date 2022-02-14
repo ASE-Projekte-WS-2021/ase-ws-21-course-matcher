@@ -52,7 +52,12 @@ public class InviteFriendsFragment extends Fragment
         binding.inviteFriendsSearchBtn.setOnClickListener(v -> onSearchButtonClicked());
 
         binding.btnSendInvite.setOnClickListener(v -> {
-            createMeetupViewModel.createMeetup();
+            boolean isSuccessful = createMeetupViewModel.createMeetup();
+            if (isSuccessful) {
+                navigator.getNavController().navigate(R.id.navigation_meetup_tabs);
+            } else {
+                Snackbar.make(binding.getRoot(), "Etwas ist schiefgelaufen, versuche es erneut.", Snackbar.LENGTH_LONG).show();
+            }
         });
     }
 

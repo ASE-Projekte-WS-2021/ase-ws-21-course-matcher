@@ -12,6 +12,7 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
+import com.example.cm.utils.Navigator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +32,7 @@ public class CreateMeetupViewModel extends ViewModel {
     private final MeetupRequestRepository meetupRequestRepository;
     public MutableLiveData<List<User>> users;
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+    private Navigator navigator;
 
     public CreateMeetupViewModel() {
         userRepository = new UserRepository();
@@ -97,7 +99,7 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupIsPrivate.postValue(isPrivate);
     }
 
-    public void createMeetup() {
+    public boolean createMeetup() {
         Objects.requireNonNull(selectedUsers.getValue());
         String meetupId = UUID.randomUUID().toString();
         Meetup meetupToAdd = new Meetup(
@@ -109,8 +111,14 @@ public class CreateMeetupViewModel extends ViewModel {
                 selectedUsers.getValue(),
                 meetupTimestamp.getValue());
 
-        meetupRepository.addMeetup(meetupToAdd);
-        sendMeetupRequest(meetupToAdd.getId());
+        boolean isSuccessful = meetupRepository.addMeetup(meetupToAdd);
+
+        if (isSuccessful) {
+            sendMeetupRequest(meetupToAdd.getId());
+            return true;
+        }
+
+        return false;
     }
 
     private void sendMeetupRequest(String meetupId) {
