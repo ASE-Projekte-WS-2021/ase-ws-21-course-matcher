@@ -54,7 +54,7 @@ public class InviteFriendsFragment extends Fragment
         binding.btnSendInvite.setOnClickListener(v -> {
             boolean isSuccessful = createMeetupViewModel.createMeetup();
             if (isSuccessful) {
-                navigator.getNavController().navigate(R.id.navigation_meetup_tabs);
+                navigator.getNavController().navigate(R.id.navigateToMeetupInviteSuccess);
             } else {
                 Snackbar.make(binding.getRoot(), R.string.meetup_create_error, Snackbar.LENGTH_LONG).show();
             }
