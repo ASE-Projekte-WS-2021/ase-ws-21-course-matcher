@@ -33,19 +33,6 @@
     <string name="invitation_success_dialog">Dein Meetup wurde erfolgreich versendet. Warte auf die Reaktion deiner Freunde und viel Spaß bei eurem Treffen!</string>
     <string name="invitation_success_title">"Meetup versendet!"</string>
     <string name="invitation_success_close_dialog">"ok"</string>
-    <!-- Notifications -->
-    <string name="accept_button_text">✓</string>
-    <string name="decline_button_text">✗</string>
-    <string name="decline_snackbar_text">Anfrage abgelehnt.</string>
-    <string name="undo_snackbar_text">UNDO</string>
-    <string name="friend_request_title">"Neue Freundschaftsanfrage"</string>
-    <string name="friend_request_text">" möchte mit dir befreundet sein."</string>
-    <string name="friend_accepted_text">" ist jetzt auf deiner Freundesliste."</string>
-    <string name="meetup_request_title">"Neue Meetup-Anfrage"</string>
-    <string name="meetup_accepted_text">" rechnet mit dir."</string>
-    <string name="meetup_request_text">" möchte sich mit dir treffen."</string>
-    <string name="meetup_declined_text">" kommt leider nicht."</string>
-
 
     <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
     <string name="title_notifications">Benachrichtigungen</string>
@@ -108,8 +95,22 @@
     <string name="location_card">location</string>
     <string name="meetup_tabs_list">Anstehend</string>
     <string name="meetup_tabs_requests">Anfragen</string>
+
     <string name="searchbar_text_search_through_friends">Freundesliste durchsuchen...</string>
     <string name="user_image">user image</string>
     <string name="MeetupDetailedTitle">Meetupinfo</string>
     <string name="meetup_create_error">Etwas ist schiefgelaufen, versuche es erneut.</string>
+
+    <!-- Requests -->
+    <string name="meetup_request_description">" möchte dich einladen."</string>
+    <string name="meetup_accepted_text">" rechnet mit dir."</string>
+    <string name="meetup_declined_text">" kommt leider nicht."</string>
+
+    <string name="decline_snackbar_text">Anfrage abgelehnt.</string>
+    <string name="undo_snackbar_text">UNDO</string>
+
+    <string name="friend_request_text">" möchte mit dir befreundet sein."</string>
+    <string name="friend_accepted_text">" ist jetzt auf deiner Freundesliste."</string>
+    <string name="decline_button_text">no</string>
+    <string name="accept_button_text">ja</string>
 </resources>

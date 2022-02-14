@@ -55,21 +55,21 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FriendRequestListAdapter.FriendRequestViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
         FriendRequest request = mRequests.get(position);
 
         String user = "@" + request.getSenderName();
         String date = request.getCreationTimeAgo();
 
-        holder.getTvSender().setText(user);
+        /*holder.getTvSender().setText(user);
         holder.getTvDate().setText(date);
 
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
-        holder.getTvTitle().setText(R.string.friend_request_title);
+        holder.getTvTitle().setText(R.string.title_home);
         holder.getTvContent().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
-        holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
+        holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);*/
     }
 
     @Override
@@ -125,7 +125,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         /**
          * Getters for the views in the list item
          */
-        public TextView getTvTitle() {
+        /*public TextView getTvTitle() {
             return binding.notificationTitleTextView;
         }
 
@@ -151,6 +151,6 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
         public Button getBtnDecline(){
             return binding.notificationDeclineButton;
-        }
+        }*/
     }
 }

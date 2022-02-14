@@ -5,75 +5,119 @@
     android:id="@+id/notificationLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/small_margin_items">
-
-    <Button
-        android:id="@+id/notificationAcceptButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/small_margin_items"
-        android:text="@string/accept_button_text"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/notificationDeclineButton"
-        app:layout_constraintTop_toTopOf="@+id/notificationDeclineButton" />
-
-    <Button
-        android:id="@+id/notificationDeclineButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/small_margin_items"
-        android:text="@string/decline_button_text"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notificationContentTextView" />
+    android:paddingStart="@dimen/big_margin"
+    android:paddingTop="@dimen/big_margin"
+    android:paddingEnd="@dimen/big_margin">
 
     <ImageView
-        android:id="@+id/notificationImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:contentDescription="@string/profile_picture_decription"
-        android:src="@android:drawable/ic_menu_gallery"
-        app:layout_constraintBottom_toBottomOf="@+id/notificationContentTextView"
+        android:id="@+id/notificationAcceptButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/accept_btn"
+        app:layout_constraintBottom_toBottomOf="@+id/meetupRequestImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/meetupRequestImageView" />
+
+    <ImageView
+        android:id="@+id/notificationDeclineButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:src="@drawable/decline_btn"
+        app:layout_constraintBottom_toBottomOf="@+id/notificationAcceptButton"
+        app:layout_constraintEnd_toStartOf="@+id/notificationAcceptButton"
+        app:layout_constraintTop_toTopOf="@+id/notificationAcceptButton" />
+
+    <ImageView
+        android:id="@+id/meetupRequestImageView"
+        android:layout_width="@dimen/meetup_icon_image_height"
+        android:layout_height="@dimen/meetup_icon_image_height"
+        android:src="@drawable/cafe_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/notificationContentTextView"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:singleLine="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/notificationSenderTextView"
-        app:layout_constraintTop_toBottomOf="@+id/notificationTitleTextView" />
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+
+        android:layout_marginStart="@dimen/medium_margin"
+        app:layout_constraintBottom_toBottomOf="@+id/meetupRequestImageView"
+        app:layout_constraintEnd_toStartOf="@+id/notificationDeclineButton"
+        app:layout_constraintStart_toEndOf="@+id/meetupRequestImageView"
+        app:layout_constraintTop_toTopOf="@+id/meetupRequestImageView">
+
+        <TextView
+            android:id="@+id/meetupTimeRequestTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:includeFontPadding="false"
+            android:textColor="@color/gray500"
+            android:textSize="@dimen/text_size_description" />
+
+        <TextView
+            android:id="@+id/meetupLocationRequestTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:includeFontPadding="false"
+            android:singleLine="false"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_description" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/notificationTitleTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/notificationImageView"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/notificationSenderTextView"
+        android:id="@+id/meetupSenderDescriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/orange_dark"
+
+        android:textColor="@color/black"
+        android:text="@string/meetup_request_description"
+        android:textSize="@dimen/text_size_description_small"
+
+        android:layout_marginTop="@dimen/small_margin"
+        app:layout_constraintStart_toEndOf="@+id/meetupSenderTextView"
+        app:layout_constraintTop_toBottomOf="@+id/meetupRequestImageView" />
+
+    <TextView
+        android:id="@+id/meetupSenderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/notificationImageView"
-        app:layout_constraintTop_toBottomOf="@+id/notificationTitleTextView" />
+        android:textColor="@color/gray500"
+        android:textSize="@dimen/text_size_description_small"
+
+        android:layout_marginTop="@dimen/small_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/meetupRequestImageView" />
 
     <TextView
         android:id="@+id/notificationDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/small_margin_items"
+
         android:textAlignment="textEnd"
-        android:textColor="@color/grey_medium"
         android:textStyle="italic"
+        android:textColor="@color/gray400"
+        android:textSize="@dimen/text_size_description_small"
+
+        app:layout_constraintBottom_toBottomOf="@+id/meetupSenderDescriptionTextView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notificationDeclineButton" />
+        app:layout_constraintTop_toTopOf="@+id/meetupSenderDescriptionTextView" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="@dimen/medium_margin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/meetupSenderDescriptionTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

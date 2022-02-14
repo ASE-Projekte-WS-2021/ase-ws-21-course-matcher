@@ -12,13 +12,13 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="@dimen/small_margin_items">
+        android:padding="@dimen/small_margin">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/small_margin_items"
+            android:layout_marginBottom="@dimen/small_margin"
             android:gravity="center"
             android:text="@string/loginTitle"
             android:textColor="@color/black"

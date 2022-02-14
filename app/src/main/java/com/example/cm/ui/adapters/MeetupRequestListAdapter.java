@@ -59,31 +59,31 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
         String user = "@" + request.getSenderName();
         String date = request.getCreationTimeAgo();
-
-        holder.getTvSender().setText(user);
-        holder.getTvDate().setText(date);
+        String meetupTime = request.getMeetupAt() + " Uhr";
+        String location = request.getLocation();
 
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
         int content = 0;
-        switch(request.getType()){
+        switch (request.getType()) {
             case MEETUP_REQUEST:
-                holder.getTvTitle().setText(request.toString());
-                content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_text;
+                content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_description;
                 break;
             case MEETUP_INFO_ACCEPTED:
-                holder.getTvTitle().setText(request.toString());
                 isAccepted = true;
                 content = R.string.meetup_accepted_text;
                 break;
             case MEETUP_INFO_DECLINED:
-                holder.getTvTitle().setText(request.toString());
                 isAccepted = true;
                 content = R.string.meetup_declined_text;
                 break;
         }
 
-        holder.getTvContent().setText(content);
+        holder.getTvMeetupTime().setText(meetupTime);
+        holder.getTvLocation().setText(location);
+        holder.getTvSender().setText(user);
+        holder.getTvDate().setText(date);
+        holder.getTvDescription().setText(content);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
         holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
     }
@@ -141,31 +141,31 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         /**
          * Getters for the views in the list item
          */
-        public TextView getTvTitle() {
-            return binding.notificationTitleTextView;
+        public TextView getTvMeetupTime() {
+            return binding.meetupTimeRequestTextView;
         }
 
-        public TextView getTvContent() {
-            return binding.notificationContentTextView;
+        public TextView getTvLocation() {
+            return binding.meetupLocationRequestTextView;
         }
 
         public TextView getTvSender() {
-            return binding.notificationSenderTextView;
+            return binding.meetupSenderTextView;
+        }
+
+        public TextView getTvDescription() {
+            return binding.meetupSenderDescriptionTextView;
         }
 
         public TextView getTvDate() {
             return binding.notificationDateTextView;
         }
 
-        public ImageView getIvProfilePicture(){
-            return binding.notificationImageView;
-        }
-
-        public Button getBtnAccept(){
+        public ImageView getBtnAccept(){
             return binding.notificationAcceptButton;
         }
 
-        public Button getBtnDecline(){
+        public ImageView getBtnDecline(){
             return binding.notificationDeclineButton;
         }
     }
