@@ -1,4 +1,4 @@
-package com.example.cm.ui.friends;
+package com.example.cm.ui.friends.FriendRequests;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -13,21 +13,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FriendRequestsViewModel extends ViewModel implements
-        FriendRequestRepository.OnFriendRequestRepositoryListener {
+public class FriendRequestsViewModel extends ViewModel {
 
     private final UserRepository userRepository;
-    private final MutableLiveData<List<FriendRequest>> requests = new MutableLiveData<>();
+    private MutableLiveData<List<FriendRequest>> receivedRequests;
+    private MutableLiveData<List<FriendRequest>> sentRequests = new MutableLiveData<>();
     private FriendRequestRepository friendRequestRepository;
 
     public FriendRequestsViewModel() {
         userRepository = new UserRepository();
-        friendRequestRepository = new FriendRequestRepository(this);
-        friendRequestRepository.getFriendRequestsForUser();
+        friendRequestRepository = new FriendRequestRepository();
+        receivedRequests = friendRequestRepository.getFriendRequestsForUser();
     }
 
     public MutableLiveData<List<FriendRequest>> getFriendRequests() {
-        return requests;
+        return receivedRequests;
     }
 
     public void acceptFriendRequest(FriendRequest request) {
@@ -40,27 +40,16 @@ public class FriendRequestsViewModel extends ViewModel implements
     public void declineFriendRequest(FriendRequest request) {
         request.setState(Request.RequestState.REQUEST_DECLINED);
         friendRequestRepository.decline(request);
-        Objects.requireNonNull(requests.getValue()).remove(request);
+        Objects.requireNonNull(receivedRequests.getValue()).remove(request);
     }
 
     public void undoDeclineFriendRequest(FriendRequest request, int position) {
         request.setState(Request.RequestState.REQUEST_PENDING);
         friendRequestRepository.undo(request);
-        Objects.requireNonNull(requests.getValue()).add(position, request);
+        Objects.requireNonNull(receivedRequests.getValue()).add(position, request);
     }
 
     public void refresh() {
-        friendRequestRepository.getFriendRequestsForUser();
-    }
-
-    @Override
-    public void onFriendRequestsRetrieved(List<FriendRequest> requests) {
-        ArrayList<FriendRequest> displayedRequests = new ArrayList<>();
-        for (FriendRequest request : requests) {
-            if (request.getState() != Request.RequestState.REQUEST_DECLINED) {
-                displayedRequests.add(request);
-            }
-        }
-        this.requests.postValue(displayedRequests);
+        receivedRequests = friendRequestRepository.getFriendRequestsForUser();
     }
 }

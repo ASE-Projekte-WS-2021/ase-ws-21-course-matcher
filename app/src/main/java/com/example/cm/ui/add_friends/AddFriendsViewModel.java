@@ -12,22 +12,27 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class AddFriendsViewModel extends ViewModel
-        implements FriendRequestRepository.OnFriendRequestRepositoryListener {
+public class AddFriendsViewModel extends ViewModel {
 
     private final UserRepository userRepository;
     private final FriendRequestRepository requestRepository;
+
     public MutableLiveData<List<User>> users;
-    public MutableLiveData<List<FriendRequest>> sentFriendRequests = new MutableLiveData<>();
     public MutableLiveData<User> currentUser;
+    public MutableLiveData<List<FriendRequest>> receivedFriendRequests;
+    public MutableLiveData<List<FriendRequest>> sentFriendRequests;
+
     public OnRequestSentListener listener;
 
     public AddFriendsViewModel() {
         userRepository = new UserRepository();
-        requestRepository = new FriendRequestRepository(this);
-        requestRepository.getFriendRequestsForUser();
         users = userRepository.getUsersNotFriends();
         currentUser = userRepository.getCurrentUser();
+
+        requestRepository = new FriendRequestRepository();
+        receivedFriendRequests = requestRepository.getFriendRequestsForUser();
+        sentFriendRequests = requestRepository.getFriendRequestsSentBy(userRepository.getCurrentAuthUser().getUid());
+
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -100,7 +105,13 @@ public class AddFriendsViewModel extends ViewModel
         listener.onRequestDeleted();
     }
 
-    private Boolean hasReceivedFriendRequest(List<FriendRequest> requests, String receiverId) {
+    /**
+     * has current user sent an friend request to user with given id
+     * @param requests list of friend requests
+     * @param receiverId id of the friend to check if has received friend request of current
+     * @return
+     */
+    private boolean hasReceivedFriendRequest(List<FriendRequest> requests, String receiverId) {
         for (FriendRequest request : requests) {
             if (request.getReceiverId().equals(receiverId) && request.getSenderId().equals(userRepository.getFirebaseUser().getUid())) {
                 return true;
@@ -109,14 +120,9 @@ public class AddFriendsViewModel extends ViewModel
         return false;
     }
 
-    @Override
-    public void onFriendRequestsRetrieved(List<FriendRequest> requests) {
-        sentFriendRequests.postValue(requests);
-    }
 
     public interface OnRequestSentListener {
         void onRequestAdded();
-
         void onRequestDeleted();
     }
 }

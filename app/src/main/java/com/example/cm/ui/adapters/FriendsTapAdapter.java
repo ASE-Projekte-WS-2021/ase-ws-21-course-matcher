@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.cm.ui.friends.FriendRequestsFragment;
+import com.example.cm.ui.friends.FriendRequests.FriendRequestsFragment;
 import com.example.cm.ui.friends.FriendsListFragment;
 
 public class FriendsTapAdapter extends FragmentStateAdapter {

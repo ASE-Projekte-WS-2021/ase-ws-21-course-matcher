@@ -49,17 +49,8 @@ public class CreateMeetupFragment extends Fragment {
     }
 
     private void initListener() {
-
-        binding.meetupTimeText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onTimePickerDialogClicked();
-            }
-        });
-
-        binding.meetupInfoBtn.setOnClickListener(v -> {
-            checkTime();
-        });
+        binding.meetupTimeText.setOnClickListener(v -> onTimePickerDialogClicked());
+        binding.meetupInfoBtn.setOnClickListener(v -> checkTime());
     }
 
     private void showCurrentTime() {

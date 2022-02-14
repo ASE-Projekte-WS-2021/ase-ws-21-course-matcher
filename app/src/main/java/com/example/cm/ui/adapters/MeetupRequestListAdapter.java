@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
+import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
@@ -30,6 +31,13 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     @SuppressLint("NotifyDataSetChanged")
     public void setRequests(List<MeetupRequest> newRequests){
+        // filter out declined request to not display them again
+        for (MeetupRequest request : newRequests) {
+            if (request.getState() == Request.RequestState.REQUEST_DECLINED) {
+                newRequests.remove(request);
+            }
+        }
+
         if(mRequests == null){
             mRequests = newRequests;
             notifyDataSetChanged();

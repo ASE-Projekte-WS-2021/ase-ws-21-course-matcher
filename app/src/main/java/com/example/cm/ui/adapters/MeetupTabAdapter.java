@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.cm.ui.meetup.MeetupList.MeetupListFragment;
-import com.example.cm.ui.meetup.MeetupRequestsFragment;
+import com.example.cm.ui.meetup.MeetupRequests.MeetupRequestsFragment;
 
 public class MeetupTabAdapter extends FragmentStateAdapter {
 
