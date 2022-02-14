@@ -57,15 +57,12 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
 
         friendsViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
             binding.loadingCircle.setVisibility(View.GONE);
-            Timber.d("Friends initially loading...");
 
             if (friends.isEmpty()) {
-                Timber.d("Friends list is empty");
                 binding.noFriendsWrapper.setVisibility(View.VISIBLE);
                 return;
             }
 
-            Timber.d("Friends list is not null");
             friendsListAdapter.setFriends(friends);
             binding.rvUserList.setVisibility(View.VISIBLE);
             binding.noFriendsWrapper.setVisibility(View.GONE);

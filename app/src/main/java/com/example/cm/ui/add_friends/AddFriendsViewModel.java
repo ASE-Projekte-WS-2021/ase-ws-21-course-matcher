@@ -71,21 +71,6 @@ public class AddFriendsViewModel extends ViewModel
         } else {
             onFriendRequestDoesNotExist(receiverId);
         }
-        /*
-        requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid(), requests -> {
-            if (requests == null) {
-                return;
-            }
-
-            if (hasReceivedFriendRequest(requests, receiverId)) {
-                onFriendRequestExists(receiverId);
-            } else {
-                onFriendRequestDoesNotExist(receiverId);
-            }
-
-            sentFriendRequests.postValue(requests);
-        });
-         */
     }
 
     /**
