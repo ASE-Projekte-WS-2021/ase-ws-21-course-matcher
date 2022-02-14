@@ -18,10 +18,8 @@ import java.util.Objects;
 
 
 public class MeetupInviteSuccessFragment extends Fragment {
-
     private FragmentMeetupInviteSuccessBinding binding;
     private Navigator navigator;
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
