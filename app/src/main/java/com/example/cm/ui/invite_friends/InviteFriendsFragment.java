@@ -56,7 +56,7 @@ public class InviteFriendsFragment extends Fragment
             if (isSuccessful) {
                 navigator.getNavController().navigate(R.id.navigation_meetup_tabs);
             } else {
-                Snackbar.make(binding.getRoot(), "Etwas ist schiefgelaufen, versuche es erneut.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(binding.getRoot(), R.string.meetup_create_error, Snackbar.LENGTH_LONG).show();
             }
         });
     }
