@@ -16,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.databinding.FragmentMeetupRequestsBinding;
 import com.example.cm.ui.adapters.MeetupRequestListAdapter;
+import com.example.cm.utils.Navigator;
 
 public class MeetupRequestsFragment extends Fragment implements
         MeetupRequestListAdapter.OnMeetupRequestAcceptanceListener,
@@ -25,10 +26,12 @@ public class MeetupRequestsFragment extends Fragment implements
     private MeetupRequestListAdapter requestsListAdapter;
     private FragmentMeetupRequestsBinding binding;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Navigator navigator;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupRequestsBinding.inflate(inflater, container, false);
+        navigator = new Navigator(requireActivity());
         initUI();
         initViewModel();
         return binding.getRoot();

@@ -1,10 +1,10 @@
 package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemFriendRequestBinding;
-import com.example.cm.databinding.ItemMeetupRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Iterator;
@@ -25,9 +23,9 @@ import java.util.List;
 public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder>{
 
     private List<FriendRequest> mRequests;
-    private FriendRequestListAdapter.OnFriendRequestAcceptanceListener listener;
+    private OnFriendRequestListener listener;
 
-    public FriendRequestListAdapter(OnFriendRequestAcceptanceListener listener) {
+    public FriendRequestListAdapter(OnFriendRequestListener listener) {
         this.listener = listener;
     }
 
@@ -80,7 +78,8 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         return mRequests.size();
     }
 
-    public interface OnFriendRequestAcceptanceListener {
+    public interface OnFriendRequestListener {
+        void onItemClicked(String id);
         void onAccept(FriendRequest request);
         void onDecline(FriendRequest request);
         void onUndo(FriendRequest request, int position);
@@ -97,8 +96,15 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         }
 
         private void setListeners() {
+            binding.getRoot().setOnClickListener(v -> onItemClicked());
             binding.acceptButton.setOnClickListener(view -> onAccept());
             binding.declineButton.setOnClickListener(view -> onDecline());
+        }
+
+        private void onItemClicked() {
+            int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION || listener == null) return;
+            listener.onItemClicked(mRequests.get(position).getSenderId());
         }
 
         private void onAccept() {

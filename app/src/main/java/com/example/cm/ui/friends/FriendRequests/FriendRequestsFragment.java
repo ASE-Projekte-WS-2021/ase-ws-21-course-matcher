@@ -13,23 +13,27 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.databinding.FragmentFriendRequestsBinding;
 import com.example.cm.ui.adapters.FriendRequestListAdapter;
+import com.example.cm.utils.Navigator;
 
 
 public class FriendRequestsFragment extends Fragment implements
-        FriendRequestListAdapter.OnFriendRequestAcceptanceListener,
+        FriendRequestListAdapter.OnFriendRequestListener,
         SwipeRefreshLayout.OnRefreshListener {
 
     private FriendRequestsViewModel requestsViewModel;
     private FriendRequestListAdapter requestsListAdapter;
     private FragmentFriendRequestsBinding binding;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Navigator navigator;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFriendRequestsBinding.inflate(inflater, container, false);
+        navigator = new Navigator(requireActivity());
         initUI();
         initViewModel();
         return binding.getRoot();
@@ -66,6 +70,13 @@ public class FriendRequestsFragment extends Fragment implements
         requestsViewModel.refresh();
         requestsListAdapter.notifyDataSetChanged();
         new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 100);
+    }
+
+    @Override
+    public void onItemClicked(String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString("userId", id);
+        navigator.getNavController().navigate(R.id.fromFriendsToProfile, bundle);
     }
 
     @Override
