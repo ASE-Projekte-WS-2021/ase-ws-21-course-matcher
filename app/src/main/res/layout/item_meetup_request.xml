@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/notificationLayout"
+    android:id="@+id/meetupRequestLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="@dimen/big_margin"
@@ -10,23 +9,23 @@
     android:paddingEnd="@dimen/big_margin">
 
     <ImageView
-        android:id="@+id/notificationAcceptButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/acceptButton"
+        android:layout_width="@dimen/request_btn_size"
+        android:layout_height="@dimen/request_btn_size"
         android:src="@drawable/accept_btn"
         app:layout_constraintBottom_toBottomOf="@+id/meetupRequestImageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/meetupRequestImageView" />
 
     <ImageView
-        android:id="@+id/notificationDeclineButton"
+        android:id="@+id/declineButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginEnd="@dimen/medium_margin"
         android:src="@drawable/decline_btn"
-        app:layout_constraintBottom_toBottomOf="@+id/notificationAcceptButton"
-        app:layout_constraintEnd_toStartOf="@+id/notificationAcceptButton"
-        app:layout_constraintTop_toTopOf="@+id/notificationAcceptButton" />
+        app:layout_constraintBottom_toBottomOf="@+id/acceptButton"
+        app:layout_constraintEnd_toStartOf="@+id/acceptButton"
+        app:layout_constraintTop_toTopOf="@+id/acceptButton" />
 
     <ImageView
         android:id="@+id/meetupRequestImageView"
@@ -45,12 +44,12 @@
 
         android:layout_marginStart="@dimen/medium_margin"
         app:layout_constraintBottom_toBottomOf="@+id/meetupRequestImageView"
-        app:layout_constraintEnd_toStartOf="@+id/notificationDeclineButton"
+        app:layout_constraintEnd_toStartOf="@+id/declineButton"
         app:layout_constraintStart_toEndOf="@+id/meetupRequestImageView"
         app:layout_constraintTop_toTopOf="@+id/meetupRequestImageView">
 
         <TextView
-            android:id="@+id/meetupTimeRequestTextView"
+            android:id="@+id/meetupTimeTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
@@ -59,7 +58,7 @@
             android:textSize="@dimen/text_size_description" />
 
         <TextView
-            android:id="@+id/meetupLocationRequestTextView"
+            android:id="@+id/locationTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
@@ -97,7 +96,7 @@
         app:layout_constraintTop_toBottomOf="@+id/meetupRequestImageView" />
 
     <TextView
-        android:id="@+id/notificationDateTextView"
+        android:id="@+id/sentDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 

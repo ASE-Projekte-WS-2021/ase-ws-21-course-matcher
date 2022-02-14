@@ -19,4 +19,5 @@
     <dimen name="meetup_card_content_padding">16dp</dimen>
 
     <dimen name="meetup_icon_image_height">55dp</dimen>
+    <dimen name="request_btn_size">40dp</dimen>
 </resources>

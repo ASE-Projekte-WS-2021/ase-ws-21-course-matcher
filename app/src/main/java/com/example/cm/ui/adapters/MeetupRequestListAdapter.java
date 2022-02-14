@@ -57,7 +57,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
         MeetupRequest request = mRequests.get(position);
 
-        String user = "@" + request.getSenderName();
+        String user = "@" + request.getSenderName() + " ";
         String date = request.getCreationTimeAgo();
         String meetupTime = request.getMeetupAt() + " Uhr";
         String location = request.getLocation();
@@ -113,8 +113,8 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
 
         private void setListeners() {
-            binding.notificationAcceptButton.setOnClickListener(view -> onAccept());
-            binding.notificationDeclineButton.setOnClickListener(view -> onDecline());
+            binding.acceptButton.setOnClickListener(view -> onAccept());
+            binding.declineButton.setOnClickListener(view -> onDecline());
         }
 
         private void onAccept() {
@@ -142,11 +142,11 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
          * Getters for the views in the list item
          */
         public TextView getTvMeetupTime() {
-            return binding.meetupTimeRequestTextView;
+            return binding.meetupTimeTextView;
         }
 
         public TextView getTvLocation() {
-            return binding.meetupLocationRequestTextView;
+            return binding.locationTextView;
         }
 
         public TextView getTvSender() {
@@ -158,15 +158,15 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
 
         public TextView getTvDate() {
-            return binding.notificationDateTextView;
+            return binding.sentDateTextView;
         }
 
         public ImageView getBtnAccept(){
-            return binding.notificationAcceptButton;
+            return binding.acceptButton;
         }
 
         public ImageView getBtnDecline(){
-            return binding.notificationDeclineButton;
+            return binding.declineButton;
         }
     }
 }

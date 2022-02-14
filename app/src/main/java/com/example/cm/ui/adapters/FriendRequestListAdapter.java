@@ -19,6 +19,7 @@ import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder>{
@@ -33,9 +34,11 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     @SuppressLint("NotifyDataSetChanged")
     public void setRequests(List<FriendRequest> newRequests){
         // filter out declined request to not display them again
-        for (FriendRequest request : newRequests) {
+        Iterator<FriendRequest> iterator = newRequests.iterator();
+        while (iterator.hasNext()) {
+            FriendRequest request = iterator.next();
             if (request.getState() == Request.RequestState.REQUEST_DECLINED) {
-                newRequests.remove(request);
+                iterator.remove();
             }
         }
 
@@ -58,18 +61,15 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
         FriendRequest request = mRequests.get(position);
 
-        String user = "@" + request.getSenderName();
+        String user = request.getSenderName();
         String date = request.getCreationTimeAgo();
-
-        /*holder.getTvSender().setText(user);
-        holder.getTvDate().setText(date);
-
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
-        holder.getTvTitle().setText(R.string.title_home);
-        holder.getTvContent().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);
+        holder.getTvSender().setText(user);
+        holder.getTvSentDate().setText(date);
+        holder.getTvDescription().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
-        holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);*/
+        holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -97,8 +97,8 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         }
 
         private void setListeners() {
-            binding.notificationAcceptButton.setOnClickListener(view -> onAccept());
-            binding.notificationDeclineButton.setOnClickListener(view -> onDecline());
+            binding.acceptButton.setOnClickListener(view -> onAccept());
+            binding.declineButton.setOnClickListener(view -> onDecline());
         }
 
         private void onAccept() {
@@ -125,32 +125,29 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         /**
          * Getters for the views in the list item
          */
-        /*public TextView getTvTitle() {
-            return binding.notificationTitleTextView;
-        }
 
-        public TextView getTvContent() {
-            return binding.notificationContentTextView;
+        public ImageView getIvProfilePicture(){
+            return binding.senderProfileImageView;
         }
 
         public TextView getTvSender() {
-            return binding.notificationSenderTextView;
+            return binding.senderTextView;
         }
 
-        public TextView getTvDate() {
-            return binding.notificationDateTextView;
+        public TextView getTvDescription() {
+            return binding.descriptionTextView;
         }
 
-        public ImageView getIvProfilePicture(){
-            return binding.notificationImageView;
+        public TextView getTvSentDate() {
+            return binding.sentDateTextView;
         }
 
-        public Button getBtnAccept(){
-            return binding.notificationAcceptButton;
+        public ImageView getBtnAccept(){
+            return binding.acceptButton;
         }
 
-        public Button getBtnDecline(){
-            return binding.notificationDeclineButton;
-        }*/
+        public ImageView getBtnDecline(){
+            return binding.declineButton;
+        }
     }
 }

@@ -2,78 +2,86 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/notificationLayout"
+    android:id="@+id/friendRequestLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/small_margin">
-
-    <Button
-        android:id="@+id/notificationAcceptButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/small_margin"
-        android:text="@string/accept_button_text"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/notificationDeclineButton"
-        app:layout_constraintTop_toTopOf="@+id/notificationDeclineButton" />
-
-    <Button
-        android:id="@+id/notificationDeclineButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/small_margin"
-        android:text="@string/decline_button_text"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meetupLocationRequestTextView" />
+    android:paddingStart="@dimen/big_margin"
+    android:paddingTop="@dimen/medium_margin"
+    android:paddingEnd="@dimen/big_margin">
 
     <ImageView
-        android:id="@+id/meetupRequestImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:contentDescription="@string/profile_picture_decription"
-        android:src="@android:drawable/ic_menu_gallery"
-        app:layout_constraintBottom_toBottomOf="@+id/meetupLocationRequestTextView"
+        android:id="@+id/acceptButton"
+        android:layout_width="@dimen/request_btn_size"
+        android:layout_height="@dimen/request_btn_size"
+        android:src="@drawable/accept_btn"
+        app:layout_constraintBottom_toBottomOf="@+id/senderProfileImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/senderProfileImageView" />
+
+    <ImageView
+        android:id="@+id/declineButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:src="@drawable/decline_btn"
+        app:layout_constraintBottom_toBottomOf="@+id/acceptButton"
+        app:layout_constraintEnd_toStartOf="@+id/acceptButton"
+        app:layout_constraintTop_toTopOf="@+id/acceptButton" />
+
+    <ImageView
+        android:id="@+id/senderProfileImageView"
+        android:layout_width="@dimen/meetup_icon_image_height"
+        android:layout_height="@dimen/meetup_icon_image_height"
+        android:src="@drawable/ic_profile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/meetupLocationRequestTextView"
+        android:id="@+id/senderTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_title"
+        app:layout_constraintBottom_toBottomOf="@+id/senderProfileImageView"
+        app:layout_constraintEnd_toStartOf="@+id/declineButton"
+        app:layout_constraintStart_toEndOf="@+id/senderProfileImageView"
+        app:layout_constraintTop_toTopOf="@+id/senderProfileImageView" />
+
+    <TextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
         android:singleLine="false"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/meetupSenderDescriptionTextView"
-        app:layout_constraintTop_toBottomOf="@+id/meetupTimeRequestTextView" />
+        android:text="test"
+        android:textColor="@color/gray500"
+        android:textSize="@dimen/text_size_description_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/senderProfileImageView" />
 
     <TextView
-        android:id="@+id/meetupTimeRequestTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/meetupRequestImageView"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/meetupSenderDescriptionTextView"
+        android:id="@+id/sentDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/orange_dark"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/meetupRequestImageView"
-        app:layout_constraintTop_toBottomOf="@+id/meetupTimeRequestTextView" />
 
-    <TextView
-        android:id="@+id/notificationDateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/small_margin"
+        android:text="tst"
         android:textAlignment="textEnd"
-        android:textColor="@color/grey_medium"
         android:textStyle="italic"
+        android:textColor="@color/gray400"
+        android:textSize="@dimen/text_size_description_small"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notificationDeclineButton" />
+        app:layout_constraintTop_toTopOf="@+id/descriptionTextView" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/small_margin"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sentDateTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
