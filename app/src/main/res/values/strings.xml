@@ -102,9 +102,9 @@
     <string name="meetup_create_error">Etwas ist schiefgelaufen, versuche es erneut.</string>
 
     <!-- Requests -->
-    <string name="meetup_request_description">" möchte dich einladen."</string>
-    <string name="meetup_accepted_text">" rechnet mit dir."</string>
-    <string name="meetup_declined_text">" kommt leider nicht."</string>
+    <string name="meetup_request_description">möchte dich einladen.</string>
+    <string name="meetup_accepted_text">rechnet mit dir.</string>
+    <string name="meetup_declined_text">kommt leider nicht.</string>
 
     <string name="decline_snackbar_text">Anfrage abgelehnt.</string>
     <string name="undo_snackbar_text">UNDO</string>
