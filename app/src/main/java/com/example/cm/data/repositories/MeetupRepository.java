@@ -18,16 +18,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class MeetupRepository {
+
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
     private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
-    private OnMeetupRepositoryListener listener;
+    private final MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
 
     public MeetupRepository() {
-    }
-
-    public MeetupRepository(OnMeetupRepositoryListener listener) {
-        this.listener = listener;
     }
 
     public MutableLiveData<List<Meetup>> getMeetups() {
@@ -41,12 +38,17 @@ public class MeetupRepository {
         return meetupListMLD;
     }
 
-    public void addMeetup(Meetup meetup) {
-        meetupCollection.add(meetup).addOnCompleteListener(task -> {
-            if(task.isSuccessful() && listener != null){
-                listener.onMeetupAdded(task.getResult().getId());
-            }
+    public MutableLiveData<Meetup> getMeetup(String id){
+        meetupCollection.document(id).get().addOnCompleteListener(task -> {
+            DocumentSnapshot document = task.getResult();
+            meetupMLD.postValue(snapshotToMeetup(Objects.requireNonNull(document)));
         });
+
+        return meetupMLD;
+    }
+
+    public void addMeetup(Meetup meetup) {
+        meetupCollection.add(meetup);
     }
 
     public void addConfirmed(String meetupId, String participantId) {
@@ -87,6 +89,7 @@ public class MeetupRepository {
      */
     private Meetup snapshotToMeetup(DocumentSnapshot document) {
         Meetup meetup = new Meetup();
+        meetup.setId(document.getId());
         meetup.setConfirmedFriends(Utils.castList(document.get("confirmedFriends"), String.class));
         meetup.setRequestingUser(document.getString("requestingUser"));
         meetup.setInvitedFriends(Utils.castList(document.get("invitedFriends"), String.class));
@@ -95,10 +98,5 @@ public class MeetupRepository {
         meetup.setPrivate(document.getBoolean("private"));
         meetup.setDeclinedFriends(Utils.castList(document.get("declinedFriends"), String.class));
         return meetup;
-    }
-
-    public interface OnMeetupRepositoryListener {
-        void onMeetupsRetrieved(List<Meetup> meetups);
-        void onMeetupAdded(String meetupId);
     }
 }

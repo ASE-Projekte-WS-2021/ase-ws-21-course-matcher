@@ -1,5 +1,6 @@
 package com.example.cm.ui.adapters;
 
+import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -7,11 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.ItemMeetupBinding;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
@@ -33,6 +37,14 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     @Override
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
         Meetup meetup = meetups.get(position);
+
+        MaterialCardView meetupCard = holder.getMeetupCard();
+
+        meetupCard.setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.KEY_MEETUP_ID, meetup.getId());
+            Navigation.findNavController(view).navigate(R.id.navigateToMeetupDetailed, bundle);
+        });
 
         holder.getTvLocation().setText(meetup.getLocation());
         holder.getTvTime().setText(meetup.getTime());
@@ -89,6 +101,8 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         public LinearLayout getImagesLayout() {
             return binding.meetupImagesLayout;
         }
+
+        public MaterialCardView getMeetupCard() { return binding.card;}
 
     }
 }

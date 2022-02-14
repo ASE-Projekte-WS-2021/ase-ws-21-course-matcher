@@ -9,20 +9,19 @@ import android.widget.AdapterView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
-import com.example.cm.ui.meetup.CreateMeetupViewModel;
+import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 public class InviteFriendsFragment extends Fragment
         implements AdapterView.OnItemClickListener,
-        InviteFriendsAdapter.OnItemClickListener, CreateMeetupViewModel.OnMeetupCreatedListener {
+        InviteFriendsAdapter.OnItemClickListener {
 
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentInviteFriendsBinding binding;
@@ -59,7 +58,6 @@ public class InviteFriendsFragment extends Fragment
 
     public void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
-        createMeetupViewModel.setListener(this);
 
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
@@ -96,7 +94,7 @@ public class InviteFriendsFragment extends Fragment
 
     private void onSearchButtonClicked() {
         String query = binding.inviteUserSearch.getText().toString();
-        createMeetupViewModel.searchUsers(query);
+        createMeetupViewModel.searchFriends(query);
 
         Utils.hideKeyboard(requireActivity(), binding.getRoot());
     }
@@ -123,10 +121,5 @@ public class InviteFriendsFragment extends Fragment
     @Override
     public void onItemClicked(String id) {
         // do nothing
-    }
-
-    @Override
-    public void onMeetupCreated() {
-        navigator.getNavController().navigate(R.id.navigateToMeetupInviteSuccess);
     }
 }

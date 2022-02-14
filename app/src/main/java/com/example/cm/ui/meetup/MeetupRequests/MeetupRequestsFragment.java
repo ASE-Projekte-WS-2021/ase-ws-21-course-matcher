@@ -1,4 +1,4 @@
-package com.example.cm.ui.friends;
+package com.example.cm.ui.meetup.MeetupRequests;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -13,23 +13,22 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.cm.data.models.FriendRequest;
-import com.example.cm.databinding.FragmentFriendRequestsBinding;
-import com.example.cm.ui.adapters.FriendRequestListAdapter;
+import com.example.cm.data.models.MeetupRequest;
+import com.example.cm.databinding.FragmentMeetupRequestsBinding;
+import com.example.cm.ui.adapters.MeetupRequestListAdapter;
 
-
-public class FriendRequestsFragment extends Fragment implements
-        FriendRequestListAdapter.OnFriendRequestAcceptanceListener,
+public class MeetupRequestsFragment extends Fragment implements
+        MeetupRequestListAdapter.OnMeetupRequestAcceptanceListener,
         SwipeRefreshLayout.OnRefreshListener {
 
-    private FriendRequestsViewModel requestsViewModel;
-    private FriendRequestListAdapter requestsListAdapter;
-    private FragmentFriendRequestsBinding binding;
+    private MeetupRequestsViewModel requestsViewModel;
+    private MeetupRequestListAdapter requestsListAdapter;
+    private FragmentMeetupRequestsBinding binding;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentFriendRequestsBinding.inflate(inflater, container, false);
+        binding = FragmentMeetupRequestsBinding.inflate(inflater, container, false);
         initUI();
         initViewModel();
         return binding.getRoot();
@@ -38,15 +37,15 @@ public class FriendRequestsFragment extends Fragment implements
     private void initUI() {
         swipeRefreshLayout = binding.getRoot();
         swipeRefreshLayout.setOnRefreshListener(this);
-        requestsListAdapter = new FriendRequestListAdapter(this);
+        requestsListAdapter = new MeetupRequestListAdapter(this);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
         binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
     }
 
     private void initViewModel() {
-        requestsViewModel = new ViewModelProvider(this).get(FriendRequestsViewModel.class);
-        requestsViewModel.getFriendRequests().observe(getViewLifecycleOwner(), requests -> {
+        requestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
+        requestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), requests -> {
             if(requests == null){
                 return;
             }
@@ -69,17 +68,17 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     @Override
-    public void onAccept(FriendRequest request) {
-        requestsViewModel.acceptFriendRequest(request);
+    public void onAccept(MeetupRequest request) {
+        requestsViewModel.acceptMeetupRequest(request);
     }
 
     @Override
-    public void onDecline(FriendRequest request) {
-        requestsViewModel.declineFriendRequest(request);
+    public void onDecline(MeetupRequest request) {
+        requestsViewModel.declineMeetupRequest(request);
     }
 
     @Override
-    public void onUndo(FriendRequest request, int position) {
-        requestsViewModel.undoDeclineFriendRequest(request, position);
+    public void onUndo(MeetupRequest request, int position) {
+        requestsViewModel.undoDeclineMeetupRequest(request, position);
     }
 }
