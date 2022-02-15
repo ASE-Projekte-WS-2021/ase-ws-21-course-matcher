@@ -108,5 +108,20 @@ public class MeetupRequestRepository extends Repository {
     public void undo(MeetupRequest request) {
         meetupRequestCollection.document(request.getId()).
                 update("state", Request.RequestState.REQUEST_PENDING);
+
+        meetupRequestCollection.whereEqualTo("meetupId", request.getMeetupId())
+                .whereEqualTo("state", Request.RequestState.REQUEST_ANSWERED)
+                .whereEqualTo("senderId", request.getReceiverId())
+                .whereEqualTo("type", MeetupRequest.MeetupRequestType.MEETUP_INFO_DECLINED)
+                .get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null) {
+                    return;
+                }
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    document.getReference().delete();
+                }
+            }
+        });
     }
 }

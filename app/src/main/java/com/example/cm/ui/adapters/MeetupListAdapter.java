@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.databinding.ItemMeetupBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -25,6 +26,11 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     List<Meetup> meetups;
 
     public MeetupListAdapter(List<Meetup> meetups) {
+        for (int i = 0; i < meetups.size(); i++) {
+            if (meetups.get(i).getPhase() == MeetupPhase.MEETUP_ENDED){
+                meetups.remove(i);
+            }
+        }
         this.meetups = meetups;
     }
 
@@ -54,11 +60,6 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
                 break;
             case MEETUP_ACTIVE:
                 holder.getTvTime().setText(meetupCard.getContext().getString(R.string.meetup_active_text, meetup.getTimeDisplayed()));
-                break;
-            case MEETUP_ENDED:
-                holder.getTvTime().setText(R.string.meetup_ended_text);
-                int greyedColor = meetupCard.getContext().getResources().getColor(R.color.outgreyed);
-                meetupCard.setCardForegroundColor(ColorStateList.valueOf(greyedColor));
                 break;
         }
 

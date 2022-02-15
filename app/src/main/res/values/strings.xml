@@ -112,7 +112,7 @@
     <string name="friend_request_text">möchte mit dir befreundet sein.</string>
     <string name="friend_accepted_text">ist jetzt auf deiner Freundesliste.</string>
 
-    <string name="meetup_active_text">Aktiv seit %1$s</string>
+    <string name="meetup_active_text">Seit %1$s</string>
     <string name="meetup_ended_text">Beendet</string>
 
 </resources>

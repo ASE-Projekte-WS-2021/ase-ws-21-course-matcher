@@ -2,6 +2,7 @@ package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     @Override
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
+        Context context = holder.binding.getRoot().getContext();
         MeetupRequest request = mRequests.get(position);
 
         String user = String.format("@%s ", request.getSenderName());
@@ -70,11 +72,19 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
                 holder.getTvMeetupTime().setText(request.getTimeDisplayed());
                 break;
             case MEETUP_ACTIVE:
-                Context context = holder.binding.getRoot().getContext();
                 holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getTimeDisplayed()));
                 break;
             case MEETUP_ENDED:
+                int color = context.getResources().getColor(R.color.outgreyed);
                 holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
+
+                holder.getTvMeetupTime().setTextColor(color);
+                holder.getTvLocation().setTextColor(color);
+                holder.getTvSender().setTextColor(color);
+                holder.getTvDescription().setTextColor(color);
+                holder.getBtnAccept().setImageResource(R.drawable.accept_btn_disabled);
+                holder.getBtnDecline().setImageResource(R.drawable.decline_btn_disabled);
+
                 break;
         }
 

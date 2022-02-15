@@ -20,4 +20,6 @@
 
     <dimen name="meetup_icon_image_height">55dp</dimen>
     <dimen name="request_btn_size">40dp</dimen>
+    <dimen name="medium_margin_negative">-8dp</dimen>
+    <dimen name="text_size_description_medium">16sp</dimen>
 </resources>
