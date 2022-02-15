@@ -106,10 +106,9 @@ public class CreateMeetupViewModel extends ViewModel {
                 meetupId,
                 userRepository.getFirebaseUser().getUid(),
                 meetupLocation.getValue(),
-                meetupTime.getValue(),
+                meetupTimestamp.getValue(),
                 Boolean.TRUE.equals(meetupIsPrivate.getValue()),
-                selectedUsers.getValue(),
-                meetupTimestamp.getValue());
+                selectedUsers.getValue());
 
         boolean isSuccessful = meetupRepository.addMeetup(meetupToAdd);
 
@@ -131,7 +130,7 @@ public class CreateMeetupViewModel extends ViewModel {
                         currentUser.getValue().getFullName(),
                         invitedFriendId,
                         meetupLocation.getValue(),
-                        meetupTime.getValue(),
+                        meetupTimestamp.getValue(),
                         MEETUP_REQUEST);
                 meetupRequestRepository.addMeetupRequest(request);
             }

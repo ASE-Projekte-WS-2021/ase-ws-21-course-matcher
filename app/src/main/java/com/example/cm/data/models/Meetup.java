@@ -1,41 +1,44 @@
 package com.example.cm.data.models;
 
-import android.util.Log;
+import android.annotation.SuppressLint;
 
 import com.google.firebase.firestore.DocumentId;
+import com.google.firebase.firestore.Exclude;
 
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Meetup {
 
+    @DocumentId
+    private String id;
     private String requestingUser;
     private String location;
-    private String time;
+    private Date timestamp;
     private boolean isPrivate;
     private List<String> invitedFriends;
     private List<String> confirmedFriends;
-
     private List<String> declinedFriends;
-    @DocumentId
-    private String id;
-    private Date timestamp;
+
+    private final Calendar calendarNow = GregorianCalendar.getInstance();
+    private final Calendar calendarMeetup = GregorianCalendar.getInstance();
 
     public Meetup() {
     }
 
-    public Meetup(String id, String requestingUser, String location, String time, boolean isPrivate, List<String> invitedFriends, Date timestamp) {
+    public Meetup(String id, String requestingUser, String location, Date timestamp, boolean isPrivate, List<String> invitedFriends) {
         this.id = id;
         this.requestingUser = requestingUser;
         this.location = location;
-        this.time = time;
+        this.timestamp = timestamp;
+        calendarMeetup.setTime(timestamp);
         this.isPrivate = isPrivate;
         this.invitedFriends = invitedFriends;
-        Log.e("USER", requestingUser);
         confirmedFriends = Collections.singletonList(requestingUser);
-        this.timestamp = new Date();
     }
 
     public String getId() {
@@ -66,6 +69,31 @@ public class Meetup {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+        calendarMeetup.setTime(timestamp);
+    }
+
+    @SuppressLint("DefaultLocale")
+    @Exclude
+    public String getTimeDisplayed(){
+        return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
+    }
+
+    @Exclude
+    public MeetupPhase getPhase() {
+        Date now = new Date();
+        calendarNow.setTime(now);
+        // is today?
+        if (calendarNow.get(Calendar.YEAR) == calendarMeetup.get(Calendar.YEAR)
+                && calendarNow.get(Calendar.MONTH) == calendarMeetup.get(Calendar.MONTH)
+                && calendarNow.get(Calendar.DAY_OF_MONTH) == calendarMeetup.get(Calendar.DAY_OF_MONTH)) {
+            // has started?
+            if (TimeUnit.MILLISECONDS.toSeconds(now.getTime() - timestamp.getTime()) >= 0) {
+                return MeetupPhase.MEETUP_ACTIVE;
+            } else {
+                return MeetupPhase.MEETUP_UPCOMING;
+            }
+        }
+        return MeetupPhase.MEETUP_ENDED;
     }
 
     public String getLocation() {
@@ -74,14 +102,6 @@ public class Meetup {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public boolean isPrivate() {

@@ -102,7 +102,7 @@
     <string name="meetup_create_error">Etwas ist schiefgelaufen, versuche es erneut.</string>
 
     <!-- Requests -->
-    <string name="meetup_request_description">möchte dich einladen.</string>
+    <string name="meetup_request_description">lädt dich ein.</string>
     <string name="meetup_accepted_text">rechnet mit dir.</string>
     <string name="meetup_declined_text">kommt leider nicht.</string>
 
@@ -111,6 +111,8 @@
 
     <string name="friend_request_text">möchte mit dir befreundet sein.</string>
     <string name="friend_accepted_text">ist jetzt auf deiner Freundesliste.</string>
-    <string name="decline_button_text">no</string>
-    <string name="accept_button_text">ja</string>
+
+    <string name="meetup_active_text">Aktiv seit %1$s</string>
+    <string name="meetup_ended_text">Beendet</string>
+
 </resources>

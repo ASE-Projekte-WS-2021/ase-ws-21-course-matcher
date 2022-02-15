@@ -39,7 +39,8 @@ public class MeetupRequestRepository extends Repository {
         }
 
         String userId = auth.getCurrentUser().getUid();
-        meetupRequestCollection.whereEqualTo("receiverId", userId).orderBy("createdAt", Query.Direction.DESCENDING)
+        meetupRequestCollection.whereEqualTo("receiverId", userId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<MeetupRequest> requests = snapshotToMeetupRequestList(Objects.requireNonNull(task.getResult()));
@@ -74,7 +75,7 @@ public class MeetupRequestRepository extends Repository {
         request.setState(document.get("state", Request.RequestState.class));
         request.setMeetupId(document.getString("meetupId"));
         request.setLocation(document.getString("location"));
-        request.setMeetupAt(document.getString("meetupAt"));
+        request.setMeetupAt(document.getDate("meetupAt"));
         return request;
     }
 

@@ -1,5 +1,6 @@
 package com.example.cm.ui.adapters;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -47,7 +48,19 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         });
 
         holder.getTvLocation().setText(meetup.getLocation());
-        holder.getTvTime().setText(meetup.getTime());
+        switch (meetup.getPhase()){
+            case MEETUP_UPCOMING:
+                holder.getTvTime().setText(meetup.getTimeDisplayed());
+                break;
+            case MEETUP_ACTIVE:
+                holder.getTvTime().setText(meetupCard.getContext().getString(R.string.meetup_active_text, meetup.getTimeDisplayed()));
+                break;
+            case MEETUP_ENDED:
+                holder.getTvTime().setText(R.string.meetup_ended_text);
+                int greyedColor = meetupCard.getContext().getResources().getColor(R.color.outgreyed);
+                meetupCard.setCardForegroundColor(ColorStateList.valueOf(greyedColor));
+                break;
+        }
 
         List<String> confirmedFriends = meetup.getConfirmedFriends();
         List<String> invitedFriends = meetup.getInvitedFriends();

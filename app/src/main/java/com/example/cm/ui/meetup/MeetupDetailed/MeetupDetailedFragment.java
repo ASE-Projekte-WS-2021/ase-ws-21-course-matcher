@@ -1,6 +1,7 @@
 package com.example.cm.ui.meetup.MeetupDetailed;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.cm.Constants;
+import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.google.android.material.tabs.TabLayout;
@@ -38,9 +40,7 @@ public class MeetupDetailedFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupDetailedBinding.inflate(inflater, container, false);
-
         initUI();
-
         return binding.getRoot();
     }
 
@@ -67,7 +67,17 @@ public class MeetupDetailedFragment extends Fragment {
             tabLayoutMediator.attach();
 
             binding.meetupDetailedLocation.setText(meetup.getLocation());
-            binding.meetupDetailedTime.setText(meetup.getTime());
+            switch (meetup.getPhase()){
+                case MEETUP_UPCOMING:
+                    binding.meetupDetailedLocation.setText(meetup.getTimeDisplayed());
+                    break;
+                case MEETUP_ACTIVE:
+                    binding.meetupDetailedLocation.setText(getString(R.string.meetup_active_text, meetup.getTimeDisplayed()));
+                    break;
+                case MEETUP_ENDED:
+                    binding.meetupDetailedLocation.setText(R.string.meetup_ended_text);
+                    break;
+            }
         });
 
     }

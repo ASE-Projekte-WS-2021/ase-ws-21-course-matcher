@@ -1,10 +1,10 @@
 package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
-import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
@@ -60,12 +59,24 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
         MeetupRequest request = mRequests.get(position);
 
-        String user = "@" + request.getSenderName() + " ";
+        String user = String.format("@%s ", request.getSenderName());
         String date = request.getCreationTimeAgo();
-        String meetupTime = request.getMeetupAt() + " Uhr";
         String location = request.getLocation();
 
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
+
+        switch (request.getPhase()){
+            case MEETUP_UPCOMING:
+                holder.getTvMeetupTime().setText(request.getTimeDisplayed());
+                break;
+            case MEETUP_ACTIVE:
+                Context context = holder.binding.getRoot().getContext();
+                holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getTimeDisplayed()));
+                break;
+            case MEETUP_ENDED:
+                holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
+                break;
+        }
 
         int content = 0;
         switch (request.getType()) {
@@ -82,7 +93,6 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
                 break;
         }
 
-        holder.getTvMeetupTime().setText(meetupTime);
         holder.getTvLocation().setText(location);
         holder.getTvSender().setText(user);
         holder.getTvDate().setText(date);
