@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -68,7 +69,7 @@ public class FriendRequestRepository extends Repository {
         }
 
         String userId = auth.getCurrentUser().getUid();
-        friendRequestCollection.whereEqualTo("receiverId", userId)
+        friendRequestCollection.whereEqualTo("receiverId", userId).orderBy("createdAt", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<FriendRequest> requests = snapshotToFriendRequestList(Objects.requireNonNull(task.getResult()));
