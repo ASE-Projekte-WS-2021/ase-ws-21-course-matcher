@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.databinding.FragmentFriendRequestsBinding;
@@ -75,7 +76,7 @@ public class FriendRequestsFragment extends Fragment implements
     @Override
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
-        bundle.putString("userId", id);
+        bundle.putString(Constants.KEY_USER_ID, id);
         navigator.getNavController().navigate(R.id.fromFriendsToProfile, bundle);
     }
 

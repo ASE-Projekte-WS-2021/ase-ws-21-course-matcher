@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cm.Constants;
 import com.example.cm.databinding.FragmentProfileBinding;
 import com.example.cm.utils.Navigator;
 
@@ -45,8 +46,8 @@ public class ProfileFragment extends Fragment {
             return;
         }
 
-        if (bundle.containsKey("userId")) {
-            String profileId = bundle.getString("userId");
+        if (bundle.containsKey(Constants.KEY_USER_ID)) {
+            String profileId = bundle.getString(Constants.KEY_USER_ID);
             profileViewModel.getUserById(profileId);
         }
     }

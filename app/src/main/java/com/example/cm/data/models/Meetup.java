@@ -1,7 +1,10 @@
 package com.example.cm.data.models;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.DocumentId;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +33,7 @@ public class Meetup {
         this.time = time;
         this.isPrivate = isPrivate;
         this.invitedFriends = invitedFriends;
+        Log.e("USER", requestingUser);
         confirmedFriends = Collections.singletonList(requestingUser);
         this.timestamp = new Date();
     }
@@ -48,7 +52,10 @@ public class Meetup {
 
     public void setRequestingUser(String requestingUser) {
         this.requestingUser = requestingUser;
-        if(!confirmedFriends.contains(requestingUser)){
+        if (confirmedFriends == null) {
+            confirmedFriends = Collections.singletonList(requestingUser);
+        }
+        if (!confirmedFriends.contains(requestingUser)){
             confirmedFriends.add(requestingUser);
         }
     }

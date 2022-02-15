@@ -100,6 +100,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     }
 
     public interface OnMeetupRequestAcceptanceListener {
+        void onItemClicked(String id);
         void onAccept(MeetupRequest request);
         void onDecline(MeetupRequest request);
         void onUndo(MeetupRequest request, int position);
@@ -116,8 +117,15 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
 
         private void setListeners() {
+            binding.getRoot().setOnClickListener(view -> onItemClicked());
             binding.acceptButton.setOnClickListener(view -> onAccept());
             binding.declineButton.setOnClickListener(view -> onDecline());
+        }
+
+        private void onItemClicked() {
+            int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION || listener == null) return;
+            listener.onItemClicked(mRequests.get(position).getMeetupId());
         }
 
         private void onAccept() {

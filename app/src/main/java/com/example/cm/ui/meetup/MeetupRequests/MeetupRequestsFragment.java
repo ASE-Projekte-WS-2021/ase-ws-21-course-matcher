@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.cm.Constants;
+import com.example.cm.R;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.databinding.FragmentMeetupRequestsBinding;
 import com.example.cm.ui.adapters.MeetupRequestListAdapter;
@@ -68,6 +70,13 @@ public class MeetupRequestsFragment extends Fragment implements
         requestsViewModel.refresh();
         requestsListAdapter.notifyDataSetChanged();
         new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 100);
+    }
+
+    @Override
+    public void onItemClicked(String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_MEETUP_ID, id);
+        navigator.getNavController().navigate(R.id.navigateToMeetupDetailed, bundle);
     }
 
     @Override

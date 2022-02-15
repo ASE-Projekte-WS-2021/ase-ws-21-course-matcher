@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -39,9 +41,13 @@ public class MeetupRepository {
     }
 
     public MutableLiveData<Meetup> getMeetup(String id) {
+        Log.e("ID", id);
         meetupCollection.document(id).get().addOnCompleteListener(task -> {
-            DocumentSnapshot document = task.getResult();
-            meetupMLD.postValue(snapshotToMeetup(Objects.requireNonNull(document)));
+            if (task.isSuccessful()){
+                DocumentSnapshot document = task.getResult();
+                Log.e("GET", document+"");
+                meetupMLD.postValue(snapshotToMeetup(Objects.requireNonNull(document)));
+            }
         });
 
         return meetupMLD;
@@ -93,6 +99,7 @@ public class MeetupRepository {
      * @return Returns a meetup
      */
     private Meetup snapshotToMeetup(DocumentSnapshot document) {
+        Log.e("TAG", document+"");
         Meetup meetup = new Meetup();
         meetup.setId(document.getId());
         meetup.setConfirmedFriends(Utils.castList(document.get("confirmedFriends"), String.class));
