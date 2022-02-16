@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -19,6 +20,7 @@ import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentFriendRequestsBinding;
 import com.example.cm.ui.adapters.FriendRequestListAdapter;
+import com.example.cm.ui.adapters.SwipeToDelete;
 import com.example.cm.utils.Navigator;
 
 
@@ -48,6 +50,8 @@ public class FriendRequestsFragment extends Fragment implements
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
         binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
+        itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
     }
 
     private void initViewModel() {
