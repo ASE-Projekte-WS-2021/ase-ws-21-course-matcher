@@ -8,6 +8,7 @@ import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
+import com.example.cm.data.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -89,6 +90,24 @@ public class MeetupRequestRepository extends Repository {
     }
 
     /**
+     * Delete a Meetup Request from collection
+     *
+     * @param requestId Id of the request
+     */
+    public void deleteFriendRequest(String requestId) {
+        meetupRequestCollection.document(requestId)
+                .get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null) {
+                    return;
+                }
+                task.getResult().getReference().delete();
+
+            }
+        });
+    }
+
+    /**
      * Set state of request
      *
      * @param request to accept/decline/undo decline
@@ -105,7 +124,7 @@ public class MeetupRequestRepository extends Repository {
                 update("state", Request.RequestState.REQUEST_DECLINED);
     }
 
-    public void undo(MeetupRequest request) {
+    public void undoDecline(MeetupRequest request) {
         meetupRequestCollection.document(request.getId()).
                 update("state", Request.RequestState.REQUEST_PENDING);
 
@@ -123,5 +142,10 @@ public class MeetupRequestRepository extends Repository {
                 }
             }
         });
+    }
+
+    public void undoDelete(MeetupRequest request) {
+        meetupRequestCollection.document(request.getId()).
+                update("state", Request.RequestState.REQUEST_PENDING);
     }
 }

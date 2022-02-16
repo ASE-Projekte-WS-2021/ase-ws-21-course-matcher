@@ -114,5 +114,6 @@
 
     <string name="meetup_active_text">Seit %1$s</string>
     <string name="meetup_ended_text">Beendet</string>
+    <string name="delete_snackbar_text">Anfrage gelöscht.</string>
 
 </resources>

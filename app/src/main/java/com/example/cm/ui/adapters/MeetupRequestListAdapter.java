@@ -2,7 +2,6 @@ package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.opengl.Visibility;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +22,11 @@ import java.util.List;
 
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
+    private ViewGroup parent;
     private List<MeetupRequest> mRequests;
-    private OnMeetupRequestAcceptanceListener listener;
+    private final OnMeetupRequestListener listener;
 
-    public MeetupRequestListAdapter(OnMeetupRequestAcceptanceListener listener) {
+    public MeetupRequestListAdapter(OnMeetupRequestListener listener) {
         this.listener = listener;
     }
 
@@ -49,9 +49,26 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         mRequests = newRequests;
     }
 
+    public void deleteItem(int position) {
+        MeetupRequest request = mRequests.get(position);
+        Request.RequestState previousState = request.getState();
+        mRequests.remove(position);
+        notifyItemRemoved(position);
+        listener.onItemDeleted(request);
+        Snackbar snackbar = Snackbar.make(parent, R.string.delete_snackbar_text, Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.undo_snackbar_text, view -> onUndoDelete(request, position, previousState));
+        snackbar.show();
+    }
+
+    private void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState){
+        listener.onUndoDelete(request, position, previousState);
+        notifyItemInserted(position);
+    }
+
     @NonNull
     @Override
     public MeetupRequestListAdapter.MeetupRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        this.parent = parent;
         ItemMeetupRequestBinding binding = ItemMeetupRequestBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new MeetupRequestListAdapter.MeetupRequestViewHolder(binding);
     }
@@ -84,6 +101,8 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
                 holder.getTvDescription().setTextColor(color);
                 holder.getBtnAccept().setImageResource(R.drawable.accept_btn_disabled);
                 holder.getBtnDecline().setImageResource(R.drawable.decline_btn_disabled);
+                holder.getBtnAccept().setOnClickListener(null);
+                holder.getBtnDecline().setOnClickListener(null);
 
                 break;
         }
@@ -119,11 +138,13 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         return mRequests.size();
     }
 
-    public interface OnMeetupRequestAcceptanceListener {
+    public interface OnMeetupRequestListener {
         void onItemClicked(String id);
+        void onItemDeleted(MeetupRequest request);
         void onAccept(MeetupRequest request);
         void onDecline(MeetupRequest request);
-        void onUndo(MeetupRequest request, int position);
+        void onUndoDecline(MeetupRequest request, int position);
+        void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState);
     }
 
     public class MeetupRequestViewHolder extends RecyclerView.ViewHolder {
@@ -155,7 +176,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
 
         private void onUndo(MeetupRequest request, int position){
-            listener.onUndo(request, position);
+            listener.onUndoDecline(request, position);
             notifyItemInserted(position);
         }
 
@@ -201,3 +222,5 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
     }
 }
+
+

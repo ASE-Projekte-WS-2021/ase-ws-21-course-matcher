@@ -2,6 +2,7 @@ package com.example.cm.ui.meetup.MeetupRequests;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_ACCEPTED;
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_DECLINED;
+import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -36,6 +37,11 @@ public class MeetupRequestsViewModel extends ViewModel {
 
     public MutableLiveData<List<MeetupRequest>> getMeetupRequests() {
         return requests;
+    }
+
+
+    public void deleteMeetupRequest(MeetupRequest request) {
+        meetupRequestRepository.decline(request);
     }
 
     public void acceptMeetupRequest(MeetupRequest request) {
@@ -83,7 +89,13 @@ public class MeetupRequestsViewModel extends ViewModel {
     public void undoDeclineMeetupRequest(MeetupRequest request, int position) {
         request.setState(Request.RequestState.REQUEST_PENDING);
         meetupRepository.addPending(request.getMeetupId(), request.getReceiverId());
-        meetupRequestRepository.undo(request);
+        meetupRequestRepository.undoDecline(request);
+        Objects.requireNonNull(requests.getValue()).add(position, request);
+    }
+
+    public void undoDeleteMeetupRequest(MeetupRequest request, int position, Request.RequestState previousState) {
+        request.setState(previousState);
+        meetupRequestRepository.undoDelete(request);
         Objects.requireNonNull(requests.getValue()).add(position, request);
     }
 

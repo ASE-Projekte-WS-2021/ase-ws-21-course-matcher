@@ -16,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
+import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentFriendRequestsBinding;
 import com.example.cm.ui.adapters.FriendRequestListAdapter;
 import com.example.cm.utils.Navigator;
@@ -81,6 +82,11 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     @Override
+    public void onItemDeleted(FriendRequest request) {
+        requestsViewModel.deleteFriendRequest(request);
+    }
+
+    @Override
     public void onAccept(FriendRequest request) {
         requestsViewModel.acceptFriendRequest(request);
     }
@@ -91,7 +97,8 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     @Override
-    public void onUndo(FriendRequest request, int position) {
-        requestsViewModel.undoDeclineFriendRequest(request, position);
+    public void onUndo(FriendRequest request, int position, Request.RequestState previousState) {
+        requestsViewModel.undoFriendRequest(request, position, previousState);
     }
+
 }

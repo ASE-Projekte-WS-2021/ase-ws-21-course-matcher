@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
+import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -22,8 +23,9 @@ import java.util.List;
 
 public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder>{
 
+    private ViewGroup parent;
     private List<FriendRequest> mRequests;
-    private OnFriendRequestListener listener;
+    private final OnFriendRequestListener listener;
 
     public FriendRequestListAdapter(OnFriendRequestListener listener) {
         this.listener = listener;
@@ -48,9 +50,26 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         mRequests = newRequests;
     }
 
+    public void deleteItem(int position) {
+        FriendRequest request = mRequests.get(position);
+        Request.RequestState previousState = request.getState();
+        mRequests.remove(position);
+        notifyItemRemoved(position);
+        listener.onItemDeleted(request);
+        Snackbar snackbar = Snackbar.make(parent, R.string.delete_snackbar_text, Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.undo_snackbar_text, view -> onUndoDelete(request, position, previousState));
+        snackbar.show();
+    }
+
+    private void onUndoDelete(FriendRequest request, int position, Request.RequestState previousState){
+        listener.onUndo(request, position, previousState);
+        notifyItemInserted(position);
+    }
+
     @NonNull
     @Override
     public FriendRequestListAdapter.FriendRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        this.parent = parent;
         ItemFriendRequestBinding binding = ItemFriendRequestBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new FriendRequestListAdapter.FriendRequestViewHolder(binding);
     }
@@ -80,9 +99,10 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     public interface OnFriendRequestListener {
         void onItemClicked(String id);
+        void onItemDeleted(FriendRequest request);
         void onAccept(FriendRequest request);
         void onDecline(FriendRequest request);
-        void onUndo(FriendRequest request, int position);
+        void onUndo(FriendRequest request, int position, Request.RequestState previousState);
     }
 
     public class FriendRequestViewHolder extends RecyclerView.ViewHolder {
@@ -113,18 +133,19 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             notifyItemChanged(getAdapterPosition());
         }
 
-        private void onUndo(FriendRequest request, int position){
-            listener.onUndo(request, position);
+        private void onUndo(FriendRequest request, int position, Request.RequestState previousState){
+            listener.onUndo(request, position, previousState);
             notifyItemInserted(position);
         }
 
         private void onDecline(){
             int position = getAdapterPosition();
             FriendRequest request = mRequests.get(position);
+            Request.RequestState previousState = request.getState();
             listener.onDecline(request);
             notifyItemRemoved(position);
             Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.decline_snackbar_text, Snackbar.LENGTH_LONG);
-            snackbar.setAction(R.string.undo_snackbar_text, view -> onUndo(request, position));
+            snackbar.setAction(R.string.undo_snackbar_text, view -> onUndo(request, position, previousState));
             snackbar.show();
         }
 
