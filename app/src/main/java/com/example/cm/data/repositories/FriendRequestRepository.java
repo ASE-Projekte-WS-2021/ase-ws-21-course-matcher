@@ -140,7 +140,7 @@ public class FriendRequestRepository extends Repository {
 
     public void undo(FriendRequest request) {
         friendRequestCollection.document(request.getId()).
-                update("state", Request.RequestState.REQUEST_PENDING);
+                update("state", request.getState());
     }
 
 

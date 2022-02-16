@@ -146,6 +146,6 @@ public class MeetupRequestRepository extends Repository {
 
     public void undoDelete(MeetupRequest request) {
         meetupRequestCollection.document(request.getId()).
-                update("state", Request.RequestState.REQUEST_PENDING);
+                update("state", request.getState());
     }
 }

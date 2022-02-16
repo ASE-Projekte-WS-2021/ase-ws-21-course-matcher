@@ -62,6 +62,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     private void onUndoDelete(FriendRequest request, int position, Request.RequestState previousState){
+        Log.e("STATE", previousState+"");
         listener.onUndo(request, position, previousState);
         notifyItemInserted(position);
     }
