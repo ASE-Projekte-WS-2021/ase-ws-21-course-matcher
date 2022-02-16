@@ -4,10 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.cm.R;
-import com.example.cm.data.models.MeetupRequest;
-import com.google.android.material.snackbar.Snackbar;
-
 public class SwipeToDelete extends ItemTouchHelper.SimpleCallback {
 
     private RecyclerView.Adapter adapter;

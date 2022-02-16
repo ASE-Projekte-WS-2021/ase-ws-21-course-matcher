@@ -4,13 +4,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
-import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 

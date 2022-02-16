@@ -1,14 +1,10 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
-import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
-import com.example.cm.data.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -25,7 +21,7 @@ public class MeetupRequestRepository extends Repository {
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());;
+    private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());
 
     private MutableLiveData<List<MeetupRequest>> mutableReceivedRequestList = new MutableLiveData<>();
 

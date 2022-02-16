@@ -1,7 +1,6 @@
 package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -62,7 +60,6 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     private void onUndoDelete(FriendRequest request, int position, Request.RequestState previousState){
-        Log.e("STATE", previousState+"");
         listener.onUndo(request, position, previousState);
         notifyItemInserted(position);
     }

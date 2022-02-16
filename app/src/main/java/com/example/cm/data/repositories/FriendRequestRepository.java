@@ -4,9 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
-import com.example.cm.data.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,10 +21,10 @@ public class FriendRequestRepository extends Repository {
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private CollectionReference friendRequestCollection = firestore.collection(CollectionConfig.FRIEND_REQUESTS.toString());;
+    private final CollectionReference friendRequestCollection = firestore.collection(CollectionConfig.FRIEND_REQUESTS.toString());
 
-    private MutableLiveData<List<FriendRequest>> mutableReceivedRequestList = new MutableLiveData<>();
-    private MutableLiveData<List<FriendRequest>> mutableSentRequestList = new MutableLiveData<>();
+    private final MutableLiveData<List<FriendRequest>> mutableReceivedRequestList = new MutableLiveData<>();
+    private final MutableLiveData<List<FriendRequest>> mutableSentRequestList = new MutableLiveData<>();
 
     public FriendRequestRepository() {}
 
@@ -141,10 +139,5 @@ public class FriendRequestRepository extends Repository {
     public void undo(FriendRequest request) {
         friendRequestCollection.document(request.getId()).
                 update("state", request.getState());
-    }
-
-
-    public interface OnFriendRequestRepositoryListener {
-        void onFriendRequestsRetrieved(List<FriendRequest> requests);
     }
 }

@@ -2,7 +2,6 @@ package com.example.cm.ui.meetup.MeetupRequests;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_ACCEPTED;
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_DECLINED;
-import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -20,10 +19,10 @@ import java.util.Objects;
 public class MeetupRequestsViewModel extends ViewModel {
 
     private final UserRepository userRepository;
-    private MutableLiveData<User> currentUser;
+    private final MutableLiveData<User> currentUser;
 
     private final MeetupRepository meetupRepository;
-    private MeetupRequestRepository meetupRequestRepository;
+    private final MeetupRequestRepository meetupRequestRepository;
     private MutableLiveData<List<MeetupRequest>> requests;
 
     public MeetupRequestsViewModel() {

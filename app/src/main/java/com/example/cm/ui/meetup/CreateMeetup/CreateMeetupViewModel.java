@@ -26,7 +26,6 @@ public class CreateMeetupViewModel extends ViewModel {
     private final MutableLiveData<User> currentUser;
     private final MeetupRepository meetupRepository;
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
-    private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
