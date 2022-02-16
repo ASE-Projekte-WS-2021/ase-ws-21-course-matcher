@@ -71,10 +71,6 @@ public class CreateMeetupViewModel extends ViewModel {
         return meetupLocation;
     }
 
-    public LiveData<String> getMeetupTime() {
-        return meetupTime;
-    }
-
     public LiveData<Boolean> getMeetupIsPrivate() {
         return meetupIsPrivate;
     }
@@ -89,10 +85,6 @@ public class CreateMeetupViewModel extends ViewModel {
 
     public void setLocation(String location) {
         meetupLocation.postValue(location);
-    }
-
-    public void setTime(String time) {
-        meetupTime.postValue(time);
     }
 
     public void setIsPrivate(Boolean isPrivate) {
