@@ -16,6 +16,7 @@ public class Meetup {
 
     @DocumentId
     private String id;
+
     private String requestingUser;
     private String location;
     private Date timestamp;
@@ -41,10 +42,12 @@ public class Meetup {
         confirmedFriends = Collections.singletonList(requestingUser);
     }
 
+    @DocumentId
     public String getId() {
         return id;
     }
 
+    @DocumentId
     public void setId(String id) {
         this.id = id;
     }
@@ -74,7 +77,7 @@ public class Meetup {
 
     @SuppressLint("DefaultLocale")
     @Exclude
-    public String getTimeDisplayed(){
+    public String getFormattedTime(){
         return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
     }
 

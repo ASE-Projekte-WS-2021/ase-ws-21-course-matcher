@@ -1,7 +1,6 @@
 package com.example.cm.ui.meetup.MeetupDetailed;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,10 +68,10 @@ public class MeetupDetailedFragment extends Fragment {
             binding.meetupDetailedLocation.setText(meetup.getLocation());
             switch (meetup.getPhase()){
                 case MEETUP_UPCOMING:
-                    binding.meetupDetailedLocation.setText(meetup.getTimeDisplayed());
+                    binding.meetupDetailedLocation.setText(meetup.getFormattedTime());
                     break;
                 case MEETUP_ACTIVE:
-                    binding.meetupDetailedLocation.setText(getString(R.string.meetup_active_text, meetup.getTimeDisplayed()));
+                    binding.meetupDetailedLocation.setText(getString(R.string.meetup_active_text, meetup.getFormattedTime()));
                     break;
                 case MEETUP_ENDED:
                     binding.meetupDetailedLocation.setText(R.string.meetup_ended_text);

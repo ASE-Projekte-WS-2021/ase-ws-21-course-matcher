@@ -1,5 +1,7 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
+import android.util.Log;
+
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
 import androidx.lifecycle.LiveData;
@@ -93,6 +95,7 @@ public class CreateMeetupViewModel extends ViewModel {
     public boolean createMeetup() {
         Objects.requireNonNull(selectedUsers.getValue());
         String meetupId = UUID.randomUUID().toString();
+        Log.e("MET", meetupId);
         Meetup meetupToAdd = new Meetup(
                 meetupId,
                 userRepository.getFirebaseUser().getUid(),
@@ -115,6 +118,7 @@ public class CreateMeetupViewModel extends ViewModel {
         // Create notifications for each invited user
         if (selectedUsers.getValue() != null && currentUser.getValue() != null) {
             for (String invitedFriendId : selectedUsers.getValue()) {
+                Log.e("REQ", meetupId);
                 MeetupRequest request = new MeetupRequest(
                         meetupId,
                         userRepository.getFirebaseUser().getUid(),

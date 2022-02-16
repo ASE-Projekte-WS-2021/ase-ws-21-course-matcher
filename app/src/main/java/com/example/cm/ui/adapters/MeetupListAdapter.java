@@ -1,6 +1,5 @@
 package com.example.cm.ui.adapters;
 
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -56,10 +55,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         holder.getTvLocation().setText(meetup.getLocation());
         switch (meetup.getPhase()){
             case MEETUP_UPCOMING:
-                holder.getTvTime().setText(meetup.getTimeDisplayed());
+                holder.getTvTime().setText(meetup.getFormattedTime());
                 break;
             case MEETUP_ACTIVE:
-                holder.getTvTime().setText(meetupCard.getContext().getString(R.string.meetup_active_text, meetup.getTimeDisplayed()));
+                holder.getTvTime().setText(meetupCard.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
                 break;
         }
 

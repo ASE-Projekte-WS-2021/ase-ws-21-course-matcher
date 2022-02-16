@@ -86,10 +86,10 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
         switch (request.getPhase()){
             case MEETUP_UPCOMING:
-                holder.getTvMeetupTime().setText(request.getTimeDisplayed());
+                holder.getTvMeetupTime().setText(request.getFormattedTime());
                 break;
             case MEETUP_ACTIVE:
-                holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getTimeDisplayed()));
+                holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getFormattedTime()));
                 break;
             case MEETUP_ENDED:
                 int color = context.getResources().getColor(R.color.outgreyed);

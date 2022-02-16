@@ -56,7 +56,7 @@ public class MeetupRepository {
 
     public boolean addMeetup(Meetup meetup) {
         try {
-            meetupCollection.add(meetup);
+            meetupCollection.document(meetup.getId()).set(meetup);
             return true;
         } catch (Exception e) {
             return false;

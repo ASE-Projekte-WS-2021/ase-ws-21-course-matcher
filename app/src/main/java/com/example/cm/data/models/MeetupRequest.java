@@ -75,7 +75,7 @@ public class MeetupRequest extends Request {
 
     @SuppressLint("DefaultLocale")
     @Exclude
-    public String getTimeDisplayed(){
+    public String getFormattedTime(){
         return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
     }
 
