@@ -5,11 +5,9 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.Request;
-import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,6 +28,10 @@ public class FriendRequestsViewModel extends ViewModel {
         return receivedRequests;
     }
 
+    public void deleteFriendRequest(FriendRequest request) {
+        friendRequestRepository.decline(request);
+    }
+
     public void acceptFriendRequest(FriendRequest request) {
         request.setState(Request.RequestState.REQUEST_ACCEPTED);
         request.setCreatedAtToNow();
@@ -43,8 +45,8 @@ public class FriendRequestsViewModel extends ViewModel {
         Objects.requireNonNull(receivedRequests.getValue()).remove(request);
     }
 
-    public void undoDeclineFriendRequest(FriendRequest request, int position) {
-        request.setState(Request.RequestState.REQUEST_PENDING);
+    public void undoFriendRequest(FriendRequest request, int position, Request.RequestState previousState) {
+        request.setState(previousState);
         friendRequestRepository.undo(request);
         Objects.requireNonNull(receivedRequests.getValue()).add(position, request);
     }

@@ -13,7 +13,7 @@
         android:id="@+id/searchBarWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/small_margin_items">
+        android:layout_marginBottom="@dimen/small_margin">
 
         <EditText
             android:id="@+id/etUserSearch"

@@ -24,21 +24,28 @@ import java.util.Locale;
 
 public class CreateMeetupFragment extends Fragment {
 
-    Calendar calendar = Calendar.getInstance();
+    int sMin, sHour;
+    Calendar calendarMeetup = Calendar.getInstance();
+    Calendar calendarNow = Calendar.getInstance();
+
     ArrayAdapter<CharSequence> adapter;
-    int sMin = calendar.get(Calendar.MINUTE);
-    int sHour = calendar.get(Calendar.HOUR_OF_DAY);
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentMeetupBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentMeetupBinding.inflate(inflater, container, false);
-
+        setTodaysDate();
         initUI();
         initViewModel();
         initListener();
         return binding.getRoot();
+    }
+
+    private void setTodaysDate(){
+        calendarNow.setTime(new Date());
+        calendarMeetup.set(Calendar.DATE, calendarNow.get(Calendar.DATE));
+        calendarMeetup.set(Calendar.MONTH, calendarNow.get(Calendar.MONTH));
+        calendarMeetup.set(Calendar.YEAR, calendarNow.get(Calendar.YEAR));
     }
 
     private void initUI() {
@@ -54,8 +61,8 @@ public class CreateMeetupFragment extends Fragment {
     }
 
     private void showCurrentTime() {
-        int localHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int localMin = calendar.get(Calendar.MINUTE);
+        int localHour = calendarMeetup.get(Calendar.HOUR_OF_DAY);
+        int localMin = calendarMeetup.get(Calendar.MINUTE);
 
         String formattedMin = String.format("%02d", localMin);
         String formattedHour = String.format("%02d", localHour);
@@ -65,14 +72,14 @@ public class CreateMeetupFragment extends Fragment {
     }
 
     private void onTimePickerDialogClicked() {
-
         binding.meetupInfoBtn.setEnabled(true);
 
         TimePickerDialog.OnTimeSetListener onTimeSetListener = (view, selectedHour, selectedMinute) -> {
-
             sHour = selectedHour;
             sMin = selectedMinute;
             binding.meetupTimeText.setText(String.format(Locale.getDefault(), "%02d:%02d", sHour, sMin));
+            calendarMeetup.set(Calendar.HOUR_OF_DAY, sHour);
+            calendarMeetup.set(Calendar.MINUTE, sMin);
         };
 
         TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), onTimeSetListener, sHour, sMin, true);
@@ -82,9 +89,6 @@ public class CreateMeetupFragment extends Fragment {
 
 
     private void onMeetupInfoBtnClicked() {
-
-        Date timeStamp = new Date();
-        String timeTest = binding.meetupTimeText.getText().toString();
         String location = binding.meetupLocationSpinner.getSelectedItem().toString();
 
         //TODO den boolean wieder benutzen wenn gefiltert werden kann
@@ -93,9 +97,8 @@ public class CreateMeetupFragment extends Fragment {
         Boolean isPrivate = true;
 
         createMeetupViewModel.setLocation(location);
-        createMeetupViewModel.setTime(timeTest);
         createMeetupViewModel.setIsPrivate(isPrivate);
-        createMeetupViewModel.setMeetupTimestamp(timeStamp);
+        createMeetupViewModel.setMeetupTimestamp(calendarMeetup.getTime());
 
         Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
     }
@@ -104,14 +107,13 @@ public class CreateMeetupFragment extends Fragment {
     private void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
         createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location -> binding.meetupLocationSpinner.setSelection(adapter.getPosition(location)));
-        createMeetupViewModel.getMeetupTime().observe(getViewLifecycleOwner(), time -> binding.meetupTimeText.getText());
         createMeetupViewModel.getMeetupIsPrivate().observe(getViewLifecycleOwner(), isPrivate -> binding.meetupPrivateCheckBox.setChecked(isPrivate));
-        createMeetupViewModel.getMeetupTimestamp().observe(getViewLifecycleOwner(), timestamp -> new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()));
+        createMeetupViewModel.getMeetupTimestamp().observe(getViewLifecycleOwner(), timestamp -> new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(calendarMeetup.getTime()));
     }
 
     private void checkTime() {
-        int localHour = calendar.get(Calendar.HOUR_OF_DAY);
-        int localMin = calendar.get(Calendar.MINUTE);
+        int localHour = calendarNow.get(Calendar.HOUR_OF_DAY);
+        int localMin = calendarNow.get(Calendar.MINUTE);
 
         String time = binding.meetupTimeText.getText().toString();
         String[] timeArray = time.split(":");

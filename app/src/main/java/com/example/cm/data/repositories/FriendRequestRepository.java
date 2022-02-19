@@ -4,13 +4,12 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
-import com.example.cm.data.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -22,10 +21,10 @@ public class FriendRequestRepository extends Repository {
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private CollectionReference friendRequestCollection = firestore.collection(CollectionConfig.FRIEND_REQUESTS.toString());;
+    private final CollectionReference friendRequestCollection = firestore.collection(CollectionConfig.FRIEND_REQUESTS.toString());
 
-    private MutableLiveData<List<FriendRequest>> mutableReceivedRequestList = new MutableLiveData<>();
-    private MutableLiveData<List<FriendRequest>> mutableSentRequestList = new MutableLiveData<>();
+    private final MutableLiveData<List<FriendRequest>> mutableReceivedRequestList = new MutableLiveData<>();
+    private final MutableLiveData<List<FriendRequest>> mutableSentRequestList = new MutableLiveData<>();
 
     public FriendRequestRepository() {}
 
@@ -69,6 +68,7 @@ public class FriendRequestRepository extends Repository {
 
         String userId = auth.getCurrentUser().getUid();
         friendRequestCollection.whereEqualTo("receiverId", userId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
                 List<FriendRequest> requests = snapshotToFriendRequestList(Objects.requireNonNull(task.getResult()));
@@ -138,11 +138,6 @@ public class FriendRequestRepository extends Repository {
 
     public void undo(FriendRequest request) {
         friendRequestCollection.document(request.getId()).
-                update("state", Request.RequestState.REQUEST_PENDING);
-    }
-
-
-    public interface OnFriendRequestRepositoryListener {
-        void onFriendRequestsRetrieved(List<FriendRequest> requests);
+                update("state", request.getState());
     }
 }

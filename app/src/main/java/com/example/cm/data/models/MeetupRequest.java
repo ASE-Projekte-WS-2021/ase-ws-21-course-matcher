@@ -1,11 +1,23 @@
 package com.example.cm.data.models;
 
+import android.annotation.SuppressLint;
+
+import com.google.firebase.firestore.Exclude;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
+
 public class MeetupRequest extends Request {
 
     private String meetupId;
     private String location;
-    private String meetupAt;
+    private Date meetupAt;
     private MeetupRequestType type;
+
+    private final Calendar calendarNow = GregorianCalendar.getInstance();
+    private final Calendar calendarMeetup = GregorianCalendar.getInstance();
 
     public MeetupRequest(MeetupRequestType type) {
         super();
@@ -16,11 +28,12 @@ public class MeetupRequest extends Request {
     }
 
     public MeetupRequest(String meetupId, String senderId, String senderName,
-                         String receiverId, String location, String meetupAt, MeetupRequestType type) {
+                         String receiverId, String location, Date meetupAt, MeetupRequestType type) {
         super(senderId, senderName, receiverId);
         this.meetupId = meetupId;
         this.location = location;
         this.meetupAt = meetupAt;
+        calendarMeetup.setTime(meetupAt);
         this.type = type;
         if(type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED){
             state = RequestState.REQUEST_ANSWERED;
@@ -51,12 +64,37 @@ public class MeetupRequest extends Request {
         this.location = location;
     }
 
-    public String getMeetupAt() {
+    public Date getMeetupAt() {
         return meetupAt;
     }
 
-    public void setMeetupAt(String meetupAt) {
+    public void setMeetupAt(Date meetupAt) {
         this.meetupAt = meetupAt;
+        calendarMeetup.setTime(meetupAt);
+    }
+
+    @SuppressLint("DefaultLocale")
+    @Exclude
+    public String getFormattedTime(){
+        return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
+    }
+
+    @Exclude
+    public MeetupPhase getPhase() {
+        Date now = new Date();
+        calendarNow.setTime(now);
+        // is today?
+        if (calendarNow.get(Calendar.YEAR) == calendarMeetup.get(Calendar.YEAR)
+                && calendarNow.get(Calendar.MONTH) == calendarMeetup.get(Calendar.MONTH)
+                && calendarNow.get(Calendar.DAY_OF_MONTH) == calendarMeetup.get(Calendar.DAY_OF_MONTH)) {
+            // has started?
+            if (TimeUnit.MILLISECONDS.toSeconds(now.getTime() - meetupAt.getTime()) >= 0) {
+                return MeetupPhase.MEETUP_ACTIVE;
+            } else {
+                return MeetupPhase.MEETUP_UPCOMING;
+            }
+        }
+        return MeetupPhase.MEETUP_ENDED;
     }
 
     @Override

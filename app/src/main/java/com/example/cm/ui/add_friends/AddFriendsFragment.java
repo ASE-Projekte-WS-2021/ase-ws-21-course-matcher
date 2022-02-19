@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.Request;
@@ -95,7 +96,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
-        bundle.putString("userId", id);
+        bundle.putString(Constants.KEY_USER_ID, id);
 
         navigator.getNavController().navigate(R.id.fromSelectFriendsToProfile, bundle);
     }

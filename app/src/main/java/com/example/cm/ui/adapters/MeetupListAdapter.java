@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.databinding.ItemMeetupBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -24,6 +25,11 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     List<Meetup> meetups;
 
     public MeetupListAdapter(List<Meetup> meetups) {
+        for (int i = 0; i < meetups.size(); i++) {
+            if (meetups.get(i).getPhase() == MeetupPhase.MEETUP_ENDED){
+                meetups.remove(i);
+            }
+        }
         this.meetups = meetups;
     }
 
@@ -47,7 +53,14 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         });
 
         holder.getTvLocation().setText(meetup.getLocation());
-        holder.getTvTime().setText(meetup.getTime());
+        switch (meetup.getPhase()){
+            case MEETUP_UPCOMING:
+                holder.getTvTime().setText(meetup.getFormattedTime());
+                break;
+            case MEETUP_ACTIVE:
+                holder.getTvTime().setText(meetupCard.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                break;
+        }
 
         List<String> confirmedFriends = meetup.getConfirmedFriends();
         List<String> invitedFriends = meetup.getInvitedFriends();

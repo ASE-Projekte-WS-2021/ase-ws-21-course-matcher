@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -10,6 +12,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -29,7 +32,9 @@ public class MeetupRepository {
 
     public MutableLiveData<List<Meetup>> getMeetups() {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        meetupCollection.whereArrayContains("confirmedFriends", currentUserId).get().addOnCompleteListener(task -> {
+        meetupCollection.whereArrayContains("confirmedFriends", currentUserId)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<Meetup> meetups = snapshotToMeetupList(Objects.requireNonNull(task.getResult()));
                 meetupListMLD.postValue(meetups);
@@ -40,8 +45,10 @@ public class MeetupRepository {
 
     public MutableLiveData<Meetup> getMeetup(String id) {
         meetupCollection.document(id).get().addOnCompleteListener(task -> {
-            DocumentSnapshot document = task.getResult();
-            meetupMLD.postValue(snapshotToMeetup(Objects.requireNonNull(document)));
+            if (task.isSuccessful()){
+                DocumentSnapshot document = task.getResult();
+                meetupMLD.postValue(snapshotToMeetup(Objects.requireNonNull(document)));
+            }
         });
 
         return meetupMLD;
@@ -49,7 +56,7 @@ public class MeetupRepository {
 
     public boolean addMeetup(Meetup meetup) {
         try {
-            meetupCollection.add(meetup);
+            meetupCollection.document(meetup.getId()).set(meetup);
             return true;
         } catch (Exception e) {
             return false;
@@ -69,7 +76,7 @@ public class MeetupRepository {
     public void addPending(String meetupId, String participantId) {
         meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayRemove(participantId));
-        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayUnion(participantId));
     }
 
     /**
@@ -99,7 +106,7 @@ public class MeetupRepository {
         meetup.setRequestingUser(document.getString("requestingUser"));
         meetup.setInvitedFriends(Utils.castList(document.get("invitedFriends"), String.class));
         meetup.setLocation(document.getString("location"));
-        meetup.setTime(document.getString("time"));
+        meetup.setTimestamp(document.getDate("timestamp"));
         meetup.setPrivate(document.getBoolean("private"));
         meetup.setDeclinedFriends(Utils.castList(document.get("declinedFriends"), String.class));
         return meetup;

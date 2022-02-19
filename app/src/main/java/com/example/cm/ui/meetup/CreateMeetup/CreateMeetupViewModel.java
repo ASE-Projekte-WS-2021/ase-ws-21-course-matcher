@@ -1,5 +1,7 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
+import android.util.Log;
+
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
 import androidx.lifecycle.LiveData;
@@ -26,7 +28,6 @@ public class CreateMeetupViewModel extends ViewModel {
     private final MutableLiveData<User> currentUser;
     private final MeetupRepository meetupRepository;
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
-    private final MutableLiveData<String> meetupTime = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
@@ -71,10 +72,6 @@ public class CreateMeetupViewModel extends ViewModel {
         return meetupLocation;
     }
 
-    public LiveData<String> getMeetupTime() {
-        return meetupTime;
-    }
-
     public LiveData<Boolean> getMeetupIsPrivate() {
         return meetupIsPrivate;
     }
@@ -91,10 +88,6 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupLocation.postValue(location);
     }
 
-    public void setTime(String time) {
-        meetupTime.postValue(time);
-    }
-
     public void setIsPrivate(Boolean isPrivate) {
         meetupIsPrivate.postValue(isPrivate);
     }
@@ -106,10 +99,9 @@ public class CreateMeetupViewModel extends ViewModel {
                 meetupId,
                 userRepository.getFirebaseUser().getUid(),
                 meetupLocation.getValue(),
-                meetupTime.getValue(),
+                meetupTimestamp.getValue(),
                 Boolean.TRUE.equals(meetupIsPrivate.getValue()),
-                selectedUsers.getValue(),
-                meetupTimestamp.getValue());
+                selectedUsers.getValue());
 
         boolean isSuccessful = meetupRepository.addMeetup(meetupToAdd);
 
@@ -131,7 +123,7 @@ public class CreateMeetupViewModel extends ViewModel {
                         currentUser.getValue().getFullName(),
                         invitedFriendId,
                         meetupLocation.getValue(),
-                        meetupTime.getValue(),
+                        meetupTimestamp.getValue(),
                         MEETUP_REQUEST);
                 meetupRequestRepository.addMeetupRequest(request);
             }

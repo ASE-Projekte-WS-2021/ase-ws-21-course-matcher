@@ -29,4 +29,6 @@
     <color name="gray_600">#FF757575</color>
     <color name="green">#009944</color>
     <color name="red">#cf000f</color>
+
+    <color name="outgreyed">#73505971</color>
 </resources>

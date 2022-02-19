@@ -10,25 +10,33 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.cm.Constants;
+import com.example.cm.R;
 import com.example.cm.data.models.MeetupRequest;
+import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentMeetupRequestsBinding;
 import com.example.cm.ui.adapters.MeetupRequestListAdapter;
+import com.example.cm.ui.adapters.SwipeToDelete;
+import com.example.cm.utils.Navigator;
 
 public class MeetupRequestsFragment extends Fragment implements
-        MeetupRequestListAdapter.OnMeetupRequestAcceptanceListener,
+        MeetupRequestListAdapter.OnMeetupRequestListener,
         SwipeRefreshLayout.OnRefreshListener {
 
     private MeetupRequestsViewModel requestsViewModel;
     private MeetupRequestListAdapter requestsListAdapter;
     private FragmentMeetupRequestsBinding binding;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Navigator navigator;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupRequestsBinding.inflate(inflater, container, false);
+        navigator = new Navigator(requireActivity());
         initUI();
         initViewModel();
         return binding.getRoot();
@@ -41,6 +49,8 @@ public class MeetupRequestsFragment extends Fragment implements
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
         binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
+        itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
     }
 
     private void initViewModel() {
@@ -68,6 +78,18 @@ public class MeetupRequestsFragment extends Fragment implements
     }
 
     @Override
+    public void onItemClicked(String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_MEETUP_ID, id);
+        navigator.getNavController().navigate(R.id.navigateToMeetupDetailed, bundle);
+    }
+
+    @Override
+    public void onItemDeleted(MeetupRequest request) {
+        requestsViewModel.deleteMeetupRequest(request);
+    }
+
+    @Override
     public void onAccept(MeetupRequest request) {
         requestsViewModel.acceptMeetupRequest(request);
     }
@@ -78,7 +100,12 @@ public class MeetupRequestsFragment extends Fragment implements
     }
 
     @Override
-    public void onUndo(MeetupRequest request, int position) {
+    public void onUndoDecline(MeetupRequest request, int position) {
         requestsViewModel.undoDeclineMeetupRequest(request, position);
+    }
+
+    @Override
+    public void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState) {
+        requestsViewModel.undoDeleteMeetupRequest(request, position, previousState);
     }
 }

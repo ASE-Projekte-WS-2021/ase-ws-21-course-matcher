@@ -1,10 +1,10 @@
 package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,29 +12,32 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
-import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
+    private ViewGroup parent;
     private List<MeetupRequest> mRequests;
-    private OnMeetupRequestAcceptanceListener listener;
+    private final OnMeetupRequestListener listener;
 
-    public MeetupRequestListAdapter(OnMeetupRequestAcceptanceListener listener) {
+    public MeetupRequestListAdapter(OnMeetupRequestListener listener) {
         this.listener = listener;
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void setRequests(List<MeetupRequest> newRequests){
         // filter out declined request to not display them again
-        for (MeetupRequest request : newRequests) {
+        Iterator<MeetupRequest> iterator = newRequests.iterator();
+        while (iterator.hasNext()) {
+            MeetupRequest request = iterator.next();
             if (request.getState() == Request.RequestState.REQUEST_DECLINED) {
-                newRequests.remove(request);
+                iterator.remove();
             }
         }
 
@@ -46,44 +49,83 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         mRequests = newRequests;
     }
 
+    public void deleteItem(int position) {
+        MeetupRequest request = mRequests.get(position);
+        Request.RequestState previousState = request.getState();
+        mRequests.remove(position);
+        notifyItemRemoved(position);
+        listener.onItemDeleted(request);
+        Snackbar snackbar = Snackbar.make(parent, R.string.delete_snackbar_text, Snackbar.LENGTH_LONG);
+        snackbar.setAction(R.string.undo_snackbar_text, view -> onUndoDelete(request, position, previousState));
+        snackbar.show();
+    }
+
+    private void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState){
+        listener.onUndoDelete(request, position, previousState);
+        notifyItemInserted(position);
+    }
+
     @NonNull
     @Override
     public MeetupRequestListAdapter.MeetupRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        this.parent = parent;
         ItemMeetupRequestBinding binding = ItemMeetupRequestBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new MeetupRequestListAdapter.MeetupRequestViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
+        Context context = holder.binding.getRoot().getContext();
         MeetupRequest request = mRequests.get(position);
 
-        String user = "@" + request.getSenderName();
+        String user = String.format("@%s ", request.getSenderName());
         String date = request.getCreationTimeAgo();
-
-        holder.getTvSender().setText(user);
-        holder.getTvDate().setText(date);
+        String location = request.getLocation();
 
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
+        switch (request.getPhase()){
+            case MEETUP_UPCOMING:
+                holder.getTvMeetupTime().setText(request.getFormattedTime());
+                break;
+            case MEETUP_ACTIVE:
+                holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getFormattedTime()));
+                break;
+            case MEETUP_ENDED:
+                int color = context.getResources().getColor(R.color.outgreyed);
+                holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
+
+                holder.getTvMeetupTime().setTextColor(color);
+                holder.getTvLocation().setTextColor(color);
+                holder.getTvSender().setTextColor(color);
+                holder.getTvDescription().setTextColor(color);
+                holder.getBtnAccept().setImageResource(R.drawable.accept_btn_disabled);
+                holder.getBtnDecline().setImageResource(R.drawable.decline_btn_disabled);
+                holder.getBtnAccept().setOnClickListener(null);
+                holder.getBtnDecline().setOnClickListener(null);
+
+                break;
+        }
+
         int content = 0;
-        switch(request.getType()){
+        switch (request.getType()) {
             case MEETUP_REQUEST:
-                holder.getTvTitle().setText(request.toString());
-                content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_text;
+                content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_description;
                 break;
             case MEETUP_INFO_ACCEPTED:
-                holder.getTvTitle().setText(request.toString());
                 isAccepted = true;
                 content = R.string.meetup_accepted_text;
                 break;
             case MEETUP_INFO_DECLINED:
-                holder.getTvTitle().setText(request.toString());
                 isAccepted = true;
                 content = R.string.meetup_declined_text;
                 break;
         }
 
-        holder.getTvContent().setText(content);
+        holder.getTvLocation().setText(location);
+        holder.getTvSender().setText(user);
+        holder.getTvDate().setText(date);
+        holder.getTvDescription().setText(content);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
         holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
     }
@@ -96,10 +138,13 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         return mRequests.size();
     }
 
-    public interface OnMeetupRequestAcceptanceListener {
+    public interface OnMeetupRequestListener {
+        void onItemClicked(String id);
+        void onItemDeleted(MeetupRequest request);
         void onAccept(MeetupRequest request);
         void onDecline(MeetupRequest request);
-        void onUndo(MeetupRequest request, int position);
+        void onUndoDecline(MeetupRequest request, int position);
+        void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState);
     }
 
     public class MeetupRequestViewHolder extends RecyclerView.ViewHolder {
@@ -113,8 +158,15 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
 
         private void setListeners() {
-            binding.notificationAcceptButton.setOnClickListener(view -> onAccept());
-            binding.notificationDeclineButton.setOnClickListener(view -> onDecline());
+            binding.getRoot().setOnClickListener(view -> onItemClicked());
+            binding.acceptButton.setOnClickListener(view -> onAccept());
+            binding.declineButton.setOnClickListener(view -> onDecline());
+        }
+
+        private void onItemClicked() {
+            int position = getAdapterPosition();
+            if (position == RecyclerView.NO_POSITION || listener == null) return;
+            listener.onItemClicked(mRequests.get(position).getMeetupId());
         }
 
         private void onAccept() {
@@ -124,7 +176,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
 
         private void onUndo(MeetupRequest request, int position){
-            listener.onUndo(request, position);
+            listener.onUndoDecline(request, position);
             notifyItemInserted(position);
         }
 
@@ -141,32 +193,34 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         /**
          * Getters for the views in the list item
          */
-        public TextView getTvTitle() {
-            return binding.notificationTitleTextView;
+        public TextView getTvMeetupTime() {
+            return binding.meetupTimeTextView;
         }
 
-        public TextView getTvContent() {
-            return binding.notificationContentTextView;
+        public TextView getTvLocation() {
+            return binding.locationTextView;
         }
 
         public TextView getTvSender() {
-            return binding.notificationSenderTextView;
+            return binding.meetupSenderTextView;
+        }
+
+        public TextView getTvDescription() {
+            return binding.meetupSenderDescriptionTextView;
         }
 
         public TextView getTvDate() {
-            return binding.notificationDateTextView;
+            return binding.sentDateTextView;
         }
 
-        public ImageView getIvProfilePicture(){
-            return binding.notificationImageView;
+        public ImageView getBtnAccept(){
+            return binding.acceptButton;
         }
 
-        public Button getBtnAccept(){
-            return binding.notificationAcceptButton;
-        }
-
-        public Button getBtnDecline(){
-            return binding.notificationDeclineButton;
+        public ImageView getBtnDecline(){
+            return binding.declineButton;
         }
     }
 }
+
+
