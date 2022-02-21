@@ -1,7 +1,6 @@
-package com.example.cm.ui.profile;
+package com.example.cm.ui.other_profile;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,27 +10,25 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.Constants;
-import com.example.cm.databinding.FragmentProfileBinding;
-import com.example.cm.utils.Navigator;
+import com.example.cm.databinding.FragmentOtherProfileBinding;
 
-public class ProfileFragment extends Fragment {
+public class OtherProfileFragment extends Fragment {
 
-    private ProfileViewModel profileViewModel;
-    private FragmentProfileBinding binding;
+    private OtherProfileViewModel otherProfileViewModel;
+    private FragmentOtherProfileBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        binding = FragmentOtherProfileBinding.inflate(inflater, container, false);
         initViewModel();
 
         return binding.getRoot();
     }
 
     private void initViewModel() {
-        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
-        Bundle bundle = this.getArguments();
-        getProfileInformation(bundle);
+        otherProfileViewModel = new ViewModelProvider(this).get(OtherProfileViewModel.class);
+        getProfileInformation();
 
-        profileViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
+        otherProfileViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
             if (currentUser == null) {
                 return;
             }
@@ -40,15 +37,16 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void getProfileInformation(Bundle bundle) {
+    private void getProfileInformation() {
+        Bundle bundle = this.getArguments();
+
         if (bundle == null) {
-            profileViewModel.getLoggedInUser();
             return;
         }
 
         if (bundle.containsKey(Constants.KEY_USER_ID)) {
             String profileId = bundle.getString(Constants.KEY_USER_ID);
-            profileViewModel.getUserById(profileId);
+            otherProfileViewModel.getUserById(profileId);
         }
     }
 
