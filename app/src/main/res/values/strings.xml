@@ -37,7 +37,7 @@
     <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
     <string name="title_notifications">Benachrichtigungen</string>
     <string name="title_profile">Profil</string>
-    <string name="title_friends">Freunde</string>
+    <string name="title_friends">Freundesliste</string>
     <string name="title_find_friends">Freunde finden</string>
     <string name="add_friend">Freunde hinzufügen</string>
     <string name="btn_send_friend_request">Anfrage senden</string>
