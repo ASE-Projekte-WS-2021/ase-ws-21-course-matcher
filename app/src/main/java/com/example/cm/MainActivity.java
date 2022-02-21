@@ -16,13 +16,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
     private ActivityMainBinding binding;
     private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());

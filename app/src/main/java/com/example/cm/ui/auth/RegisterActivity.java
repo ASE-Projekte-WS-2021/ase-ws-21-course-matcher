@@ -21,6 +21,10 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
         authViewModel = new ViewModelProvider(RegisterActivity.this).get(AuthViewModel.class);
         setContentView(R.layout.activity_register);
 
