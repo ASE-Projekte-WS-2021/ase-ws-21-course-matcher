@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.add_friends.AddFriendsFragment">
+    tools:context=".ui.other_profile.OtherProfileFragment">
 
     <ImageView
         android:id="@+id/ivProfileImage"

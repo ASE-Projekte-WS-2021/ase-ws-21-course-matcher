@@ -18,10 +18,6 @@ public class Navigator {
         navController.navigate(R.id.navigateToSelectFriends);
     }
 
-    public void navigateToFriends() {
-        navController.navigate(R.id.navigateToFriends);
-    }
-
     public void navigateToInviteFriends() {
         navController.navigate(R.id.navigateToInviteFriends);
     }

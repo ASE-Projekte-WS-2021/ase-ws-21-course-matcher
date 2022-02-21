@@ -68,17 +68,9 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.example.cm.ui.profile.ProfileFragment"
+        android:name="com.example.cm.ui.own_profile.OwnProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profile">
-
-        <action
-            android:id="@+id/navigateToFriends"
-            app:destination="@id/navigation_friends"
-            app:enterAnim="@anim/nav_default_pop_enter_anim"
-            app:exitAnim="@anim/nav_default_pop_exit_anim" />
-
-    </fragment>
+        tools:layout="@layout/fragment_own_profile"/>
 
     <fragment
         android:id="@+id/navigation_friends_tabs"
@@ -90,7 +82,7 @@
             app:destination="@+id/navigation_select_friends" />
         <action
             android:id="@+id/fromFriendsToProfile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_other_profile" />
     </fragment>
 
     <fragment
@@ -104,7 +96,7 @@
             app:destination="@id/navigation_select_friends" />
         <action
             android:id="@+id/fromFriendsToProfile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_other_profile" />
     </fragment>
 
     <fragment
@@ -114,12 +106,16 @@
         tools:layout="@layout/fragment_add_friends">
         <action
             android:id="@+id/fromSelectFriendsToProfile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_other_profile" />
     </fragment>
     <fragment
         android:id="@+id/navigation_meetup_success"
         android:name="com.example.cm.ui.meetup_invite_success.MeetupInviteSuccessFragment"
         android:label="fragment_meetup_invite_success"
         tools:layout="@layout/fragment_meetup_invite_success" />
+    <fragment
+        android:id="@+id/navigation_other_profile"
+        android:name="com.example.cm.ui.other_profile.OtherProfileFragment"
+        android:label="@string/title_profile" />
 
 </navigation>
