@@ -55,7 +55,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     }
 
     private void initListener() {
-        //binding.btnSearch.setOnClickListener(v -> onSearchButtonClicked());
         binding.btnAddFriends.setOnClickListener(v -> navigator.navigateToSelectFriends());
         binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
         binding.etUserSearch.addTextChangedListener(new TextWatcher() {
