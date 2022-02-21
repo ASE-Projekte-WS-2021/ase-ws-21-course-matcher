@@ -28,7 +28,7 @@ public class FriendsViewModel extends ViewModel {
             return;
         }
 
-        if(friends.getValue() != null) {
+        if (friends.getValue() != null) {
             friends.getValue().clear();
             friends = userRepository.getFriendsByUsername(query);
         }
