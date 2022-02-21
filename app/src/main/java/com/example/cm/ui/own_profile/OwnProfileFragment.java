@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.cm.Constants;
 import com.example.cm.databinding.FragmentOwnProfileBinding;
 
 public class OwnProfileFragment extends Fragment {
