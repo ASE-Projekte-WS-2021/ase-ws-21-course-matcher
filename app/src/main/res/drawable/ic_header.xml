@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="50dp"
+    android:viewportWidth="200"
+    android:viewportHeight="50">
+  <path
+      android:pathData="M186,50H0V0h200v36C200,43.73 193.73,50 186,50z"
+      android:fillColor="#505971"/>
+</vector>
+-->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item>
+    <shape>
+      <gradient
+          android:angle="90"
+          android:endColor="#00000000"
+          android:startColor="#00000000"
+          android:type="linear" />
+    </shape>
+  </item>
+  <item
+      android:bottom="0dp"
+      android:left="0dp"
+      android:right="0dp"
+      android:top="00dp">
+    <shape>
+      <solid android:color="#505971" />
+      <corners
+          android:bottomLeftRadius="0dp"
+          android:bottomRightRadius="25dp"
+          android:topLeftRadius="0dp"
+          android:topRightRadius="0dp" />
+    </shape>
+  </item>
+</layer-list>
