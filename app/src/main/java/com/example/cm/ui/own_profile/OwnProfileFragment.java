@@ -9,14 +9,15 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cm.R;
 import com.example.cm.databinding.FragmentOwnProfileBinding;
-
-import timber.log.Timber;
+import com.example.cm.utils.Navigator;
 
 public class OwnProfileFragment extends Fragment {
 
     private OwnProfileViewModel ownProfileViewModel;
     private FragmentOwnProfileBinding binding;
+    private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOwnProfileBinding.inflate(inflater, container, false);
@@ -27,8 +28,9 @@ public class OwnProfileFragment extends Fragment {
     }
 
     private void initListeners() {
+        navigator = new Navigator(requireActivity());
         binding.btnProfileSettings.setOnClickListener(v -> {
-            Timber.d("Profile settings button clicked");
+            navigator.getNavController().navigate(R.id.action_navigation_profile_to_settingsFragment);
         });
     }
 
