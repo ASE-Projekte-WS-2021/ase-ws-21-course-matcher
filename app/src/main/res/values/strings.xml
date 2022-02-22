@@ -120,5 +120,6 @@
     <string name="content_description_back_button">Navigate to previous screen</string>
     <string name="profile_btn_add_friend">Hinzufügen</string>
     <string name="profile_btn_remove_friend">Entfernen</string>
+    <string name="content_description_profile_settings">Navigate to Profile Settings</string>
 
 </resources>
