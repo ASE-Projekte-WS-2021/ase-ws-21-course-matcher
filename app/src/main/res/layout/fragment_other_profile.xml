@@ -42,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:gravity="center"
             android:orientation="vertical"
             android:padding="@dimen/activity_vertical_margin">
 
@@ -63,6 +64,16 @@
                 android:textAlignment="center"
                 android:textColor="@color/gray400"
                 tools:text="username" />
+
+            <Button
+                android:id="@+id/btnAddRemoveFriend"
+                style="@style/BtnOrangeSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/btn_rounded"
+                android:backgroundTint="@color/orange500"
+                tools:text="@string/profile_btn_add_friend" />
 
         </LinearLayout>
 
