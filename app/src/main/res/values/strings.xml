@@ -117,5 +117,6 @@
     <string name="delete_snackbar_text">Anfrage gelöscht.</string>
     <string name="content_description_profile_image">Profile Image of user</string>
     <string name="profile_title_bio">Bio</string>
+    <string name="content_description_back_button">Navigate to previous screen</string>
 
 </resources>
