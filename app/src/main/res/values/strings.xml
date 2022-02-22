@@ -121,5 +121,12 @@
     <string name="profile_btn_add_friend">Anfragen</string>
     <string name="profile_btn_remove_friend">Entfernen</string>
     <string name="content_description_profile_settings">Navigate to Profile Settings</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="app_version_prefix">App-Version:</string>
+    <string name="link_label_edit_profile">Profil bearbeiten</string>
+    <string name="link_label_edit_account">Account bearbeiten</string>
+    <string name="link_label_edit_notifications">Benachrichtigungen</string>
+    <string name="link_label_privacy_policy">Datenschutzerklärung</string>
+    <string name="link_label_imprint">Impressum</string>
 
 </resources>
