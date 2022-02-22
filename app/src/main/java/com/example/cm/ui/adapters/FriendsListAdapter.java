@@ -86,7 +86,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
 
-        String name = mUsers.get(position).getFirstName() + " " + mUsers.get(position).getLastName();
+        String name = mUsers.get(position).getFullName();
         String username = mUsers.get(position).getUsername();
 
         holder.getTvName().setText(name);
