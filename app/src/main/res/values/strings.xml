@@ -128,5 +128,7 @@
     <string name="link_label_edit_notifications">Benachrichtigungen</string>
     <string name="link_label_privacy_policy">Datenschutzerklärung</string>
     <string name="link_label_imprint">Impressum</string>
+    <string name="url_imprint">https://www.uni-regensburg.de/impressum/startseite/index.html</string>
+    <string name="url_privacy_policy">https://www.uni-regensburg.de/datenschutz/startseite/index.html</string>
 
 </resources>

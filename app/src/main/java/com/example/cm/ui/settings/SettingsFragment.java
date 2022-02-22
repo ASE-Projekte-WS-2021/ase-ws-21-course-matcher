@@ -1,8 +1,10 @@
 package com.example.cm.ui.settings;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,5 +63,34 @@ public class SettingsFragment extends Fragment {
     private void initListeners() {
         navigator = new Navigator(requireActivity());
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+        binding.linkEditProfile.linkWrapper.setOnClickListener(v -> onEditProfileClicked());
+        binding.linkEditAccount.linkWrapper.setOnClickListener(v -> onEditAccountClicked());
+        binding.linkNotifications.linkWrapper.setOnClickListener(v -> onNotificationsClicked());
+        binding.linkPrivacyPolicy.linkWrapper.setOnClickListener(v -> onPrivacyPolicyClicked());
+        binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
+    }
+
+    private void onEditProfileClicked() {
+    }
+
+    private void onEditAccountClicked() {
+    }
+
+    private void onNotificationsClicked() {
+    }
+
+    private void onPrivacyPolicyClicked() {
+        String url = getString(R.string.url_privacy_policy);
+        openLink(url);
+    }
+
+    private void onImprintClicked() {
+        String url = getString(R.string.url_imprint);
+        openLink(url);
+    }
+
+    private void openLink(String url) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
     }
 }
