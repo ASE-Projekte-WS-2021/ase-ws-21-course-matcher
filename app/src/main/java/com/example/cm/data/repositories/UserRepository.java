@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import timber.log.Timber;
-
 public class UserRepository extends Repository {
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -79,6 +77,33 @@ public class UserRepository extends Repository {
         });
 
         return mutableUsers;
+    }
+
+    public MutableLiveData<Boolean> isUserBefriended(String friendId) {
+        MutableLiveData<Boolean> isUserBefriended = new MutableLiveData<>();
+
+        if (auth.getCurrentUser() == null) {
+            return isUserBefriended;
+        }
+        String userId = auth.getCurrentUser().getUid();
+
+        userCollection.document(friendId).get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null || task.getResult().get("friends") == null) {
+                    isUserBefriended.postValue(false);
+                    return;
+                }
+
+                List<String> friends = Utils.castList(task.getResult().get("friends"), String.class);
+                if (friends == null) {
+                    return;
+                }
+
+                boolean isBefriended = friends.contains(userId);
+                isUserBefriended.postValue(isBefriended);
+            }
+        });
+        return isUserBefriended;
     }
 
     /**
@@ -163,11 +188,11 @@ public class UserRepository extends Repository {
     public MutableLiveData<List<User>> getUsersByUsername(String query) {
         userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
                 .get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
-                mutableUsers.postValue(users);
-            }
-        });
+                    if (task.isSuccessful()) {
+                        List<User> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+                        mutableUsers.postValue(users);
+                    }
+                });
         return mutableUsers;
     }
 
