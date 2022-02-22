@@ -18,9 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/content_description_profile_image"
-            android:src="@drawable/ic_profile"
             android:scaleX="0.5"
             android:scaleY="0.5"
+            android:src="@drawable/ic_profile"
             app:tint="@color/gray600" />
 
         <LinearLayout
@@ -76,21 +76,19 @@
             android:id="@+id/tvBioDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hey ho, willkommen auf meinem Profil 👋🏼"
-            />
+            android:text="Hey ho, willkommen auf meinem Profil 👋🏼" />
+
         <LinearLayout
             android:id="@+id/bioMetaInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            >
+            android:layout_marginTop="12dp">
 
             <TextView
                 android:id="@+id/tvCourseOfStudies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="MSc. Medieninformatik"
-                />
+                android:text="MSc. Medieninformatik" />
         </LinearLayout>
 
     </LinearLayout>

@@ -11,17 +11,25 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.Constants;
 import com.example.cm.databinding.FragmentOtherProfileBinding;
+import com.example.cm.utils.Navigator;
 
 public class OtherProfileFragment extends Fragment {
 
     private OtherProfileViewModel otherProfileViewModel;
     private FragmentOtherProfileBinding binding;
+    private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOtherProfileBinding.inflate(inflater, container, false);
         initViewModel();
+        initListener();
 
         return binding.getRoot();
+    }
+
+    private void initListener() {
+        navigator = new Navigator(getActivity());
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 
     private void initViewModel() {
