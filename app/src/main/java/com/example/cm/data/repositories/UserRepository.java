@@ -102,6 +102,35 @@ public class UserRepository extends Repository {
         return mutableUsers;
     }
 
+
+    public MutableLiveData<List<User>> getUsersNotFriendsByQuery(String query) {
+        userCollection.get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                List<User> users = new ArrayList<>();
+                for (DocumentSnapshot doc : task.getResult().getDocuments()) {
+                    User user = snapshotToUser(doc);
+                    boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
+                    boolean isQueryInFullName = user.getFullName().toLowerCase().contains(query.toLowerCase());
+
+                    if(!isQueryInUsername || !isQueryInFullName) {
+                        continue;
+                    }
+
+                    if (doc.get("friends") == null) {
+                        users.add(user);
+                    } else if (!Utils.castList(doc.get("friends"), String.class)
+                            .contains(auth.getCurrentUser().getUid())) {
+                        users.add(user);
+                    }
+                }
+                mutableUsers.postValue(users);
+            }
+        });
+        return mutableUsers;
+    }
+
+
+
     public MutableLiveData<User> getUserById(String userId) {
         userCollection.document(userId).get().addOnCompleteListener(executorService, task -> {
             if (task.isSuccessful()) {
