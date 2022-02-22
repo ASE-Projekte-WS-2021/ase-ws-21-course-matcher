@@ -40,14 +40,14 @@ public class SettingsFragment extends Fragment {
         // Set labels of links
         binding.linkEditProfile.linkText.setText(getString(R.string.link_label_edit_profile));
         binding.linkEditAccount.linkText.setText(getString(R.string.link_label_edit_account));
-        binding.linkNotifications.linkText.setText(getString(R.string.link_label_edit_notifications));
+        binding.linkEditNotifications.linkText.setText(getString(R.string.link_label_edit_notifications));
         binding.linkPrivacyPolicy.linkText.setText(getString(R.string.link_label_privacy_policy));
         binding.linkImprint.linkText.setText(getString(R.string.link_label_imprint));
 
         // Set icons of links
         binding.linkEditProfile.linkIcon.setImageResource(R.drawable.ic_edit_profile);
         binding.linkEditAccount.linkIcon.setImageResource(R.drawable.ic_edit_account);
-        binding.linkNotifications.linkIcon.setImageResource(R.drawable.ic_edit_notifications);
+        binding.linkEditNotifications.linkIcon.setImageResource(R.drawable.ic_edit_notifications);
         binding.linkPrivacyPolicy.linkIcon.setImageResource(R.drawable.ic_privacy_policy);
         binding.linkImprint.linkIcon.setImageResource(R.drawable.ic_imprint);
 
@@ -65,18 +65,21 @@ public class SettingsFragment extends Fragment {
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.linkEditProfile.linkWrapper.setOnClickListener(v -> onEditProfileClicked());
         binding.linkEditAccount.linkWrapper.setOnClickListener(v -> onEditAccountClicked());
-        binding.linkNotifications.linkWrapper.setOnClickListener(v -> onNotificationsClicked());
+        binding.linkEditNotifications.linkWrapper.setOnClickListener(v -> onEditNotificationsClicked());
         binding.linkPrivacyPolicy.linkWrapper.setOnClickListener(v -> onPrivacyPolicyClicked());
         binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
     }
 
     private void onEditProfileClicked() {
+        navigator.getNavController().navigate(R.id.action_settingsFragment_to_editProfileFragment);
     }
 
     private void onEditAccountClicked() {
+        navigator.getNavController().navigate(R.id.action_settingsFragment_to_editAccountFragment);
     }
 
-    private void onNotificationsClicked() {
+    private void onEditNotificationsClicked() {
+        navigator.getNavController().navigate(R.id.action_settingsFragment_to_editNotificationsFragment);
     }
 
     private void onPrivacyPolicyClicked() {
