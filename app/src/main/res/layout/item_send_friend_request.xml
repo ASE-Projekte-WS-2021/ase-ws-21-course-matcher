@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="@dimen/activity_horizontal_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:padding="@dimen/activity_horizontal_margin">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvImageWrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="50dp"
         android:layout_alignParentStart="true"
         android:layout_marginEnd="16dp"
         android:backgroundTint="#98A3C3"
-        >
+        app:cardCornerRadius="50dp">
+
         <ImageView
             android:id="@+id/ivUserImage"
             android:layout_width="50dp"
@@ -26,33 +26,30 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_toEndOf="@+id/cvImageWrapper"
         android:layout_toStartOf="@+id/btnSendFriendRequest"
-        >
+        android:layout_toEndOf="@+id/cvImageWrapper"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{username}"
             android:textColor="#22283A"
             android:textSize="18sp"
-            tools:text="Name"
-            android:maxLines="1"
-            android:ellipsize="end"
-            />
+            tools:text="Name" />
 
         <TextView
             android:id="@+id/tvUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{username}"
             android:textColor="#98A3C3"
-            tools:text="Username"
-            android:maxLines="1"
-            android:ellipsize="end"
-            />
+            tools:text="Username" />
     </LinearLayout>
 
     <Button
