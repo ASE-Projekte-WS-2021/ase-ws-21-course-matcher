@@ -21,10 +21,9 @@ public class MeetupListFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentMeetupListBinding.inflate(inflater, container, false);
 
-        initUi();
+        initUI();
         initViewModel();
 
         return binding.getRoot();
@@ -34,16 +33,25 @@ public class MeetupListFragment extends Fragment {
     private void initViewModel() {
         MeetupListViewModel meetupListViewModel = new ViewModelProvider(this).get(MeetupListViewModel.class);
         meetupListViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
-            meetupListAdapter = new MeetupListAdapter(meetups);
-            binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
+            if (meetups.size() == 1) {
+                binding.noMeetupsWrapper.setVisibility(View.VISIBLE);
+                binding.meetupListRecyclerView.setVisibility(View.GONE);
+                return;
+            }
+
+            meetupListAdapter.setMeetups(meetups);
+            binding.noMeetupsWrapper.setVisibility(View.GONE);
+            binding.meetupListRecyclerView.setVisibility(View.VISIBLE);
         });
 
     }
 
-    private void initUi() {
+    private void initUI() {
+        meetupListAdapter = new MeetupListAdapter();
         GridLayoutManager gridLayout = new GridLayoutManager(getContext(), 2);
         binding.meetupListRecyclerView.setLayoutManager(gridLayout);
         binding.meetupListRecyclerView.setHasFixedSize(true);
+        binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
     }
 
     @Override
