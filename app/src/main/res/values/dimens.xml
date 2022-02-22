@@ -7,6 +7,8 @@
     <dimen name="medium_margin">8dp</dimen>
     <dimen name="big_margin">12dp</dimen>
 
+    <dimen name="default_screen_padding">20dp</dimen>
+
     <dimen name="text_size_title">24sp</dimen>
     <dimen name="text_size_description">18sp</dimen>
     <dimen name="text_size_description_small">14sp</dimen>
