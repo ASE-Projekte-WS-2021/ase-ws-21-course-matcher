@@ -130,5 +130,7 @@
     <string name="link_label_imprint">Impressum</string>
     <string name="url_imprint">https://www.uni-regensburg.de/impressum/startseite/index.html</string>
     <string name="url_privacy_policy">https://www.uni-regensburg.de/datenschutz/startseite/index.html</string>
+    <string name="title_edit_profile">Profile bearbeiten</string>
+    <string name="title_edit_account">Account bearbeiten</string>
 
 </resources>
