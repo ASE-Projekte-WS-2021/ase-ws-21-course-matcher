@@ -4,12 +4,14 @@ import static com.example.cm.utils.Utils.calculateDiff;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -75,18 +77,19 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             boolean notificationExists = request.getReceiverId().equals(users.get(position).getId()) &&
                     request.getState() == Request.RequestState.REQUEST_PENDING;
 
-            int btnContent, btnColor, btnTextColor;
+            int btnContent, btnTextColor;
+            ColorStateList btnBackground;
             if (!notificationExists) {
                 btnContent = R.string.btn_send_friend_request_default;
-                btnColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.orange500);
+                btnBackground = ContextCompat.getColorStateList(context, R.color.orange500);
                 btnTextColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.white);
             } else {
                 btnContent = R.string.btn_send_friend_request_pending;
-                btnColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.gray400);
+                btnBackground = ContextCompat.getColorStateList(context, R.color.gray400);
                 btnTextColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.gray700);
             }
             holder.getFriendRequestButton().setText(btnContent);
-            holder.getFriendRequestButton().setBackgroundColor(btnColor);
+            holder.getFriendRequestButton().setBackgroundTintList(btnBackground);
             holder.getFriendRequestButton().setTextColor(btnTextColor);
         }
     }
@@ -146,19 +149,21 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
                 return;
             listener.onFriendRequestButtonClicked(users.get(position).getId());
 
-            int btnContent, btnColor, btnTextColor;
+            int btnContent, btnTextColor;
+            ColorStateList btnBackground;
+
             if (binding.btnSendFriendRequest.getText().toString()
                     .equals(context.getString(R.string.btn_send_friend_request_default))) {
                 btnContent = R.string.btn_send_friend_request_pending;
-                btnColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.gray400);
+                btnBackground = ContextCompat.getColorStateList(binding.btnSendFriendRequest.getContext(), R.color.gray400);
                 btnTextColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.gray700);
             } else {
                 btnContent = R.string.btn_send_friend_request_default;
-                btnColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.orange500);
+                btnBackground = ContextCompat.getColorStateList(binding.btnSendFriendRequest.getContext(), R.color.orange500);
                 btnTextColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.white);
             }
             binding.btnSendFriendRequest.setText(btnContent);
-            binding.btnSendFriendRequest.setBackgroundColor(btnColor);
+            binding.btnSendFriendRequest.setBackgroundTintList(btnBackground);
             binding.btnSendFriendRequest.setTextColor(btnTextColor);
         }
 
