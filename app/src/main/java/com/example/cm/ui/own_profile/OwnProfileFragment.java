@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.databinding.FragmentOwnProfileBinding;
 
+import timber.log.Timber;
+
 public class OwnProfileFragment extends Fragment {
 
     private OwnProfileViewModel ownProfileViewModel;
@@ -19,8 +21,15 @@ public class OwnProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOwnProfileBinding.inflate(inflater, container, false);
         initViewModel();
+        initListeners();
 
         return binding.getRoot();
+    }
+
+    private void initListeners() {
+        binding.btnProfileSettings.setOnClickListener(v -> {
+            Timber.d("Profile settings button clicked");
+        });
     }
 
     private void initViewModel() {
@@ -34,6 +43,7 @@ public class OwnProfileFragment extends Fragment {
             binding.tvUsername.setText(currentUser.getUsername());
         });
     }
+
 
     @Override
     public void onDestroyView() {
