@@ -29,6 +29,9 @@ public class EditProfileFragment extends Fragment {
 
     private void initUI() {
         binding.actionBar.tvTitle.setText(getString(R.string.title_edit_profile));
+        binding.inputUsername.inputLabel.setText(R.string.input_label_username);
+        binding.inputFirstName.inputLabel.setText(getString(R.string.input_label_first_name));
+        binding.inputLastName.inputLabel.setText(getString(R.string.input_label_last_name));
     }
 
     private void initListeners() {

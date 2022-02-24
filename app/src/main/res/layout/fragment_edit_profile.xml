@@ -1,11 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.settings.edit_profile.EditProfileFragment">
 
     <include
         android:id="@+id/actionBar"
-        layout="@layout/action_bar_with_back_button" />
-</FrameLayout>
+        layout="@layout/action_bar_with_back_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/actionBar"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/default_screen_padding">
+
+            <include
+                android:id="@+id/inputUsername"
+                layout="@layout/input_text_with_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp" />
+
+            <include
+                android:id="@+id/inputFirstName"
+                layout="@layout/input_text_with_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp" />
+
+            <include
+                android:id="@+id/inputLastName"
+                layout="@layout/input_text_with_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/readexpro_regular"
+                    android:includeFontPadding="false"
+                    android:text="@string/input_label_bio"
+                    android:textColor="@color/gray700"
+                    android:layout_toStartOf="@+id/bioCharacterCount"
+                    android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/bioCharacterCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/readexpro_regular"
+                        android:includeFontPadding="false"
+                        tools:text="50/125"
+                        android:textColor="@color/gray600"
+                        android:layout_alignParentEnd="true"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <EditText
+                    android:id="@+id/inputFieldBio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/style_edittext"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    android:maxLines="3"
+                    android:lines="3"
+                    android:maxLength="125"
+                    android:gravity="top"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="15dp"
+                    android:scrollbars="vertical"
+                    tools:ignore="LabelFor" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>
