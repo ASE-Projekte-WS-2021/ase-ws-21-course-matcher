@@ -132,5 +132,9 @@
     <string name="url_privacy_policy">https://www.uni-regensburg.de/datenschutz/startseite/index.html</string>
     <string name="title_edit_profile">Profil bearbeiten</string>
     <string name="title_edit_account">Account bearbeiten</string>
+    <string name="input_label_bio">Bio</string>
+    <string name="input_label_username">Benutzername</string>
+    <string name="input_label_first_name">Vorname</string>
+    <string name="input_label_last_name">Nachname</string>
 
 </resources>
