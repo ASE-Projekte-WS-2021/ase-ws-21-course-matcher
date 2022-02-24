@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,14 +23,14 @@ import com.google.android.material.imageview.ShapeableImageView;
 import java.util.List;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
-    List<Meetup> meetups;
+    List<MutableLiveData<Meetup>> meetups;
 
-    public MeetupListAdapter(List<Meetup> meetups) {
-        for (int i = 0; i < meetups.size(); i++) {
+    public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups) {
+        /*for (int i = 0; i < meetups.size(); i++) {
             if (meetups.get(i).getPhase() == MeetupPhase.MEETUP_ENDED){
                 meetups.remove(i);
             }
-        }
+        }*/
         this.meetups = meetups;
     }
 
@@ -42,7 +43,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
     @Override
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
-        Meetup meetup = meetups.get(position);
+        Meetup meetup = meetups.get(position).getValue();
 
         MaterialCardView meetupCard = holder.getMeetupCard();
 
