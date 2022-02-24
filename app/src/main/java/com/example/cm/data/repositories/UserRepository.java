@@ -48,13 +48,15 @@ public class UserRepository extends Repository {
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
-        userCollection.document(currentUserId).get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                User user = snapshotToUser(Objects.requireNonNull(task.getResult()));
+        userCollection.document(currentUserId).addSnapshotListener(executorService, (documentSnapshot, e) -> {
+            if (e != null) {
+                return;
+            }
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                User user = snapshotToUser(documentSnapshot);
                 mutableUser.postValue(user);
             }
         });
-
         return mutableUser;
     }
 
@@ -66,8 +68,15 @@ public class UserRepository extends Repository {
     }
 
 
-    public void updateField(String field, Object value) {
-        userCollection.document(getFirebaseUser().getUid()).update(field, value);
+    public void updateField(String field, Object value, Callback callback) {
+        try {
+            userCollection.document(getFirebaseUser().getUid()).update(field, value)
+                    .addOnSuccessListener(callback.onSuccess(value))
+                    .addOnFailureListener(callback::onError);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
