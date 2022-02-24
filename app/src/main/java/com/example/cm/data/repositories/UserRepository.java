@@ -65,6 +65,11 @@ public class UserRepository extends Repository {
         userCollection.document(user.getId()).set(user);
     }
 
+
+    public void updateField(String field, Object value) {
+        userCollection.document(getFirebaseUser().getUid()).update(field, value);
+    }
+
     /**
      * Get a list of all users
      */
