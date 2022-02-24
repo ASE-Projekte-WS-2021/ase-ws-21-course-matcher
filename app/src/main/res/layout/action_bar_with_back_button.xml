@@ -1,0 +1,34 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_header"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/content_description_back_button"
+            android:src="@drawable/ic_back_button"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/readexpro_semibold"
+            tools:text="@string/title_edit_profile"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/app_bar_title"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
+
+</layout>

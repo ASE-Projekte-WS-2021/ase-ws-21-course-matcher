@@ -37,6 +37,7 @@ public class SettingsFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void initUI() {
+        binding.actionBar.tvTitle.setText(R.string.title_settings);
         // Set labels of links
         binding.linkEditProfile.linkText.setText(getString(R.string.link_label_edit_profile));
         binding.linkEditAccount.linkText.setText(getString(R.string.link_label_edit_account));
@@ -62,7 +63,7 @@ public class SettingsFragment extends Fragment {
 
     private void initListeners() {
         navigator = new Navigator(requireActivity());
-        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+        binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.linkEditProfile.linkWrapper.setOnClickListener(v -> onEditProfileClicked());
         binding.linkEditAccount.linkWrapper.setOnClickListener(v -> onEditAccountClicked());
         binding.linkEditNotifications.linkWrapper.setOnClickListener(v -> onEditNotificationsClicked());

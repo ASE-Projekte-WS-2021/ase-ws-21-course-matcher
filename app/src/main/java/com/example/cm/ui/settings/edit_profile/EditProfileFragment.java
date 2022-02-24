@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.cm.R;
 import com.example.cm.databinding.FragmentEditProfileBinding;
 import com.example.cm.utils.Navigator;
 
@@ -20,14 +21,18 @@ public class EditProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEditProfileBinding.inflate(inflater, container, false);
-
+        initUI();
         initListeners();
 
         return binding.getRoot();
     }
 
+    private void initUI() {
+        binding.actionBar.tvTitle.setText(getString(R.string.title_edit_profile));
+    }
+
     private void initListeners() {
         navigator = new Navigator(requireActivity());
-        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+        binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 }
