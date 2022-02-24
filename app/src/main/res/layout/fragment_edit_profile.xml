@@ -54,26 +54,27 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/readexpro_regular"
-                    android:includeFontPadding="false"
-                    android:text="@string/input_label_bio"
-                    android:textColor="@color/gray700"
-                    android:layout_toStartOf="@+id/bioCharacterCount"
-                    android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@+id/bioCharacterCount"
+                        android:fontFamily="@font/readexpro_regular"
+                        android:includeFontPadding="false"
+                        android:text="@string/input_label_bio"
+                        android:textColor="@color/gray700"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/bioCharacterCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
                         android:fontFamily="@font/readexpro_regular"
                         android:includeFontPadding="false"
-                        tools:text="50/125"
                         android:textColor="@color/gray600"
-                        android:layout_alignParentEnd="true"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        tools:text="50/125" />
 
                 </RelativeLayout>
 
@@ -83,14 +84,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:background="@drawable/style_edittext"
+                    android:gravity="top"
                     android:importantForAutofill="no"
                     android:inputType="textMultiLine"
-                    android:maxLines="3"
                     android:lines="3"
                     android:maxLength="125"
-                    android:gravity="top"
-                    android:paddingVertical="10dp"
+                    android:maxLines="3"
                     android:paddingHorizontal="15dp"
+                    android:paddingVertical="10dp"
                     android:scrollbars="vertical"
                     tools:ignore="LabelFor" />
             </LinearLayout>
