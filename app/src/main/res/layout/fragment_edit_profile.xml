@@ -86,7 +86,7 @@
                     android:background="@drawable/style_edittext"
                     android:gravity="top"
                     android:importantForAutofill="no"
-                    android:inputType="textMultiLine"
+                    android:inputType="textMultiLine|textNoSuggestions"
                     android:lines="3"
                     android:maxLength="125"
                     android:maxLines="3"
