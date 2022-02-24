@@ -29,6 +29,7 @@
             android:maxLines="1"
             android:paddingVertical="10dp"
             android:paddingHorizontal="15dp"
+            android:focusable="false"
             tools:ignore="LabelFor" />
 
     </LinearLayout>
