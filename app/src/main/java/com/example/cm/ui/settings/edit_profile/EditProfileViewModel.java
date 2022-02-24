@@ -4,9 +4,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.Callback;
 import com.example.cm.data.repositories.UserRepository;
+import com.google.android.gms.tasks.OnSuccessListener;
 
-public class EditProfileViewModel extends ViewModel {
+import timber.log.Timber;
+
+public class EditProfileViewModel extends ViewModel implements Callback {
     private UserRepository userRepository;
     private MutableLiveData<User> user;
 
@@ -20,19 +24,30 @@ public class EditProfileViewModel extends ViewModel {
     }
 
     public void updateField(String field, String value) {
-        switch  (field) {
+
+        switch (field) {
             case "Benutzername":
-                userRepository.updateField("username", value);
+                userRepository.updateField("username", value, this);
                 break;
             case "Vorname":
-                userRepository.updateField("firstName", value);
+                userRepository.updateField("firstName", value, this);
                 break;
             case "Nachname":
-                userRepository.updateField("lastName", value);
+                userRepository.updateField("lastName", value, this);
                 break;
             default:
                 break;
         }
     }
 
+    @Override
+    public OnSuccessListener<? super Void> onSuccess(Object object) {
+        user = userRepository.getCurrentUser();
+        return null;
+    }
+
+    @Override
+    public void onError(Object object) {
+        Timber.e("onError: %s", object);
+    }
 }
