@@ -29,24 +29,26 @@ public class EditProfileViewModel extends ViewModel implements Callback {
     }
 
     public void updateField(String field, String value) {
-        if (value.isEmpty()) {
+        if (value.trim().isEmpty()) {
             status.postValue(Status.ERROR);
             return;
         }
 
         status.postValue(Status.LOADING);
+
+        String trimmedValue = value.trim();
         switch (field) {
             case "Benutzername":
-                userRepository.updateField("username", value, this);
+                userRepository.updateField("username", trimmedValue, this);
                 break;
             case "Vorname":
-                userRepository.updateField("firstName", value, this);
+                userRepository.updateField("firstName", trimmedValue, this);
                 break;
             case "Nachname":
-                userRepository.updateField("lastName", value, this);
+                userRepository.updateField("lastName", trimmedValue, this);
                 break;
             case "Bio":
-                userRepository.updateField("bio", value, this);
+                userRepository.updateField("bio", trimmedValue, this);
             default:
                 break;
         }
