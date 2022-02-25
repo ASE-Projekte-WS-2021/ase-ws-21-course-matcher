@@ -13,22 +13,6 @@
         android:layout_height="0dp"
         android:layout_weight="0.75">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/default_screen_padding"
-            android:paddingTop="@dimen/default_screen_padding">
-
-            <ImageView
-                android:id="@+id/btnProfileSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:contentDescription="@string/content_description_profile_settings"
-                android:src="@drawable/ic_settings_button" />
-
-        </RelativeLayout>
-
         <ImageView
             android:id="@+id/ivProfileImage"
             android:layout_width="match_parent"
@@ -64,8 +48,23 @@
                 android:textAlignment="center"
                 android:textColor="@color/gray400"
                 tools:text="username" />
-
         </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/default_screen_padding"
+            android:paddingTop="@dimen/default_screen_padding">
+
+            <ImageView
+                android:id="@+id/btnProfileSettings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/content_description_profile_settings"
+                android:src="@drawable/ic_settings_button" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
