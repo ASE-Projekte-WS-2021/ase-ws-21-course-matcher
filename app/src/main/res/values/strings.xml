@@ -144,5 +144,11 @@
     <string name="edit_profile_error_message">Ein Fehler ist aufgetreten. Versuche es erneut.</string>
     <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
     <string name="dialog_title_field">{field} bearbeiten</string>
+    <string name="edit_account_error_password_not_empty">Passwort-Felder dürfen nicht leer sein</string>
+    <string name="edit_account_error_password_min_length">Passwort muss mindestens {length} Zeichen lang sein</string>
+    <string name="edit_account_error_password_must_differ">Das neue Passwort darf nicht mit dem alten übereinstimmen</string>
+    <string name="edit_account_error_password_must_match">Das neue Passwort und die Bestätigung müssen übereinstimmen</string>
+    <string name="edit_account_success_password_change">Passwort erfolgreich geändert</string>
+    <string name="edit_account_error_password_not_changed">Passwort konnte nicht geändert werden</string>
 
 </resources>
