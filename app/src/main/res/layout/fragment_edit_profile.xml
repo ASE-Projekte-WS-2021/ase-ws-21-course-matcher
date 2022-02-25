@@ -89,6 +89,7 @@
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:lines="3"
                     android:maxLength="125"
+                    android:focusable="false"
                     android:maxLines="3"
                     android:paddingHorizontal="15dp"
                     android:paddingVertical="10dp"
