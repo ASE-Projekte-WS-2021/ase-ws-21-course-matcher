@@ -8,11 +8,9 @@ import androidx.lifecycle.ViewModelProvider;
 public class EditProfileViewModelFactory implements ViewModelProvider.Factory {
     private final Context context;
 
-
     public EditProfileViewModelFactory(Context context) {
         this.context = context;
     }
-
 
     @Override
     public <T extends ViewModel> T create(Class<T> modelClass) {
