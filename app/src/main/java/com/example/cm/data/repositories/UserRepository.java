@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.net.Uri;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -288,6 +290,7 @@ public class UserRepository extends Repository {
         user.setLastName(document.getString("lastName"));
         user.setFriends(Utils.castList(document.get("friends"), String.class));
         user.setBio(document.getString("bio"));
+        user.setProfileImageUrl(document.getString("profileImageUrl"));
         return user;
     }
 
