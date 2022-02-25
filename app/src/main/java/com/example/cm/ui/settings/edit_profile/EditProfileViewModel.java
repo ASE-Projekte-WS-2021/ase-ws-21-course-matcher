@@ -1,6 +1,7 @@
 package com.example.cm.ui.settings.edit_profile;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,10 +19,8 @@ public class EditProfileViewModel extends ViewModel implements Callback {
     public MutableLiveData<Status> status = new MutableLiveData<>();
     private UserRepository userRepository;
     private MutableLiveData<User> user;
-    private Context context;
 
-    public EditProfileViewModel(Context context) {
-        this.context = context;
+    public EditProfileViewModel() {
         userRepository = new UserRepository();
         user = userRepository.getCurrentUser();
     }
@@ -44,7 +43,7 @@ public class EditProfileViewModel extends ViewModel implements Callback {
             case "Benutzername":
                 if (!InputValidator.hasMinLength(trimmedValue, 4)) {
                     // Get string resource
-                    String message = context.getResources().getString(R.string.edit_profile_error_min_length);
+                    String message = Resources.getSystem().getString(R.string.edit_profile_error_min_length);
                     message = message.replace("{length}", "4").replace("{field}", field);
 
                     status.postValue(new Status(StatusFlag.ERROR, message));
@@ -54,7 +53,7 @@ public class EditProfileViewModel extends ViewModel implements Callback {
                 break;
             case "Vorname":
                 if (!InputValidator.hasMinLength(trimmedValue, 2)) {
-                    String message = context.getResources().getString(R.string.edit_profile_error_min_length);
+                    String message = Resources.getSystem().getString(R.string.edit_profile_error_min_length);
                     message = message.replace("{length}", "2").replace("{field}", field);
                     status.postValue(new Status(StatusFlag.ERROR, message));
 
@@ -65,7 +64,7 @@ public class EditProfileViewModel extends ViewModel implements Callback {
                 break;
             case "Nachname":
                 if (!InputValidator.hasMinLength(trimmedValue, 2)) {
-                    String message = context.getResources().getString(R.string.edit_profile_error_min_length);
+                    String message = Resources.getSystem().getString(R.string.edit_profile_error_min_length);
                     message = message.replace("{length}", "2").replace("{field}", field);
                     status.postValue(new Status(StatusFlag.ERROR, message));
 

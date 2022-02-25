@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.R;
 import com.example.cm.config.FieldType;
 import com.example.cm.databinding.FragmentEditProfileBinding;
+import com.example.cm.ui.settings.edit_account.EditAccountViewModel;
 import com.example.cm.utils.EditTextAreaDialog;
 import com.example.cm.utils.EditTextDialog;
 import com.example.cm.utils.Navigator;
@@ -37,7 +38,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     }
 
     private void initViewModel() {
-        editProfileViewModel = new ViewModelProvider(this, new EditProfileViewModelFactory(requireContext())).get(EditProfileViewModel.class);
+        editProfileViewModel = new ViewModelProvider(requireActivity()).get(EditProfileViewModel.class);
         editProfileViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             binding.inputUsername.inputField.setText(user.getUsername());
             binding.inputFirstName.inputField.setText(user.getFirstName());
