@@ -29,7 +29,6 @@ public class UserRepository extends Repository {
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
 
-
     public UserRepository() {
     }
 
@@ -69,16 +68,13 @@ public class UserRepository extends Repository {
         userCollection.document(user.getId()).set(user);
     }
 
-
     public void updateField(String field, Object value, Callback callback) {
         try {
             userCollection.document(getFirebaseUser().getUid()).update(field, value)
                     .addOnSuccessListener(task -> {
-                        Timber.d("Successfully updated field %s", field);
                         callback.onSuccess(value);
                     })
                     .addOnFailureListener(task -> {
-                        Timber.e( "Failed to update field %s", field);
                         callback.onError(false);
                     });
         } catch (Exception e) {
@@ -86,7 +82,6 @@ public class UserRepository extends Repository {
             callback.onError(e);
             e.printStackTrace();
         }
-
     }
 
     /**
