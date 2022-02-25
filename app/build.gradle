@@ -66,6 +66,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:20.0.0'
     implementation "androidx.cardview:cardview:1.0.0"
 
+    // Picasso for image loading
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
 }
