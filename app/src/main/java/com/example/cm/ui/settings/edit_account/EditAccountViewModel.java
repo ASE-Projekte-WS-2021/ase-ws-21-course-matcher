@@ -3,6 +3,7 @@ package com.example.cm.ui.settings.edit_account;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.Constants;
 import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
@@ -34,7 +35,9 @@ public class EditAccountViewModel extends ViewModel implements Callback {
             return;
         }
 
-        if (!InputValidator.hasMinLength(currentPassword, 6) || !InputValidator.hasMinLength(newPassword, 6) || !InputValidator.hasMinLength(newPasswordConfirm, 6)) {
+        if (!InputValidator.hasMinLength(currentPassword, Constants.MIN_PASSWORD_LENGTH)
+                || !InputValidator.hasMinLength(newPassword, Constants.MIN_PASSWORD_LENGTH)
+                || !InputValidator.hasMinLength(newPasswordConfirm, Constants.MIN_PASSWORD_LENGTH)) {
             status.postValue(new Status(StatusFlag.ERROR, "Password must be at least 6 characters long"));
             return;
         }
