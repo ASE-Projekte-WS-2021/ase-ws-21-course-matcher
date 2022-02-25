@@ -45,6 +45,7 @@ public class OtherProfileFragment extends Fragment {
             }
             binding.tvName.setText(currentUser.getFullName());
             binding.tvUsername.setText(currentUser.getUsername());
+            binding.tvBioDescription.setText(currentUser.getBio());
         });
 
 
