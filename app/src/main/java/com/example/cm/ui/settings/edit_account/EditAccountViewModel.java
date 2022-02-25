@@ -1,9 +1,12 @@
 package com.example.cm.ui.settings.edit_account;
 
+import android.content.res.Resources;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.Constants;
+import com.example.cm.R;
 import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
@@ -31,24 +34,27 @@ public class EditAccountViewModel extends ViewModel implements Callback {
 
     public void updatePassword(String currentPassword, String newPassword, String newPasswordConfirm) {
         if (currentPassword.isEmpty() || newPassword.isEmpty() || newPasswordConfirm.isEmpty()) {
-            status.postValue(new Status(StatusFlag.ERROR, "All fields must be filled"));
+            status.postValue(new Status(StatusFlag.ERROR, Resources.getSystem().getString(R.string.edit_account_error_password_not_empty)));
             return;
         }
 
         if (!InputValidator.hasMinLength(currentPassword, Constants.MIN_PASSWORD_LENGTH)
                 || !InputValidator.hasMinLength(newPassword, Constants.MIN_PASSWORD_LENGTH)
                 || !InputValidator.hasMinLength(newPasswordConfirm, Constants.MIN_PASSWORD_LENGTH)) {
-            status.postValue(new Status(StatusFlag.ERROR, "Password must be at least 6 characters long"));
+
+            String message = Resources.getSystem().getString(R.string.edit_account_error_password_min_length);
+            message = message.replace("{length}", String.valueOf(Constants.MIN_PASSWORD_LENGTH));
+            status.postValue(new Status(StatusFlag.ERROR, message));
             return;
         }
 
         if (currentPassword.equals(newPassword)) {
-            status.postValue(new Status(StatusFlag.ERROR, "New password must be different from current password"));
+            status.postValue(new Status(StatusFlag.ERROR, Resources.getSystem().getString(R.string.edit_account_error_password_must_differ)));
             return;
         }
 
         if (!newPassword.equals(newPasswordConfirm)) {
-            status.postValue(new Status(StatusFlag.ERROR, "New password and confirm password must be the same"));
+            status.postValue(new Status(StatusFlag.ERROR, Resources.getSystem().getString(R.string.edit_account_error_password_must_match)));
             return;
         }
 
@@ -57,13 +63,13 @@ public class EditAccountViewModel extends ViewModel implements Callback {
 
     @Override
     public OnSuccessListener<? super Void> onSuccess(Object object) {
-        status.postValue(new Status(StatusFlag.SUCCESS, "Password updated successfully"));
+        status.postValue(new Status(StatusFlag.SUCCESS, Resources.getSystem().getString(R.string.edit_account_success_password_change)));
         user = userRepository.getCurrentUser();
         return null;
     }
 
     @Override
     public void onError(Object object) {
-        status.postValue(new Status(StatusFlag.ERROR, "Could not verify user with password"));
+        status.postValue(new Status(StatusFlag.ERROR, Resources.getSystem().getString(R.string.edit_account_error_password_not_changed)));
     }
 }
