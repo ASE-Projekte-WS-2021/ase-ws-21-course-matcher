@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentEditAccountBinding;
 import com.example.cm.utils.Navigator;
+import com.google.android.material.snackbar.Snackbar;
 
 public class EditAccountFragment extends Fragment {
     FragmentEditAccountBinding binding;
@@ -45,17 +46,42 @@ public class EditAccountFragment extends Fragment {
         editAccountViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
            binding.inputEmail.inputField.setText(user.getEmail());
         });
+        editAccountViewModel.status.observe(getViewLifecycleOwner(), status -> {
+            if (status == null) {
+                return;
+            }
+
+            switch (status.getFlag()) {
+                case SUCCESS:
+                    Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    resetPasswordFields();
+                    break;
+                case ERROR:
+                    Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    break;
+                default:
+                    break;
+            }
+        });
+    }
+
+    private void resetPasswordFields() {
+        binding.inputCurrentPassword.inputField.setText("");
+        binding.inputNewPassword.inputField.setText("");
+        binding.inputNewPasswordConfirm.inputField.setText("");
     }
 
     private void initListeners() {
         navigator = new Navigator(requireActivity());
         binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
-        binding.btnUpdatePassword.setOnClickListener(v -> {
-            String currentPassword = binding.inputCurrentPassword.inputField.getText().toString().trim();
-            String newPassword = binding.inputNewPassword.inputField.getText().toString().trim();
-            String newPasswordConfirm = binding.inputNewPasswordConfirm.inputField.getText().toString().trim();
+        binding.btnUpdatePassword.setOnClickListener(v -> onUpdatePasswordClicked());
+    }
 
-            editAccountViewModel.updatePassword(currentPassword, newPassword, newPasswordConfirm);
-        });
+    private void onUpdatePasswordClicked() {
+        String currentPassword = binding.inputCurrentPassword.inputField.getText().toString().trim();
+        String newPassword = binding.inputNewPassword.inputField.getText().toString().trim();
+        String newPasswordConfirm = binding.inputNewPasswordConfirm.inputField.getText().toString().trim();
+
+        editAccountViewModel.updatePassword(currentPassword, newPassword, newPasswordConfirm);
     }
 }
