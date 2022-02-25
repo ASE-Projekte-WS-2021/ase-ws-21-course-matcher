@@ -44,8 +44,12 @@ public class EditAccountFragment extends Fragment {
     private void initViewModel() {
         editAccountViewModel = new ViewModelProvider(requireActivity()).get(EditAccountViewModel.class);
         editAccountViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-           binding.inputEmail.inputField.setText(user.getEmail());
+            binding.inputEmail.inputField.setText(user.getEmail());
         });
+        observeStatusChanges();
+    }
+
+    private void observeStatusChanges() {
         editAccountViewModel.status.observe(getViewLifecycleOwner(), status -> {
             if (status == null) {
                 return;
