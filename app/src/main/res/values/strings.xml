@@ -136,5 +136,13 @@
     <string name="input_label_current_password">Aktuelles Passwort</string>
     <string name="input_label_new_password">Neues Passwort</string>
     <string name="input_label_new_password_confirm">Neues Passwort bestätigen</string>
+    <string name="input_label_bio">Bio</string>
+    <string name="input_label_username">Benutzername</string>
+    <string name="input_label_first_name">Vorname</string>
+    <string name="input_label_last_name">Nachname</string>
+    <string name="edit_profile_success_message">Änderungen wurden gespeichert</string>
+    <string name="edit_profile_error_message">Ein Fehler ist aufgetreten. Versuche es erneut.</string>
+    <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
+    <string name="dialog_title_field">{field} bearbeiten</string>
 
 </resources>
