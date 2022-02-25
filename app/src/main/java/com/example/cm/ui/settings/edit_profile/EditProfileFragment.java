@@ -37,7 +37,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     }
 
     private void initViewModel() {
-        editProfileViewModel = new ViewModelProvider(this).get(EditProfileViewModel.class);
+        editProfileViewModel = new ViewModelProvider(this, new EditProfileViewModelFactory(requireContext())).get(EditProfileViewModel.class);
         editProfileViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             binding.inputUsername.inputField.setText(user.getUsername());
             binding.inputFirstName.inputField.setText(user.getFirstName());
@@ -50,21 +50,16 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
                 return;
             }
 
-            switch (status) {
+            switch (status.getFlag()) {
                 case SUCCESS:
                     dialog.hide();
-                    Snackbar.make(binding.getRoot(),
-                            R.string.edit_profile_success_message,
-                            Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
                     break;
                 case ERROR:
                     dialog.hide();
-                    Snackbar.make(binding.getRoot().getContext(),
-                            binding.getRoot(),
-                            getString(R.string.edit_profile_error_message),
-                            Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
                     break;
-                case LOADING:
+                default:
                     break;
             }
         });
@@ -92,8 +87,6 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         binding.inputFieldBio.setOnClickListener(v -> {
             openDialog(FieldType.TEXT_AREA.toString(), getString(R.string.input_label_bio), binding.inputFieldBio.getText().toString());
         });
-
-
     }
 
     private void openDialog(String fieldType, String fieldToUpdate, String valueToEdit) {
