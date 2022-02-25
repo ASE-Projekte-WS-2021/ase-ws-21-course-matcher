@@ -139,5 +139,6 @@
     <string name="edit_profile_success_message">Änderungen wurden gespeichert</string>
     <string name="edit_profile_error_message">Ein Fehler ist aufgetreten. Versuche es erneut.</string>
     <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
+    <string name="dialog_title_field">{field} bearbeiten</string>
 
 </resources>

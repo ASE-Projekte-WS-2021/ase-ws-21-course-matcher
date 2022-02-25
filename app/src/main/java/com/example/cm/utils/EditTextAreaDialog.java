@@ -1,5 +1,7 @@
 package com.example.cm.utils;
 
+import static com.example.cm.Constants.MAX_CHAR_COUNT;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -12,11 +14,11 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
+import com.example.cm.R;
 import com.example.cm.databinding.DialogTextareaBinding;
 
 
 public class EditTextAreaDialog extends Dialog {
-    private static final int MAX_CHAR_COUNT = 125;
     DialogTextareaBinding binding;
     OnSaveListener listener;
     String initialValue, fieldToUpdate;
@@ -40,7 +42,9 @@ public class EditTextAreaDialog extends Dialog {
 
     public EditTextAreaDialog setFieldToUpdate(String fieldToUpdate) {
         this.fieldToUpdate = fieldToUpdate;
-        binding.dialogTitle.setText(fieldToUpdate + " bearbeiten");
+        String title = getContext().getResources().getString(R.string.dialog_title_field);
+        title = title.replace("{field}", fieldToUpdate);
+        binding.dialogTitle.setText(title);
         return this;
     }
 
