@@ -55,15 +55,17 @@ public class EditTextDialog extends Dialog {
 
     private void initListeners() {
         binding.btnCancel.setOnClickListener(v -> dismiss());
-        binding.btnSave.setOnClickListener(v -> {
-            String newValue = binding.inputField.getText().toString();
-            if (listener != null) {
-                listener.onSave(fieldToUpdate, newValue);
-            }
-        });
+        binding.btnSave.setOnClickListener(v -> onSaveClicked());
+    }
+
+    private void onSaveClicked() {
+        String newValue = binding.inputField.getText().toString();
+        if (listener != null) {
+            listener.onTextInputSaved(fieldToUpdate, newValue);
+        }
     }
 
     public interface OnSaveListener {
-        void onSave(String fieldToUpdate, String updatedValue);
+        void onTextInputSaved(String fieldToUpdate, String updatedValue);
     }
 }
