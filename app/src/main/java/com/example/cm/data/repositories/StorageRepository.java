@@ -31,7 +31,7 @@ public class StorageRepository extends Repository {
      */
     public void uploadProfileImage(Uri uri, String userId, Callback callback) {
         Bitmap originalImage = uriToBitmap(uri);
-        Bitmap resizedImage = resizeBitmap(originalImage, 800);
+        Bitmap resizedImage = resizeBitmap(originalImage, Constants.PROFILE_IMAGE_MAX_WIDTH);
         Uri resizedImageUri = bitmapToUri(resizedImage);
 
         StorageReference profileImageRef = storageReference.child(Constants.FIREBASE_STORAGE_FOLDER + userId + Constants.PROFILE_IMAGE_EXTENSION);

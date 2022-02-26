@@ -6,4 +6,5 @@ public class Constants {
     public static final int MAX_CHAR_COUNT = 125;
     public static final String FIREBASE_STORAGE_FOLDER = "profile_images/";
     public static final String PROFILE_IMAGE_EXTENSION = ".jpg";
+    public static final int PROFILE_IMAGE_MAX_WIDTH = 800;
 }
