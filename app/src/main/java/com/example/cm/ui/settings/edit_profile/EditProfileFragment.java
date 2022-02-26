@@ -25,8 +25,6 @@ import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
-import timber.log.Timber;
-
 public class EditProfileFragment extends Fragment implements EditTextDialog.OnSaveListener, EditTextAreaDialog.OnSaveListener {
     ActivityResultLauncher<String> storagePermissionRequestLauncher;
     ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -50,6 +48,9 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         return binding.getRoot();
     }
 
+    /**
+     * Initialize the image picker
+     */
     private void initImagePicker() {
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -62,6 +63,9 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
                 });
     }
 
+    /**
+     * Initialize the permission request
+     */
     private void initPermissionRequest() {
         storagePermissionRequestLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
@@ -71,8 +75,6 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
                         intent.setType("image/*");
                         intent.setAction(Intent.ACTION_GET_CONTENT);
                         imagePickerLauncher.launch(intent);
-                    } else {
-                        Timber.d("Permission denied");
                     }
                 });
     }
