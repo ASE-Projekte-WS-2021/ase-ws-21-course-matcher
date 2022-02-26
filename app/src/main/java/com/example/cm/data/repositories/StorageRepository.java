@@ -31,7 +31,7 @@ public class StorageRepository extends Repository {
      */
     public void uploadProfileImage(Uri uri, String userId, Callback callback) {
         Bitmap originalImage = uriToBitmap(uri);
-        Bitmap resizedImage = resizeBitmap(originalImage, 400);
+        Bitmap resizedImage = resizeBitmap(originalImage, 800);
         Uri resizedImageUri = bitmapToUri(resizedImage);
 
         StorageReference profileImageRef = storageReference.child(Constants.FIREBASE_STORAGE_FOLDER + userId + Constants.PROFILE_IMAGE_EXTENSION);
@@ -77,7 +77,7 @@ public class StorageRepository extends Repository {
      */
     private Uri bitmapToUri(Bitmap bitmap) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bytes);
         String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Profile Image", null);
         return Uri.parse(path);
     }

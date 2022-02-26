@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
  * inspired by https://learntodroid.com/how-to-use-firebase-authentication-in-an-android-app-using-mvvm/
  */
 
-public class AuthRepository {
+public class AuthRepository extends Repository {
     private static final String TAG = "AuthRepository";
 
     private final Application application;
@@ -41,7 +41,7 @@ public class AuthRepository {
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void login(String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(application.getMainExecutor(), task -> {
+                .addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
                         userLiveData.postValue(firebaseAuth.getCurrentUser());
                     } else {

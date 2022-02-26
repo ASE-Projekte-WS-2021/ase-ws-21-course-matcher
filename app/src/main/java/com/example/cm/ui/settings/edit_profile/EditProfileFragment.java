@@ -2,6 +2,7 @@ package com.example.cm.ui.settings.edit_profile;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -23,9 +26,12 @@ import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
+import timber.log.Timber;
+
 public class EditProfileFragment extends Fragment implements EditTextDialog.OnSaveListener, EditTextAreaDialog.OnSaveListener {
     private final int SELECT_IMAGE_REQUEST_CODE = 1;
 
+    ActivityResultLauncher<String> readExternalStoragePermisionRequest;
     FragmentEditProfileBinding binding;
     EditProfileViewModel editProfileViewModel;
     Navigator navigator;
@@ -37,11 +43,27 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEditProfileBinding.inflate(inflater, container, false);
+        initPermissionRequest();
         initUI();
         initViewModel();
         initListeners();
 
         return binding.getRoot();
+    }
+
+    private void initPermissionRequest() {
+        readExternalStoragePermisionRequest = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                result -> {
+                    if (result) {
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE_REQUEST_CODE);
+                    } else {
+                        Timber.d("Permission denied");
+                    }
+                });
     }
 
     private void initViewModel() {
@@ -117,10 +139,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
 
 
     private void onEditProfileImageClicked() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_IMAGE_REQUEST_CODE);
+        readExternalStoragePermisionRequest.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 
     @Override
