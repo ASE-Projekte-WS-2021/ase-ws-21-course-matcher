@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.R;
 import com.example.cm.config.FieldType;
-import com.example.cm.data.repositories.StorageRepository;
 import com.example.cm.databinding.FragmentEditProfileBinding;
 import com.example.cm.utils.EditTextAreaDialog;
 import com.example.cm.utils.EditTextDialog;
@@ -62,13 +61,13 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
 
             switch (status.getFlag()) {
                 case SUCCESS:
-                    if(dialog != null) {
+                    if (dialog != null) {
                         dialog.hide();
                     }
                     Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
                     break;
                 case ERROR:
-                    if(dialog != null) {
+                    if (dialog != null) {
                         dialog.hide();
                     }
                     Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
@@ -106,6 +105,16 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         });
     }
 
+    private void openDialog(String fieldType, String fieldToUpdate, String valueToEdit) {
+        if (fieldType.equals(FieldType.TEXT_AREA.toString())) {
+            dialog = new EditTextAreaDialog(requireContext(), this);
+            ((EditTextAreaDialog) dialog).setFieldToUpdate(fieldToUpdate).setValueOfField(valueToEdit).show();
+        } else {
+            dialog = new EditTextDialog(requireContext(), this);
+            ((EditTextDialog) dialog).setFieldToUpdate(fieldToUpdate).setValueOfField(valueToEdit).show();
+        }
+    }
+
 
     private void onEditProfileImageClicked() {
         Intent intent = new Intent();
@@ -118,20 +127,9 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == SELECT_IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == SELECT_IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri uri = data.getData();
-            binding.profileImage.setImageURI(uri);
             editProfileViewModel.updateImage(uri);
-        }
-    }
-
-    private void openDialog(String fieldType, String fieldToUpdate, String valueToEdit) {
-        if (fieldType.equals(FieldType.TEXT_AREA.toString())) {
-            dialog = new EditTextAreaDialog(requireContext(), this);
-            ((EditTextAreaDialog) dialog).setFieldToUpdate(fieldToUpdate).setValueOfField(valueToEdit).show();
-        } else {
-            dialog = new EditTextDialog(requireContext(), this);
-            ((EditTextDialog) dialog).setFieldToUpdate(fieldToUpdate).setValueOfField(valueToEdit).show();
         }
     }
 

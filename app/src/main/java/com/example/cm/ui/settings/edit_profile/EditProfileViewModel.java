@@ -17,8 +17,8 @@ import com.example.cm.utils.InputValidator;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 public class EditProfileViewModel extends ViewModel implements Callback, StorageRepository.Callback {
-    StorageRepository storageRepository = new StorageRepository();
     public MutableLiveData<Status> status = new MutableLiveData<>();
+    StorageRepository storageRepository;
     private UserRepository userRepository;
     private MutableLiveData<User> user;
     private Context context;
@@ -26,6 +26,7 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
     public EditProfileViewModel(Context context) {
         this.context = context;
         userRepository = new UserRepository();
+        storageRepository = new StorageRepository(context);
         user = userRepository.getCurrentUser();
     }
 
@@ -35,7 +36,7 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
 
 
     public void updateImage(Uri uri) {
-        if(uri == null || user.getValue() == null) {
+        if (uri == null || user.getValue() == null) {
             status.postValue(new Status(StatusFlag.ERROR, "Ein Fehler ist aufgetreten"));
             return;
         }
@@ -89,9 +90,6 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
             case "Bio":
                 userRepository.updateField("bio", trimmedValue, this);
                 break;
-            case "profileImageUrl":
-                userRepository.updateField("profileImageUrl", trimmedValue, this);
-                break;
             default:
                 break;
         }
@@ -111,7 +109,7 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
 
     @Override
     public void onSuccess(String url) {
-        updateField("profileImageUrl", url);
+        userRepository.updateField("profileImageUrl", url, this);
     }
 
     @Override
