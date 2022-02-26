@@ -25,7 +25,6 @@ public class MeetupRequestRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());
-
     private MutableLiveData<List<MutableLiveData<MeetupRequest>>> receivedRequestListMDL = new MutableLiveData<>();
 
     public MeetupRequestRepository() {
@@ -130,32 +129,27 @@ public class MeetupRequestRepository extends Repository {
     /**
      * Add a new Meetup Request to collection
      *
-     * @param request Requests to be stored
+     * @param request Request to be stored
      */
     public void addMeetupRequest(MeetupRequest request) {
-        meetupRequestCollection.add(request);
-    }
-
-    public void deleteMeetupRequest(MeetupRequest request) {
-        meetupRequestCollection.document(request.getId()).delete();
+        meetupRequestCollection.add(request).addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null) {
+                    return;
+                }
+                request.setId(task.getResult().getId());
+                task.getResult().update("id", task.getResult().getId());
+            }
+        });
     }
 
     /**
      * Delete a Meetup Request from collection
      *
-     * @param requestId Id of the request
+     * @param request Request to be deleted
      */
-    public void deleteFriendRequest(String requestId) {
-        meetupRequestCollection.document(requestId)
-                .get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult() == null) {
-                    return;
-                }
-                task.getResult().getReference().delete();
-
-            }
-        });
+    public void deleteMeetupRequest(MeetupRequest request) {
+        meetupRequestCollection.document(request.getId()).delete();
     }
 
     /**
@@ -193,10 +187,5 @@ public class MeetupRequestRepository extends Repository {
                 }
             }
         });
-    }
-
-    public void undoDelete(MeetupRequest request) {
-        meetupRequestCollection.document(request.getId()).
-                update("state", request.getState());
     }
 }

@@ -38,9 +38,7 @@ public class MeetupRequestsViewModel extends ViewModel {
         return requestList;
     }
 
-
     public void deleteMeetupRequest(MeetupRequest request) {
-        //meetupRequestRepository.decline(request);
         meetupRequestRepository.deleteMeetupRequest(request);
     }
 
@@ -102,8 +100,4 @@ public class MeetupRequestsViewModel extends ViewModel {
         requestMDL.postValue(request);
         Objects.requireNonNull(requestList.getValue()).add(position, requestMDL);
     }
-
-    /*public void refresh() {
-        requests = meetupRequestRepository.getMeetupRequestsForUser();
-    }*/
 }

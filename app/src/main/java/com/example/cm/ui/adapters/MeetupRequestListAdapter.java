@@ -35,7 +35,6 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     }
 
     public void deleteItem(int position) {
-        Log.e("REMOVE", "delete");
         MeetupRequest request = mRequests.get(position).getValue();
         Request.RequestState previousState = request.getState();
         mRequests.remove(position);

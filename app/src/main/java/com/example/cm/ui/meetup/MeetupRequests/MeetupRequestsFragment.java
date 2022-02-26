@@ -1,8 +1,6 @@
 package com.example.cm.ui.meetup.MeetupRequests;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
@@ -24,13 +21,11 @@ import com.example.cm.ui.adapters.SwipeToDelete;
 import com.example.cm.utils.Navigator;
 
 public class MeetupRequestsFragment extends Fragment implements
-        MeetupRequestListAdapter.OnMeetupRequestListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        MeetupRequestListAdapter.OnMeetupRequestListener {
 
     private MeetupRequestsViewModel requestsViewModel;
     private MeetupRequestListAdapter requestsListAdapter;
     private FragmentMeetupRequestsBinding binding;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private Navigator navigator;
 
     @Override
@@ -43,16 +38,14 @@ public class MeetupRequestsFragment extends Fragment implements
     }
 
     private void initUI() {
-        swipeRefreshLayout = binding.getRoot();
-        swipeRefreshLayout.setOnRefreshListener(this);
+        binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.notificationsRecyclerView.setHasFixedSize(true);
     }
 
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
         requestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), requests -> {
             requestsListAdapter = new MeetupRequestListAdapter(requests, this);
-            binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            binding.notificationsRecyclerView.setHasFixedSize(true);
             binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
             itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
@@ -63,14 +56,6 @@ public class MeetupRequestsFragment extends Fragment implements
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void onRefresh() {
-        /*requestsViewModel.refresh();
-        requestsListAdapter.notifyDataSetChanged();
-        new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 100);*/
     }
 
     @Override

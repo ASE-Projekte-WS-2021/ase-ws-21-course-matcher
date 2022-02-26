@@ -22,10 +22,8 @@ public class SwipeToDelete extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        Log.e("REMOVE", "swipe");
         int position = viewHolder.getAdapterPosition();
         if (adapter instanceof MeetupRequestListAdapter) {
-            Log.e("REMOVE", "instance");
             ((MeetupRequestListAdapter)adapter).deleteItem(position);
         } else if (adapter instanceof FriendRequestListAdapter) {
             ((FriendRequestListAdapter) adapter).deleteItem(position);

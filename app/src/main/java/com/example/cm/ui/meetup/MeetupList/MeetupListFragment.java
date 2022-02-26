@@ -21,13 +21,16 @@ public class MeetupListFragment extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         binding = FragmentMeetupListBinding.inflate(inflater, container, false);
-
         initUi();
         initViewModel();
-
         return binding.getRoot();
+    }
+
+    private void initUi() {
+        GridLayoutManager gridLayout = new GridLayoutManager(getContext(), 2);
+        binding.meetupListRecyclerView.setLayoutManager(gridLayout);
+        binding.meetupListRecyclerView.setHasFixedSize(true);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -37,13 +40,6 @@ public class MeetupListFragment extends Fragment {
             meetupListAdapter = new MeetupListAdapter(meetups);
             binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
         });
-
-    }
-
-    private void initUi() {
-        GridLayoutManager gridLayout = new GridLayoutManager(getContext(), 2);
-        binding.meetupListRecyclerView.setLayoutManager(gridLayout);
-        binding.meetupListRecyclerView.setHasFixedSize(true);
     }
 
     @Override
