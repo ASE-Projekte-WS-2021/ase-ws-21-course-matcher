@@ -1,7 +1,5 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
-import android.util.Log;
-
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
 import androidx.lifecycle.LiveData;

@@ -1,8 +1,5 @@
 package com.example.cm.data.repositories;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.Constants;
@@ -10,7 +7,6 @@ import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.utils.Utils;
-import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -20,9 +16,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.example.cm.data.repositories.Repository.executorService;
@@ -44,7 +38,7 @@ public class MeetupRepository {
                 .whereGreaterThan("timestamp", Constants.getCurrentDay())
                 .whereNotEqualTo("phase", MeetupPhase.MEETUP_ENDED)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
-                .addSnapshotListener((value, error) -> {
+                .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
                         return;
                     }

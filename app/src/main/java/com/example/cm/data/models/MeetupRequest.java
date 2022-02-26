@@ -90,12 +90,14 @@ public class MeetupRequest extends Request {
                 && calendarNow.get(Calendar.DAY_OF_MONTH) == calendarMeetup.get(Calendar.DAY_OF_MONTH)) {
             // has started?
             if (TimeUnit.MILLISECONDS.toSeconds(now.getTime() - meetupAt.getTime()) >= 0) {
-                return MeetupPhase.MEETUP_ACTIVE;
+                phase = MeetupPhase.MEETUP_ACTIVE;
             } else {
-                return MeetupPhase.MEETUP_UPCOMING;
+                phase = MeetupPhase.MEETUP_UPCOMING;
             }
+        } else {
+            phase = MeetupPhase.MEETUP_ENDED;
         }
-        return MeetupPhase.MEETUP_ENDED;
+        return phase;
     }
 
     public void setPhase(MeetupPhase phase) {
