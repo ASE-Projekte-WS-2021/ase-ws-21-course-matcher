@@ -1,12 +1,16 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.cm.Constants;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.utils.Utils;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -16,9 +20,12 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
+
+import static com.example.cm.data.repositories.Repository.executorService;
 
 public class MeetupRepository {
 
@@ -34,10 +41,11 @@ public class MeetupRepository {
     private void listenToMeetupListChanges() {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         meetupCollection.whereArrayContains("confirmedFriends", currentUserId)
+                .whereGreaterThan("timestamp", Constants.getCurrentDay())
+                .whereNotEqualTo("phase", MeetupPhase.MEETUP_ENDED)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.w("LIVE", "Listen failed.", error);
                         return;
                     }
                     List<MutableLiveData<Meetup>> meetups = snapshotToMeetupList(value);
@@ -50,19 +58,15 @@ public class MeetupRepository {
     }
 
     public MutableLiveData<Meetup> getMeetup(String id) {
-        meetupCollection.document(id).addSnapshotListener((value, error) -> {
+        meetupCollection.document(id).addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
-                Log.w("LIVE", "Listen failed.", error);
                 return;
             }
-            meetupMLD = snapshotToMeetup(value);
-        });
-        /*meetupCollection.document(id).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()){
-                DocumentSnapshot document = task.getResult();
-                meetupMLD = snapshotToMeetup(Objects.requireNonNull(document));
+            if (value != null && value.exists()) {
+                Meetup meetup = snapshotToMeetup(value);
+                meetupMLD.postValue(meetup);
             }
-        });*/
+        });
         return meetupMLD;
     }
 
@@ -100,7 +104,9 @@ public class MeetupRepository {
     private List<MutableLiveData<Meetup>> snapshotToMeetupList(QuerySnapshot documents) {
         List<MutableLiveData<Meetup>> meetups = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            meetups.add(snapshotToMeetup(document));
+            MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
+            meetupMLD.postValue(snapshotToMeetup(document));
+            meetups.add(meetupMLD);
         }
         return meetups;
     }
@@ -111,10 +117,8 @@ public class MeetupRepository {
      * @param document Snapshot of a meetup returned from Firestore
      * @return Returns a meetup
      */
-    private MutableLiveData<Meetup> snapshotToMeetup(DocumentSnapshot document) {
-        MutableLiveData<Meetup> meetupMutableLiveData = new MutableLiveData<>();
+    private Meetup snapshotToMeetup(DocumentSnapshot document) {
         Meetup meetup = new Meetup();
-
         meetup.setId(document.getId());
         meetup.setConfirmedFriends(Utils.castList(document.get("confirmedFriends"), String.class));
         meetup.setRequestingUser(document.getString("requestingUser"));
@@ -122,9 +126,9 @@ public class MeetupRepository {
         meetup.setLocation(document.getString("location"));
         meetup.setTimestamp(document.getDate("timestamp"));
         meetup.setPrivate(document.getBoolean("private"));
+        meetup.setPrivate(document.getBoolean("hasEnded"));
+        meetup.setPhase(document.get("phase", MeetupPhase.class));
         meetup.setDeclinedFriends(Utils.castList(document.get("declinedFriends"), String.class));
-
-        meetupMutableLiveData.postValue(meetup);
-        return meetupMutableLiveData;
+        return meetup;
     }
 }

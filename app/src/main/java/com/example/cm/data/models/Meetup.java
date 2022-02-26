@@ -24,6 +24,7 @@ public class Meetup {
     private List<String> invitedFriends;
     private List<String> confirmedFriends;
     private List<String> declinedFriends;
+    private MeetupPhase phase;
 
     private final Calendar calendarNow = GregorianCalendar.getInstance();
     private final Calendar calendarMeetup = GregorianCalendar.getInstance();
@@ -40,6 +41,7 @@ public class Meetup {
         this.isPrivate = isPrivate;
         this.invitedFriends = invitedFriends;
         confirmedFriends = Collections.singletonList(requestingUser);
+        phase = getPhase();
     }
 
     @DocumentId
@@ -81,7 +83,6 @@ public class Meetup {
         return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
     }
 
-    @Exclude
     public MeetupPhase getPhase() {
         Date now = new Date();
         calendarNow.setTime(now);
@@ -97,6 +98,10 @@ public class Meetup {
             }
         }
         return MeetupPhase.MEETUP_ENDED;
+    }
+
+    public void setPhase(MeetupPhase phase) {
+        this.phase = phase;
     }
 
     public String getLocation() {

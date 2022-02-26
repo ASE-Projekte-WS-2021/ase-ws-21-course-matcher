@@ -15,6 +15,7 @@ public class MeetupRequest extends Request {
     private String location;
     private Date meetupAt;
     private MeetupRequestType type;
+    private MeetupPhase phase;
 
     private final Calendar calendarNow = GregorianCalendar.getInstance();
     private final Calendar calendarMeetup = GregorianCalendar.getInstance();
@@ -38,6 +39,7 @@ public class MeetupRequest extends Request {
         if(type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED){
             state = RequestState.REQUEST_ANSWERED;
         }
+        phase = getPhase();
     }
 
     public MeetupRequestType getType() {
@@ -79,7 +81,6 @@ public class MeetupRequest extends Request {
         return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
     }
 
-    @Exclude
     public MeetupPhase getPhase() {
         Date now = new Date();
         calendarNow.setTime(now);
@@ -95,6 +96,10 @@ public class MeetupRequest extends Request {
             }
         }
         return MeetupPhase.MEETUP_ENDED;
+    }
+
+    public void setPhase(MeetupPhase phase) {
+        this.phase = phase;
     }
 
     @Override

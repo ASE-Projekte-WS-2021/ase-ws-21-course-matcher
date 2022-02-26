@@ -26,12 +26,6 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     List<MutableLiveData<Meetup>> meetups;
 
     public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups) {
-        //todo
-        /*for (int i = 0; i < meetups.size(); i++) {
-            if (meetups.get(i).getPhase() == MeetupPhase.MEETUP_ENDED){
-                meetups.remove(i);
-            }
-        }*/
         this.meetups = meetups;
     }
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +38,6 @@ public class MeetupRequestRepository extends Repository {
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.w("LIVE", "Listen failed.", error);
                         return;
                     }
                     List<MutableLiveData<MeetupRequest>> meetupRequests = snapshotToMeetupRequestList(value);
@@ -51,32 +51,6 @@ public class MeetupRequestRepository extends Repository {
     public MutableLiveData<List<MutableLiveData<MeetupRequest>>> getMeetupRequestsForUser() {
         return receivedRequestListMDL;
     }
-
-    /*
-    public MutableLiveData<List<MeetupRequest>> getMeetupRequestsForUser() {
-        if (auth.getCurrentUser() == null) {
-            return null;
-        }
-
-        String userId = auth.getCurrentUser().getUid();
-        meetupRequestCollection.whereEqualTo("receiverId", userId)
-                .orderBy("createdAt", Query.Direction.DESCENDING)
-                .get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                List<MeetupRequest> requests = snapshotToMeetupRequestList(Objects.requireNonNull(task.getResult()));
-                receivedRequestListMDL.postValue(requests);
-            }
-        });
-        return receivedRequestListMDL;
-    }
-
-    private List<MeetupRequest> snapshotToMeetupRequestList(QuerySnapshot documents) {
-        List<MeetupRequest> requests = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents) {
-            requests.add(snapshotToMeetupRequest(document));
-        }
-        return requests;
-    }*/
 
     private List<MutableLiveData<MeetupRequest>> snapshotToMeetupRequestList(QuerySnapshot documents) {
         List<MutableLiveData<MeetupRequest>> requests = new ArrayList<>();
@@ -106,25 +80,11 @@ public class MeetupRequestRepository extends Repository {
         request.setMeetupId(document.getString("meetupId"));
         request.setLocation(document.getString("location"));
         request.setMeetupAt(document.getDate("meetupAt"));
+        request.setPhase(document.get("phase", MeetupPhase.class));
 
         requestMutableLiveData.postValue(request);
         return requestMutableLiveData;
     }
-    /*
-    private MeetupRequest snapshotToMeetupRequest(DocumentSnapshot document) {
-        MeetupRequest.MeetupRequestType notType = Objects.requireNonNull(document.get("type", MeetupRequest.MeetupRequestType.class));
-        MeetupRequest request = new MeetupRequest(notType);
-        request.setId(document.getId());
-        request.setSenderId(document.getString("senderId"));
-        request.setSenderName(document.getString("senderName"));
-        request.setReceiverId(document.getString("receiverId"));
-        request.setCreatedAt(document.getDate("createdAt"));
-        request.setState(document.get("state", Request.RequestState.class));
-        request.setMeetupId(document.getString("meetupId"));
-        request.setLocation(document.getString("location"));
-        request.setMeetupAt(document.getDate("meetupAt"));
-        return request;
-    }*/
 
     /**
      * Add a new Meetup Request to collection

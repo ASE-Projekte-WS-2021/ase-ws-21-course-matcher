@@ -2,7 +2,6 @@ package com.example.cm.ui.adapters;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.cm.data.models.Meetup;
@@ -12,9 +11,9 @@ public class MeetupDetailedTabAdapter extends FragmentStateAdapter {
 
     public static final int TAB_COUNT = 3;
 
-    private final MutableLiveData<Meetup> meetup;
+    private final Meetup meetup;
 
-    public MeetupDetailedTabAdapter(Fragment fragment, MutableLiveData<Meetup> meetup) {
+    public MeetupDetailedTabAdapter(Fragment fragment, Meetup meetup) {
         super(fragment);
         this.meetup = meetup;
     }
@@ -23,11 +22,11 @@ public class MeetupDetailedTabAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if (position == 0) {
-            return new MeetupDetailedFriendsListFragment(meetup.getValue().getConfirmedFriends());
+            return new MeetupDetailedFriendsListFragment(meetup.getConfirmedFriends());
         } else if (position == 1) {
-            return new MeetupDetailedFriendsListFragment(meetup.getValue().getDeclinedFriends());
+            return new MeetupDetailedFriendsListFragment(meetup.getDeclinedFriends());
         } else {
-            return new MeetupDetailedFriendsListFragment(meetup.getValue().getInvitedFriends());
+            return new MeetupDetailedFriendsListFragment(meetup.getInvitedFriends());
         }
     }
 
