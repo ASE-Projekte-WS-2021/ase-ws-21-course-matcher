@@ -1,12 +1,14 @@
 package com.example.cm.ui.adapters;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class SwipeToDelete extends ItemTouchHelper.SimpleCallback {
 
-    private RecyclerView.Adapter adapter;
+    private final RecyclerView.Adapter adapter;
 
     public SwipeToDelete(RecyclerView.Adapter adapter) {
         super(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);
@@ -20,8 +22,10 @@ public class SwipeToDelete extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        Log.e("REMOVE", "swipe");
         int position = viewHolder.getAdapterPosition();
         if (adapter instanceof MeetupRequestListAdapter) {
+            Log.e("REMOVE", "instance");
             ((MeetupRequestListAdapter)adapter).deleteItem(position);
         } else if (adapter instanceof FriendRequestListAdapter) {
             ((FriendRequestListAdapter) adapter).deleteItem(position);

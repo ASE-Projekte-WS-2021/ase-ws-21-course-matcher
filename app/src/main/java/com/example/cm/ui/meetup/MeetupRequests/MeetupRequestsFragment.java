@@ -45,21 +45,17 @@ public class MeetupRequestsFragment extends Fragment implements
     private void initUI() {
         swipeRefreshLayout = binding.getRoot();
         swipeRefreshLayout.setOnRefreshListener(this);
-        requestsListAdapter = new MeetupRequestListAdapter(this);
-        binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.notificationsRecyclerView.setHasFixedSize(true);
-        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
-        itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
     }
 
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
         requestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), requests -> {
-            if(requests == null){
-                return;
-            }
-            requestsListAdapter.setRequests(requests);
+            requestsListAdapter = new MeetupRequestListAdapter(requests, this);
+            binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            binding.notificationsRecyclerView.setHasFixedSize(true);
+            binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
+            itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
         });
     }
 
@@ -72,9 +68,9 @@ public class MeetupRequestsFragment extends Fragment implements
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onRefresh() {
-        requestsViewModel.refresh();
+        /*requestsViewModel.refresh();
         requestsListAdapter.notifyDataSetChanged();
-        new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 100);
+        new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 100);*/
     }
 
     @Override

@@ -50,16 +50,20 @@ public class MeetupRepository {
     }
 
     public MutableLiveData<Meetup> getMeetup(String id) {
-        Log.e("MDL", meetupListMLD + "");
-        List<MutableLiveData<Meetup>> meetups = meetupListMLD.getValue();
-        Log.e("LIST", meetups + "");
-        Log.e("LIST", meetups.size() + "");
-        for (MutableLiveData<Meetup> meetup : meetups) {
-            if (Objects.requireNonNull(meetup.getValue()).getId().equals(id)) {
-                return meetup;
+        meetupCollection.document(id).addSnapshotListener((value, error) -> {
+            if (error != null) {
+                Log.w("LIVE", "Listen failed.", error);
+                return;
             }
-        }
-        return null;
+            meetupMLD = snapshotToMeetup(value);
+        });
+        /*meetupCollection.document(id).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()){
+                DocumentSnapshot document = task.getResult();
+                meetupMLD = snapshotToMeetup(Objects.requireNonNull(document));
+            }
+        });*/
+        return meetupMLD;
     }
 
     public boolean addMeetup(Meetup meetup) {

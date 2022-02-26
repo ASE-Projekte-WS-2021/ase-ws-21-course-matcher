@@ -2,6 +2,7 @@ package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
+import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
@@ -23,34 +26,17 @@ import java.util.List;
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
     private ViewGroup parent;
-    private List<MeetupRequest> mRequests;
+    private List<MutableLiveData<MeetupRequest>> mRequests;
     private final OnMeetupRequestListener listener;
 
-    public MeetupRequestListAdapter(OnMeetupRequestListener listener) {
+    public MeetupRequestListAdapter(List<MutableLiveData<MeetupRequest>> requests, OnMeetupRequestListener listener) {
+        mRequests = requests;
         this.listener = listener;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setRequests(List<MeetupRequest> newRequests){
-        // filter out declined request to not display them again
-        Iterator<MeetupRequest> iterator = newRequests.iterator();
-        while (iterator.hasNext()) {
-            MeetupRequest request = iterator.next();
-            if (request.getState() == Request.RequestState.REQUEST_DECLINED) {
-                iterator.remove();
-            }
-        }
-
-        if(mRequests == null){
-            mRequests = newRequests;
-            notifyDataSetChanged();
-            return;
-        }
-        mRequests = newRequests;
-    }
-
     public void deleteItem(int position) {
-        MeetupRequest request = mRequests.get(position);
+        Log.e("REMOVE", "delete");
+        MeetupRequest request = mRequests.get(position).getValue();
         Request.RequestState previousState = request.getState();
         mRequests.remove(position);
         notifyItemRemoved(position);
@@ -76,7 +62,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     @Override
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
         Context context = holder.binding.getRoot().getContext();
-        MeetupRequest request = mRequests.get(position);
+        MeetupRequest request = mRequests.get(position).getValue();
 
         String user = String.format("@%s ", request.getSenderName());
         String date = request.getCreationTimeAgo();
@@ -166,11 +152,11 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(mRequests.get(position).getMeetupId());
+            listener.onItemClicked(mRequests.get(position).getValue().getMeetupId());
         }
 
         private void onAccept() {
-            MeetupRequest request = mRequests.get(getAdapterPosition());
+            MeetupRequest request = mRequests.get(getAdapterPosition()).getValue();
             listener.onAccept(request);
             notifyItemChanged(getAdapterPosition());
         }
@@ -182,7 +168,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
         private void onDecline(){
             int position = getAdapterPosition();
-            MeetupRequest request = mRequests.get(position);
+            MeetupRequest request = mRequests.get(position).getValue();
             listener.onDecline(request);
             notifyItemRemoved(position);
             Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.decline_snackbar_text, Snackbar.LENGTH_LONG);
