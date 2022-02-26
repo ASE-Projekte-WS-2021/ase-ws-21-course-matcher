@@ -1,6 +1,5 @@
 package com.example.cm.ui.adapters;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
@@ -16,40 +16,21 @@ import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder>{
 
     private ViewGroup parent;
-    private List<FriendRequest> mRequests;
+    private final List<MutableLiveData<FriendRequest>> mRequests;
     private final OnFriendRequestListener listener;
 
-    public FriendRequestListAdapter(OnFriendRequestListener listener) {
+    public FriendRequestListAdapter(List<MutableLiveData<FriendRequest>> requests, OnFriendRequestListener listener) {
+        mRequests = requests;
         this.listener = listener;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setRequests(List<FriendRequest> newRequests){
-        // filter out declined request to not display them again
-        Iterator<FriendRequest> iterator = newRequests.iterator();
-        while (iterator.hasNext()) {
-            FriendRequest request = iterator.next();
-            if (request.getState() == Request.RequestState.REQUEST_DECLINED) {
-                iterator.remove();
-            }
-        }
-
-        if(mRequests == null){
-            mRequests = newRequests;
-            notifyDataSetChanged();
-            return;
-        }
-        mRequests = newRequests;
-    }
-
     public void deleteItem(int position) {
-        FriendRequest request = mRequests.get(position);
+        FriendRequest request = mRequests.get(position).getValue();
         Request.RequestState previousState = request.getState();
         mRequests.remove(position);
         notifyItemRemoved(position);
@@ -61,6 +42,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     private void onUndoDelete(FriendRequest request, int position, Request.RequestState previousState){
         listener.onUndo(request, position, previousState);
+        mRequests.add(position, new MutableLiveData<>(request));
         notifyItemInserted(position);
     }
 
@@ -74,7 +56,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     @Override
     public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
-        FriendRequest request = mRequests.get(position);
+        FriendRequest request = mRequests.get(position).getValue();
 
         String user = request.getSenderName();
         String date = request.getCreationTimeAgo();
@@ -122,11 +104,11 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(mRequests.get(position).getSenderId());
+            listener.onItemClicked(mRequests.get(position).getValue().getSenderId());
         }
 
         private void onAccept() {
-            FriendRequest request = mRequests.get(getAdapterPosition());
+            FriendRequest request = mRequests.get(getAdapterPosition()).getValue();
             listener.onAccept(request);
             notifyItemChanged(getAdapterPosition());
         }
@@ -138,7 +120,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
         private void onDecline(){
             int position = getAdapterPosition();
-            FriendRequest request = mRequests.get(position);
+            FriendRequest request = mRequests.get(position).getValue();
             Request.RequestState previousState = request.getState();
             listener.onDecline(request);
             notifyItemRemoved(position);

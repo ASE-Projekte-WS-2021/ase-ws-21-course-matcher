@@ -19,6 +19,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
 import static com.example.cm.data.repositories.Repository.executorService;
 
 public class MeetupRepository {
@@ -36,11 +37,18 @@ public class MeetupRepository {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         meetupCollection.whereArrayContains("confirmedFriends", currentUserId)
                 .whereGreaterThan("timestamp", Constants.getCurrentDay())
-                .whereNotEqualTo("phase", MeetupPhase.MEETUP_ENDED)
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
                         return;
+                    }
+                    if (value != null && !value.isEmpty()) {
+                        for (int i = 0; i < value.getDocuments().size(); i++) {
+                            MeetupPhase currentPhase = value.getDocuments().get(i).get("phase", MeetupPhase.class);
+                            if (currentPhase == MEETUP_ENDED) {
+                                value.getDocuments().remove(i);
+                            }
+                        }
                     }
                     List<MutableLiveData<Meetup>> meetups = snapshotToMeetupList(value);
                     meetupListMLD.postValue(meetups);
@@ -120,8 +128,7 @@ public class MeetupRepository {
         meetup.setLocation(document.getString("location"));
         meetup.setTimestamp(document.getDate("timestamp"));
         meetup.setPrivate(document.getBoolean("private"));
-        meetup.setPrivate(document.getBoolean("hasEnded"));
-        meetup.setPhase(document.get("phase", MeetupPhase.class));
+        //meetup.setPhase(document.get("phase", MeetupPhase.class));
         meetup.setDeclinedFriends(Utils.castList(document.get("declinedFriends"), String.class));
         return meetup;
     }

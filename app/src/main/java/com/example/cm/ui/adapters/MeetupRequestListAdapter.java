@@ -26,7 +26,7 @@ import java.util.List;
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
     private ViewGroup parent;
-    private List<MutableLiveData<MeetupRequest>> mRequests;
+    private final List<MutableLiveData<MeetupRequest>> mRequests;
     private final OnMeetupRequestListener listener;
 
     public MeetupRequestListAdapter(List<MutableLiveData<MeetupRequest>> requests, OnMeetupRequestListener listener) {
@@ -47,6 +47,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     private void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState){
         listener.onUndoDelete(request, position, previousState);
+        mRequests.add(position, new MutableLiveData<>(request));
         notifyItemInserted(position);
     }
 

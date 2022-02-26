@@ -1,8 +1,6 @@
 package com.example.cm.ui.friends.FriendRequests;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
@@ -25,13 +22,11 @@ import com.example.cm.utils.Navigator;
 
 
 public class FriendRequestsFragment extends Fragment implements
-        FriendRequestListAdapter.OnFriendRequestListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        FriendRequestListAdapter.OnFriendRequestListener {
 
     private FriendRequestsViewModel requestsViewModel;
     private FriendRequestListAdapter requestsListAdapter;
     private FragmentFriendRequestsBinding binding;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private Navigator navigator;
 
     @Override
@@ -44,23 +39,17 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     private void initUI() {
-        swipeRefreshLayout = binding.getRoot();
-        swipeRefreshLayout.setOnRefreshListener(this);
-        requestsListAdapter = new FriendRequestListAdapter(this);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
-        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
-        itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
     }
 
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(FriendRequestsViewModel.class);
         requestsViewModel.getFriendRequests().observe(getViewLifecycleOwner(), requests -> {
-            if(requests == null){
-                return;
-            }
-            requestsListAdapter.setRequests(requests);
+            requestsListAdapter = new FriendRequestListAdapter(requests, this);
+            binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
+            itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
         });
     }
 
@@ -68,14 +57,6 @@ public class FriendRequestsFragment extends Fragment implements
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    @Override
-    public void onRefresh() {
-        requestsViewModel.refresh();
-        requestsListAdapter.notifyDataSetChanged();
-        new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 100);
     }
 
     @Override
@@ -87,7 +68,7 @@ public class FriendRequestsFragment extends Fragment implements
 
     @Override
     public void onItemDeleted(FriendRequest request) {
-        requestsViewModel.deleteFriendRequest(request);
+        requestsViewModel.declineOrDeleteFriendRequest(request);
     }
 
     @Override
@@ -97,7 +78,7 @@ public class FriendRequestsFragment extends Fragment implements
 
     @Override
     public void onDecline(FriendRequest request) {
-        requestsViewModel.declineFriendRequest(request);
+        requestsViewModel.declineOrDeleteFriendRequest(request);
     }
 
     @Override
