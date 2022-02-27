@@ -1,6 +1,7 @@
 package com.example.cm.ui.invite_friends;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +32,10 @@ public class InviteFriendsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-
         View root = binding.getRoot();
-
         initUI();
         initViewModel();
         initListener();
-
         return root;
     }
 
@@ -50,7 +48,6 @@ public class InviteFriendsFragment extends Fragment
 
     private void initListener() {
         binding.inviteFriendsSearchBtn.setOnClickListener(v -> onSearchButtonClicked());
-
         binding.btnSendInvite.setOnClickListener(v -> {
             boolean isSuccessful = createMeetupViewModel.createMeetup();
             if (isSuccessful) {
@@ -63,7 +60,6 @@ public class InviteFriendsFragment extends Fragment
 
     public void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
-
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
                 return;
@@ -73,8 +69,9 @@ public class InviteFriendsFragment extends Fragment
                 // todo: set snackbar action -> go to add-friends-fragment
                 snackbar.show();
                 binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
+                return;
             }
-
+            inviteFriendsListAdapter.setUsers(users);
             binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);
         });
