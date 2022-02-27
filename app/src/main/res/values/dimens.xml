@@ -9,6 +9,7 @@
 
     <dimen name="default_screen_padding">20dp</dimen>
 
+    <dimen name="app_bar_title">20sp</dimen>
     <dimen name="text_size_title">24sp</dimen>
     <dimen name="text_size_description">18sp</dimen>
     <dimen name="text_size_description_small">14sp</dimen>
