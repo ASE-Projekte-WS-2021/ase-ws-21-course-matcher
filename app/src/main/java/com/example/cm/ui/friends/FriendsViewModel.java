@@ -1,7 +1,5 @@
 package com.example.cm.ui.friends;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
