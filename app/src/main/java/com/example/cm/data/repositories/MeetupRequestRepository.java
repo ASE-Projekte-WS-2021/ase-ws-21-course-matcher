@@ -23,22 +23,28 @@ public class MeetupRequestRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());
-    private MutableLiveData<List<MutableLiveData<MeetupRequest>>> receivedRequests = new MutableLiveData<>();
+    private final MutableLiveData<List<MutableLiveData<MeetupRequest>>> receivedRequests = new MutableLiveData<>();
 
     public MeetupRequestRepository() {
         listenToRequestListChanges();
     }
 
     private void listenToRequestListChanges() {
-        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (auth.getCurrentUser() == null) {
+            return;
+        }
+        String currentUserId = auth.getCurrentUser().getUid();
+
         meetupRequestCollection.whereEqualTo("receiverId", currentUserId)
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         return;
                     }
-                    List<MutableLiveData<MeetupRequest>> meetupRequests = snapshotToMutableMeetupRequestList(value);
-                    receivedRequests.postValue(meetupRequests);
+                    if (value != null && !value.isEmpty()) {
+                        List<MutableLiveData<MeetupRequest>> meetupRequests = snapshotToMutableMeetupRequestList(value);
+                        receivedRequests.postValue(meetupRequests);
+                    }
                 });
     }
 

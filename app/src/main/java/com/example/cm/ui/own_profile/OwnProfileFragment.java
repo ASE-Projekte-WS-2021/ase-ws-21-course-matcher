@@ -27,9 +27,7 @@ public class OwnProfileFragment extends Fragment {
     }
 
     private void initListeners() {
-        binding.btnProfileSettings.setOnClickListener(v -> {
-            Timber.d("Profile settings button clicked");
-        });
+        binding.btnProfileSettings.setOnClickListener(v -> Timber.d("Profile settings button clicked"));
     }
 
     private void initViewModel() {

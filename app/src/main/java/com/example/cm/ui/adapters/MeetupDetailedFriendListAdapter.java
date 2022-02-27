@@ -12,6 +12,7 @@ import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemMeetupFriendBinding;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
     private final List<MutableLiveData<User>> friends;
@@ -32,7 +33,7 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
         if (friends != null) {
             User friend = friends.get(position).getValue();
-            String fullName = friend.getFullName();
+            String fullName = Objects.requireNonNull(friend).getFullName();
             String username = friend.getUsername();
             TextView tvUserName = holder.getTvUserName();
             TextView tvFullName = holder.getTvFullName();

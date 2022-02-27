@@ -55,7 +55,7 @@ public class AuthViewModel extends AndroidViewModel {
     private void addUser(String username, String firstName, String lastName, String email) {
         FirebaseUser authUser = authRepository.getCurrentUser();
         if (authUser != null) {
-            User user = new User(authUser.getUid(), username, firstName, lastName, email, new ArrayList<String>());
+            User user = new User(authUser.getUid(), username, firstName, lastName, email, new ArrayList<>());
             userRepository.createUser(user);
             userLiveData.postValue(authUser);
         }

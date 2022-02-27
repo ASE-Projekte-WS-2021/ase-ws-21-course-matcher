@@ -10,7 +10,7 @@ import java.util.List;
 
 public class MeetupDetailedFriendsListViewModel extends ViewModel {
 
-    private MutableLiveData<List<MutableLiveData<User>>> users;
+    private final MutableLiveData<List<MutableLiveData<User>>> users;
 
     public MeetupDetailedFriendsListViewModel(List<String> userIds) {
         UserRepository userRepository = new UserRepository();

@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
@@ -15,9 +14,8 @@ import java.util.Objects;
 public class FriendRequestsViewModel extends ViewModel {
 
     private final UserRepository userRepository;
-    private MutableLiveData<List<MutableLiveData<FriendRequest>>> receivedRequests;
-    private MutableLiveData<List<MutableLiveData<FriendRequest>>> sentRequests = new MutableLiveData<>();
-    private FriendRequestRepository friendRequestRepository;
+    private final MutableLiveData<List<MutableLiveData<FriendRequest>>> receivedRequests;
+    private final FriendRequestRepository friendRequestRepository;
 
     public FriendRequestsViewModel() {
         userRepository = new UserRepository();

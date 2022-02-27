@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.UserRepository;
 
-import java.util.List;
 
 public class OtherProfileViewModel extends ViewModel {
 

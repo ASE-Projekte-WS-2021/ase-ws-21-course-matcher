@@ -1,8 +1,6 @@
 package com.example.cm.ui.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,14 +12,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
-import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
@@ -36,7 +33,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     public void deleteItem(int position) {
         MeetupRequest request = mRequests.get(position).getValue();
-        Request.RequestState previousState = request.getState();
+        Request.RequestState previousState = Objects.requireNonNull(request).getState();
         mRequests.remove(position);
         notifyItemRemoved(position);
         listener.onItemDeleted(request);
@@ -64,7 +61,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         Context context = holder.binding.getRoot().getContext();
         MeetupRequest request = mRequests.get(position).getValue();
 
-        String user = String.format("@%s ", request.getSenderName());
+        String user = String.format("@%s ", Objects.requireNonNull(request).getSenderName());
         String date = request.getCreationTimeAgo();
         String location = request.getLocation();
 
@@ -152,7 +149,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(mRequests.get(position).getValue().getMeetupId());
+            listener.onItemClicked(Objects.requireNonNull(mRequests.get(position).getValue()).getMeetupId());
         }
 
         private void onAccept() {

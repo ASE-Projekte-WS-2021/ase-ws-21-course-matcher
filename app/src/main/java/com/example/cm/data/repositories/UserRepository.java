@@ -109,7 +109,7 @@ public class UserRepository extends Repository {
                 isUserBefriended.postValue(false);
             } else {
                 List<String> friends = Utils.castList(value.get("friends"), String.class);
-                boolean isBefriended = friends.contains(userId);
+                boolean isBefriended = Objects.requireNonNull(friends).contains(userId);
                 isUserBefriended.postValue(isBefriended);
             }
         }));
@@ -134,7 +134,7 @@ public class UserRepository extends Repository {
 
                         if (doc.get("friends") == null) {
                             users.add(new MutableLiveData<>(snapshotToUser(doc)));
-                        } else if (!Utils.castList(doc.get("friends"), String.class)
+                        } else if (!Objects.requireNonNull(Utils.castList(doc.get("friends"), String.class))
                                 .contains(auth.getCurrentUser().getUid())) {
                             users.add(new MutableLiveData<>(snapshotToUser(doc)));
                         }
@@ -149,7 +149,7 @@ public class UserRepository extends Repository {
     /**
      * Get user with given id
      *
-     * @param userId
+     * @param userId id of user to retrieve
      * @return MutableLiveData of user with id
      */
     public MutableLiveData<User> getUserById(String userId) {
@@ -168,7 +168,7 @@ public class UserRepository extends Repository {
     /**
      * Get user with given email
      *
-     * @param email
+     * @param email email of user to retrieve
      * @return MutableLiveData of user with email
      */
     public MutableLiveData<User> getUserByEmail(String email) {
@@ -211,7 +211,7 @@ public class UserRepository extends Repository {
     /**
      * Get user list by list of userIds
      *
-     * @param userIds
+     * @param userIds IDs of users to retrieve
      * @return MutableLiveData-List of mutable users with ids
      */
     public MutableLiveData<List<MutableLiveData<User>>> getUsersByIds(List<String> userIds) {
@@ -252,7 +252,7 @@ public class UserRepository extends Repository {
 
                         if (doc.get("friends") == null) {
                             users.add(new MutableLiveData<>(snapshotToUser(doc)));
-                        } else if (!Utils.castList(doc.get("friends"), String.class)
+                        } else if (!Objects.requireNonNull(Utils.castList(doc.get("friends"), String.class))
                                 .contains(auth.getCurrentUser().getUid())) {
                             users.add(new MutableLiveData<>(snapshotToUser(doc)));
                         }
@@ -369,8 +369,8 @@ public class UserRepository extends Repository {
     /**
      * Add each other to friends list
      *
-     * @param friend1Id
-     * @param friend2Id
+     * @param friend1Id ID of friend to add to other's friend list
+     * @param friend2Id ID of friend to add to other's friend list
      */
     public void addFriends(String friend1Id, String friend2Id) {
         userCollection.document(friend1Id).update("friends", FieldValue.arrayUnion(friend2Id));

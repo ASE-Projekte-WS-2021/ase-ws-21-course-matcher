@@ -9,6 +9,7 @@ import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 import timber.log.Timber;
 
@@ -105,14 +106,16 @@ public class AddFriendsViewModel extends ViewModel {
     }
 
     /**
-     * has current user sent an friend request to user with given id
+     * checks whether current user sent an friend request to user with given id
+     *
      * @param requests list of friend requests
      * @param receiverId id of the friend to check if has received friend request of current
-     * @return
+     * @return has current user sent an friend request to user with given id
      */
     private boolean hasReceivedFriendRequest(List<MutableLiveData<FriendRequest>> requests, String receiverId) {
         for (MutableLiveData<FriendRequest> request : requests) {
-            if (request.getValue().getReceiverId().equals(receiverId) && request.getValue().getSenderId().equals(userRepository.getFirebaseUser().getUid())) {
+            if (Objects.requireNonNull(request.getValue()).getReceiverId().equals(receiverId)
+                    && request.getValue().getSenderId().equals(userRepository.getFirebaseUser().getUid())) {
                 return true;
             }
         }

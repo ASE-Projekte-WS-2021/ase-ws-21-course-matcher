@@ -24,13 +24,13 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         FirebaseUser firebaseUser = authViewModel.getUserLiveData().getValue();
 
+        Intent intent;
         if (firebaseUser != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            intent = new Intent(this, MainActivity.class);
         } else {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            intent = new Intent(this, LoginActivity.class);
         }
+        startActivity(intent);
 
         setContentView(R.layout.activity_splash_screen);
     }

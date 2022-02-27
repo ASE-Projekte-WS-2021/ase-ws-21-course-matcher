@@ -17,6 +17,7 @@ import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.Objects;
 
 public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder>{
 
@@ -31,7 +32,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     public void deleteItem(int position) {
         FriendRequest request = mRequests.get(position).getValue();
-        Request.RequestState previousState = request.getState();
+        Request.RequestState previousState = Objects.requireNonNull(request).getState();
         mRequests.remove(position);
         notifyItemRemoved(position);
         listener.onItemDeleted(request);
@@ -58,7 +59,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
         FriendRequest request = mRequests.get(position).getValue();
 
-        String user = request.getSenderName();
+        String user = Objects.requireNonNull(request).getSenderName();
         String date = request.getCreationTimeAgo();
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
@@ -104,7 +105,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(mRequests.get(position).getValue().getSenderId());
+            listener.onItemClicked(Objects.requireNonNull(mRequests.get(position).getValue()).getSenderId());
         }
 
         private void onAccept() {
@@ -121,7 +122,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         private void onDecline(){
             int position = getAdapterPosition();
             FriendRequest request = mRequests.get(position).getValue();
-            Request.RequestState previousState = request.getState();
+            Request.RequestState previousState = Objects.requireNonNull(request).getState();
             listener.onDecline(request);
             notifyItemRemoved(position);
             Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.decline_snackbar_text, Snackbar.LENGTH_LONG);

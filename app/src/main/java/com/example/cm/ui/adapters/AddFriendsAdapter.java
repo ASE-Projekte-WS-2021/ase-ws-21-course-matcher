@@ -22,6 +22,7 @@ import com.example.cm.databinding.ItemSendFriendRequestBinding;
 import com.example.cm.ui.add_friends.AddFriendsViewModel;
 
 import java.util.List;
+import java.util.Objects;
 
 public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.UserViewHolder> {
 
@@ -68,7 +69,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
         User user = mUsers.get(position).getValue();
 
-        String name = user.getFullName();
+        String name = Objects.requireNonNull(user).getFullName();
         String username = user.getUsername();
 
         holder.getTvName().setText(name);
@@ -76,7 +77,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         holder.getFriendRequestButton().setEnabled(true);
 
         for (MutableLiveData<FriendRequest> request : sentFriendRequests) {
-            boolean notificationExists = request.getValue().getReceiverId().equals(user.getId()) &&
+            boolean notificationExists = Objects.requireNonNull(request.getValue()).getReceiverId().equals(user.getId()) &&
                     request.getValue().getState() == Request.RequestState.REQUEST_PENDING;
 
             int btnContent, btnColor;
@@ -135,7 +136,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
-            listener.onItemClicked(mUsers.get(position).getValue().getId());
+            listener.onItemClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
         }
 
         @SuppressLint("ResourceAsColor")
@@ -145,7 +146,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
-            listener.onFriendRequestButtonClicked(mUsers.get(position).getValue().getId());
+            listener.onFriendRequestButtonClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
 
             int btnContent, btnColor;
             if (binding.btnSendFriendRequest.getText().toString()

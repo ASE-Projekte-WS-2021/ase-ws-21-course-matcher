@@ -23,7 +23,7 @@ public class MeetupRequestsViewModel extends ViewModel {
 
     private final MeetupRepository meetupRepository;
     private final MeetupRequestRepository meetupRequestRepository;
-    private MutableLiveData<List<MutableLiveData<MeetupRequest>>> requestList = new MutableLiveData<>();
+    private final MutableLiveData<List<MutableLiveData<MeetupRequest>>> requestList;
 
     public MeetupRequestsViewModel() {
         userRepository = new UserRepository();

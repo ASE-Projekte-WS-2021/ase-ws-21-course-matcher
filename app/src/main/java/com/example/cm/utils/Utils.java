@@ -54,7 +54,7 @@ public class Utils {
      * @return List of type T
      */
     public static <T> List<T> castList(Object obj, Class<T> typeOfList) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         if (obj instanceof List<?>) {
             for (Object o : (List<?>) obj) {
                 result.add(typeOfList.cast(o));
@@ -87,8 +87,8 @@ public class Utils {
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(oldUsers.get(oldItemPosition).getValue().getId(),
-                        newUsers.get(newItemPosition).getValue().getId());
+                return Objects.equals(Objects.requireNonNull(oldUsers.get(oldItemPosition).getValue()).getId(),
+                        Objects.requireNonNull(newUsers.get(newItemPosition).getValue()).getId());
             }
 
             @Override
@@ -96,7 +96,7 @@ public class Utils {
                 User newUser = newUsers.get(newItemPosition).getValue();
                 User oldUser = oldUsers.get(oldItemPosition).getValue();
 
-                return Objects.equals(newUser.getId(), oldUser.getId())
+                return Objects.equals(Objects.requireNonNull(newUser).getId(), Objects.requireNonNull(oldUser).getId())
                         && Objects.equals(newUser.getFirstName(), oldUser.getFirstName())
                         && Objects.equals(newUser.getLastName(), oldUser.getLastName())
                         && Objects.equals(newUser.getUsername(), oldUser.getUsername());

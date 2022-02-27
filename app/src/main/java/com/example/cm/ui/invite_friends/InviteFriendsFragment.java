@@ -19,8 +19,7 @@ import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
-public class InviteFriendsFragment extends Fragment
-        implements AdapterView.OnItemClickListener,
+public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener,
         InviteFriendsAdapter.OnItemClickListener {
 
     private CreateMeetupViewModel createMeetupViewModel;

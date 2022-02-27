@@ -2,6 +2,8 @@ package com.example.cm.data.models;
 
 import android.annotation.SuppressLint;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.firestore.Exclude;
 
 import java.util.Calendar;
@@ -104,6 +106,7 @@ public class MeetupRequest extends Request {
         this.phase = phase;
     }
 
+    @NonNull
     @Override
     public String toString() {
         String meetupString = "Treffen " + meetupAt + " Uhr - " + location;

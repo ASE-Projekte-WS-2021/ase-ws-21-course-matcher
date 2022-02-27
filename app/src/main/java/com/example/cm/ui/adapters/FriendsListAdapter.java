@@ -13,6 +13,7 @@ import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.cm.utils.Utils.calculateDiff;
 
@@ -51,7 +52,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
         User user = mUsers.get(position).getValue();
 
-        String name = user.getFullName();
+        String name = Objects.requireNonNull(user).getFullName();
         String username = user.getUsername();
 
         holder.getTvName().setText(name);
@@ -95,7 +96,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(mUsers.get(position).getValue().getId());
+            listener.onItemClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
         }
 
 

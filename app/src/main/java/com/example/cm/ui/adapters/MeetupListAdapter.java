@@ -20,6 +20,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
     List<MutableLiveData<Meetup>> meetups;
@@ -43,11 +44,11 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
         meetupCard.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putString(Constants.KEY_MEETUP_ID, meetup.getId());
+            bundle.putString(Constants.KEY_MEETUP_ID, Objects.requireNonNull(meetup).getId());
             Navigation.findNavController(view).navigate(R.id.navigateToMeetupDetailed, bundle);
         });
 
-        holder.getTvLocation().setText(meetup.getLocation());
+        holder.getTvLocation().setText(Objects.requireNonNull(meetup).getLocation());
         switch (meetup.getPhase()){
             case MEETUP_UPCOMING:
                 holder.getTvTime().setText(meetup.getFormattedTime());
