@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.settings.edit_account.EditAccountFragment">
+
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/action_bar_with_back_button" />
+
+</FrameLayout>

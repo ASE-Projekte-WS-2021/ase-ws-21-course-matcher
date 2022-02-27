@@ -70,7 +70,11 @@
         android:id="@+id/navigation_profile"
         android:name="com.example.cm.ui.own_profile.OwnProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_own_profile"/>
+        tools:layout="@layout/fragment_own_profile">
+        <action
+            android:id="@+id/action_navigation_profile_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_friends_tabs"
@@ -117,5 +121,35 @@
         android:id="@+id/navigation_other_profile"
         android:name="com.example.cm.ui.other_profile.OtherProfileFragment"
         android:label="@string/title_profile" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.cm.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_editNotificationsFragment"
+            app:destination="@id/editNotificationsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_editAccountFragment"
+            app:destination="@id/editAccountFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.cm.ui.settings.edit_profile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/editAccountFragment"
+        android:name="com.example.cm.ui.settings.edit_account.EditAccountFragment"
+        android:label="fragment_edit_account"
+        tools:layout="@layout/fragment_edit_account" />
+    <fragment
+        android:id="@+id/editNotificationsFragment"
+        android:name="com.example.cm.ui.settings.edit_notifications.EditNotificationsFragment"
+        android:label="fragment_edit_notifications"
+        tools:layout="@layout/fragment_edit_notifications" />
 
 </navigation>
