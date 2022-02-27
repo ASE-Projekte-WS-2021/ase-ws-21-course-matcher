@@ -25,10 +25,6 @@ public class FriendsViewModel extends ViewModel {
     }
 
     public void searchUsers(String query) {
-        if (query.isEmpty()) {
-            friends = userRepository.getFriends();
-            return;
-        }
         if (friends.getValue() != null) {
             friends.getValue().clear();
             friends = userRepository.getFriendsByUsername(query);

@@ -3,6 +3,7 @@ package com.example.cm.ui.friends;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     private FriendsListAdapter friendsListAdapter;
     private Navigator navigator;
 
+    private boolean wasClearedByButton;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFriendsListBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
@@ -55,7 +58,11 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
         binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
         binding.etUserSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                if (wasClearedByButton) {
+                    wasClearedByButton = false;
+                    return;
+                }
                 onSearchTextChanged(charSequence);
             }
 
@@ -70,7 +77,9 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     }
 
     private void onClearInputClicked() {
+        wasClearedByButton = true;
         binding.etUserSearch.setText("");
+        friendsViewModel.searchUsers("");
         binding.ivClearInput.setVisibility(View.GONE);
     }
 

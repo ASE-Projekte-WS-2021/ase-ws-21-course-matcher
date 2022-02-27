@@ -53,14 +53,14 @@ public class UserRepository extends Repository {
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
-        userCollection.document(currentUserId).addSnapshotListener(executorService, ((value, error) -> {
+        userCollection.document(currentUserId).addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
                 return;
             } if (value != null && value.exists()) {
                 User user = snapshotToUser(value);
                 mutableUser.postValue(user);
             }
-        }));
+        });
         return mutableUser;
     }
 
