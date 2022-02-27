@@ -17,6 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class UserRepository extends Repository {
 
@@ -129,11 +130,14 @@ public class UserRepository extends Repository {
                 List<MutableLiveData<User>> users = new ArrayList<>();
 
                 for (DocumentSnapshot doc : value.getDocuments()) {
-                    if (doc.get("friends") == null) {
-                        users.add(new MutableLiveData<>(snapshotToUser(doc)));
-                    } else if (!Utils.castList(doc.get("friends"), String.class)
-                            .contains(auth.getCurrentUser().getUid())) {
-                        users.add(new MutableLiveData<>(snapshotToUser(doc)));
+                    if (!doc.getId().equals(Objects.requireNonNull(auth.getCurrentUser()).getUid())) {
+
+                        if (doc.get("friends") == null) {
+                            users.add(new MutableLiveData<>(snapshotToUser(doc)));
+                        } else if (!Utils.castList(doc.get("friends"), String.class)
+                                .contains(auth.getCurrentUser().getUid())) {
+                            users.add(new MutableLiveData<>(snapshotToUser(doc)));
+                        }
                     }
                 }
                 mutableUsers.postValue(users);
@@ -242,12 +246,16 @@ public class UserRepository extends Repository {
             }
             if (value != null && !value.isEmpty()) {
                 List<MutableLiveData<User>> users = new ArrayList<>();
+
                 for (DocumentSnapshot doc : value.getDocuments()) {
-                    if (doc.get("friends") == null) {
-                        users.add(new MutableLiveData<>(snapshotToUser(doc)));
-                    } else if (!Utils.castList(doc.get("friends"), String.class)
-                            .contains(auth.getCurrentUser().getUid())) {
-                        users.add(new MutableLiveData<>(snapshotToUser(doc)));
+                    if (!doc.getId().equals(Objects.requireNonNull(auth.getCurrentUser()).getUid())) {
+
+                        if (doc.get("friends") == null) {
+                            users.add(new MutableLiveData<>(snapshotToUser(doc)));
+                        } else if (!Utils.castList(doc.get("friends"), String.class)
+                                .contains(auth.getCurrentUser().getUid())) {
+                            users.add(new MutableLiveData<>(snapshotToUser(doc)));
+                        }
                     }
                 }
                 mutableUsers.postValue(users);
