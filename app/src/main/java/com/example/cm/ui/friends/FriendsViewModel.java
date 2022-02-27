@@ -11,14 +11,14 @@ import java.util.List;
 public class FriendsViewModel extends ViewModel {
 
     private final UserRepository userRepository;
-    private MutableLiveData<List<User>> friends;
+    private MutableLiveData<List<MutableLiveData<User>>> friends;
 
     public FriendsViewModel() {
         userRepository = new UserRepository();
         friends = userRepository.getFriends();
     }
 
-    public MutableLiveData<List<User>> getFriends() {
+    public MutableLiveData<List<MutableLiveData<User>>> getFriends() {
         return friends;
     }
 

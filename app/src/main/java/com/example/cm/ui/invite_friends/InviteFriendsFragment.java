@@ -67,9 +67,7 @@ public class InviteFriendsFragment extends Fragment
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
                 return;
-            }
-
-            if (users.size() == 0) {
+            } else if (users.size() == 0) {
                 Snackbar snackbar = Snackbar.make(binding.getRoot(),
                         getContext().getText(R.string.snackbar_no_friends_text), Snackbar.LENGTH_LONG);
                 // todo: set snackbar action -> go to add-friends-fragment
@@ -77,7 +75,6 @@ public class InviteFriendsFragment extends Fragment
                 binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
             }
 
-            inviteFriendsListAdapter.setUsers(users);
             binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);
         });

@@ -17,7 +17,7 @@ public class AddFriendsViewModel extends ViewModel {
     private final UserRepository userRepository;
     private final FriendRequestRepository requestRepository;
 
-    public MutableLiveData<List<User>> users;
+    public MutableLiveData<List<MutableLiveData<User>>> users;
     public MutableLiveData<User> currentUser;
     public MutableLiveData<List<MutableLiveData<FriendRequest>>> receivedFriendRequests;
     public MutableLiveData<List<MutableLiveData<FriendRequest>>> sentFriendRequests;
@@ -31,11 +31,11 @@ public class AddFriendsViewModel extends ViewModel {
 
         requestRepository = new FriendRequestRepository();
         receivedFriendRequests = requestRepository.getFriendRequestsForUser();
-        sentFriendRequests = requestRepository.getFriendRequestsSentBy(userRepository.getCurrentAuthUser().getUid());
+        sentFriendRequests = requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
 
     }
 
-    public MutableLiveData<List<User>> getUsers() {
+    public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
         return users;
     }
 

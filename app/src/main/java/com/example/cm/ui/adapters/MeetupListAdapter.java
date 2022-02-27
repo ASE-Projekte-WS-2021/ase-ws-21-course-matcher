@@ -86,6 +86,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
     @Override
     public int getItemCount() {
+        if (meetups == null) {
+            return 0;
+        }
         return meetups.size();
     }
 

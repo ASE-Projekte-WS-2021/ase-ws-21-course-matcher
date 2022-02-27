@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.data.models.User;
@@ -13,9 +14,9 @@ import com.example.cm.databinding.ItemMeetupFriendBinding;
 import java.util.List;
 
 public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
-    private final List<User> friends;
+    private final List<MutableLiveData<User>> friends;
 
-    public MeetupDetailedFriendListAdapter(List<User> friends) {
+    public MeetupDetailedFriendListAdapter(List<MutableLiveData<User>> friends) {
         this.friends = friends;
     }
 
@@ -30,8 +31,9 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     @Override
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
         if (friends != null) {
-            String fullName = friends.get(position).getFullName();
-            String username = friends.get(position).getUsername();
+            User friend = friends.get(position).getValue();
+            String fullName = friend.getFullName();
+            String username = friend.getUsername();
             TextView tvUserName = holder.getTvUserName();
             TextView tvFullName = holder.getTvFullName();
 

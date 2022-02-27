@@ -29,7 +29,7 @@ public class CreateMeetupViewModel extends ViewModel {
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
-    public MutableLiveData<List<User>> users;
+    public MutableLiveData<List<MutableLiveData<User>>> users;
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
     private Navigator navigator;
 
@@ -43,7 +43,7 @@ public class CreateMeetupViewModel extends ViewModel {
     }
 
 
-    public MutableLiveData<List<User>> getUsers() {
+    public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
         return users;
     }
 

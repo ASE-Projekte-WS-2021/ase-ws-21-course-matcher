@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
@@ -73,7 +74,7 @@ public class Utils {
      * @param newUsers The new list of users
      * @return The result of the calculation
      */
-    public static DiffUtil.DiffResult calculateDiff(List<User> oldUsers, List<User> newUsers) {
+    public static DiffUtil.DiffResult calculateDiff(List<MutableLiveData<User>> oldUsers, List<MutableLiveData<User>> newUsers) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -87,13 +88,13 @@ public class Utils {
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(oldUsers.get(oldItemPosition).getId(), newUsers.get(newItemPosition).getId());
+                return Objects.equals(oldUsers.get(oldItemPosition).getValue().getId(), newUsers.get(newItemPosition).getValue().getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                User newUser = newUsers.get(newItemPosition);
-                User oldUser = oldUsers.get(oldItemPosition);
+                User newUser = newUsers.get(newItemPosition).getValue();
+                User oldUser = oldUsers.get(oldItemPosition).getValue();
 
                 return Objects.equals(newUser.getId(), oldUser.getId())
                         && Objects.equals(newUser.getFirstName(), oldUser.getFirstName())

@@ -7,12 +7,14 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSelectFriendBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +34,12 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
         this.selectedUsers = selectedUsers;
     }
 
-    public void setUsers(List<User> newUsers) {
+    public void setUsers(List<MutableLiveData<User>> newUsersMDL) {
+        List<User> newUsers = new ArrayList<>();
+        for (MutableLiveData<User> userMDL : newUsersMDL) {
+            newUsers.add(userMDL.getValue());
+        }
+
         if (mUsers == null) {
             mUsers = newUsers;
             notifyItemRangeInserted(0, newUsers.size());

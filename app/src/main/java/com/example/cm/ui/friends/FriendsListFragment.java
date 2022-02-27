@@ -1,9 +1,9 @@
 package com.example.cm.ui.friends;
 
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +41,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
 
         return binding.getRoot();
     }
-
 
     private void initUI() {
         setHasOptionsMenu(true);
@@ -81,7 +80,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
 
     private void initViewModel() {
         friendsViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
-
         friendsViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
             binding.loadingCircle.setVisibility(View.GONE);
 
@@ -90,9 +88,11 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
                 return;
             }
 
+            //friendsListAdapter = new FriendsListAdapter(friends, this);
             friendsListAdapter.setFriends(friends);
             binding.rvUserList.setVisibility(View.VISIBLE);
             binding.noFriendsWrapper.setVisibility(View.GONE);
+            //binding.rvUserList.setAdapter(friendsListAdapter);
         });
     }
 
@@ -103,7 +103,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
         }
-
         friendsViewModel.searchUsers(query);
     }
 
