@@ -15,12 +15,12 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
+import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSendFriendRequestBinding;
 import com.example.cm.ui.add_friends.AddFriendsViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.UserViewHolder> {
@@ -28,14 +28,14 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     private final OnItemClickListener listener;
     private final Context context;
     private List<MutableLiveData<User>> mUsers;
-    private List<Request> sentFriendRequests;
+    private List<MutableLiveData<FriendRequest>> sentFriendRequests;
 
     public AddFriendsAdapter(AddFriendsAdapter.OnItemClickListener listener, Context context) {
         this.listener = listener;
         this.context = context;
     }
 
-    public void setSentFriendRequests(List<Request> sentFriendRequests) {
+    public void setSentFriendRequests(List<MutableLiveData<FriendRequest>> sentFriendRequests) {
         this.sentFriendRequests = sentFriendRequests;
         listener.onFriendRequestsSet();
     }
@@ -75,9 +75,9 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         holder.getTvUsername().setText(username);
         holder.getFriendRequestButton().setEnabled(true);
 
-        for (Request request : sentFriendRequests) {
-            boolean notificationExists = request.getReceiverId().equals(user.getId()) &&
-                    request.getState() == Request.RequestState.REQUEST_PENDING;
+        for (MutableLiveData<FriendRequest> request : sentFriendRequests) {
+            boolean notificationExists = request.getValue().getReceiverId().equals(user.getId()) &&
+                    request.getValue().getState() == Request.RequestState.REQUEST_PENDING;
 
             int btnContent, btnColor;
             if (!notificationExists) {

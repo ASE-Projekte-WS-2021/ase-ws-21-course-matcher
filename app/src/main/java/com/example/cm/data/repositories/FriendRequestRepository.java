@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.data.models.Request.RequestState;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,7 +16,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
 
@@ -26,17 +24,17 @@ public class FriendRequestRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference friendRequestCollection = firestore.collection(CollectionConfig.FRIEND_REQUESTS.toString());
-
-    private final MutableLiveData<List<MutableLiveData<FriendRequest>>> mutableReceivedRequestList = new MutableLiveData<>();
-    private final MutableLiveData<List<MutableLiveData<FriendRequest>>> mutableSentRequestList = new MutableLiveData<>();
+    private final MutableLiveData<List<MutableLiveData<FriendRequest>>> mutableRequestList = new MutableLiveData<>();
 
     public FriendRequestRepository() {
-        listenToReceivedRequests();
     }
 
-    private void listenToReceivedRequests() {
+    /**
+     * Get all friend requests for currently signed in user
+     */
+    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequestsForUser() {
         if (auth.getCurrentUser() == null) {
-            return;
+            return mutableRequestList;
         }
 
         String userId = auth.getCurrentUser().getUid();
@@ -53,17 +51,11 @@ public class FriendRequestRepository extends Repository {
                                 value.getDocuments().remove(i);
                             }
                         }
-                        List<MutableLiveData<FriendRequest>> requests = snapshotToFriendRequestList(value);
-                        mutableReceivedRequestList.postValue(requests);
+                        List<MutableLiveData<FriendRequest>> requests = snapshotToMutableFriendRequestList(value);
+                        mutableRequestList.postValue(requests);
                     }
                 }));
-    }
-
-    /**
-     * Get all friend requests for currently signed in user
-     */
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequestsForUser() {
-        return mutableReceivedRequestList;
+        return mutableRequestList;
     }
 
     /**
@@ -77,17 +69,23 @@ public class FriendRequestRepository extends Repository {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<FriendRequest>> requests = snapshotToFriendRequestList(value);
-                        mutableSentRequestList.postValue(requests);
+                        List<MutableLiveData<FriendRequest>> requests = snapshotToMutableFriendRequestList(value);
+                        mutableRequestList.postValue(requests);
                     }
                 }));
-        return mutableSentRequestList;
+        return mutableRequestList;
     }
 
-    private List<MutableLiveData<FriendRequest>> snapshotToFriendRequestList(QuerySnapshot documents) {
+    /**
+     * Convert a list of snapshots to a list of mutable friend requests
+     *
+     * @param documents List of snapshots returned from Firestore
+     * @return List of mutable friend requests
+     */
+    private List<MutableLiveData<FriendRequest>> snapshotToMutableFriendRequestList(QuerySnapshot documents) {
         List<MutableLiveData<FriendRequest>> requests = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            requests.add(snapshotToFriendRequest(document));
+            requests.add(new MutableLiveData<>(snapshotToFriendRequest(document)));
         }
         return requests;
     }
@@ -98,8 +96,7 @@ public class FriendRequestRepository extends Repository {
      * @param document Snapshot of a friend request returned from Firestore
      * @return Returns a friend request built from firestore document
      */
-    private MutableLiveData<FriendRequest> snapshotToFriendRequest(DocumentSnapshot document) {
-        MutableLiveData<FriendRequest> requestMutableLiveData = new MutableLiveData<>();
+    private FriendRequest snapshotToFriendRequest(DocumentSnapshot document) {
         FriendRequest request = new FriendRequest();
 
         request.setId(document.getId());
@@ -109,8 +106,7 @@ public class FriendRequestRepository extends Repository {
         request.setCreatedAt(document.getDate("createdAt"));
         request.setState(document.get("state", Request.RequestState.class));
 
-        requestMutableLiveData.postValue(request);
-        return requestMutableLiveData;
+        return request;
     }
     /**
      * Add a new Friend Request to collection

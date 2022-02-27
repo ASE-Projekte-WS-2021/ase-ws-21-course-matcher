@@ -3,7 +3,6 @@ package com.example.cm.ui.friends;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,11 +33,9 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFriendsListBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-
         initUI();
         initListener();
         initViewModel();
-
         return binding.getRoot();
     }
 
@@ -74,7 +71,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
 
     private void onClearInputClicked() {
         binding.etUserSearch.setText("");
-        friendsViewModel.searchUsers("");
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
@@ -88,11 +84,9 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
                 return;
             }
 
-            //friendsListAdapter = new FriendsListAdapter(friends, this);
             friendsListAdapter.setFriends(friends);
             binding.rvUserList.setVisibility(View.VISIBLE);
             binding.noFriendsWrapper.setVisibility(View.GONE);
-            //binding.rvUserList.setAdapter(friendsListAdapter);
         });
     }
 

@@ -1,5 +1,7 @@
 package com.example.cm.ui.friends;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -27,7 +29,6 @@ public class FriendsViewModel extends ViewModel {
             friends = userRepository.getFriends();
             return;
         }
-
         if (friends.getValue() != null) {
             friends.getValue().clear();
             friends = userRepository.getFriendsByUsername(query);

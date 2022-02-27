@@ -1,11 +1,8 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
-import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
@@ -26,7 +23,7 @@ public class MeetupRequestRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());
-    private MutableLiveData<List<MutableLiveData<MeetupRequest>>> receivedRequestListMDL = new MutableLiveData<>();
+    private MutableLiveData<List<MutableLiveData<MeetupRequest>>> receivedRequests = new MutableLiveData<>();
 
     public MeetupRequestRepository() {
         listenToRequestListChanges();
@@ -40,8 +37,8 @@ public class MeetupRequestRepository extends Repository {
                     if (error != null) {
                         return;
                     }
-                    List<MutableLiveData<MeetupRequest>> meetupRequests = snapshotToMeetupRequestList(value);
-                    receivedRequestListMDL.postValue(meetupRequests);
+                    List<MutableLiveData<MeetupRequest>> meetupRequests = snapshotToMutableMeetupRequestList(value);
+                    receivedRequests.postValue(meetupRequests);
                 });
     }
 
@@ -49,10 +46,16 @@ public class MeetupRequestRepository extends Repository {
      * Get all meetup requests for currently signed in user
      */
     public MutableLiveData<List<MutableLiveData<MeetupRequest>>> getMeetupRequestsForUser() {
-        return receivedRequestListMDL;
+        return receivedRequests;
     }
 
-    private List<MutableLiveData<MeetupRequest>> snapshotToMeetupRequestList(QuerySnapshot documents) {
+    /**
+     * Convert a list of snapshots to a list of mutable meetup requests
+     *
+     * @param documents List of snapshots returned from Firestore
+     * @return List of mutable meetup requests
+     */
+    private List<MutableLiveData<MeetupRequest>> snapshotToMutableMeetupRequestList(QuerySnapshot documents) {
         List<MutableLiveData<MeetupRequest>> requests = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
             requests.add(snapshotToMeetupRequest(document));
@@ -61,10 +64,10 @@ public class MeetupRequestRepository extends Repository {
     }
 
     /**
-     * Convert a single snapshot to a meetup request model
+     * Convert a single snapshot to mutable of a meetup request model
      *
      * @param document Snapshot of a meetup request returned from Firestore
-     * @return Returns a meetup request built from firestore document
+     * @return Returns a mutable meetup request built from firestore document
      */
     private MutableLiveData<MeetupRequest> snapshotToMeetupRequest(DocumentSnapshot document) {
         MutableLiveData<MeetupRequest> requestMutableLiveData = new MutableLiveData<>();

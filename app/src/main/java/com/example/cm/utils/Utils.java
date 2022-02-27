@@ -64,14 +64,13 @@ public class Utils {
         return null;
     }
 
-
     /**
      * Calculate the difference between two lists and return the result
      * Also used to animate the changes
      * From https://stackoverflow.com/questions/49588377/how-to-set-adapter-in-mvvm-using-databinding
      *
-     * @param oldUsers The old list of users
-     * @param newUsers The new list of users
+     * @param oldUsers The old list of mutable users
+     * @param newUsers The new list of mutable users
      * @return The result of the calculation
      */
     public static DiffUtil.DiffResult calculateDiff(List<MutableLiveData<User>> oldUsers, List<MutableLiveData<User>> newUsers) {
@@ -88,7 +87,8 @@ public class Utils {
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(oldUsers.get(oldItemPosition).getValue().getId(), newUsers.get(newItemPosition).getValue().getId());
+                return Objects.equals(oldUsers.get(oldItemPosition).getValue().getId(),
+                        newUsers.get(newItemPosition).getValue().getId());
             }
 
             @Override

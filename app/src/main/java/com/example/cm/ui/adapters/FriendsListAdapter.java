@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.example.cm.utils.Utils.calculateDiff;
 

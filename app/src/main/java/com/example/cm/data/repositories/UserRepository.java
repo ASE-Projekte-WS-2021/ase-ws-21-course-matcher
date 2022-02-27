@@ -17,7 +17,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class UserRepository extends Repository {
 
@@ -26,16 +25,13 @@ public class UserRepository extends Repository {
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<MutableLiveData<User>>> mutableUsers = new MutableLiveData<>();
-    private MutableLiveData<List<MutableLiveData<User>>> mutableUsersNotFriends = new MutableLiveData<>();
-    private MutableLiveData<List<MutableLiveData<User>>> mutableUsersFriends = new MutableLiveData<>();
 
-    private MutableLiveData<List<User>> mutableUsersFriendsNotMDL = new MutableLiveData<>();
-
-
-    public UserRepository() {}
+    public UserRepository() {
+    }
 
     /**
      * Get current authorized FirebaseUser
+     *
      * @return current authorized FirebaseUser
      */
     public FirebaseUser getFirebaseUser() {
@@ -47,6 +43,7 @@ public class UserRepository extends Repository {
 
     /**
      * Get the current user
+     *
      * @return MutableLiveData of current user
      */
     public MutableLiveData<User> getCurrentUser() {
@@ -74,7 +71,7 @@ public class UserRepository extends Repository {
     }
 
     /**
-     * Get a list of all users
+     * Get a MutableLiveData-List of all mutable users
      */
     public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
         userCollection.addSnapshotListener(executorService, ((value, error) -> {
@@ -82,7 +79,7 @@ public class UserRepository extends Repository {
                 return;
             }
             if (value != null && !value.isEmpty()) {
-                List<MutableLiveData<User>> users = snapshotToUserList(value);
+                List<MutableLiveData<User>> users = snapshotToMutableUserList(value);
                 mutableUsers.postValue(users);
             }
         }));
@@ -91,6 +88,7 @@ public class UserRepository extends Repository {
 
     /**
      * Check if the current authorized user is befriended with the given user
+     *
      * @param friendId id of user to check
      * @return MutableLiveData isBefriended
      */
@@ -119,10 +117,11 @@ public class UserRepository extends Repository {
 
     /**
      * Get list of all users who aren't friends yet
-     * @return MutableLiveData-List of not-friends
+     *
+     * @return MutableLiveData-List of mutable not-friends
      */
     public MutableLiveData<List<MutableLiveData<User>>> getUsersNotFriends() {
-        userCollection.addSnapshotListener(executorService, ((value, error) -> {
+        userCollection.addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
                 return;
             }
@@ -137,14 +136,15 @@ public class UserRepository extends Repository {
                         users.add(new MutableLiveData<>(snapshotToUser(doc)));
                     }
                 }
-                mutableUsersNotFriends.postValue(users);
+                mutableUsers.postValue(users);
             }
-        }));
-        return mutableUsersNotFriends;
+        });
+        return mutableUsers;
     }
 
     /**
      * Get user with given id
+     *
      * @param userId
      * @return MutableLiveData of user with id
      */
@@ -163,6 +163,7 @@ public class UserRepository extends Repository {
 
     /**
      * Get user with given email
+     *
      * @param email
      * @return MutableLiveData of user with email
      */
@@ -181,7 +182,8 @@ public class UserRepository extends Repository {
 
     /**
      * Get friends of current authorized user
-     * @return MutableLiveData-List of friends
+     *
+     * @return MutableLiveData-List of mutable friends
      */
     public MutableLiveData<List<MutableLiveData<User>>> getFriends() {
         if (auth.getCurrentUser() == null) {
@@ -189,23 +191,24 @@ public class UserRepository extends Repository {
         }
         String currentUserId = auth.getCurrentUser().getUid();
 
-        userCollection.document(currentUserId).collection("friends")
-                .addSnapshotListener(executorService, ((value, error) -> {
+        userCollection.document(currentUserId).addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
                 return;
             }
-            if (value != null && !value.isEmpty()) {
-                List<MutableLiveData<User>> friends = snapshotToUserList(value);
-                mutableUsersFriends.postValue(friends);
+            if (value != null && value.exists()) {
+                User user = snapshotToUser(value);
+                List<String> friends = user.getFriends();
+                mutableUsers = getUsersByIds(friends);
             }
-        }));
-        return mutableUsersFriends;
+        });
+        return mutableUsers;
     }
 
     /**
      * Get user list by list of userIds
+     *
      * @param userIds
-     * @return MutableLiveData-List of users with ids
+     * @return MutableLiveData-List of mutable users with ids
      */
     public MutableLiveData<List<MutableLiveData<User>>> getUsersByIds(List<String> userIds) {
         if (userIds == null || userIds.isEmpty()) {
@@ -218,7 +221,7 @@ public class UserRepository extends Repository {
                 return;
             }
             if (value != null && !value.isEmpty()) {
-                List<MutableLiveData<User>> users = snapshotToUserList(value);
+                List<MutableLiveData<User>> users = snapshotToMutableUserList(value);
                 mutableUsers.postValue(users);
             }
         });
@@ -226,18 +229,27 @@ public class UserRepository extends Repository {
     }
 
     /**
-     * Get list of users by their username
+     * Get list of not-friends by their username
+     *
      * @param query String to search for
-     * @return MutableLiveData-List of users with query matching username
+     * @return MutableLiveData-List of mutable users with query matching username
      */
-    public MutableLiveData<List<MutableLiveData<User>>> getUsersByUsername(String query) {
+    public MutableLiveData<List<MutableLiveData<User>>> getUsersNotFriendsByUsername(String query) {
         userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
                 .addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
                 return;
             }
             if (value != null && !value.isEmpty()) {
-                List<MutableLiveData<User>> users = snapshotToUserList(value);
+                List<MutableLiveData<User>> users = new ArrayList<>();
+                for (DocumentSnapshot doc : value.getDocuments()) {
+                    if (doc.get("friends") == null) {
+                        users.add(new MutableLiveData<>(snapshotToUser(doc)));
+                    } else if (!Utils.castList(doc.get("friends"), String.class)
+                            .contains(auth.getCurrentUser().getUid())) {
+                        users.add(new MutableLiveData<>(snapshotToUser(doc)));
+                    }
+                }
                 mutableUsers.postValue(users);
             }
         });
@@ -246,8 +258,9 @@ public class UserRepository extends Repository {
 
     /**
      * Get list of friends of a user by their username
+     *
      * @param query String to search for
-     * @return MutableLiveData-List of friends with query matching username
+     * @return MutableLiveData-List of mutable friends with query matching username
      */
     public MutableLiveData<List<MutableLiveData<User>>> getFriendsByUsername(String query) {
         if (auth.getCurrentUser() == null) {
@@ -270,22 +283,26 @@ public class UserRepository extends Repository {
 
     /**
      * Get users within given list with query matching name
+     *
      * @param userIds list of users to search in
      * @param query String to search for
-     * @return MutableLiveData-List of users within given list with query matching name
+     * @return MutableLiveData-List of mutable users within given list with query matching name
      */
     public MutableLiveData<List<MutableLiveData<User>>> getUsersByIdsAndName(List<String> userIds, String query) {
-        userCollection.whereIn(FieldPath.documentId(), userIds).get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                List<MutableLiveData<User>> users = snapshotToUserList(Objects.requireNonNull(task.getResult()));
+        userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener((value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null && !value.isEmpty()) {
+                List<User> users = snapshotToUserList(value);
                 List<MutableLiveData<User>> filteredUsers = new ArrayList<>();
 
-                for (MutableLiveData<User> user : users) {
-                    boolean isQueryInUsername = user.getValue().getUsername().toLowerCase().contains(query.toLowerCase());
-                    boolean isQueryInFullName = user.getValue().getFullName().toLowerCase().contains(query.toLowerCase());
+                for (User user : users) {
+                    boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
+                    boolean isQueryInFullName = user.getFullName().toLowerCase().contains(query.toLowerCase());
 
                     if (isQueryInUsername || isQueryInFullName) {
-                        filteredUsers.add(user);
+                        filteredUsers.add(new MutableLiveData<>(user));
                     }
                 }
                 mutableUsers.postValue(filteredUsers);
@@ -300,7 +317,21 @@ public class UserRepository extends Repository {
      * @param documents List of snapshots returned from Firestore
      * @return List of users
      */
-    private List<MutableLiveData<User>> snapshotToUserList(QuerySnapshot documents) {
+    private List<User> snapshotToUserList(QuerySnapshot documents) {
+        List<User> users = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            users.add(snapshotToUser(document));
+        }
+        return users;
+    }
+
+    /**
+     * Convert a list of snapshots to a list of mutable users
+     *
+     * @param documents List of snapshots returned from Firestore
+     * @return List of mutable users
+     */
+    private List<MutableLiveData<User>> snapshotToMutableUserList(QuerySnapshot documents) {
         List<MutableLiveData<User>> users = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
             MutableLiveData<User> userMLD = new MutableLiveData<>();
@@ -327,6 +358,12 @@ public class UserRepository extends Repository {
         return user;
     }
 
+    /**
+     * Add each other to friends list
+     *
+     * @param friend1Id
+     * @param friend2Id
+     */
     public void addFriends(String friend1Id, String friend2Id) {
         userCollection.document(friend1Id).update("friends", FieldValue.arrayUnion(friend2Id));
         userCollection.document(friend2Id).update("friends", FieldValue.arrayUnion(friend1Id));

@@ -7,14 +7,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentAddFriendsBinding;
 import com.example.cm.ui.adapters.AddFriendsAdapter;
 import com.example.cm.ui.adapters.AddFriendsAdapter.OnItemClickListener;
@@ -22,9 +19,6 @@ import com.example.cm.ui.add_friends.AddFriendsViewModel.OnRequestSentListener;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.ArrayList;
-
 
 public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnRequestSentListener {
 
@@ -38,10 +32,8 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         initUI();
         initListener();
         initViewModel();
-
         return binding.getRoot();
     }
-
 
     private void initUI() {
         selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
@@ -66,11 +58,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             if (sentFriendRequests == null) {
                 return;
             }
-            ArrayList<Request> requestsToSet = new ArrayList<>();
-            for(MutableLiveData<FriendRequest> request : sentFriendRequests) {
-                requestsToSet.add((Request) request.getValue());
-            }
-            selectFriendsAdapter.setSentFriendRequests(requestsToSet);
+            selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
         });
     }
 
@@ -80,7 +68,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
         Utils.hideKeyboard(requireActivity(), binding.getRoot());
     }
-
 
     @Override
     public void onDestroyView() {
@@ -93,7 +80,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         addFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
     }
 
-
     @Override
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
@@ -105,7 +91,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onRequestAdded() {
         Snackbar.make(binding.getRoot(), R.string.snackbar_sent_request, Snackbar.LENGTH_LONG).show();
-
     }
 
     @Override
@@ -119,7 +104,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             if (users == null) {
                 return;
             }
-
             selectFriendsAdapter.setUsers(users);
             binding.loadingCircle.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);
