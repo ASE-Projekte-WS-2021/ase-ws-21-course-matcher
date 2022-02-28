@@ -63,10 +63,7 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_USER_ID, id);
-        if (meetupDetailedFriendsListViewModel.isOwnUserId(id)) {
-            navigator.getNavController().navigate(R.id.fromMeetupDetailedToOwnProfile, bundle);
-        } else {
-            navigator.getNavController().navigate(R.id.fromMeetupDetailedToOtherProfile, bundle);
-        }
+        bundle.putBoolean(Constants.KEY_IS_OWN_USER, meetupDetailedFriendsListViewModel.isOwnUserId(id));
+        navigator.getNavController().navigate(R.id.fromMeetupDetailedToOtherProfile, bundle);
     }
 }
