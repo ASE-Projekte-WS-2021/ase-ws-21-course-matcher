@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CM</string>
+    <string name="app_name">CourseMatcher</string>
     <string name="title_home">Karte</string>
     <string name="title_dashboard">Dashboard</string>
 
@@ -115,6 +115,8 @@
     <string name="meetup_active_text">Seit %1$s</string>
     <string name="meetup_ended_text">Beendet</string>
     <string name="delete_snackbar_text">Anfrage gelöscht.</string>
+    <string name="meetup_list_no_meetups_found">Keine Meetups gefunden. Du kannst ein neues Meetup erstellen, indem du auf den \"+\" Button klickst.</string>
+    <string name="find_friends_no_friends_found">Es wurden keine Einträge für den Suchbegriff gefunden.</string>
     <string name="content_description_profile_image">Profile Image of user</string>
     <string name="profile_title_bio">Bio</string>
     <string name="content_description_back_button">Navigate to previous screen</string>
@@ -132,6 +134,9 @@
     <string name="url_privacy_policy">https://www.uni-regensburg.de/datenschutz/startseite/index.html</string>
     <string name="title_edit_profile">Profil bearbeiten</string>
     <string name="title_edit_account">Account bearbeiten</string>
+
+    <string name="content_description_splash_screen_logo">Splash Screen Logo</string>
+
     <string name="input_label_bio">Bio</string>
     <string name="input_label_username">Benutzername</string>
     <string name="input_label_first_name">Vorname</string>
