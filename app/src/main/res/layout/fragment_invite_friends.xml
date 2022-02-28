@@ -9,6 +9,15 @@
     android:orientation="vertical"
     tools:context=".ui.invite_friends.InviteFriendsFragment">
 
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/content_description_back_button"
+        android:src="@drawable/ic_back_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/btnSendInvite"
         android:layout_width="match_parent"

@@ -8,6 +8,15 @@
     android:orientation="vertical"
     tools:context=".ui.meetup.CreateMeetup.CreateMeetupFragment">
 
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/content_description_back_button"
+        android:src="@drawable/ic_back_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/meetup_info_btn"
         android:layout_width="wrap_content"
