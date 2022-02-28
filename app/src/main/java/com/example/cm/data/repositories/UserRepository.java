@@ -27,7 +27,6 @@ public class UserRepository extends Repository {
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
 
-
     public UserRepository() {
     }
 
