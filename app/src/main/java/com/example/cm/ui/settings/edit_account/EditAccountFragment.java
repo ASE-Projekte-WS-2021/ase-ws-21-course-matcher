@@ -13,6 +13,8 @@ import com.example.cm.databinding.FragmentEditAccountBinding;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 
+import timber.log.Timber;
+
 public class EditAccountFragment extends Fragment {
     FragmentEditAccountBinding binding;
     EditAccountViewModel editAccountViewModel;
@@ -57,11 +59,11 @@ public class EditAccountFragment extends Fragment {
 
             switch (status.getFlag()) {
                 case SUCCESS:
-                    Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(binding.getRoot(), getResources().getString(status.getMessageResourceId()), Snackbar.LENGTH_SHORT).show();
                     resetPasswordFields();
                     break;
                 case ERROR:
-                    Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(binding.getRoot(), getResources().getString(status.getMessageResourceId()), Snackbar.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -88,4 +90,12 @@ public class EditAccountFragment extends Fragment {
 
         editAccountViewModel.updatePassword(currentPassword, newPassword, newPasswordConfirm);
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Timber.d("onPause");
+        editAccountViewModel.status.postValue(null);
+    }
 }
+

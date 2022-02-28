@@ -150,10 +150,16 @@
     <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
     <string name="dialog_title_field">{field} bearbeiten</string>
     <string name="edit_account_error_password_not_empty">Passwort-Felder dürfen nicht leer sein</string>
-    <string name="edit_account_error_password_min_length">Passwort muss mindestens {length} Zeichen lang sein</string>
+    <string name="edit_account_error_password_min_length">Passwort muss mindestens 6 Zeichen lang sein</string>
     <string name="edit_account_error_password_must_differ">Das neue Passwort darf nicht mit dem alten übereinstimmen</string>
     <string name="edit_account_error_password_must_match">Das neue Passwort und die Bestätigung müssen übereinstimmen</string>
     <string name="edit_account_success_password_change">Passwort erfolgreich geändert</string>
     <string name="edit_account_error_password_not_changed">Passwort konnte nicht geändert werden</string>
+    <string name="edit_profile_field_not_empty">Feld darf nicht leer sein</string>
+    <string name="edit_profile_username_min_length">Benutzername muss mindestens 4 Zeichen lang sein</string>
+    <string name="edit_profile_first_name_min_length">Vorname muss mindestens 2 Zeichen lang sein</string>
+    <string name="edit_profile_last_name_min_length">Nachname muss mindestens 2 Zeichen lang sein</string>
+    <string name="edit_profile_success">Erfolgreich aktualisiert</string>
+    <string name="edit_profile_general_error">Ein Fehler ist aufgetreten</string>
 
 </resources>

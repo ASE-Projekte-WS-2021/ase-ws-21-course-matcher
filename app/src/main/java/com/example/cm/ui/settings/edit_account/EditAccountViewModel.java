@@ -34,7 +34,7 @@ public class EditAccountViewModel extends ViewModel implements Callback {
 
     public void updatePassword(String currentPassword, String newPassword, String newPasswordConfirm) {
         if (currentPassword.isEmpty() || newPassword.isEmpty() || newPasswordConfirm.isEmpty()) {
-            status.postValue(new Status(StatusFlag.ERROR, Resources.getSystem().getString(R.string.edit_account_error_password_not_empty)));
+            status.postValue(new Status(StatusFlag.ERROR, R.string.edit_account_error_password_not_empty));
             return;
         }
 
@@ -42,19 +42,17 @@ public class EditAccountViewModel extends ViewModel implements Callback {
                 || !InputValidator.hasMinLength(newPassword, Constants.MIN_PASSWORD_LENGTH)
                 || !InputValidator.hasMinLength(newPasswordConfirm, Constants.MIN_PASSWORD_LENGTH)) {
 
-            String message = Resources.getSystem().getString(R.string.edit_account_error_password_min_length);
-            message = message.replace("{length}", String.valueOf(Constants.MIN_PASSWORD_LENGTH));
-            status.postValue(new Status(StatusFlag.ERROR, message));
+            status.postValue(new Status(StatusFlag.ERROR, R.string.edit_account_error_password_min_length));
             return;
         }
 
         if (currentPassword.equals(newPassword)) {
-            status.postValue(new Status(StatusFlag.ERROR, Resources.getSystem().getString(R.string.edit_account_error_password_must_differ)));
+            status.postValue(new Status(StatusFlag.ERROR, R.string.edit_account_error_password_must_differ));
             return;
         }
 
         if (!newPassword.equals(newPasswordConfirm)) {
-            status.postValue(new Status(StatusFlag.ERROR, Resources.getSystem().getString(R.string.edit_account_error_password_must_match)));
+            status.postValue(new Status(StatusFlag.ERROR, R.string.edit_account_error_password_must_match));
             return;
         }
 
@@ -63,13 +61,13 @@ public class EditAccountViewModel extends ViewModel implements Callback {
 
     @Override
     public OnSuccessListener<? super Void> onSuccess(Object object) {
-        status.postValue(new Status(StatusFlag.SUCCESS, Resources.getSystem().getString(R.string.edit_account_success_password_change)));
+        status.postValue(new Status(StatusFlag.SUCCESS, R.string.edit_account_success_password_change));
         user = userRepository.getCurrentUser();
         return null;
     }
 
     @Override
     public void onError(Object object) {
-        status.postValue(new Status(StatusFlag.ERROR, Resources.getSystem().getString(R.string.edit_account_error_password_not_changed)));
+        status.postValue(new Status(StatusFlag.ERROR, R.string.edit_account_error_password_not_changed));
     }
 }

@@ -12,11 +12,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.R;
 import com.example.cm.config.FieldType;
 import com.example.cm.databinding.FragmentEditProfileBinding;
-import com.example.cm.ui.settings.edit_account.EditAccountViewModel;
 import com.example.cm.utils.EditTextAreaDialog;
 import com.example.cm.utils.EditTextDialog;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
+
+import timber.log.Timber;
 
 public class EditProfileFragment extends Fragment implements EditTextDialog.OnSaveListener, EditTextAreaDialog.OnSaveListener {
     FragmentEditProfileBinding binding;
@@ -51,18 +52,11 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
                 return;
             }
 
-            switch (status.getFlag()) {
-                case SUCCESS:
-                    dialog.hide();
-                    Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
-                    break;
-                case ERROR:
-                    dialog.hide();
-                    Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
+            if (dialog != null) {
+                dialog.hide();
             }
+
+            Snackbar.make(binding.getRoot(), status.getMessageResourceId(), Snackbar.LENGTH_SHORT).show();
         });
     }
 
@@ -103,6 +97,12 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     @Override
     public void onTextAreaSaved(String fieldToUpdate, String updatedValue) {
         editProfileViewModel.updateField(fieldToUpdate, updatedValue);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        editProfileViewModel.status.postValue(null);
     }
 
     @Override
