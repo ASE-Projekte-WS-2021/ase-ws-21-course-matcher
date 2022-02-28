@@ -12,14 +12,19 @@ import java.util.List;
 
 public class MeetupDetailedFriendsListViewModel extends ViewModel {
 
-    private MutableLiveData<List<User>> users = new MutableLiveData<>();
+    private MutableLiveData<List<User>> users;
+    private UserRepository userRepository;
 
     public MeetupDetailedFriendsListViewModel(List<String> userIds) {
-        UserRepository userRepository = new UserRepository();
+        userRepository = new UserRepository();
         users = userRepository.getUsersByIds(userIds);
     }
 
     public MutableLiveData<List<User>> getUsers() {
         return users;
+    }
+
+    public boolean isOwnUserId(String id) {
+        return id.equals(userRepository.getCurrentAuthUserId());
     }
 }
