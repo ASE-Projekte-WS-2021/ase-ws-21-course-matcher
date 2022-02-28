@@ -52,11 +52,15 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
 
             switch (status.getFlag()) {
                 case SUCCESS:
-                    dialog.hide();
+                    if (dialog != null) {
+                        dialog.hide();
+                    }
                     Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
                     break;
                 case ERROR:
-                    dialog.hide();
+                    if (dialog != null) {
+                        dialog.hide();
+                    }
                     Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
                     break;
                 default:
