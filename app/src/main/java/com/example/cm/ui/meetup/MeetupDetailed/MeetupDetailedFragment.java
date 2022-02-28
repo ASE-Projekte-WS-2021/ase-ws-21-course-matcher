@@ -15,6 +15,7 @@ import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
+import com.example.cm.utils.Navigator;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -24,9 +25,9 @@ public class MeetupDetailedFragment extends Fragment {
     private ViewPager2 viewPager;
     private FragmentMeetupDetailedBinding binding;
     private TabLayoutMediator tabLayoutMediator;
+    private Navigator navigator;
 
     private String meetupId;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,12 +40,13 @@ public class MeetupDetailedFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupDetailedBinding.inflate(inflater, container, false);
-        initUI();
+        navigator = new Navigator(requireActivity());
+        initUIAndViewModel();
         return binding.getRoot();
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void initUI() {
+    private void initUIAndViewModel() {
         MeetupDetailedViewModel meetupDetailedViewModel = new ViewModelProvider(this, new MeetupDetailedFactory(meetupId)).get(MeetupDetailedViewModel.class);
         meetupDetailedViewModel.getMeetup().observe(getViewLifecycleOwner(), meetup -> {
             tabAdapter = new MeetupDetailedTabAdapter(this, meetup);
@@ -78,6 +80,6 @@ public class MeetupDetailedFragment extends Fragment {
                     break;
             }
         });
-
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 }

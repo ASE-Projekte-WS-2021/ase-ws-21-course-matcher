@@ -26,6 +26,16 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/cafe" />
 
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/default_screen_padding"
+                android:paddingTop="@dimen/default_screen_padding"
+                android:contentDescription="@string/content_description_back_button"
+                android:src="@drawable/ic_back_button"
+                tools:ignore="RtlSymmetry" />
+
             <TextView
                 android:id="@+id/meetupDetailedTime"
                 android:layout_width="wrap_content"
