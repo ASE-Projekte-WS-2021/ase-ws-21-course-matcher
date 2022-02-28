@@ -69,24 +69,6 @@
                 tools:text="username" />
         </LinearLayout>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/gradient_gray700_transparent_to_transparent_top_down"
-            android:paddingHorizontal="@dimen/default_screen_padding"
-            android:paddingTop="@dimen/default_screen_padding"
-            android:paddingBottom="40dp">
-
-            <ImageView
-                android:id="@+id/btnProfileSettings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:contentDescription="@string/content_description_profile_settings"
-                android:src="@drawable/ic_settings_button" />
-
-        </RelativeLayout>
-
     </RelativeLayout>
 
 
