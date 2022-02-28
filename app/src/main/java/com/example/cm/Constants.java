@@ -9,4 +9,6 @@ public class Constants {
     public static final int PROFILE_IMAGE_MAX_WIDTH = 800;
     public static final String KEY_IS_OWN_USER = "keyIsOwnUser";
     public static final int MIN_PASSWORD_LENGTH = 6;
+    public static final int TRASH_ICON_MARGIN = 15;
+    public static final int TRASH_ICON_SIZE = 175;
 }
