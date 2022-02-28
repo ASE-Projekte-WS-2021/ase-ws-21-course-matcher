@@ -27,7 +27,6 @@ public class UserRepository extends Repository {
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
 
-
     public UserRepository() {
     }
 
@@ -48,13 +47,15 @@ public class UserRepository extends Repository {
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
-        userCollection.document(currentUserId).get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                User user = snapshotToUser(Objects.requireNonNull(task.getResult()));
+        userCollection.document(currentUserId).addSnapshotListener(executorService, (documentSnapshot, e) -> {
+            if (e != null) {
+                return;
+            }
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                User user = snapshotToUser(documentSnapshot);
                 mutableUser.postValue(user);
             }
         });
-
         return mutableUser;
     }
 
@@ -63,6 +64,22 @@ public class UserRepository extends Repository {
      */
     public void createUser(User user) {
         userCollection.document(user.getId()).set(user);
+    }
+
+    public void updateField(String field, Object value, Callback callback) {
+        try {
+            userCollection.document(getFirebaseUser().getUid()).update(field, value)
+                    .addOnSuccessListener(task -> {
+                        callback.onSuccess(value);
+                    })
+                    .addOnFailureListener(task -> {
+                        callback.onError(false);
+                    });
+        } catch (Exception e) {
+            Timber.e(e);
+            callback.onError(e);
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -77,6 +94,33 @@ public class UserRepository extends Repository {
         });
 
         return mutableUsers;
+    }
+
+    public MutableLiveData<Boolean> isUserBefriended(String friendId) {
+        MutableLiveData<Boolean> isUserBefriended = new MutableLiveData<>();
+
+        if (auth.getCurrentUser() == null) {
+            return isUserBefriended;
+        }
+        String userId = auth.getCurrentUser().getUid();
+
+        userCollection.document(friendId).get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null || task.getResult().get("friends") == null) {
+                    isUserBefriended.postValue(false);
+                    return;
+                }
+
+                List<String> friends = Utils.castList(task.getResult().get("friends"), String.class);
+                if (friends == null) {
+                    return;
+                }
+
+                boolean isBefriended = friends.contains(userId);
+                isUserBefriended.postValue(isBefriended);
+            }
+        });
+        return isUserBefriended;
     }
 
     /**
@@ -281,6 +325,7 @@ public class UserRepository extends Repository {
         user.setFirstName(document.getString("firstName"));
         user.setLastName(document.getString("lastName"));
         user.setFriends(Utils.castList(document.get("friends"), String.class));
+        user.setBio(document.getString("bio"));
         return user;
     }
 

@@ -5,18 +5,19 @@ import java.util.List;
 public class User {
 
     private String id;
-    private String username, firstName, lastName, email;
+    private String username, firstName, lastName, email, bio;
     private List<String> friends;
 
     public User() {
     }
 
-    public User(String id, String username, String firstName, String lastName, String email, List<String> friends) {
+    public User(String id, String username, String firstName, String lastName, String email, String bio, List<String> friends) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.bio = bio;
     }
 
     public String getId() {
@@ -71,4 +72,11 @@ public class User {
         this.friends = friends;
     }
 
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 }
