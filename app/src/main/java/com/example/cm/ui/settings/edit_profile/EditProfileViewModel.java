@@ -19,9 +19,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 
 public class EditProfileViewModel extends ViewModel implements Callback, StorageManager.Callback {
-    public MutableLiveData<Status> status = new MutableLiveData<>();
-    StorageManager storageRepository;
     private final UserRepository userRepository;
+    private final StorageManager storageRepository;
+    public MutableLiveData<Status> status = new MutableLiveData<>();
     private MutableLiveData<User> user;
 
     public EditProfileViewModel(Context context) {

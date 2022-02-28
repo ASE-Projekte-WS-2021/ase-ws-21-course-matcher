@@ -66,9 +66,6 @@ public class StorageManager extends Repository {
         return bitmap;
     }
 
-    // TODO: Find a way to convert bitmap to uri without storing the file on the device first
-    // TODO: Or figure out how to remove the image directly afterwards
-
     /**
      * Converts a bitmap to a uri needed for uploading to firebase storage
      *
