@@ -38,7 +38,7 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
 
     public void updateImage(Uri uri) {
         if (uri == null || user.getValue() == null) {
-            status.postValue(new Status(StatusFlag.ERROR, "Ein Fehler ist aufgetreten"));
+            status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
             return;
         }
         storageRepository.uploadProfileImage(uri, user.getValue().getId(), this);
@@ -101,6 +101,6 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
 
     @Override
     public void onError(Exception e) {
-        status.postValue(new Status(StatusFlag.ERROR, "Ein Fehler ist aufgetreten"));
+        status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
     }
 }
