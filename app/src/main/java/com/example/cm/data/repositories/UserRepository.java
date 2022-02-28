@@ -177,18 +177,18 @@ public class UserRepository extends Repository {
      * @param query String to search for
      * @return MutableLiveData-List of mutable users with query matching username
      */
-    public MutableLiveData<List<User>> getUsersNotFriendsByQuery(String query) {
+    public MutableLiveData<List<MutableLiveData<User>>> getUsersNotFriendsByQuery(String query) {
         userCollection.addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
                 return;
             }
             if (value != null && !value.isEmpty()) {
 
-                List<User> users = new ArrayList<>();
+                List<MutableLiveData<User>> users = new ArrayList<>();
                 String currentUserId = auth.getCurrentUser().getUid();
 
-                for (int i = 0; i < task.getResult().getDocuments().size(); i++) {
-                    DocumentSnapshot doc = task.getResult().getDocuments().get(i);
+                for (int i = 0; i < value.getDocuments().size(); i++) {
+                    DocumentSnapshot doc = value.getDocuments().get(i);
                     User user = snapshotToUser(doc);
                     boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
                     boolean isQueryInFullName = user.getFullName().toLowerCase().contains(query.toLowerCase());
@@ -198,14 +198,14 @@ public class UserRepository extends Repository {
                     }
 
                     if (doc.get("friends") == null) {
-                        users.add(user);
+                        users.add(new MutableLiveData<>(user));
                     } else {
                         List<String> friends = Utils.castList(doc.get("friends"), String.class);
                         if (friends == null) {
                             continue;
                         }
                         if (!friends.contains(currentUserId)) {
-                            users.add(user);
+                            users.add(new MutableLiveData<>(user));
                         }
                     }
                 }

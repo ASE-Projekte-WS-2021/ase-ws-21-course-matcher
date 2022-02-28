@@ -27,12 +27,10 @@ public class MeetupListFragment extends Fragment {
         return binding.getRoot();
     }
   
-  private void initUI() {
-        meetupListAdapter = new MeetupListAdapter();
+    private void initUi() {
         GridLayoutManager gridLayout = new GridLayoutManager(getContext(), 2);
         binding.meetupListRecyclerView.setLayoutManager(gridLayout);
         binding.meetupListRecyclerView.setHasFixedSize(true);
-        binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -44,8 +42,8 @@ public class MeetupListFragment extends Fragment {
                 binding.meetupListRecyclerView.setVisibility(View.GONE);
                 return;
             }
-
-            meetupListAdapter.setMeetups(meetups);
+            meetupListAdapter = new MeetupListAdapter(meetups);
+            binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
             binding.noMeetupsWrapper.setVisibility(View.GONE);
             binding.meetupListRecyclerView.setVisibility(View.VISIBLE);
         });

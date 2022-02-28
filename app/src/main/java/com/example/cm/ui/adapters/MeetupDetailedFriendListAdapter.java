@@ -19,7 +19,7 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     private final List<MutableLiveData<User>> friends;
     private final OnItemClickListener listener;
 
-    public MeetupDetailedFriendListAdapter(List<User> friends, OnItemClickListener listener) {
+    public MeetupDetailedFriendListAdapter(List<MutableLiveData<User>> friends, OnItemClickListener listener) {
         this.friends = friends;
         this.listener = listener;
     }
@@ -77,7 +77,7 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(friends.get(position).getId());
+            listener.onItemClicked(friends.get(position).getValue().getId());
         }
 
         public TextView getTvUserName() {
