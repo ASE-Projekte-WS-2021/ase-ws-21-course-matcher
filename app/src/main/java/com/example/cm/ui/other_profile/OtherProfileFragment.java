@@ -47,8 +47,6 @@ public class OtherProfileFragment extends Fragment {
             binding.tvUsername.setText(currentUser.getUsername());
             binding.tvBioDescription.setText(currentUser.getBio());
         });
-
-
     }
 
     private void getProfileInformation() {
@@ -62,6 +60,9 @@ public class OtherProfileFragment extends Fragment {
             String profileId = bundle.getString(Constants.KEY_USER_ID);
             otherProfileViewModel.getUserById(profileId);
             observeFriendship(profileId);
+        }
+        if (bundle.containsKey(Constants.KEY_IS_OWN_USER) && bundle.getBoolean(Constants.KEY_IS_OWN_USER)) {
+            binding.btnAddRemoveFriend.setVisibility(View.GONE);
         }
     }
 
