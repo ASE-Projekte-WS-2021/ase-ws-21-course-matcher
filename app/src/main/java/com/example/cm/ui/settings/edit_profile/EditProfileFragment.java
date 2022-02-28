@@ -7,7 +7,9 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,12 +145,18 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     }
 
     private void onEditProfileImageClicked() {
-        boolean hasExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        boolean hasReadExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        boolean hasWriteExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
-        if (!hasExternalStoragePermission) {
+        if (!hasReadExternalStoragePermission) {
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
-        if (hasExternalStoragePermission) {
+
+        if(!hasWriteExternalStoragePermission) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+
+        if (hasReadExternalStoragePermission && hasWriteExternalStoragePermission) {
             storagePermissionRequestLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
     }
