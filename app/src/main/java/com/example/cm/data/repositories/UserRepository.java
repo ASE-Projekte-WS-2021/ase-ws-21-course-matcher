@@ -76,7 +76,6 @@ public class UserRepository extends Repository {
                         callback.onError(false);
                     });
         } catch (Exception e) {
-            Timber.e(e);
             callback.onError(e);
             e.printStackTrace();
         }
