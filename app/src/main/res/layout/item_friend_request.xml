@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/friendRequestLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/padding_small"
+    android:paddingStart="@dimen/padding_medium"
     android:paddingTop="@dimen/padding_small"
     android:paddingEnd="@dimen/padding_small">
 
@@ -27,25 +28,56 @@
         app:layout_constraintEnd_toStartOf="@+id/acceptButton"
         app:layout_constraintTop_toTopOf="@+id/acceptButton" />
 
-    <ImageView
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/senderProfileImageView"
-        android:layout_width="@dimen/meetup_icon_image_height"
-        android:layout_height="@dimen/meetup_icon_image_height"
+        android:layout_width="@dimen/profile_img_size"
+        android:layout_height="@dimen/profile_img_size"
+        android:layout_gravity="center"
+        android:background="@color/gray500"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_profile"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView" />
 
-    <TextView
-        android:id="@+id/senderTextView"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_big"
+        android:layout_marginStart="@dimen/padding_big"
+        android:layout_centerVertical="true"
         app:layout_constraintBottom_toBottomOf="@+id/senderProfileImageView"
         app:layout_constraintEnd_toStartOf="@+id/declineButton"
         app:layout_constraintStart_toEndOf="@+id/senderProfileImageView"
-        app:layout_constraintTop_toTopOf="@+id/senderProfileImageView" />
+        app:layout_constraintTop_toTopOf="@+id/senderProfileImageView"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/senderTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{username}"
+            android:textColor="@color/gray700"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="Name"
+             />
+
+        <TextView
+            android:id="@+id/tvSenderUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{username}"
+            android:textColor="@color/gray500"
+            app:layout_constraintTop_toBottomOf="@+id/senderTextView"
+            tools:layout_editor_absoluteX="10dp"
+            tools:text="Username" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/descriptionTextView"
@@ -76,7 +108,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/stroke_width"
         android:layout_marginTop="@dimen/small_margin"
-        android:background="@android:color/darker_gray"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:background="@color/gray300"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sentDateTextView" />
