@@ -2,6 +2,7 @@ package com.example.cm.ui.adapters;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -32,13 +34,16 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     @Override
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
         if (friends != null) {
+            String profileImageUrl = friends.get(position).getProfileImageUrl();
             String fullName = friends.get(position).getFullName();
             String username = friends.get(position).getUsername();
-            TextView tvUserName = holder.getTvUserName();
-            TextView tvFullName = holder.getTvFullName();
 
-            tvFullName.setText(fullName);
-            tvUserName.setText(username);
+            if (profileImageUrl != null) {
+                holder.getProfileImage().setImageTintMode(null);
+                Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+            }
+            holder.getTvFullName().setText(fullName);
+            holder.getTvUserName().setText(username);
         }
     }
 
@@ -75,6 +80,10 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
             listener.onItemClicked(friends.get(position).getId());
+        }
+
+        public ImageView getProfileImage() {
+            return binding.ivUserImage;
         }
 
         public TextView getTvUserName() {

@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSelectFriendBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;
@@ -95,10 +97,14 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
-
+        String profileImageUrl = mUsers.get(position).getProfileImageUrl();
         String name = mUsers.get(position).getFirstName() + " " + mUsers.get(position).getLastName();
         String username = mUsers.get(position).getUsername();
 
+        if (profileImageUrl != null) {
+            holder.getProfileImage().setImageTintMode(null);
+            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+        }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
 
@@ -160,6 +166,10 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
         /**
          * Getters for the views in the list item
          */
+        public ImageView getProfileImage() {
+            return binding.ivUserImage;
+        }
+
         public TextView getTvName() {
             return binding.tvName;
         }
