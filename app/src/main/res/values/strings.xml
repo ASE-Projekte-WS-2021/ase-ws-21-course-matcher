@@ -134,6 +134,10 @@
     <string name="url_privacy_policy">https://www.uni-regensburg.de/datenschutz/startseite/index.html</string>
     <string name="title_edit_profile">Profil bearbeiten</string>
     <string name="title_edit_account">Account bearbeiten</string>
+    <string name="input_label_email">E-Mail Adresse</string>
+    <string name="input_label_current_password">Aktuelles Passwort</string>
+    <string name="input_label_new_password">Neues Passwort</string>
+    <string name="input_label_new_password_confirm">Neues Passwort bestätigen</string>
 
     <string name="content_description_splash_screen_logo">Splash Screen Logo</string>
 
@@ -145,5 +149,17 @@
     <string name="edit_profile_error_message">Ein Fehler ist aufgetreten. Versuche es erneut.</string>
     <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
     <string name="dialog_title_field">{field} bearbeiten</string>
+    <string name="edit_account_error_password_not_empty">Passwort-Felder dürfen nicht leer sein</string>
+    <string name="edit_account_error_password_min_length">Passwort muss mindestens 6 Zeichen lang sein</string>
+    <string name="edit_account_error_password_must_differ">Das neue Passwort darf nicht mit dem alten übereinstimmen</string>
+    <string name="edit_account_error_password_must_match">Das neue Passwort und die Bestätigung müssen übereinstimmen</string>
+    <string name="edit_account_success_password_change">Passwort erfolgreich geändert</string>
+    <string name="edit_account_error_password_not_changed">Passwort konnte nicht geändert werden</string>
+    <string name="edit_profile_field_not_empty">Feld darf nicht leer sein</string>
+    <string name="edit_profile_username_min_length">Benutzername muss mindestens 4 Zeichen lang sein</string>
+    <string name="edit_profile_first_name_min_length">Vorname muss mindestens 2 Zeichen lang sein</string>
+    <string name="edit_profile_last_name_min_length">Nachname muss mindestens 2 Zeichen lang sein</string>
+    <string name="edit_profile_success">Erfolgreich aktualisiert</string>
+    <string name="edit_profile_general_error">Ein Fehler ist aufgetreten</string>
 
 </resources>
