@@ -1,14 +1,12 @@
 package com.example.cm.ui.meetup.MeetupDetailed;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -24,6 +22,7 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
 
     private final List<String> friends;
     private FragmentMeetupDetailedFriendsListBinding binding;
+    private MeetupDetailedFriendsListViewModel meetupDetailedFriendsListViewModel;
     private Navigator navigator;
 
     public MeetupDetailedFriendsListFragment(List<String> friends) {
@@ -53,8 +52,8 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
     }
 
     private void initViewModel() {
-        MeetupDetailedFriendsListViewModel viewModel = new ViewModelProvider(this, new MeetupDetailedFriendsListFactory(friends)).get(MeetupDetailedFriendsListViewModel.class);
-        viewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+        meetupDetailedFriendsListViewModel = new ViewModelProvider(this, new MeetupDetailedFriendsListFactory(friends)).get(MeetupDetailedFriendsListViewModel.class);
+        meetupDetailedFriendsListViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             MeetupDetailedFriendListAdapter adapter = new MeetupDetailedFriendListAdapter(users, this);
             binding.meetupDetailedFriendsList.setAdapter(adapter);
         });
@@ -64,6 +63,10 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_USER_ID, id);
-        navigator.getNavController().navigate(R.id.fromMeetupDetailedToProfile, bundle);
+        if (meetupDetailedFriendsListViewModel.isOwnUserId(id)) {
+            navigator.getNavController().navigate(R.id.fromMeetupDetailedToOwnProfile, bundle);
+        } else {
+            navigator.getNavController().navigate(R.id.fromMeetupDetailedToOtherProfile, bundle);
+        }
     }
 }

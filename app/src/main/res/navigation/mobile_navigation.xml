@@ -38,7 +38,10 @@
         android:label="@string/MeetupDetailedTitle"
         tools:layout="@layout/fragment_meetup_detailed">
         <action
-            android:id="@+id/fromMeetupDetailedToProfile"
+            android:id="@+id/fromMeetupDetailedToOwnProfile"
+            app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/fromMeetupDetailedToOtherProfile"
             app:destination="@id/navigation_other_profile" />
     </fragment>
 
