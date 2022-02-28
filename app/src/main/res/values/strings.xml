@@ -116,5 +116,31 @@
     <string name="meetup_ended_text">Beendet</string>
     <string name="delete_snackbar_text">Anfrage gelöscht.</string>
     <string name="meetup_list_no_meetups_found">Keine Meetups gefunden. Du kannst ein neues Meetup erstellen, indem du auf den \"+\" Button klickst.</string>
+    <string name="find_friends_no_friends_found">Es wurden keine Einträge für den Suchbegriff gefunden.</string>
+    <string name="content_description_profile_image">Profile Image of user</string>
+    <string name="profile_title_bio">Bio</string>
+    <string name="content_description_back_button">Navigate to previous screen</string>
+    <string name="profile_btn_add_friend">Anfragen</string>
+    <string name="profile_btn_remove_friend">Entfernen</string>
+    <string name="content_description_profile_settings">Navigate to Profile Settings</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="app_version_prefix">App-Version:</string>
+    <string name="link_label_edit_profile">Profil bearbeiten</string>
+    <string name="link_label_edit_account">Account bearbeiten</string>
+    <string name="link_label_edit_notifications">Benachrichtigungen</string>
+    <string name="link_label_privacy_policy">Datenschutzerklärung</string>
+    <string name="link_label_imprint">Impressum</string>
+    <string name="url_imprint">https://www.uni-regensburg.de/impressum/startseite/index.html</string>
+    <string name="url_privacy_policy">https://www.uni-regensburg.de/datenschutz/startseite/index.html</string>
+    <string name="title_edit_profile">Profil bearbeiten</string>
+    <string name="title_edit_account">Account bearbeiten</string>
+    <string name="input_label_bio">Bio</string>
+    <string name="input_label_username">Benutzername</string>
+    <string name="input_label_first_name">Vorname</string>
+    <string name="input_label_last_name">Nachname</string>
+    <string name="edit_profile_success_message">Änderungen wurden gespeichert</string>
+    <string name="edit_profile_error_message">Ein Fehler ist aufgetreten. Versuche es erneut.</string>
+    <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
+    <string name="dialog_title_field">{field} bearbeiten</string>
 
 </resources>
