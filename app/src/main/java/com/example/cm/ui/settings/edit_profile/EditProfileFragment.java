@@ -30,6 +30,8 @@ import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
+import timber.log.Timber;
+
 public class EditProfileFragment extends Fragment implements EditTextDialog.OnSaveListener, EditTextAreaDialog.OnSaveListener {
     ActivityResultLauncher<String> storagePermissionRequestLauncher;
     ActivityResultLauncher<Intent> imagePickerLauncher;
@@ -85,7 +87,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     }
 
     private void initViewModel() {
-        editProfileViewModel = new ViewModelProvider(this, new EditProfileViewModelFactory(requireContext())).get(EditProfileViewModel.class);
+        editProfileViewModel = new ViewModelProvider(requireActivity()).get(EditProfileViewModel.class);
         editProfileViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             binding.inputUsername.inputField.setText(user.getUsername());
             binding.inputFirstName.inputField.setText(user.getFirstName());
@@ -103,7 +105,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
                 dialog.hide();
             }
 
-            Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), status.getMessageResourceId(), Snackbar.LENGTH_SHORT).show();
         });
     }
 
@@ -164,6 +166,12 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     @Override
     public void onTextAreaSaved(String fieldToUpdate, String updatedValue) {
         editProfileViewModel.updateField(fieldToUpdate, updatedValue);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        editProfileViewModel.status.postValue(null);
     }
 
     @Override

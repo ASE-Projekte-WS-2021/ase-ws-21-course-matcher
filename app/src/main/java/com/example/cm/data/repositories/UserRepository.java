@@ -61,6 +61,13 @@ public class UserRepository extends Repository {
         return mutableUser;
     }
 
+    public String getCurrentAuthUserId() {
+        if (auth.getCurrentUser() == null) {
+            return null;
+        }
+        return auth.getCurrentUser().getUid();
+    }
+
     /**
      * Create a user
      */
