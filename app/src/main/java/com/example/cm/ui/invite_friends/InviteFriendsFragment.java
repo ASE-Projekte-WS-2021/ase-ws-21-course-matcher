@@ -46,6 +46,7 @@ public class InviteFriendsFragment extends Fragment
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(inviteFriendsListAdapter);
+        binding.btnBack.bringToFront();
     }
 
     private void initListener() {

@@ -56,6 +56,7 @@ public class CreateMeetupFragment extends Fragment {
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.meetup_locations, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding.meetupLocationSpinner.setAdapter(adapter);
+        binding.btnBack.bringToFront();
     }
 
     private void initListener() {
