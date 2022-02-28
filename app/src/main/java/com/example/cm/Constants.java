@@ -5,4 +5,5 @@ public class Constants {
     public static final String KEY_MEETUP_ID = "keyMeetupId";
     public static final int MAX_CHAR_COUNT = 125;
     public static final String KEY_IS_OWN_USER = "keyIsOwnUser";
+    public static final int MIN_PASSWORD_LENGTH = 6;
 }

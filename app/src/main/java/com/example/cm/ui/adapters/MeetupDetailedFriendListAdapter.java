@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.data.models.User;
-import com.example.cm.databinding.ItemMeetupFriendBinding;
+import com.example.cm.databinding.ItemSingleFriendBinding;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     @NonNull
     @Override
     public MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemMeetupFriendBinding binding = ItemMeetupFriendBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemSingleFriendBinding binding = ItemSingleFriendBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new MeetupDetailedFriendsListViewHolder(binding);
     }
 
@@ -56,9 +56,9 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
 
     public class MeetupDetailedFriendsListViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemMeetupFriendBinding binding;
+        private final ItemSingleFriendBinding binding;
 
-        public MeetupDetailedFriendsListViewHolder(ItemMeetupFriendBinding binding) {
+        public MeetupDetailedFriendsListViewHolder(ItemSingleFriendBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
             setListeners();
@@ -78,11 +78,11 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
         }
 
         public TextView getTvUserName() {
-            return binding.tvMeetupFriendUserName;
+            return binding.tvUsername;
         }
 
         public TextView getTvFullName() {
-            return binding.tvMeetupFriendName;
+            return binding.tvName;
         }
     }
 }

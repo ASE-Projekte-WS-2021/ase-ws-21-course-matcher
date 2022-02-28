@@ -17,6 +17,8 @@ import com.example.cm.utils.EditTextDialog;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 
+import timber.log.Timber;
+
 public class EditProfileFragment extends Fragment implements EditTextDialog.OnSaveListener, EditTextAreaDialog.OnSaveListener {
     FragmentEditProfileBinding binding;
     EditProfileViewModel editProfileViewModel;
@@ -37,7 +39,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     }
 
     private void initViewModel() {
-        editProfileViewModel = new ViewModelProvider(this, new EditProfileViewModelFactory(requireContext())).get(EditProfileViewModel.class);
+        editProfileViewModel = new ViewModelProvider(requireActivity()).get(EditProfileViewModel.class);
         editProfileViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             binding.inputUsername.inputField.setText(user.getUsername());
             binding.inputFirstName.inputField.setText(user.getFirstName());
@@ -50,22 +52,11 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
                 return;
             }
 
-            switch (status.getFlag()) {
-                case SUCCESS:
-                    if (dialog != null) {
-                        dialog.hide();
-                    }
-                    Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
-                    break;
-                case ERROR:
-                    if (dialog != null) {
-                        dialog.hide();
-                    }
-                    Snackbar.make(binding.getRoot(), status.getMessage(), Snackbar.LENGTH_SHORT).show();
-                    break;
-                default:
-                    break;
+            if (dialog != null) {
+                dialog.hide();
             }
+
+            Snackbar.make(binding.getRoot(), status.getMessageResourceId(), Snackbar.LENGTH_SHORT).show();
         });
     }
 
@@ -106,6 +97,12 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     @Override
     public void onTextAreaSaved(String fieldToUpdate, String updatedValue) {
         editProfileViewModel.updateField(fieldToUpdate, updatedValue);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        editProfileViewModel.status.postValue(null);
     }
 
     @Override
