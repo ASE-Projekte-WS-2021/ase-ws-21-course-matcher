@@ -12,12 +12,12 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_header"
         android:orientation="vertical"
-        android:padding="@dimen/padding_big">
+        android:paddingHorizontal="@dimen/padding_small"
+        android:paddingVertical="@dimen/padding_medium" >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_small"
             android:fontFamily="@font/readexpro_semibold"
             android:text="@string/title_friends"
             android:textAlignment="center"
@@ -26,7 +26,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_big" >
 
             <EditText
                 android:id="@+id/etUserSearch"

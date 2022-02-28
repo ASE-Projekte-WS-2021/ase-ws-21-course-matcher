@@ -54,6 +54,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(selectFriendsAdapter);
+        binding.btnBack.bringToFront();
     }
 
     private void initListener() {
