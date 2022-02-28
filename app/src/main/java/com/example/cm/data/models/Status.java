@@ -2,11 +2,15 @@ package com.example.cm.data.models;
 
 public class Status {
     private StatusFlag flag;
-    private String message;
+    private int messageResourceId;
 
-    public Status(StatusFlag flag, String message) {
+    public Status(StatusFlag flag, int messageResourceId) {
         this.flag = flag;
-        this.message = message;
+        this.messageResourceId = messageResourceId;
+    }
+
+    public Status(StatusFlag flag) {
+        this.flag = flag;
     }
 
     public StatusFlag getFlag() {
@@ -17,12 +21,8 @@ public class Status {
         this.flag = flag;
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public int getMessageResourceId() {
+        return messageResourceId;
     }
 
     public String toString() {

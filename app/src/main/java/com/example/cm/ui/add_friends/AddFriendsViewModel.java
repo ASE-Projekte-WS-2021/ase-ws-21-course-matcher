@@ -57,7 +57,7 @@ public class AddFriendsViewModel extends ViewModel {
             users = userRepository.getUsersNotFriends();
             return;
         }
-        users = userRepository.getUsersNotFriendsByUsername(query);
+        users = userRepository.getUsersNotFriendsByQuery(query);
     }
 
     /**

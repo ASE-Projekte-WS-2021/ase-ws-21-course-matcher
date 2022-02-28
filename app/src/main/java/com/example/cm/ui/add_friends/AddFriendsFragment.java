@@ -1,13 +1,17 @@
 package com.example.cm.ui.add_friends;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
@@ -17,8 +21,11 @@ import com.example.cm.ui.adapters.AddFriendsAdapter;
 import com.example.cm.ui.adapters.AddFriendsAdapter.OnItemClickListener;
 import com.example.cm.ui.add_friends.AddFriendsViewModel.OnRequestSentListener;
 import com.example.cm.utils.Navigator;
-import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
 
 public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnRequestSentListener {
 
@@ -37,6 +44,9 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     private void initUI() {
         selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        binding.rvUserList.addItemDecoration(dividerItemDecoration);
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(selectFriendsAdapter);
@@ -44,7 +54,38 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     private void initListener() {
         navigator = new Navigator(requireActivity());
-        binding.btnSearch.setOnClickListener(v -> onSearchButtonClicked());
+        binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
+        binding.etUserSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                onSearchTextChanged(charSequence);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+    }
+
+    private void onClearInputClicked() {
+        binding.etUserSearch.setText("");
+        addFriendsViewModel.searchUsers("");
+        binding.ivClearInput.setVisibility(View.GONE);
+    }
+
+    private void onSearchTextChanged(CharSequence charSequence) {
+        String query = charSequence.toString();
+        if (query.length() > 0) {
+            binding.ivClearInput.setVisibility(View.VISIBLE);
+        } else {
+            binding.ivClearInput.setVisibility(View.GONE);
+        }
+
+        addFriendsViewModel.searchUsers(query);
     }
 
     private void initViewModel() {
@@ -59,15 +100,16 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
                 return;
             }
             selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
+            /*
+            ArrayList<Request> requestsToSet = new ArrayList<>();
+            for (FriendRequest request : sentFriendRequests) {
+                requestsToSet.add((Request) request);
+            }
+            selectFriendsAdapter.setSentFriendRequests(requestsToSet);
+            */
         });
     }
 
-    private void onSearchButtonClicked() {
-        String query = binding.etUserSearch.getText().toString();
-        addFriendsViewModel.searchUsers(query);
-
-        Utils.hideKeyboard(requireActivity(), binding.getRoot());
-    }
 
     @Override
     public void onDestroyView() {
@@ -105,6 +147,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
                 return;
             }
             selectFriendsAdapter.setUsers(users);
+            binding.noFriendsWrapper.setVisibility(View.GONE);
             binding.loadingCircle.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);
         });

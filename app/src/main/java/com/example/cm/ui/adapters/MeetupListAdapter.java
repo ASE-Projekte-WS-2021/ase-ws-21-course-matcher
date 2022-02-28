@@ -49,7 +49,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         });
 
         holder.getTvLocation().setText(Objects.requireNonNull(meetup).getLocation());
-        switch (meetup.getPhase()){
+        switch (meetup.getPhase()) {
             case MEETUP_UPCOMING:
                 holder.getTvTime().setText(meetup.getFormattedTime());
                 break;
@@ -114,7 +114,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return binding.meetupImagesLayout;
         }
 
-        public MaterialCardView getMeetupCard() { return binding.card;}
+        public MaterialCardView getMeetupCard() {
+            return binding.card;
+        }
 
     }
 }

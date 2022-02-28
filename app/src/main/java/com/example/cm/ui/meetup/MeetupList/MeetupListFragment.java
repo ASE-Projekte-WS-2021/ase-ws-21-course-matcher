@@ -26,19 +26,28 @@ public class MeetupListFragment extends Fragment {
         initViewModel();
         return binding.getRoot();
     }
-
-    private void initUi() {
+  
+  private void initUI() {
+        meetupListAdapter = new MeetupListAdapter();
         GridLayoutManager gridLayout = new GridLayoutManager(getContext(), 2);
         binding.meetupListRecyclerView.setLayoutManager(gridLayout);
         binding.meetupListRecyclerView.setHasFixedSize(true);
+        binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void initViewModel() {
         MeetupListViewModel meetupListViewModel = new ViewModelProvider(this).get(MeetupListViewModel.class);
         meetupListViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
-            meetupListAdapter = new MeetupListAdapter(meetups);
-            binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
+            if (meetups.size() == 0) {
+                binding.noMeetupsWrapper.setVisibility(View.VISIBLE);
+                binding.meetupListRecyclerView.setVisibility(View.GONE);
+                return;
+            }
+
+            meetupListAdapter.setMeetups(meetups);
+            binding.noMeetupsWrapper.setVisibility(View.GONE);
+            binding.meetupListRecyclerView.setVisibility(View.VISIBLE);
         });
     }
 
