@@ -38,13 +38,12 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAddFriendsBinding.inflate(inflater, container, false);
+        navigator = new Navigator(requireActivity());
         initUI();
         initListener();
         initViewModel();
-
         return binding.getRoot();
     }
-
 
     private void initUI() {
         selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
@@ -58,7 +57,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void initListener() {
-        navigator = new Navigator(requireActivity());
         binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
         binding.etUserSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -74,6 +72,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             public void afterTextChanged(Editable editable) {
             }
         });
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 
     private void onClearInputClicked() {
@@ -112,7 +111,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         });
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -124,19 +122,16 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         addFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
     }
 
-
     @Override
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_USER_ID, id);
-
         navigator.getNavController().navigate(R.id.fromSelectFriendsToProfile, bundle);
     }
 
     @Override
     public void onRequestAdded() {
         Snackbar.make(binding.getRoot(), R.string.snackbar_sent_request, Snackbar.LENGTH_LONG).show();
-
     }
 
     @Override

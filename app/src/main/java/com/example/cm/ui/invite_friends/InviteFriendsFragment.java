@@ -50,7 +50,7 @@ public class InviteFriendsFragment extends Fragment
 
     private void initListener() {
         binding.inviteFriendsSearchBtn.setOnClickListener(v -> onSearchButtonClicked());
-
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.btnSendInvite.setOnClickListener(v -> {
             boolean isSuccessful = createMeetupViewModel.createMeetup();
             if (isSuccessful) {

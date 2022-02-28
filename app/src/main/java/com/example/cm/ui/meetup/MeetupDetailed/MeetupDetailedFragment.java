@@ -70,13 +70,13 @@ public class MeetupDetailedFragment extends Fragment {
             binding.meetupDetailedLocation.setText(meetup.getLocation());
             switch (meetup.getPhase()) {
                 case MEETUP_UPCOMING:
-                    binding.meetupDetailedLocation.setText(meetup.getFormattedTime());
+                    binding.meetupDetailedTime.setText(meetup.getFormattedTime());
                     break;
                 case MEETUP_ACTIVE:
-                    binding.meetupDetailedLocation.setText(getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                    binding.meetupDetailedTime.setText(getString(R.string.meetup_active_text, meetup.getFormattedTime()));
                     break;
                 case MEETUP_ENDED:
-                    binding.meetupDetailedLocation.setText(R.string.meetup_ended_text);
+                    binding.meetupDetailedTime.setText(R.string.meetup_ended_text);
                     break;
             }
         });
