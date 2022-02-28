@@ -76,7 +76,7 @@ public class AuthRepository extends Repository {
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void login(String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(application.getMainExecutor(), task -> {
+                .addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
                         userLiveData.postValue(firebaseAuth.getCurrentUser());
                     } else {
