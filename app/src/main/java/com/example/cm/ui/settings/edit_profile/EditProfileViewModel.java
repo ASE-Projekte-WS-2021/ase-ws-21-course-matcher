@@ -1,5 +1,9 @@
 package com.example.cm.ui.settings.edit_profile;
 
+
+import android.content.Context;
+import android.net.Uri;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -8,24 +12,35 @@ import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.Callback;
+import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.utils.InputValidator;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import timber.log.Timber;
 
-public class EditProfileViewModel extends ViewModel implements Callback {
+public class EditProfileViewModel extends ViewModel implements Callback, StorageManager.Callback {
     private final UserRepository userRepository;
+    private final StorageManager storageRepository;
     public MutableLiveData<Status> status = new MutableLiveData<>();
     private MutableLiveData<User> user;
 
-    public EditProfileViewModel() {
+    public EditProfileViewModel(Context context) {
         userRepository = new UserRepository();
+        storageRepository = new StorageManager(context);
         user = userRepository.getCurrentUser();
     }
 
     public MutableLiveData<User> getUser() {
         return user;
+    }
+
+
+    public void updateImage(Uri uri) {
+        if (uri == null || user.getValue() == null) {
+            status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
+            return;
+        }
+        storageRepository.uploadProfileImage(uri, user.getValue().getId(), this);
     }
 
     public void updateField(String field, String value) {
@@ -60,6 +75,7 @@ public class EditProfileViewModel extends ViewModel implements Callback {
                 break;
             case "Bio":
                 userRepository.updateField("bio", trimmedValue, this);
+                break;
             default:
                 break;
         }
@@ -74,6 +90,16 @@ public class EditProfileViewModel extends ViewModel implements Callback {
 
     @Override
     public void onError(Object object) {
+        status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
+    }
+
+    @Override
+    public void onSuccess(String url) {
+        userRepository.updateField("profileImageUrl", url, this);
+    }
+
+    @Override
+    public void onError(Exception e) {
         status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
     }
 }
