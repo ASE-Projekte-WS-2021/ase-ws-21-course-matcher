@@ -3,6 +3,7 @@ package com.example.cm.ui.settings.edit_profile;
 
 import android.content.Context;
 import android.net.Uri;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -11,23 +12,21 @@ import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.Callback;
-import com.example.cm.data.repositories.StorageRepository;
+import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.utils.InputValidator;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 
-public class EditProfileViewModel extends ViewModel implements Callback, StorageRepository.Callback {
+public class EditProfileViewModel extends ViewModel implements Callback, StorageManager.Callback {
     public MutableLiveData<Status> status = new MutableLiveData<>();
-    StorageRepository storageRepository;
-    private UserRepository userRepository;
+    StorageManager storageRepository;
+    private final UserRepository userRepository;
     private MutableLiveData<User> user;
-    private Context context;
 
     public EditProfileViewModel(Context context) {
-        this.context = context;
         userRepository = new UserRepository();
-        storageRepository = new StorageRepository(context);
+        storageRepository = new StorageManager(context);
         user = userRepository.getCurrentUser();
     }
 

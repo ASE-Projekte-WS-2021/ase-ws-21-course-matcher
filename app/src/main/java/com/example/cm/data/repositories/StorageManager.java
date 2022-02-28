@@ -14,11 +14,11 @@ import com.google.firebase.storage.StorageReference;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public class StorageRepository extends Repository {
+public class StorageManager extends Repository {
     private final Context context;
     private final StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
-    public StorageRepository(Context context) {
+    public StorageManager(Context context) {
         this.context = context;
     }
 
