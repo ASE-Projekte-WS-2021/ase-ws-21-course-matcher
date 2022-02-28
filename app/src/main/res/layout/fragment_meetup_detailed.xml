@@ -30,9 +30,9 @@
                 android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/padding_big"
-                android:paddingTop="@dimen/padding_big"
                 android:contentDescription="@string/content_description_back_button"
+                android:paddingStart="@dimen/padding_small"
+                android:paddingTop="@dimen/padding_small"
                 android:src="@drawable/ic_back_button"
                 tools:ignore="RtlSymmetry" />
 

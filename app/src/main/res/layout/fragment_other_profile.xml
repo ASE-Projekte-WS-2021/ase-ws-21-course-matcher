@@ -26,8 +26,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/padding_big"
-            android:paddingTop="@dimen/padding_big">
+            android:paddingHorizontal="@dimen/padding_small"
+            android:paddingTop="@dimen/padding_small">
 
             <ImageView
                 android:id="@+id/btnBack"
