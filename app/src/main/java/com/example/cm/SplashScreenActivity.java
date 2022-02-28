@@ -16,6 +16,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash_screen);
+
         if(getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
@@ -31,7 +33,5 @@ public class SplashScreenActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         }
-
-        setContentView(R.layout.activity_splash_screen);
     }
 }

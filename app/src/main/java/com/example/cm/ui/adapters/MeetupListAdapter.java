@@ -24,9 +24,13 @@ import java.util.List;
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
     List<Meetup> meetups;
 
-    public MeetupListAdapter(List<Meetup> meetups) {
+    public MeetupListAdapter() {
+
+    }
+
+    public void setMeetups(List<Meetup> meetups) {
         for (int i = 0; i < meetups.size(); i++) {
-            if (meetups.get(i).getPhase() == MeetupPhase.MEETUP_ENDED){
+            if (meetups.get(i).getPhase() == MeetupPhase.MEETUP_ENDED) {
                 meetups.remove(i);
             }
         }
@@ -53,7 +57,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         });
 
         holder.getTvLocation().setText(meetup.getLocation());
-        switch (meetup.getPhase()){
+        switch (meetup.getPhase()) {
             case MEETUP_UPCOMING:
                 holder.getTvTime().setText(meetup.getFormattedTime());
                 break;
@@ -91,6 +95,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
     @Override
     public int getItemCount() {
+        if (meetups == null) {
+            return 0;
+        }
         return meetups.size();
     }
 
@@ -115,7 +122,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return binding.meetupImagesLayout;
         }
 
-        public MaterialCardView getMeetupCard() { return binding.card;}
+        public MaterialCardView getMeetupCard() {
+            return binding.card;
+        }
 
     }
 }
