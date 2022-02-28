@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
+    android:layout_marginBottom="@dimen/padding_medium"
     android:backgroundTint="@color/white"
-    app:cardCornerRadius="8dp"
+    app:cardCornerRadius="@dimen/medium_margin"
     app:cardElevation="0dp"
-    app:strokeColor="#F3F3F3"
+    app:strokeColor="@color/gray300"
     app:strokeWidth="1dp">
 
 
@@ -20,10 +20,10 @@
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivUserImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/profile_img_size"
+            android:layout_height="@dimen/profile_img_size"
             android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/default_screen_padding"
+            android:layout_marginEnd="@dimen/padding_big"
             android:background="@color/gray500"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_profile"
@@ -47,8 +47,8 @@
                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:text="@{username}"
-                android:textColor="#22283A"
-                android:textSize="18sp"
+                android:textColor="@color/gray700"
+                android:textSize="@dimen/text_size_medium"
                 tools:text="Name" />
 
             <TextView
@@ -59,7 +59,7 @@
                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:text="@{username}"
-                android:textColor="#98A3C3"
+                android:textColor="@color/gray500"
                 tools:text="Username" />
         </LinearLayout>
 
@@ -70,6 +70,6 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:buttonTint="#98A3C3" />
+            android:buttonTint="@color/gray500" />
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

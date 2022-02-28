@@ -7,12 +7,17 @@
     <dimen name="medium_margin">8dp</dimen>
     <dimen name="big_margin">12dp</dimen>
 
-    <dimen name="default_screen_padding">20dp</dimen>
+    <dimen name="padding_double">40dp</dimen>
+    <dimen name="padding_big">20dp</dimen>
+    <dimen name="padding_medium">15dp</dimen>
+    <dimen name="padding_small">10dp</dimen>
+    <dimen name="padding_half">5dp</dimen>
 
     <dimen name="app_bar_title">20sp</dimen>
-    <dimen name="text_size_title">24sp</dimen>
-    <dimen name="text_size_description">18sp</dimen>
-    <dimen name="text_size_description_small">14sp</dimen>
+    <dimen name="text_size_ultra">70sp</dimen>
+    <dimen name="text_size_big">24sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
     <dimen name="edit_text_min_height">48dp</dimen>
 
     <dimen name="medium_margin_items">32dp</dimen>
@@ -24,5 +29,8 @@
     <dimen name="meetup_icon_image_height">55dp</dimen>
     <dimen name="request_btn_size">40dp</dimen>
     <dimen name="medium_margin_negative">-8dp</dimen>
-    <dimen name="text_size_description_medium">16sp</dimen>
+
+    <dimen name="profile_img_size">50dp</dimen>
+
+    <dimen name="stroke_width">2dp</dimen>
 </resources>

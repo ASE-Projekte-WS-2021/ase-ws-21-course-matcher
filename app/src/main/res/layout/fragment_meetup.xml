@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_margin="10dp"
+    android:layout_margin="@dimen/padding_small"
     android:orientation="vertical"
-    tools:context=".ui.meetup.MeetupFragment">
-
+    tools:context=".ui.meetup.CreateMeetup.CreateMeetupFragment">
 
     <Button
         android:id="@+id/meetup_info_btn"
@@ -27,7 +26,7 @@
         android:buttonTint="@color/orange"
         android:checked="false"
         android:text="@string/meetup_private"
-        android:textSize="@dimen/text_size_description"
+        android:textSize="@dimen/text_size_medium"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +53,7 @@
         android:layout_marginTop="@dimen/medium_margin_items"
         android:gravity="left"
         android:text="@string/meetup_place"
-        android:textSize="@dimen/text_size_description"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +66,7 @@
         android:text="@string/meetup_header"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size_title"
+        android:textSize="@dimen/text_size_big"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -79,7 +78,7 @@
         android:layout_height="wrap_content"
         android:text="@string/meetup_header_desc"
         android:textAlignment="center"
-        android:textSize="@dimen/text_size_description"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meetup_header" />
@@ -89,10 +88,10 @@
         android:id="@+id/meetup_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="@dimen/padding_double"
         android:gravity="left"
         android:text="@string/meetup_time"
-        android:textSize="@dimen/text_size_description"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.017"
         app:layout_constraintStart_toStartOf="parent"
@@ -102,17 +101,14 @@
         android:id="@+id/meetup_time_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/padding_small"
         android:background="@android:drawable/editbox_background"
         android:gravity="center"
         android:hint="@string/select_time"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meetup_time" />
-    />
-
-
 
     <!--<TimePicker
         android:id="@+id/meetup_time_picker"

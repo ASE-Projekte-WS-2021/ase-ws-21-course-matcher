@@ -12,14 +12,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#98A3C3"
-        app:cardCornerRadius="50dp">
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:backgroundTint="@color/gray500"
+        app:cardCornerRadius="@dimen/profile_img_size">
 
         <ImageView
             android:id="@+id/ivUserImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/profile_img_size"
+            android:layout_height="@dimen/profile_img_size"
             android:contentDescription="@string/profile_picture_decription" />
     </androidx.cardview.widget.CardView>
 
@@ -37,8 +37,8 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{username}"
-            android:textColor="#22283A"
-            android:textSize="18sp"
+            android:textColor="@color/gray700"
+            android:textSize="@dimen/text_size_medium"
             tools:text="Name" />
 
         <TextView
@@ -48,7 +48,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:text="@{username}"
-            android:textColor="#98A3C3"
+            android:textColor="@color/gray500"
             tools:text="Username" />
     </LinearLayout>
 

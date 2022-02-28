@@ -84,6 +84,7 @@
     <string name="friends_tabs_requests">Freundschaftsanfragen</string>
 
     <string name="title_meetup">Meetup</string>
+    <string name="meetup_success_icon">🙌</string>
     <string name="meetup_success_title">Du hast es geschafft!</string>
     <string name="meetup_success_description">Euer Treffen wurde erfolgreich erstellt. Genieße die Zeit mit deinen Freunden.</string>
     <string name="meetup_success_btn_text">Zur Meetup-Übersicht</string>
@@ -145,10 +146,14 @@
     <string name="input_label_username">Benutzername</string>
     <string name="input_label_first_name">Vorname</string>
     <string name="input_label_last_name">Nachname</string>
+    <string name="edit_cancel">Abbrechen</string>
+    <string name="edit_save">Speichern</string>
     <string name="edit_profile_success_message">Änderungen wurden gespeichert</string>
     <string name="edit_profile_error_message">Ein Fehler ist aufgetreten. Versuche es erneut.</string>
     <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
     <string name="dialog_title_field">{field} bearbeiten</string>
+    <string name="edit_account_email">Die E-Mail Adresse ist mit deinem RZ-Account verknüpft und kann deshalb nicht nachträglich angepasst werden.</string>
+    <string name="edit_account_password">Passwort ändern</string>
     <string name="edit_account_error_password_not_empty">Passwort-Felder dürfen nicht leer sein</string>
     <string name="edit_account_error_password_min_length">Passwort muss mindestens 6 Zeichen lang sein</string>
     <string name="edit_account_error_password_must_differ">Das neue Passwort darf nicht mit dem alten übereinstimmen</string>

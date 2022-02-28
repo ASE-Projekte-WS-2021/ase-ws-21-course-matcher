@@ -28,6 +28,7 @@
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup.xml" value="0.264" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed.xml" value="0.21240942028985507" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed_friends_list.xml" value="0.21240942028985507" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_invite_success.xml" value="0.2078804347826087" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_list.xml" value="0.23233695652173914" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_notifications.xml" value="0.23233695652173914" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_requests.xml" value="0.1" />
@@ -44,6 +45,7 @@
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_notification_meetup.xml" value="0.19610507246376813" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_select_friend.xml" value="0.19610507246376813" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_send_friend_request.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_settings_link.xml" value="0.2078804347826087" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_single_friend.xml" value="0.20606884057971014" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/menu/menu_fragment_friends.xml" value="0.25416666666666665" />

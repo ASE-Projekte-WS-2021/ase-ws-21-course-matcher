@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/friendRequestLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingStart="@dimen/big_margin"
-    android:paddingTop="@dimen/medium_margin"
-    android:paddingEnd="@dimen/big_margin">
+    android:paddingStart="@dimen/padding_small"
+    android:paddingTop="@dimen/padding_small"
+    android:paddingEnd="@dimen/padding_small">
 
     <ImageView
         android:id="@+id/acceptButton"
@@ -20,8 +19,8 @@
 
     <ImageView
         android:id="@+id/declineButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/request_btn_size"
+        android:layout_height="@dimen/request_btn_size"
         android:layout_marginEnd="@dimen/medium_margin"
         android:src="@drawable/decline_btn"
         app:layout_constraintBottom_toBottomOf="@+id/acceptButton"
@@ -42,7 +41,7 @@
         android:layout_height="wrap_content"
 
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size_title"
+        android:textSize="@dimen/text_size_big"
         app:layout_constraintBottom_toBottomOf="@+id/senderProfileImageView"
         app:layout_constraintEnd_toStartOf="@+id/declineButton"
         app:layout_constraintStart_toEndOf="@+id/senderProfileImageView"
@@ -54,9 +53,8 @@
         android:layout_height="wrap_content"
 
         android:singleLine="false"
-        android:text="test"
         android:textColor="@color/gray500"
-        android:textSize="@dimen/text_size_description_small"
+        android:textSize="@dimen/text_size_small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/senderProfileImageView" />
 
@@ -65,11 +63,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:text="tst"
         android:textAlignment="textEnd"
         android:textStyle="italic"
         android:textColor="@color/gray400"
-        android:textSize="@dimen/text_size_description_small"
+        android:textSize="@dimen/text_size_small"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/descriptionTextView" />
@@ -77,7 +74,7 @@
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/stroke_width"
         android:layout_marginTop="@dimen/small_margin"
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"

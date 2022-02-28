@@ -30,8 +30,8 @@
                 android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="@dimen/default_screen_padding"
-                android:paddingTop="@dimen/default_screen_padding"
+                android:paddingStart="@dimen/padding_big"
+                android:paddingTop="@dimen/padding_big"
                 android:contentDescription="@string/content_description_back_button"
                 android:src="@drawable/ic_back_button"
                 tools:ignore="RtlSymmetry" />
@@ -42,8 +42,9 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/meetupDetailedLocation"
                 android:layout_alignParentStart="true"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="@dimen/padding_medium"
                 android:layout_marginBottom="0dp"
+                android:textSize="@dimen/text_size_small"
                 android:textColor="@color/white" />
 
             <TextView
@@ -52,10 +53,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginStart="@dimen/padding_medium"
+                android:layout_marginBottom="@dimen/padding_medium"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
         </RelativeLayout>
