@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginStart="@dimen/small_margin"
+    android:layout_marginEnd="@dimen/small_margin"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/onbarding_background">
+
+    <ImageView
+        android:id="@+id/onboarding_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_conversation" />
+
+    <TextView
+        android:id="@+id/onboarding_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_title"
+        android:text="@string/start_title"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/onboarding_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/big_margin"
+        android:gravity="center"
+        android:text="@string/start_header"
+        android:textColor="@color/gray700"
+        android:textSize="@dimen/text_size_description"/>
+</LinearLayout>
