@@ -185,7 +185,7 @@ public class UserRepository extends Repository {
             if (value != null && !value.isEmpty()) {
 
                 List<MutableLiveData<User>> users = new ArrayList<>();
-                String currentUserId = auth.getCurrentUser().getUid();
+                String currentUserId = Objects.requireNonNull(auth.getCurrentUser()).getUid();
 
                 for (int i = 0; i < value.getDocuments().size(); i++) {
                     DocumentSnapshot doc = value.getDocuments().get(i);
@@ -300,34 +300,6 @@ public class UserRepository extends Repository {
         });
         return mutableUsers;
     }
-
-    
-  /*
-    public MutableLiveData<List<MutableLiveData<User>>> getUsersNotFriendsByUsername(String query) {
-        userCollection.orderBy("username").startAt(query).endAt(query + "\uf8ff")
-                .addSnapshotListener(executorService, (value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null && !value.isEmpty()) {
-                List<MutableLiveData<User>> users = new ArrayList<>();
-
-                for (DocumentSnapshot doc : value.getDocuments()) {
-                    if (!doc.getId().equals(Objects.requireNonNull(auth.getCurrentUser()).getUid())) {
-
-                        if (doc.get("friends") == null) {
-                            users.add(new MutableLiveData<>(snapshotToUser(doc)));
-                        } else if (!Objects.requireNonNull(Utils.castList(doc.get("friends"), String.class))
-                                .contains(auth.getCurrentUser().getUid())) {
-                            users.add(new MutableLiveData<>(snapshotToUser(doc)));
-                        }
-                    }
-                }
-                mutableUsers.postValue(users);
-            }
-        });
-        return mutableUsers;
-    }*/
 
     /**
      * Get list of friends of a user by their username

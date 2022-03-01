@@ -12,6 +12,8 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.example.cm.R;
+import com.example.cm.data.models.MeetupRequest;
+import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 
 import java.util.ArrayList;
@@ -103,6 +105,4 @@ public class Utils {
             }
         });
     }
-
-
-}
+    }

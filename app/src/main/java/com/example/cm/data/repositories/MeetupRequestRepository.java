@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
+import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
+
 public class MeetupRequestRepository extends Repository {
 
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -26,12 +29,14 @@ public class MeetupRequestRepository extends Repository {
     private final MutableLiveData<List<MutableLiveData<MeetupRequest>>> receivedRequests = new MutableLiveData<>();
 
     public MeetupRequestRepository() {
-        listenToRequestListChanges();
     }
 
-    private void listenToRequestListChanges() {
+    /**
+     * Get all meetup requests for currently signed in user
+     */
+    public MutableLiveData<List<MutableLiveData<MeetupRequest>>> getMeetupRequestsForUser() {
         if (auth.getCurrentUser() == null) {
-            return;
+            return receivedRequests;
         }
         String currentUserId = auth.getCurrentUser().getUid();
 
@@ -42,16 +47,16 @@ public class MeetupRequestRepository extends Repository {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<MeetupRequest>> meetupRequests = snapshotToMutableMeetupRequestList(value);
-                        receivedRequests.postValue(meetupRequests);
+                        List<MutableLiveData<MeetupRequest>> requestsToReturn = new ArrayList<>();
+                        for (DocumentSnapshot snapshot : value.getDocuments()) {
+                            Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
+                            if (currentState != REQUEST_DECLINED) {
+                                requestsToReturn.add(new MutableLiveData<>(snapshotToMeetupRequest(snapshot)));
+                            }
+                        }
+                        receivedRequests.postValue(requestsToReturn);
                     }
                 });
-    }
-
-    /**
-     * Get all meetup requests for currently signed in user
-     */
-    public MutableLiveData<List<MutableLiveData<MeetupRequest>>> getMeetupRequestsForUser() {
         return receivedRequests;
     }
 
@@ -64,19 +69,18 @@ public class MeetupRequestRepository extends Repository {
     private List<MutableLiveData<MeetupRequest>> snapshotToMutableMeetupRequestList(QuerySnapshot documents) {
         List<MutableLiveData<MeetupRequest>> requests = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            requests.add(snapshotToMeetupRequest(document));
+            requests.add(new MutableLiveData<>(snapshotToMeetupRequest(document)));
         }
         return requests;
     }
 
     /**
-     * Convert a single snapshot to mutable of a meetup request model
+     * Convert a single snapshot to a meetup request model
      *
      * @param document Snapshot of a meetup request returned from Firestore
-     * @return Returns a mutable meetup request built from firestore document
+     * @return Returns a meetup request built from firestore document
      */
-    private MutableLiveData<MeetupRequest> snapshotToMeetupRequest(DocumentSnapshot document) {
-        MutableLiveData<MeetupRequest> requestMutableLiveData = new MutableLiveData<>();
+    private MeetupRequest snapshotToMeetupRequest(DocumentSnapshot document) {
         MeetupRequest.MeetupRequestType notType = Objects.requireNonNull(document.get("type", MeetupRequest.MeetupRequestType.class));
         MeetupRequest request = new MeetupRequest(notType);
 
@@ -91,8 +95,7 @@ public class MeetupRequestRepository extends Repository {
         request.setMeetupAt(document.getDate("meetupAt"));
         request.setPhase(document.get("phase", MeetupPhase.class));
 
-        requestMutableLiveData.postValue(request);
-        return requestMutableLiveData;
+        return request;
     }
 
     /**
@@ -139,8 +142,8 @@ public class MeetupRequestRepository extends Repository {
     }
 
     public void undoDecline(MeetupRequest request) {
-        meetupRequestCollection.document(request.getId()).
-                update("state", Request.RequestState.REQUEST_PENDING);
+        request.setState(REQUEST_PENDING);
+        addMeetupRequest(request);
 
         meetupRequestCollection.whereEqualTo("meetupId", request.getMeetupId())
                 .whereEqualTo("state", Request.RequestState.REQUEST_ANSWERED)

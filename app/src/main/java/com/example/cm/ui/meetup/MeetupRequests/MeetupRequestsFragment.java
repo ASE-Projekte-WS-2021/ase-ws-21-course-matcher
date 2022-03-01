@@ -38,15 +38,16 @@ public class MeetupRequestsFragment extends Fragment implements
     }
 
     private void initUI() {
+        requestsListAdapter = new MeetupRequestListAdapter( this);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
+        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
     }
 
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
         requestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), requests -> {
-            requestsListAdapter = new MeetupRequestListAdapter(requests, this);
-            binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
+            requestsListAdapter.setRequests(requests);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
             itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
         });

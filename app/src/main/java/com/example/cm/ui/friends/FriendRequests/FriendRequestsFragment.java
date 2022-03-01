@@ -39,6 +39,8 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     private void initUI() {
+        requestsListAdapter = new FriendRequestListAdapter(this);
+        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
     }
@@ -46,8 +48,7 @@ public class FriendRequestsFragment extends Fragment implements
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(FriendRequestsViewModel.class);
         requestsViewModel.getFriendRequests().observe(getViewLifecycleOwner(), requests -> {
-            requestsListAdapter = new FriendRequestListAdapter(requests, this);
-            binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
+            requestsListAdapter.setRequests(requests);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
             itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
         });

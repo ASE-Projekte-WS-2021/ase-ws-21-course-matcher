@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
@@ -20,15 +21,55 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 import java.util.Objects;
 
+
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
     private ViewGroup parent;
-    private final List<MutableLiveData<MeetupRequest>> mRequests;
+    private List<MutableLiveData<MeetupRequest>> mRequests;
     private final OnMeetupRequestListener listener;
 
-    public MeetupRequestListAdapter(List<MutableLiveData<MeetupRequest>> requests, OnMeetupRequestListener listener) {
-        mRequests = requests;
+    public MeetupRequestListAdapter(OnMeetupRequestListener listener) {
         this.listener = listener;
+    }
+
+    public void setRequests(List<MutableLiveData<MeetupRequest>> newRequests) {
+        if (mRequests == null) {
+            mRequests = newRequests;
+            notifyItemRangeInserted(0, newRequests.size());
+            return;
+        }
+
+        DiffUtil.DiffResult result = calculateDiffMeetupRequests(mRequests, newRequests);
+        mRequests = newRequests;
+        result.dispatchUpdatesTo(this);
+    }
+
+    public static DiffUtil.DiffResult calculateDiffMeetupRequests(List<MutableLiveData<MeetupRequest>> oldRequests, List<MutableLiveData<MeetupRequest>> newRequests) {
+        return DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return oldRequests.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newRequests.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return Objects.equals(Objects.requireNonNull(oldRequests.get(oldItemPosition).getValue()).getId(),
+                        Objects.requireNonNull(newRequests.get(newItemPosition).getValue()).getId());
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                MeetupRequest newRequest = newRequests.get(newItemPosition).getValue();
+                MeetupRequest oldRequest = oldRequests.get(oldItemPosition).getValue();
+
+                return Objects.equals(Objects.requireNonNull(newRequest).getId(), Objects.requireNonNull(oldRequest).getId());
+            }
+        });
     }
 
     public void deleteItem(int position) {
@@ -86,7 +127,6 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
                 holder.getBtnDecline().setImageResource(R.drawable.decline_btn_disabled);
                 holder.getBtnAccept().setOnClickListener(null);
                 holder.getBtnDecline().setOnClickListener(null);
-
                 break;
         }
 
@@ -166,8 +206,10 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         private void onDecline(){
             int position = getAdapterPosition();
             MeetupRequest request = mRequests.get(position).getValue();
-            listener.onDecline(request);
+            mRequests.remove(position);
             notifyItemRemoved(position);
+            listener.onDecline(request);
+
             Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.decline_snackbar_text, Snackbar.LENGTH_LONG);
             snackbar.setAction(R.string.undo_snackbar_text, view -> onUndo(request, position));
             snackbar.show();

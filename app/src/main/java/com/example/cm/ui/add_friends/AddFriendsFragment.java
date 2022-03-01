@@ -100,13 +100,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
                 return;
             }
             selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
-            /*
-            ArrayList<Request> requestsToSet = new ArrayList<>();
-            for (FriendRequest request : sentFriendRequests) {
-                requestsToSet.add((Request) request);
-            }
-            selectFriendsAdapter.setSentFriendRequests(requestsToSet);
-            */
         });
     }
 

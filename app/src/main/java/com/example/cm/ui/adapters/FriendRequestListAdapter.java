@@ -8,10 +8,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
+import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -22,12 +24,51 @@ import java.util.Objects;
 public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder>{
 
     private ViewGroup parent;
-    private final List<MutableLiveData<FriendRequest>> mRequests;
+    private List<MutableLiveData<FriendRequest>> mRequests;
     private final OnFriendRequestListener listener;
 
-    public FriendRequestListAdapter(List<MutableLiveData<FriendRequest>> requests, OnFriendRequestListener listener) {
-        mRequests = requests;
+    public FriendRequestListAdapter(OnFriendRequestListener listener) {
         this.listener = listener;
+    }
+
+    public void setRequests(List<MutableLiveData<FriendRequest>> newRequests) {
+        if (mRequests == null) {
+            mRequests = newRequests;
+            notifyItemRangeInserted(0, newRequests.size());
+            return;
+        }
+
+        DiffUtil.DiffResult result = calculateDiffFriendRequests(mRequests, newRequests);
+        mRequests = newRequests;
+        result.dispatchUpdatesTo(this);
+    }
+
+    public static DiffUtil.DiffResult calculateDiffFriendRequests(List<MutableLiveData<FriendRequest>> oldRequests, List<MutableLiveData<FriendRequest>> newRequests) {
+        return DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return oldRequests.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return newRequests.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return Objects.equals(Objects.requireNonNull(oldRequests.get(oldItemPosition).getValue()).getId(),
+                        Objects.requireNonNull(newRequests.get(newItemPosition).getValue()).getId());
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                FriendRequest newRequest = newRequests.get(newItemPosition).getValue();
+                FriendRequest oldRequest = oldRequests.get(oldItemPosition).getValue();
+
+                return Objects.equals(Objects.requireNonNull(newRequest).getId(), Objects.requireNonNull(oldRequest).getId());
+            }
+        });
     }
 
     public void deleteItem(int position) {
