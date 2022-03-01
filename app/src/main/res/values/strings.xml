@@ -51,13 +51,13 @@
     <string name="registerPasswordEditText">Passwort</string>
     <string name="registerFirstNameEditText">Vorname</string>
     <string name="registerLastNameEditText">Nachname</string>
-    <string name="registerLoginBtn">Zurück zum Login</string>
+    <string name="registerLoginBtn">Zum Login</string>
     <string name="registerRegisterBtn">Registrieren</string>
     <string name="loginTitle">Login</string>
     <string name="loginEmailEditText">Email</string>
     <string name="loginPasswordEditText">Passwort</string>
     <string name="loginLoginBtn">Einloggen</string>
-    <string name="loginRegisterBtn">Kein Account? Hier registrieren.</string>
+    <string name="loginRegisterBtn">Noch kein Account? <u>Jetzt registrieren.</u></string>
     <string name="loginUserNameEditText">Benutzername</string>
     <string name="btn_meetup_send_invite">Abschicken</string>
     <string name="profile_picture_decription">Profilbild</string>
@@ -141,4 +141,14 @@
     <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
     <string name="dialog_title_field">{field} bearbeiten</string>
 
+    <string name="start_title">Willkommen bei\n Course Matcher!</string>
+    <string name="start_header">Triff deine Freunde am Campus\n - spontan und einfach.</string>
+    <string name="profile_title">Erstelle ein Profil</string>
+    <string name="profile_header">und füge deine Freunde hinzu!</string>
+    <string name="meet_title">Vereinbart ein Treffen am Campus</string>
+    <string name="meet_header">mit nur wenigen Klicks!</string>
+    <string name="location_title">Teile deinen Standort</string>
+    <string name="location_header">um dich am Campus zu treffen.</string>
+    <string name="onboarding_btn">Registrieren</string>
+    <string name="skiptoLogin">Login</string>
 </resources>
