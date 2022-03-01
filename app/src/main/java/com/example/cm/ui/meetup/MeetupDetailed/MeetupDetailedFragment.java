@@ -24,7 +24,6 @@ public class MeetupDetailedFragment extends Fragment {
     private ViewPager2 viewPager;
     private FragmentMeetupDetailedBinding binding;
     private TabLayoutMediator tabLayoutMediator;
-
     private String meetupId;
 
     @Override
