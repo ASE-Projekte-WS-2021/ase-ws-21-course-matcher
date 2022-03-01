@@ -92,7 +92,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         String name = mUsers.get(position).getFullName();
         String username = mUsers.get(position).getUsername();
 
-        if(profileImageUrl != null) {
+        if(profileImageUrl != null && !profileImageUrl.isEmpty()) {
             holder.getProfileImage().setImageTintMode(null);
             Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
         }

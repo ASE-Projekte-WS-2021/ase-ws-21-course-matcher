@@ -47,7 +47,7 @@ public class OtherProfileFragment extends Fragment {
             binding.tvName.setText(currentUser.getFullName());
             binding.tvUsername.setText(currentUser.getUsername());
             binding.tvBioDescription.setText(currentUser.getBio());
-            if (currentUser.getProfileImageUrl() != null) {
+            if (currentUser.getProfileImageUrl() != null && !currentUser.getProfileImageUrl().isEmpty()) {
                 binding.ivProfileImage.setImageTintMode(null);
                 binding.ivProfileImage.setScaleX(1f);
                 binding.ivProfileImage.setScaleY(1f);

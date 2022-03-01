@@ -38,7 +38,7 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
             String fullName = friends.get(position).getFullName();
             String username = friends.get(position).getUsername();
 
-            if (profileImageUrl != null) {
+            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                 holder.getProfileImage().setImageTintMode(null);
                 Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
             }
