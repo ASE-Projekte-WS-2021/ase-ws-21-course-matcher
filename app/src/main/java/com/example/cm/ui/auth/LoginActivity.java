@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.MainActivity;
 import com.example.cm.R;
+import com.example.cm.ui.onboarding.OnboardingActivity;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -21,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
@@ -48,8 +50,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void goToRegister(View view) {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        Intent intent = new Intent(LoginActivity.this, OnboardingActivity.class);
         startActivity(intent);
+        finish();
     }
 
 
