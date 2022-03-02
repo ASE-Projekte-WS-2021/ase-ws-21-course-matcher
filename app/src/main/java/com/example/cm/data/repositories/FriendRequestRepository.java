@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.Request;
+import com.example.cm.data.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -56,6 +57,29 @@ public class FriendRequestRepository extends Repository {
                 }
             }
         });
+    }
+
+    /**
+     * Get all friend requests
+     */
+    public MutableLiveData<List<FriendRequest>> getFriendRequests() {
+        if (auth.getCurrentUser() == null) {
+            return null;
+        }
+
+        String userId = auth.getCurrentUser().getUid();
+        friendRequestCollection.whereEqualTo("receiverId", userId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .addSnapshotListener(executorService, (value, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+                    if (value != null && !value.isEmpty()) {
+                        List<FriendRequest> requests = snapshotToFriendRequestList(Objects.requireNonNull(value));
+                        mutableReceivedRequestList.postValue(requests);
+                    }
+                });
+        return mutableReceivedRequestList;
     }
 
     /**
