@@ -26,6 +26,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
@@ -34,22 +35,22 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         FirebaseUser firebaseUser = authViewModel.getUserLiveData().getValue();
 
+        Intent intent;
         if (firebaseUser != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
+            intent = new Intent(this, MainActivity.class);
         } else {
-            Intent intent = new Intent(this, OnboardingActivity.class);
-            startActivity(intent);
+            intent = new Intent(this, OnboardingActivity.class);
         }
+        startActivity(intent);
 
         setContentView(R.layout.activity_splash_screen);
 
         setupUI();
     }
-
+    
     private void setupUI() {
         splashImage = findViewById(R.id.splash_img);
-        splashAnim = AnimationUtils.loadAnimation(this, R.anim.splash_anim);
+        splashAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_anim);
 
         splashImage.setAnimation(splashAnim);
 
@@ -58,20 +59,19 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             boolean isFirstTime = onBoardingSP.getBoolean("firstTime", true);
 
-            if(isFirstTime) {
+            if (isFirstTime) {
 
                 SharedPreferences.Editor editor = onBoardingSP.edit();
                 editor.putBoolean("firstTime", false);
                 editor.commit();
 
-                Intent intent = new Intent(SplashScreenActivity.this, OnboardingActivity.class);
+                Intent intent = new Intent(getApplication(), AuthActivity.class);
                 startActivity(intent);
-                finish();
             } else {
-                Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                Intent intent = new Intent(getApplication(), LoginActivity.class);
                 startActivity(intent);
-                finish();
             }
+            finish();
 
         }, SPLASH_TIMER);
     }
