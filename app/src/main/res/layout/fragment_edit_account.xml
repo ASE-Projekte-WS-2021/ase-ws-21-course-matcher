@@ -23,30 +23,30 @@ tools:context=".ui.settings.edit_account.EditAccountFragment">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="@dimen/default_screen_padding">
+        android:padding="@dimen/padding_big">
 
         <include
             android:id="@+id/inputEmail"
             layout="@layout/input_text_with_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp" />
+            android:layout_marginBottom="@dimen/padding_small" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Die E-Mail Adresse ist mit deinem RZ-Account verknüpft und kann deshalb nicht nachträglich angepasst werden."
-            android:textSize="12sp"
+            android:text="@string/edit_account_email"
+            android:textSize="@dimen/text_size_small"
             android:textColor="@color/gray600"
-            android:layout_marginBottom="@dimen/default_screen_padding"
+            android:layout_marginBottom="@dimen/padding_big"
             />
 
         <TextView
-            android:text="Passwort ändern"
+            android:text="@string/edit_account_password"
             android:fontFamily="@font/readexpro_semibold"
-            android:textSize="@dimen/text_size_description_medium"
+            android:textSize="@dimen/text_size_medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/padding_small"
             />
 
         <include
@@ -54,25 +54,25 @@ tools:context=".ui.settings.edit_account.EditAccountFragment">
             layout="@layout/input_password_with_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="@dimen/padding_big" />
 
         <include
             android:id="@+id/inputNewPassword"
             layout="@layout/input_password_with_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="@dimen/padding_big" />
 
         <include
             android:id="@+id/inputNewPasswordConfirm"
             layout="@layout/input_password_with_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp" />
+            android:layout_marginBottom="@dimen/padding_big" />
 
         <Button
             android:id="@+id/btnUpdatePassword"
-            android:text="Passwort ändern"
+            android:text="@string/edit_account_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>

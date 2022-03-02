@@ -26,15 +26,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/padding_small"
+            android:paddingTop="@dimen/padding_small"
             android:background="@drawable/gradient_gray700_transparent_to_transparent_top_down"
-            android:paddingHorizontal="@dimen/default_screen_padding"
-            android:paddingTop="@dimen/default_screen_padding"
-            android:paddingBottom="40dp">
+            android:paddingBottom="@dimen/padding_double">
 
             <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
                 android:contentDescription="@string/content_description_back_button"
                 android:src="@drawable/ic_back_button" />
 
@@ -48,7 +49,7 @@
             android:gravity="center"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/activity_vertical_margin"
-            android:paddingTop="80dp"
+            android:paddingTop="@dimen/padding_ultra"
             android:paddingBottom="@dimen/activity_vertical_margin">
 
             <TextView
@@ -58,7 +59,7 @@
                 android:fontFamily="@font/readexpro_semibold"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_title"
+                android:textSize="@dimen/text_size_big"
                 tools:text="Name" />
 
             <TextView
@@ -75,7 +76,7 @@
                 style="@style/BtnOrangeSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_screen_padding"
+                android:layout_marginTop="@dimen/padding_big"
                 android:background="@drawable/btn_rounded"
                 android:backgroundTint="@color/orange500"
                 tools:text="@string/profile_btn_add_friend" />
@@ -91,9 +92,9 @@
         android:layout_weight="0.25"
         android:background="@drawable/ic_profile_description_background"
         android:orientation="vertical"
-        android:padding="@dimen/default_screen_padding"
+        android:padding="@dimen/padding_big"
         app:strokeColor="@color/black"
-        app:strokeWidth="2dp">
+        app:strokeWidth="@dimen/stroke_width">
 
         <TextView
             android:layout_width="match_parent"
@@ -101,7 +102,7 @@
             android:fontFamily="@font/readexpro_semibold"
             android:text="@string/profile_title_bio"
             android:textColor="@color/gray600"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_size_medium" />
 
         <TextView
             android:id="@+id/tvBioDescription"
@@ -113,7 +114,7 @@
             android:id="@+id/bioMetaInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="@dimen/padding_medium">
 
             <TextView
                 android:id="@+id/tvCourseOfStudies"
