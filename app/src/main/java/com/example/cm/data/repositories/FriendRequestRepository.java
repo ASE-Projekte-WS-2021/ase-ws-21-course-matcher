@@ -70,22 +70,24 @@ public class FriendRequestRepository extends Repository {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<FriendRequest>> requestsToReturn = new ArrayList<>();
+                        List<MutableLiveData<FriendRequest>> requests = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
                             if (currentState != REQUEST_DECLINED) {
-                                requestsToReturn.add(new MutableLiveData<>(snapshotToFriendRequest(snapshot)));
+                                requests.add(new MutableLiveData<>(snapshotToFriendRequest(snapshot)));
                             }
                         }
-                        mutableRequestList.postValue(requestsToReturn);
+                        mutableRequestList.postValue(requests);
                     }
                 }));
         return mutableRequestList;
     }
 
     /**
-     * Get all friend requests for sender
+     * Get all sent requests for sender
+     *
      * @param senderId Id of the sender
+     * @return mutable list of sent friend requests
      */
     public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequestsSentBy(String senderId) {
         friendRequestCollection.whereEqualTo("senderId", senderId)
@@ -94,7 +96,39 @@ public class FriendRequestRepository extends Repository {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<FriendRequest>> requests = snapshotToMutableFriendRequestList(value);
+                        List<MutableLiveData<FriendRequest>> requests = new ArrayList<>();
+                        for (DocumentSnapshot snapshot : value.getDocuments()) {
+                            Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
+                            if (currentState == REQUEST_PENDING) {
+                                requests.add(new MutableLiveData<>(snapshotToFriendRequest(snapshot)));
+                            }
+                        }
+                        mutableRequestList.postValue(requests);
+                    }
+                });
+        return mutableRequestList;
+    }
+
+    /**
+     * Get all received friend requests for receiver
+     *
+     * @param receiverId Id of the receiver
+     * @return mutable list of received friend requests
+     */
+    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequestsReceived(String receiverId) {
+        friendRequestCollection.whereEqualTo("receiverId", receiverId)
+                .addSnapshotListener(executorService, (value, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+                    if (value != null && !value.isEmpty()) {
+                        List<MutableLiveData<FriendRequest>> requests = new ArrayList<>();
+                        for (DocumentSnapshot snapshot : value.getDocuments()) {
+                            Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
+                            if (currentState == REQUEST_PENDING) {
+                                requests.add(new MutableLiveData<>(snapshotToFriendRequest(snapshot)));
+                            }
+                        }
                         mutableRequestList.postValue(requests);
                     }
                 });

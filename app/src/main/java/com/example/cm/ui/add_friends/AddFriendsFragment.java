@@ -23,7 +23,6 @@ import com.example.cm.ui.add_friends.AddFriendsViewModel.OnRequestSentListener;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -95,11 +94,13 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void observeSentFriendRequests() {
-        addFriendsViewModel.getSentFriendRequests().observe(getViewLifecycleOwner(), sentFriendRequests -> {
+        addFriendsViewModel.getSentFriendRequestsPending().observe(getViewLifecycleOwner(), sentFriendRequests -> {
             if (sentFriendRequests == null) {
                 return;
             }
-            selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
+            addFriendsViewModel.getReceivedFriendRequestsPending().observe(getViewLifecycleOwner(), receivedFriendRequests -> {
+                selectFriendsAdapter.setFriendRequests(sentFriendRequests, receivedFriendRequests);
+            });
         });
     }
 
