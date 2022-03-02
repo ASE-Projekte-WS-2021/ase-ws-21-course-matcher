@@ -5,11 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.ui.onboarding.OnboardingActivity;
 
 public class AuthActivity extends AppCompatActivity {
+
+    private Button registerBtn, loginBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,13 @@ public class AuthActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         setContentView(R.layout.activity_auth);
+
+        initUI();
+    }
+
+    private void initUI(){
+        registerBtn = findViewById(R.id.start_register_btn);
+        loginBtn = findViewById(R.id.loginLoginBtn);
     }
 
     public void toLogin(View view) {

@@ -20,13 +20,9 @@ import com.example.cm.ui.auth.RegisterActivity;
 
 public class OnboardingActivity extends AppCompatActivity {
 
-    ViewPager viewPager;
-    LinearLayout dotsLayout;
-    OnboardingAdapter onboardingAdapter;
-    TextView[] dots;
-    Button registrierenBtn;
-    Animation btnAnimation;
-    int currentPos;
+    private LinearLayout dotsLayout;
+    private Button registerBtn;
+    private int currentPos;
 
     ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -38,11 +34,11 @@ public class OnboardingActivity extends AppCompatActivity {
             addDots(position);
             currentPos = position;
             if (position == 3) {
-                btnAnimation = AnimationUtils.loadAnimation(OnboardingActivity.this, R.anim.bottom_anim);
-                registrierenBtn.setAnimation(btnAnimation);
-                registrierenBtn.setVisibility(View.VISIBLE);
+                Animation btnAnimation = AnimationUtils.loadAnimation(OnboardingActivity.this, R.anim.bottom_anim);
+                registerBtn.setAnimation(btnAnimation);
+                registerBtn.setVisibility(View.VISIBLE);
             } else {
-                registrierenBtn.setVisibility(View.INVISIBLE);
+                registerBtn.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -61,11 +57,11 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        viewPager = findViewById(R.id.onboarding_viewpager);
+        ViewPager viewPager = findViewById(R.id.onboarding_viewpager);
         dotsLayout = findViewById(R.id.layout_onboarding_indicator);
-        registrierenBtn = findViewById(R.id.onboarding_btn_register);
+        registerBtn = findViewById(R.id.onboarding_btn_register);
 
-        onboardingAdapter = new OnboardingAdapter(this);
+        OnboardingAdapter onboardingAdapter = new OnboardingAdapter(this);
 
         viewPager.setAdapter(onboardingAdapter);
         addDots(0);
@@ -85,7 +81,7 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void addDots(int position) {
-        dots = new TextView[4];
+        TextView[] dots = new TextView[4];
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new TextView(this);
@@ -94,13 +90,10 @@ public class OnboardingActivity extends AppCompatActivity {
 
             dotsLayout.addView(dots[i]);
         }
-        if (dots.length > 0) {
-            dots[position].setTextColor(getResources().getColor(R.color.orange500));
-        }
+        dots[position].setTextColor(getResources().getColor(R.color.orange500));
     }
 
     @Override
     public void onBackPressed() {
-
     }
 }
