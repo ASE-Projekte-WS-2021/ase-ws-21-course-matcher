@@ -4,12 +4,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 
-import java.util.List;
+import java.util.Objects;
 
 
 public class OtherProfileViewModel extends ViewModel {
@@ -35,27 +34,15 @@ public class OtherProfileViewModel extends ViewModel {
         return userRepository.isUserBefriended(friendId);
     }
 
-    public boolean isFriendRequestPending(String userIdToCheck) {
-        String ownId = userRepository.getCurrentAuthUserId();
-        List<FriendRequest> sentRequests = friendRequestRepository.getFriendRequests().getValue();
-        if (sentRequests != null) {
-            for (FriendRequest request : sentRequests) {
-                if (request.getState() == Request.RequestState.REQUEST_PENDING) {
-                    if (request.getReceiverId().equals(ownId) && request.getSenderId().equals(userIdToCheck) ||
-                            request.getReceiverId().equals(userIdToCheck) && request.getSenderId().equals(ownId)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+    public MutableLiveData<Boolean> isFriendRequestPending(String userIdToCheck) {
+        return friendRequestRepository.isFriendRequestPendingFor(userIdToCheck);
     }
 
     public void sendFriendRequestTo(String userIdToAdd) {
-        if (!isFriendRequestPending(userIdToAdd)) {
+        if (!isFriendRequestPending(userIdToAdd).getValue()) {
             FriendRequest friendRequest = new FriendRequest(
                     userRepository.getCurrentAuthUserId(),
-                    currentUser.getValue().getFullName(),
+                    Objects.requireNonNull(currentUser.getValue()).getFullName(),
                     userIdToAdd
             );
             friendRequestRepository.addFriendRequest(friendRequest);

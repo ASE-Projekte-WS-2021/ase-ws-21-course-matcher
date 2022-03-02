@@ -98,11 +98,14 @@ public class OtherProfileFragment extends Fragment {
             if (isBefriended) {
                 onIsAlreadyBefriended();
             } else {
-                if (otherProfileViewModel.isFriendRequestPending(profileId)) {
-                    onFriendRequestPending();
-                } else {
-                    onIsNotBefriended();
-                }
+                otherProfileViewModel.isFriendRequestPending(profileId).observe(getViewLifecycleOwner(), isPending -> {
+                    if (isPending) {
+                        onFriendRequestPending();
+                    } else {
+                        onIsNotBefriended();
+                    }
+                });
+
             }
         });
     }

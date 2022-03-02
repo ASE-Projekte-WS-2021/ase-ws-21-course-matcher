@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.Request;
-import com.example.cm.data.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -16,8 +15,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
+import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 public class FriendRequestRepository extends Repository {
 
@@ -25,6 +26,7 @@ public class FriendRequestRepository extends Repository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference friendRequestCollection = firestore.collection(CollectionConfig.FRIEND_REQUESTS.toString());
     private final MutableLiveData<List<MutableLiveData<FriendRequest>>> mutableRequestList = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> isPending = new MutableLiveData<>();
 
     public FriendRequestRepository() {
     }
@@ -32,7 +34,7 @@ public class FriendRequestRepository extends Repository {
     /**
      * Get all friend requests
      */
-    public MutableLiveData<List<FriendRequest>> getFriendRequests() {
+    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequests() {
         if (auth.getCurrentUser() == null) {
             return null;
         }
@@ -45,11 +47,11 @@ public class FriendRequestRepository extends Repository {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<FriendRequest> requests = snapshotToFriendRequestList(Objects.requireNonNull(value));
-                        mutableReceivedRequestList.postValue(requests);
+                        List<MutableLiveData<FriendRequest>> requests = snapshotToMutableFriendRequestList(Objects.requireNonNull(value));
+                        mutableRequestList.postValue(requests);
                     }
                 });
-        return mutableReceivedRequestList;
+        return mutableRequestList;
     }
 
     /**
@@ -87,7 +89,7 @@ public class FriendRequestRepository extends Repository {
      */
     public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequestsSentBy(String senderId) {
         friendRequestCollection.whereEqualTo("senderId", senderId)
-                .addSnapshotListener(executorService, ((value, error) -> {
+                .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
                         return;
                     }
@@ -95,9 +97,45 @@ public class FriendRequestRepository extends Repository {
                         List<MutableLiveData<FriendRequest>> requests = snapshotToMutableFriendRequestList(value);
                         mutableRequestList.postValue(requests);
                     }
-                }));
+                });
         return mutableRequestList;
     }
+
+    /**
+     * check if a friend request is pending for given user
+     *
+     * @param userId id of given user
+     * @return is there a friend request pending
+     */
+    public MutableLiveData<Boolean> isFriendRequestPendingFor(String userId) {
+        if (auth.getCurrentUser() == null) {
+            return null;
+        }
+        String ownUserId = auth.getCurrentUser().getUid();
+
+        friendRequestCollection.whereEqualTo("state", REQUEST_PENDING).addSnapshotListener(executorService, (value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null && !value.isEmpty()) {
+                boolean isReqPending = false;
+                for (DocumentSnapshot snapshot : value.getDocuments()) {
+                    String receiverId = snapshot.getString("receiverId");
+                    String senderId = snapshot.getString("senderId");
+                    if (receiverId != null && senderId != null) {
+                        if (((receiverId.equals(ownUserId) && senderId.equals(userId)) ||
+                                (senderId.equals(ownUserId) && receiverId.equals(userId)))) {
+                            isReqPending = true;
+                            break;
+                        }
+                    }
+                }
+                isPending.postValue(isReqPending);
+            }
+        });
+        return isPending;
+    }
+
 
     /**
      * Convert a list of snapshots to a list of mutable friend requests
