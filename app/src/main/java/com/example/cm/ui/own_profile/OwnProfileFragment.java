@@ -50,6 +50,7 @@ public class OwnProfileFragment extends Fragment {
                 binding.ivProfileImage.setScaleX(1f);
                 binding.ivProfileImage.setScaleY(1f);
                 Picasso.get().load(currentUser.getProfileImageUrl()).fit().centerCrop().into(binding.ivProfileImage);
+                binding.btnProfileSettings.bringToFront();
             }
         });
     }

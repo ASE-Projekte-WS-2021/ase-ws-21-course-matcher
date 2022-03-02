@@ -50,10 +50,12 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(inviteFriendsListAdapter);
+        binding.btnBack.bringToFront();
     }
 
     private void initListener() {
         binding.inviteFriendsSearchBtn.setOnClickListener(v -> onSearchButtonClicked());
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.btnSendInvite.setOnClickListener(v -> {
             boolean isSuccessful = createMeetupViewModel.createMeetup();
             if (isSuccessful) {

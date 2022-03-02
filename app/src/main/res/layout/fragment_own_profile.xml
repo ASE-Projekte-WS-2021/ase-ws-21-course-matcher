@@ -40,7 +40,7 @@
                 android:fontFamily="@font/readexpro_semibold"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_size_title"
+                android:textSize="@dimen/text_size_big"
                 tools:text="Name" />
 
             <TextView
@@ -56,10 +56,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/padding_small"
             android:background="@drawable/gradient_gray700_transparent_to_transparent_top_down"
-            android:paddingHorizontal="@dimen/default_screen_padding"
-            android:paddingTop="@dimen/default_screen_padding"
-            android:paddingBottom="40dp">
+            android:paddingTop="@dimen/padding_small">
 
             <ImageView
                 android:id="@+id/btnProfileSettings"
@@ -80,9 +79,9 @@
         android:layout_weight="0.25"
         android:background="@drawable/ic_profile_description_background"
         android:orientation="vertical"
-        android:padding="@dimen/default_screen_padding"
+        android:padding="@dimen/padding_big"
         app:strokeColor="@color/black"
-        app:strokeWidth="2dp">
+        app:strokeWidth="@dimen/stroke_width">
 
         <TextView
             android:layout_width="match_parent"
@@ -90,7 +89,7 @@
             android:fontFamily="@font/readexpro_semibold"
             android:text="@string/profile_title_bio"
             android:textColor="@color/gray600"
-            android:textSize="20sp" />
+            android:textSize="@dimen/text_size_medium" />
 
         <TextView
             android:id="@+id/tvBioDescription"
@@ -102,7 +101,7 @@
             android:id="@+id/bioMetaInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="@dimen/padding_small">
 
             <TextView
                 android:id="@+id/tvCourseOfStudies"

@@ -36,6 +36,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAddFriendsBinding.inflate(inflater, container, false);
+        navigator = new Navigator(requireActivity());
         initUI();
         initListener();
         initViewModel();
@@ -50,10 +51,10 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(selectFriendsAdapter);
+        binding.btnBack.bringToFront();
     }
 
     private void initListener() {
-        navigator = new Navigator(requireActivity());
         binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
         binding.etUserSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -69,6 +70,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             public void afterTextChanged(Editable editable) {
             }
         });
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 
     private void onClearInputClicked() {
@@ -103,7 +105,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         });
     }
 
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -119,7 +120,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_USER_ID, id);
-
         navigator.getNavController().navigate(R.id.fromSelectFriendsToProfile, bundle);
     }
 

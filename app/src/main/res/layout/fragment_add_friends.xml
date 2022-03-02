@@ -6,27 +6,37 @@
     android:orientation="vertical"
     tools:context=".ui.add_friends.AddFriendsFragment">
 
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:layout_marginStart="@dimen/padding_small"
+        android:contentDescription="@string/content_description_back_button"
+        android:src="@drawable/ic_back_button" />
+
     <LinearLayout
         android:id="@+id/searchBarWrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/ic_header"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingHorizontal="@dimen/padding_small"
+        android:paddingVertical="@dimen/padding_medium">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:fontFamily="@font/readexpro_semibold"
             android:text="@string/title_find_friends"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="@dimen/app_bar_title" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_big" >
 
             <EditText
                 android:id="@+id/etUserSearch"
@@ -34,13 +44,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_toStartOf="@id/ivClearInput"
+                android:paddingVertical="@dimen/padding_small"
+                android:paddingHorizontal="@dimen/padding_big"
                 android:autofillHints=""
                 android:background="@drawable/btn_rounded"
                 android:backgroundTint="@color/white"
                 android:hint="@string/searchbar_text_find_friends"
-                android:inputType="text"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp" />
+                android:inputType="text" />
 
             <ImageView
                 android:id="@+id/ivClearInput"
@@ -48,11 +58,13 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="@dimen/padding_small"
                 android:src="@drawable/ic_clear_input_btn"
-                android:visibility="gone" />
-            />
+                android:visibility="gone"
+                tools:ignore="ContentDescription" />
+
         </RelativeLayout>
+
     </LinearLayout>
 
     <RelativeLayout
@@ -75,8 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:indeterminate="true"
-            android:indeterminateTint="#98A3C3" />
-
+            android:indeterminateTint="@color/gray500" />
 
         <LinearLayout
             android:id="@+id/noFriendsWrapper"
@@ -84,16 +95,16 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:orientation="vertical"
-            android:padding="20dp"
+            android:padding="@dimen/padding_big"
             android:visibility="gone">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/padding_medium"
                 android:text="@string/find_friends_no_friends_found"
                 android:textAlignment="center"
-                android:textSize="18sp" />
+                android:textSize="@dimen/text_size_medium" />
 
         </LinearLayout>
 
