@@ -2,6 +2,7 @@ package com.example.cm.ui.adapters;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,13 +37,17 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
         if (friends != null) {
             User friend = friends.get(position).getValue();
+          
             String fullName = Objects.requireNonNull(friend).getFullName();
             String username = friend.getUsername();
-            TextView tvUserName = holder.getTvUserName();
-            TextView tvFullName = holder.getTvFullName();
+            String profileImageUrl = friend.getProfileImageUrl();
 
-            tvFullName.setText(fullName);
-            tvUserName.setText(username);
+            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                holder.getProfileImage().setImageTintMode(null);
+                Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+            }
+            holder.getTvFullName().setText(fullName);
+            holder.getTvUserName().setText(username);
         }
     }
 
@@ -78,6 +84,10 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
             listener.onItemClicked(friends.get(position).getValue().getId());
+        }
+
+        public ImageView getProfileImage() {
+            return binding.ivUserImage;
         }
 
         public TextView getTvUserName() {

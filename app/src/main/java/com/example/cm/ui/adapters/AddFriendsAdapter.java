@@ -5,9 +5,11 @@ import static com.example.cm.utils.Utils.calculateDiff;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSendFriendRequestBinding;
 import com.example.cm.ui.add_friends.AddFriendsViewModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;
@@ -71,9 +74,14 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
         User user = mUsers.get(position).getValue();
 
-        String name = Objects.requireNonNull(user).getFullName();
+        String profileImageUrl = Objects.requireNonNull(user).getProfileImageUrl();
+        String name = user.getFullName();
         String username = user.getUsername();
 
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            holder.getProfileImage().setImageTintMode(null);
+            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+        }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
         holder.getFriendRequestButton().setEnabled(true);
@@ -175,6 +183,10 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         /**
          * Getters for the views in the list item
          */
+        public ImageView getProfileImage() {
+            return binding.ivUserImage;
+        }
+
         public TextView getTvName() {
             return binding.tvName;
         }

@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
@@ -18,6 +20,9 @@ import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.Objects;
+
 
 public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener,
         InviteFriendsAdapter.OnItemClickListener {
@@ -39,6 +44,9 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     private void initUI() {
         inviteFriendsListAdapter = new InviteFriendsAdapter(this);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        binding.rvUserList.addItemDecoration(dividerItemDecoration);
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(inviteFriendsListAdapter);
