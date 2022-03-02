@@ -24,9 +24,7 @@ public class MeetupDetailedFragment extends Fragment {
     private ViewPager2 viewPager;
     private FragmentMeetupDetailedBinding binding;
     private TabLayoutMediator tabLayoutMediator;
-
     private String meetupId;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +64,7 @@ public class MeetupDetailedFragment extends Fragment {
             tabLayoutMediator.attach();
 
             binding.meetupDetailedLocation.setText(meetup.getLocation());
-            switch (meetup.getPhase()){
+            switch (meetup.getPhase()) {
                 case MEETUP_UPCOMING:
                     binding.meetupDetailedLocation.setText(meetup.getFormattedTime());
                     break;
@@ -78,6 +76,5 @@ public class MeetupDetailedFragment extends Fragment {
                     break;
             }
         });
-
     }
 }

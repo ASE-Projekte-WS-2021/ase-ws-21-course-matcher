@@ -4,49 +4,57 @@ import static com.example.cm.utils.Utils.calculateDiff;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
+import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSendFriendRequestBinding;
 import com.example.cm.ui.add_friends.AddFriendsViewModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 
 public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.UserViewHolder> {
 
     private final OnItemClickListener listener;
     private final Context context;
-    private List<User> users;
-    private List<Request> sentFriendRequests;
+    private List<MutableLiveData<User>> mUsers;
+    private List<MutableLiveData<FriendRequest>> sentFriendRequests;
 
     public AddFriendsAdapter(AddFriendsAdapter.OnItemClickListener listener, Context context) {
         this.listener = listener;
         this.context = context;
     }
 
-    public void setSentFriendRequests(List<Request> sentFriendRequests) {
+    public void setSentFriendRequests(List<MutableLiveData<FriendRequest>> sentFriendRequests) {
         this.sentFriendRequests = sentFriendRequests;
         listener.onFriendRequestsSet();
     }
 
-    public void setUsers(List<User> newUsers) {
-        if (users == null) {
-            users = newUsers;
+    public void setUsers(List<MutableLiveData<User>> newUsers) {
+        if (mUsers == null) {
+            mUsers = newUsers;
             notifyItemRangeInserted(0, newUsers.size());
             return;
         }
 
-        DiffUtil.DiffResult result = calculateDiff(users, newUsers);
-        users = newUsers;
+        DiffUtil.DiffResult result = calculateDiff(mUsers, newUsers);
+        mUsers = newUsers;
         result.dispatchUpdatesTo(this);
     }
 
@@ -64,37 +72,48 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
-        String name = users.get(position).getFullName();
-        String username = users.get(position).getUsername();
+        User user = mUsers.get(position).getValue();
 
+        String profileImageUrl = Objects.requireNonNull(user).getProfileImageUrl();
+        String name = user.getFullName();
+        String username = user.getUsername();
+
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            holder.getProfileImage().setImageTintMode(null);
+            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+        }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
         holder.getFriendRequestButton().setEnabled(true);
 
-        for (Request request : sentFriendRequests) {
-            boolean notificationExists = request.getReceiverId().equals(users.get(position).getId()) &&
-                    request.getState() == Request.RequestState.REQUEST_PENDING;
+        for (MutableLiveData<FriendRequest> request : sentFriendRequests) {
+            boolean notificationExists = Objects.requireNonNull(request.getValue()).getReceiverId().equals(user.getId()) &&
+                    request.getValue().getState() == Request.RequestState.REQUEST_PENDING;
 
-            int btnContent, btnColor;
+            int btnContent, btnTextColor;
+            ColorStateList btnBackground;
             if (!notificationExists) {
                 btnContent = R.string.btn_send_friend_request_default;
-                btnColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.orange);
+                btnBackground = ContextCompat.getColorStateList(context, R.color.orange500);
+                btnTextColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.white);
             } else {
                 btnContent = R.string.btn_send_friend_request_pending;
-                btnColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.grey_medium);
+                btnBackground = ContextCompat.getColorStateList(context, R.color.gray400);
+                btnTextColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.gray700);
             }
             holder.getFriendRequestButton().setText(btnContent);
-            holder.getFriendRequestButton().setBackgroundColor(btnColor);
+            holder.getFriendRequestButton().setBackgroundTintList(btnBackground);
+            holder.getFriendRequestButton().setTextColor(btnTextColor);
         }
     }
 
     // Return the size of the list
     @Override
     public int getItemCount() {
-        if (users == null) {
+        if (mUsers == null) {
             return 0;
         }
-        return users.size();
+        return mUsers.size();
     }
 
     public interface OnItemClickListener {
@@ -131,7 +150,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
-            listener.onItemClicked(users.get(position).getId());
+            listener.onItemClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
         }
 
         @SuppressLint("ResourceAsColor")
@@ -141,24 +160,33 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
-            listener.onFriendRequestButtonClicked(users.get(position).getId());
+            listener.onFriendRequestButtonClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
 
-            int btnContent, btnColor;
+            int btnContent, btnTextColor;
+            ColorStateList btnBackground;
+
             if (binding.btnSendFriendRequest.getText().toString()
                     .equals(context.getString(R.string.btn_send_friend_request_default))) {
                 btnContent = R.string.btn_send_friend_request_pending;
-                btnColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.grey_medium);
+                btnBackground = ContextCompat.getColorStateList(binding.btnSendFriendRequest.getContext(), R.color.gray400);
+                btnTextColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.gray700);
             } else {
                 btnContent = R.string.btn_send_friend_request_default;
-                btnColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.orange);
+                btnBackground = ContextCompat.getColorStateList(binding.btnSendFriendRequest.getContext(), R.color.orange500);
+                btnTextColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.white);
             }
             binding.btnSendFriendRequest.setText(btnContent);
-            binding.btnSendFriendRequest.setBackgroundColor(btnColor);
+            binding.btnSendFriendRequest.setBackgroundTintList(btnBackground);
+            binding.btnSendFriendRequest.setTextColor(btnTextColor);
         }
 
         /**
          * Getters for the views in the list item
          */
+        public ImageView getProfileImage() {
+            return binding.ivUserImage;
+        }
+
         public TextView getTvName() {
             return binding.tvName;
         }

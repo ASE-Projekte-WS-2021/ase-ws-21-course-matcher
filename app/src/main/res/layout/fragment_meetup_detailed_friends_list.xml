@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/meetupDetailedFriendsListContainer"
     tools:context=".ui.meetup.MeetupDetailed.MeetupDetailedFriendsListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/meetupDetailedFriendsList"
-        android:layout_margin="8dp"/>
+        android:id="@+id/meetupDetailedFriendsList" />
 
 </LinearLayout>

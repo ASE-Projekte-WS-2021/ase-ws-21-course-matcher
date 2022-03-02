@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.R;
@@ -19,8 +21,10 @@ import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
-public class InviteFriendsFragment extends Fragment
-        implements AdapterView.OnItemClickListener,
+import java.util.Objects;
+
+
+public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener,
         InviteFriendsAdapter.OnItemClickListener {
 
     private CreateMeetupViewModel createMeetupViewModel;
@@ -31,18 +35,18 @@ public class InviteFriendsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-
         View root = binding.getRoot();
-
         initUI();
         initViewModel();
         initListener();
-
         return root;
     }
 
     private void initUI() {
         inviteFriendsListAdapter = new InviteFriendsAdapter(this);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        binding.rvUserList.addItemDecoration(dividerItemDecoration);
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(inviteFriendsListAdapter);
@@ -50,7 +54,6 @@ public class InviteFriendsFragment extends Fragment
 
     private void initListener() {
         binding.inviteFriendsSearchBtn.setOnClickListener(v -> onSearchButtonClicked());
-
         binding.btnSendInvite.setOnClickListener(v -> {
             boolean isSuccessful = createMeetupViewModel.createMeetup();
             if (isSuccessful) {
@@ -63,20 +66,17 @@ public class InviteFriendsFragment extends Fragment
 
     public void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
-
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
                 return;
-            }
-
-            if (users.size() == 0) {
+            } else if (users.size() == 0) {
                 Snackbar snackbar = Snackbar.make(binding.getRoot(),
                         getContext().getText(R.string.snackbar_no_friends_text), Snackbar.LENGTH_LONG);
                 // todo: set snackbar action -> go to add-friends-fragment
                 snackbar.show();
                 binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
+                return;
             }
-
             inviteFriendsListAdapter.setUsers(users);
             binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);

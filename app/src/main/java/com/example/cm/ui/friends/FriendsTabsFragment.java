@@ -19,8 +19,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class FriendsTabsFragment extends Fragment {
 
-    FriendsTapAdapter friendsTabAdapter;
-    ViewPager2 viewPager;
+    private FriendsTapAdapter friendsTabAdapter;
+    private ViewPager2 viewPager;
     private FragmentFriendsTabsBinding binding;
     private Navigator navigator;
 

@@ -8,28 +8,24 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
-import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.databinding.ItemMeetupBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
-    List<Meetup> meetups;
+    List<MutableLiveData<Meetup>> meetups;
 
-    public MeetupListAdapter(List<Meetup> meetups) {
-        for (int i = 0; i < meetups.size(); i++) {
-            if (meetups.get(i).getPhase() == MeetupPhase.MEETUP_ENDED){
-                meetups.remove(i);
-            }
-        }
+    public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups) {
         this.meetups = meetups;
     }
 
@@ -42,18 +38,18 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
     @Override
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
-        Meetup meetup = meetups.get(position);
+        Meetup meetup = meetups.get(position).getValue();
 
         MaterialCardView meetupCard = holder.getMeetupCard();
 
         meetupCard.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putString(Constants.KEY_MEETUP_ID, meetup.getId());
+            bundle.putString(Constants.KEY_MEETUP_ID, Objects.requireNonNull(meetup).getId());
             Navigation.findNavController(view).navigate(R.id.navigateToMeetupDetailed, bundle);
         });
 
-        holder.getTvLocation().setText(meetup.getLocation());
-        switch (meetup.getPhase()){
+        holder.getTvLocation().setText(Objects.requireNonNull(meetup).getLocation());
+        switch (meetup.getPhase()) {
             case MEETUP_UPCOMING:
                 holder.getTvTime().setText(meetup.getFormattedTime());
                 break;
@@ -91,6 +87,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
     @Override
     public int getItemCount() {
+        if (meetups == null) {
+            return 0;
+        }
         return meetups.size();
     }
 
@@ -115,7 +114,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return binding.meetupImagesLayout;
         }
 
-        public MaterialCardView getMeetupCard() { return binding.card;}
+        public MaterialCardView getMeetupCard() {
+            return binding.card;
+        }
 
     }
 }

@@ -10,6 +10,7 @@
     <color name="gray400">#CCD1E1</color>
     <color name="gray300">#F2F3F7</color>
     <color name="gray_gradient">#EE2E323E</color>
+    <color name="gray700_transparent">#992E323E</color>
 
     <!-- Accent -->
     <color name="orange700">#8E3B1F</color>
