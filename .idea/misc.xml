@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable-anydpi/ic_delete_item.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/baseline_emoji_people_24.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/btn_rounded.xml" value="0.2703125" />
@@ -11,23 +12,34 @@
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_launcher_background.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_profile.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_round_person_add_alt_1_24.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_round_search_24.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/action_bar_with_back_button.xml" value="0.2078804347826087" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/activity_login.xml" value="0.24592391304347827" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/activity_main.xml" value="0.1671875" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_add_friends.xml" value="0.24592391304347827" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_friend_requests.xml" value="0.24094202898550723" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_friends.xml" value="0.24592391304347827" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_friends_list.xml" value="0.15833333333333333" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_friends_notifications.xml" value="0.23233695652173914" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_friends_tabs.xml" value="0.23097826086956522" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_invite_friends.xml" value="0.264" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup.xml" value="0.264" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed.xml" value="0.21240942028985507" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed_friends_list.xml" value="0.21240942028985507" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_invite_success.xml" value="0.2078804347826087" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_list.xml" value="0.23233695652173914" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_notifications.xml" value="0.23233695652173914" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_requests.xml" value="0.1" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_tab.xml" value="0.23233695652173914" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_tabs.xml" value="0.23097826086956522" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_notifications.xml" value="0.2427536231884058" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_other_profile.xml" value="0.21240942028985507" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_own_profile.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_settings.xml" value="0.2078804347826087" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_friend_request.xml" value="0.4" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup.xml" value="0.17889492753623187" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup_friend.xml" value="0.17889492753623187" />
@@ -37,6 +49,7 @@
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_notification_meetup.xml" value="0.19610507246376813" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_select_friend.xml" value="0.19610507246376813" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_send_friend_request.xml" value="0.19610507246376813" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_settings_link.xml" value="0.2078804347826087" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_single_friend.xml" value="0.20606884057971014" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/menu/menu_fragment_friends.xml" value="0.25416666666666665" />
@@ -46,11 +59,9 @@
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/activity_main.xml" value="0.2140625" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/activity_register.xml" value="0.2713541666666667" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/activity_splash_screen.xml" value="0.264" />
-        <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_friends_tabs.xml" value="0.223731884057971" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_login.xml" value="0.40896739130434784" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed.xml" value="0.23550724637681159" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed_friends_list.xml" value="0.23550724637681159" />
-        <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup.xml" value="0.21739130434782608" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup_friend.xml" value="0.23550724637681159" />
         <entry key="app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.2355" />
         <entry key="app/src/main/res/drawable/ic_round_search_24.xml" value="0.2355" />
@@ -59,8 +70,6 @@
         <entry key="app/src/main/res/layout/fragment_friends.xml" value="0.1765625" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3416666666666667" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.1765625" />
-        <entry key="app/src/main/res/layout/fragment_other_profile.xml" value="0.23143115942028986" />
-        <entry key="app/src/main/res/layout/fragment_own_profile.xml" value="0.23143115942028986" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.14177703857421872" />
         <entry key="app/src/main/res/layout/fragment_select_friends.xml" value="0.32019927536231885" />
         <entry key="app/src/main/res/layout/item_select_friend.xml" value="0.2658514492753623" />

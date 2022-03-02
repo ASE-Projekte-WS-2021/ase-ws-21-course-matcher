@@ -1,5 +1,6 @@
 package com.example.cm.ui.meetup.MeetupDetailed;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -12,8 +13,9 @@ public class MeetupDetailedFriendsListFactory implements ViewModelProvider.Facto
         this.userIds = userIds;
     }
 
+    @NonNull
     @Override
-    public <T extends ViewModel> T create(Class<T> modelClass) {
+    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         return (T) new MeetupDetailedFriendsListViewModel(userIds);
     }
 }

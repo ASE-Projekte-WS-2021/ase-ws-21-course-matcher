@@ -27,7 +27,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getSupportActionBar() != null) {
+        if(getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
@@ -42,7 +42,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             intent = new Intent(this, OnboardingActivity.class);
         }
         startActivity(intent);
-
+      
         setContentView(R.layout.activity_splash_screen);
 
         setupUI();

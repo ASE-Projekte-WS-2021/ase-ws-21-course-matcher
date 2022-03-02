@@ -1,6 +1,7 @@
 package com.example.cm.ui.auth;
 
 import android.app.Application;
+import android.net.Uri;
 import android.os.Build;
 import android.widget.Toast;
 
@@ -45,17 +46,17 @@ public class AuthViewModel extends AndroidViewModel {
     public void register(String email, String password, String userName, String firstName, String lastName) {
         authRepository.register(email, password, userName).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                addUser(userName, firstName, lastName, email, "");
+                addUser(userName, firstName, lastName, email, "", "");
             } else {
                 Toast.makeText(application.getApplicationContext(), "Registration Failure: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void addUser(String username, String firstName, String lastName, String email, String bio) {
+    private void addUser(String username, String firstName, String lastName, String email, String bio, String profileImageUri) {
         FirebaseUser authUser = authRepository.getCurrentUser();
         if (authUser != null) {
-            User user = new User(authUser.getUid(), username, firstName, lastName, email, bio, new ArrayList<String>());
+            User user = new User(authUser.getUid(), username, firstName, lastName, email, bio, profileImageUri, new ArrayList<String>());
             userRepository.createUser(user);
             userLiveData.postValue(authUser);
         }

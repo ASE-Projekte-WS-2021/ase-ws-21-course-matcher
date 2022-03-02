@@ -1,12 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context=".ui.settings.edit_account.EditAccountFragment">
+
+<include
+    android:id="@+id/actionBar"
+    layout="@layout/action_bar_with_back_button"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.settings.edit_account.EditAccountFragment">
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true" />
 
-    <include
-        android:id="@+id/actionBar"
-        layout="@layout/action_bar_with_back_button" />
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/actionBar"
+    android:layout_alignParentBottom="true">
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/default_screen_padding">
+
+        <include
+            android:id="@+id/inputEmail"
+            layout="@layout/input_text_with_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Die E-Mail Adresse ist mit deinem RZ-Account verknüpft und kann deshalb nicht nachträglich angepasst werden."
+            android:textSize="12sp"
+            android:textColor="@color/gray600"
+            android:layout_marginBottom="@dimen/default_screen_padding"
+            />
+
+        <TextView
+            android:text="Passwort ändern"
+            android:fontFamily="@font/readexpro_semibold"
+            android:textSize="@dimen/text_size_description_medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            />
+
+        <include
+            android:id="@+id/inputCurrentPassword"
+            layout="@layout/input_password_with_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+        <include
+            android:id="@+id/inputNewPassword"
+            layout="@layout/input_password_with_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+        <include
+            android:id="@+id/inputNewPasswordConfirm"
+            layout="@layout/input_password_with_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:id="@+id/btnUpdatePassword"
+            android:text="Passwort ändern"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>
+</RelativeLayout>

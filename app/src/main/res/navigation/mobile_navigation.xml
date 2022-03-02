@@ -36,7 +36,14 @@
         android:id="@+id/navigation_meetup_detailed"
         android:name="com.example.cm.ui.meetup.MeetupDetailed.MeetupDetailedFragment"
         android:label="@string/MeetupDetailedTitle"
-        tools:layout="@layout/fragment_meetup_detailed" />
+        tools:layout="@layout/fragment_meetup_detailed">
+        <action
+            android:id="@+id/fromMeetupDetailedToOwnProfile"
+            app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/fromMeetupDetailedToOtherProfile"
+            app:destination="@id/navigation_other_profile" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_meetup"

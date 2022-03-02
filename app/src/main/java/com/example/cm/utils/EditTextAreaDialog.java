@@ -60,6 +60,8 @@ public class EditTextAreaDialog extends Dialog {
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // Make dialog full width
         this.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        // Show keyboard
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     private void initUI() {

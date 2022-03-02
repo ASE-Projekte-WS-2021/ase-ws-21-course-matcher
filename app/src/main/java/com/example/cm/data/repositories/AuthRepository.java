@@ -2,14 +2,15 @@ package com.example.cm.data.repositories;
 
 import android.app.Application;
 import android.os.Build;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -18,13 +19,12 @@ import com.google.firebase.auth.FirebaseUser;
  * inspired by https://learntodroid.com/how-to-use-firebase-authentication-in-an-android-app-using-mvvm/
  */
 
-public class AuthRepository {
+public class AuthRepository extends Repository {
     private static final String TAG = "AuthRepository";
-
-    private final Application application;
     private final FirebaseAuth firebaseAuth;
     private final MutableLiveData<FirebaseUser> userLiveData;
     private final MutableLiveData<Boolean> loggedOutLiveData;
+    private Application application = null;
 
     public AuthRepository(Application application) {
         this.application = application;
@@ -38,10 +38,45 @@ public class AuthRepository {
         }
     }
 
+    public AuthRepository() {
+        this.firebaseAuth = FirebaseAuth.getInstance();
+        this.userLiveData = new MutableLiveData<>();
+        this.loggedOutLiveData = new MutableLiveData<>();
+
+        if (firebaseAuth.getCurrentUser() != null) {
+            userLiveData.postValue(firebaseAuth.getCurrentUser());
+            loggedOutLiveData.postValue(false);
+        }
+    }
+
+    public void updatePassword(String currentPassword, String newPassword, Callback callback) {
+        if (firebaseAuth.getCurrentUser() == null) {
+            return;
+        }
+
+        AuthCredential credential = EmailAuthProvider.getCredential(firebaseAuth.getCurrentUser().getEmail(), currentPassword);
+        firebaseAuth.getCurrentUser()
+                .reauthenticate(credential)
+                .addOnSuccessListener(executorService, task -> {
+                    // User re-authenticated successfully -> Update Password
+                    firebaseAuth.getCurrentUser().updatePassword(newPassword)
+                            .addOnSuccessListener(executorService, updatePasswordTask -> {
+                                callback.onSuccess(null);
+                            })
+                            .addOnFailureListener(executorService, e -> {
+                                callback.onError(e);
+                            });
+                })
+                .addOnFailureListener(executorService, e -> {
+                    // User could not be re-authenticated with email and password
+                    callback.onError(e);
+                });
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void login(String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(application.getMainExecutor(), task -> {
+                .addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
                         userLiveData.postValue(firebaseAuth.getCurrentUser());
                     } else {
@@ -60,7 +95,7 @@ public class AuthRepository {
         loggedOutLiveData.postValue(true);
     }
 
-    public FirebaseUser getCurrentUser(){
+    public FirebaseUser getCurrentUser() {
         return firebaseAuth.getCurrentUser();
     }
 
