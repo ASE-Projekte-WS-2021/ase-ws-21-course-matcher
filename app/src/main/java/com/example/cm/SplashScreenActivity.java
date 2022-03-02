@@ -1,5 +1,6 @@
 package com.example.cm;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,12 +17,10 @@ import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.ui.onboarding.OnboardingActivity;
 import com.google.firebase.auth.FirebaseUser;
 
+@SuppressLint("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
 
-    ImageView splashImage;
-    Animation splashAnim;
-    SharedPreferences onBoardingSP;
-    private AuthViewModel authViewModel;
+    private SharedPreferences onBoardingSP;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +30,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         FirebaseUser firebaseUser = authViewModel.getUserLiveData().getValue();
 
@@ -49,8 +48,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
     
     private void setupUI() {
-        splashImage = findViewById(R.id.splash_img);
-        splashAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_anim);
+        ImageView splashImage = findViewById(R.id.splash_img);
+        Animation splashAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_anim);
 
         splashImage.setAnimation(splashAnim);
 
@@ -63,7 +62,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 SharedPreferences.Editor editor = onBoardingSP.edit();
                 editor.putBoolean("firstTime", false);
-                editor.commit();
+                editor.apply();
 
                 Intent intent = new Intent(getApplication(), AuthActivity.class);
                 startActivity(intent);
