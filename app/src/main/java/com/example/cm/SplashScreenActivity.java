@@ -17,7 +17,7 @@ import com.example.cm.ui.onboarding.OnboardingActivity;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SplashScreenActivity extends AppCompatActivity {
-    private static int SPLASH_TIMER = 1000;
+    private static int SPLASH_TIMER = 000;
     ImageView splashImage;
     Animation splashAnim;
     SharedPreferences onBoardingSP;
