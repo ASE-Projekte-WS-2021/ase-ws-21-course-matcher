@@ -19,8 +19,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MeetupTabsFragment extends Fragment {
 
-    MeetupTabAdapter meetupTabAdapter;
-    ViewPager2 viewPager;
+    private MeetupTabAdapter meetupTabAdapter;
+    private ViewPager2 viewPager;
     private FragmentMeetupTabsBinding binding;
     private Navigator navigator;
 
@@ -36,9 +36,7 @@ public class MeetupTabsFragment extends Fragment {
         binding = FragmentMeetupTabsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
 
-        binding.addMeetupFab.setOnClickListener(view -> {
-            navigator.navigateToCreateMeetup();
-        });
+        binding.addMeetupFab.setOnClickListener(view -> navigator.navigateToCreateMeetup());
         return binding.getRoot();
     }
 

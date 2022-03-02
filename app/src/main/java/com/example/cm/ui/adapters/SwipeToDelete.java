@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SwipeToDelete extends ItemTouchHelper.SimpleCallback {
 
-    private RecyclerView.Adapter adapter;
+    private final RecyclerView.Adapter adapter;
 
     public SwipeToDelete(RecyclerView.Adapter adapter) {
         super(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);

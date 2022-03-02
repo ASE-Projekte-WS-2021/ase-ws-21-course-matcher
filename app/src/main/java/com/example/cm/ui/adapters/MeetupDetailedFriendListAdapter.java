@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.data.models.User;
@@ -13,13 +14,14 @@ import com.example.cm.databinding.ItemSingleFriendBinding;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
 
+    private final List<MutableLiveData<User>> friends;
     private final OnItemClickListener listener;
-    private final List<User> friends;
 
-    public MeetupDetailedFriendListAdapter(List<User> friends, OnItemClickListener listener) {
+    public MeetupDetailedFriendListAdapter(List<MutableLiveData<User>> friends, OnItemClickListener listener) {
         this.friends = friends;
         this.listener = listener;
     }
@@ -34,9 +36,11 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     @Override
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
         if (friends != null) {
-            String profileImageUrl = friends.get(position).getProfileImageUrl();
-            String fullName = friends.get(position).getFullName();
-            String username = friends.get(position).getUsername();
+            User friend = friends.get(position).getValue();
+          
+            String fullName = Objects.requireNonNull(friend).getFullName();
+            String username = friend.getUsername();
+            String profileImageUrl = friend.getProfileImageUrl();
 
             if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                 holder.getProfileImage().setImageTintMode(null);
@@ -79,7 +83,7 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(friends.get(position).getId());
+            listener.onItemClicked(friends.get(position).getValue().getId());
         }
 
         public ImageView getProfileImage() {

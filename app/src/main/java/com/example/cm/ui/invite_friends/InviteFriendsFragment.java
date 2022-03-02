@@ -23,8 +23,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
-public class InviteFriendsFragment extends Fragment
-        implements AdapterView.OnItemClickListener,
+
+public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener,
         InviteFriendsAdapter.OnItemClickListener {
 
     private CreateMeetupViewModel createMeetupViewModel;
@@ -35,13 +35,10 @@ public class InviteFriendsFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-
         View root = binding.getRoot();
-
         initUI();
         initViewModel();
         initListener();
-
         return root;
     }
 
@@ -57,7 +54,6 @@ public class InviteFriendsFragment extends Fragment
 
     private void initListener() {
         binding.inviteFriendsSearchBtn.setOnClickListener(v -> onSearchButtonClicked());
-
         binding.btnSendInvite.setOnClickListener(v -> {
             boolean isSuccessful = createMeetupViewModel.createMeetup();
             if (isSuccessful) {
@@ -70,20 +66,17 @@ public class InviteFriendsFragment extends Fragment
 
     public void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
-
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) {
                 return;
-            }
-
-            if (users.size() == 0) {
+            } else if (users.size() == 0) {
                 Snackbar snackbar = Snackbar.make(binding.getRoot(),
                         getContext().getText(R.string.snackbar_no_friends_text), Snackbar.LENGTH_LONG);
                 // todo: set snackbar action -> go to add-friends-fragment
                 snackbar.show();
                 binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
+                return;
             }
-
             inviteFriendsListAdapter.setUsers(users);
             binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);

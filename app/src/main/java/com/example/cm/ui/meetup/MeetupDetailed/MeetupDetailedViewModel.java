@@ -8,7 +8,7 @@ import com.example.cm.data.repositories.MeetupRepository;
 
 public class MeetupDetailedViewModel extends ViewModel {
 
-    private MutableLiveData<Meetup> meetup = new MutableLiveData<>();
+    private MutableLiveData<Meetup> meetup;
 
     public MeetupDetailedViewModel(String meetupId) {
         MeetupRepository meetupRepository = new MeetupRepository();

@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,16 +18,18 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.cm.utils.Utils.calculateDiff;
+
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.UserViewHolder> {
 
     private final OnItemClickListener listener;
-    private List<User> mUsers;
+    private List<MutableLiveData<User>> mUsers;
 
     public FriendsListAdapter(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void setFriends(List<User> newUsers) {
+    public void setFriends(List<MutableLiveData<User>> newUsers) {
         if (mUsers == null) {
             mUsers = newUsers;
             notifyItemRangeInserted(0, newUsers.size());
@@ -36,44 +39,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         DiffUtil.DiffResult result = calculateDiff(mUsers, newUsers);
         mUsers = newUsers;
         result.dispatchUpdatesTo(this);
-    }
-
-    /**
-     * Calculate the difference between two lists and return the result
-     * Also used to animate the changes
-     * From https://stackoverflow.com/questions/49588377/how-to-set-adapter-in-mvvm-using-databinding
-     *
-     * @param oldUsers The old list of users
-     * @param newUsers The new list of users
-     * @return The result of the calculation
-     */
-    private DiffUtil.DiffResult calculateDiff(List<User> oldUsers, List<User> newUsers) {
-        return DiffUtil.calculateDiff(new DiffUtil.Callback() {
-            @Override
-            public int getOldListSize() {
-                return oldUsers.size();
-            }
-
-            @Override
-            public int getNewListSize() {
-                return newUsers.size();
-            }
-
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(oldUsers.get(oldItemPosition).getId(), newUsers.get(newItemPosition).getId());
-            }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                User newUser = newUsers.get(newItemPosition);
-                User oldUser = oldUsers.get(oldItemPosition);
-                return Objects.equals(newUser.getId(), oldUser.getId())
-                        && Objects.equals(newUser.getFirstName(), oldUser.getFirstName())
-                        && Objects.equals(newUser.getLastName(), oldUser.getLastName())
-                        && Objects.equals(newUser.getUsername(), oldUser.getUsername());
-            }
-        });
     }
 
     // Create new views (invoked by the layout manager)
@@ -88,9 +53,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
-        String profileImageUrl = mUsers.get(position).getProfileImageUrl();
-        String name = mUsers.get(position).getFullName();
-        String username = mUsers.get(position).getUsername();
+        User user = mUsers.get(position).getValue();
+
+        String profileImageUrl = Objects.requireNonNull(user).getProfileImageUrl();
+        String name = user.getFullName();
+        String username = user.getUsername();
 
         if(profileImageUrl != null && !profileImageUrl.isEmpty()) {
             holder.getProfileImage().setImageTintMode(null);
@@ -137,7 +104,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(mUsers.get(position).getId());
+            listener.onItemClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
         }
 
 

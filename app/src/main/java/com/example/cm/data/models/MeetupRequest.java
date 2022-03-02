@@ -2,6 +2,8 @@ package com.example.cm.data.models;
 
 import android.annotation.SuppressLint;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.firestore.Exclude;
 
 import java.util.Calendar;
@@ -15,6 +17,7 @@ public class MeetupRequest extends Request {
     private String location;
     private Date meetupAt;
     private MeetupRequestType type;
+    private MeetupPhase phase;
 
     private final Calendar calendarNow = GregorianCalendar.getInstance();
     private final Calendar calendarMeetup = GregorianCalendar.getInstance();
@@ -38,6 +41,7 @@ public class MeetupRequest extends Request {
         if(type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED){
             state = RequestState.REQUEST_ANSWERED;
         }
+        phase = getPhase();
     }
 
     public MeetupRequestType getType() {
@@ -79,7 +83,6 @@ public class MeetupRequest extends Request {
         return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
     }
 
-    @Exclude
     public MeetupPhase getPhase() {
         Date now = new Date();
         calendarNow.setTime(now);
@@ -89,14 +92,21 @@ public class MeetupRequest extends Request {
                 && calendarNow.get(Calendar.DAY_OF_MONTH) == calendarMeetup.get(Calendar.DAY_OF_MONTH)) {
             // has started?
             if (TimeUnit.MILLISECONDS.toSeconds(now.getTime() - meetupAt.getTime()) >= 0) {
-                return MeetupPhase.MEETUP_ACTIVE;
+                phase = MeetupPhase.MEETUP_ACTIVE;
             } else {
-                return MeetupPhase.MEETUP_UPCOMING;
+                phase = MeetupPhase.MEETUP_UPCOMING;
             }
+        } else {
+            phase = MeetupPhase.MEETUP_ENDED;
         }
-        return MeetupPhase.MEETUP_ENDED;
+        return phase;
     }
 
+    public void setPhase(MeetupPhase phase) {
+        this.phase = phase;
+    }
+
+    @NonNull
     @Override
     public String toString() {
         String meetupString = "Treffen " + meetupAt + " Uhr - " + location;
