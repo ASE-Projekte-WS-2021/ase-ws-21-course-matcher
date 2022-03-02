@@ -12,7 +12,7 @@
         android:layout_width="@dimen/profile_img_size"
         android:layout_height="@dimen/profile_img_size"
         android:layout_gravity="center"
-        android:layout_marginEnd="@dimen/default_screen_padding"
+        android:layout_marginEnd="@dimen/padding_big"
         android:background="@color/gray500"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_profile"

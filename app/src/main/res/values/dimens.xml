@@ -33,4 +33,5 @@
     <dimen name="profile_img_size">50dp</dimen>
 
     <dimen name="stroke_width">2dp</dimen>
+    <dimen name="padding_ultra">80dp</dimen>
 </resources>
