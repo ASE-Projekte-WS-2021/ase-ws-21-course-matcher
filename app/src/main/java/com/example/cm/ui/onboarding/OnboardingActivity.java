@@ -95,7 +95,7 @@ public class OnboardingActivity extends AppCompatActivity {
             dotsLayout.addView(dots[i]);
         }
         if (dots.length > 0) {
-            dots[position].setTextColor(getResources().getColor(R.color.orange_dark));
+            dots[position].setTextColor(getResources().getColor(R.color.orange500));
         }
     }
 
