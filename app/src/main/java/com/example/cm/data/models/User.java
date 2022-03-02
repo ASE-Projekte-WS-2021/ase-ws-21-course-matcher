@@ -1,5 +1,7 @@
 package com.example.cm.data.models;
 
+import com.google.firebase.firestore.Exclude;
+
 import java.util.List;
 
 public class User {
@@ -37,6 +39,7 @@ public class User {
         this.username = username;
     }
 
+    @Exclude
     public String getFullName() {
         return firstName + " " + lastName;
     }

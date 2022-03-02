@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentAddFriendsBinding;
 import com.example.cm.ui.adapters.AddFriendsAdapter;
 import com.example.cm.ui.adapters.AddFriendsAdapter.OnItemClickListener;
@@ -103,11 +101,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             if (sentFriendRequests == null) {
                 return;
             }
-            ArrayList<Request> requestsToSet = new ArrayList<>();
-            for (FriendRequest request : sentFriendRequests) {
-                requestsToSet.add((Request) request);
-            }
-            selectFriendsAdapter.setSentFriendRequests(requestsToSet);
+            selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
         });
     }
 
@@ -145,13 +139,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             if (users == null) {
                 return;
             }
-
-            if (users.size() == 0) {
-                binding.rvUserList.setVisibility(View.GONE);
-                binding.noFriendsWrapper.setVisibility(View.VISIBLE);
-                return;
-            }
-
             selectFriendsAdapter.setUsers(users);
             binding.noFriendsWrapper.setVisibility(View.GONE);
             binding.loadingCircle.setVisibility(View.GONE);

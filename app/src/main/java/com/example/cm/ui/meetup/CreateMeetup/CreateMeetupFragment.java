@@ -1,5 +1,6 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
+import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -65,6 +66,7 @@ public class CreateMeetupFragment extends Fragment {
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 
+    @SuppressLint("DefaultLocale")
     private void showCurrentTime() {
         int localHour = calendarMeetup.get(Calendar.HOUR_OF_DAY);
         int localMin = calendarMeetup.get(Calendar.MINUTE);
@@ -109,6 +111,7 @@ public class CreateMeetupFragment extends Fragment {
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     private void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
         createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location -> binding.meetupLocationSpinner.setSelection(adapter.getPosition(location)));

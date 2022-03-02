@@ -6,11 +6,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.example.cm.R;
+import com.example.cm.data.models.MeetupRequest;
+import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 
 import java.util.ArrayList;
@@ -53,7 +56,7 @@ public class Utils {
      * @return List of type T
      */
     public static <T> List<T> castList(Object obj, Class<T> typeOfList) {
-        List<T> result = new ArrayList<T>();
+        List<T> result = new ArrayList<>();
         if (obj instanceof List<?>) {
             for (Object o : (List<?>) obj) {
                 result.add(typeOfList.cast(o));
@@ -63,17 +66,16 @@ public class Utils {
         return null;
     }
 
-
     /**
      * Calculate the difference between two lists and return the result
      * Also used to animate the changes
      * From https://stackoverflow.com/questions/49588377/how-to-set-adapter-in-mvvm-using-databinding
      *
-     * @param oldUsers The old list of users
-     * @param newUsers The new list of users
+     * @param oldUsers The old list of mutable users
+     * @param newUsers The new list of mutable users
      * @return The result of the calculation
      */
-    public static DiffUtil.DiffResult calculateDiff(List<User> oldUsers, List<User> newUsers) {
+    public static DiffUtil.DiffResult calculateDiff(List<MutableLiveData<User>> oldUsers, List<MutableLiveData<User>> newUsers) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -87,21 +89,20 @@ public class Utils {
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(oldUsers.get(oldItemPosition).getId(), newUsers.get(newItemPosition).getId());
+                return Objects.equals(Objects.requireNonNull(oldUsers.get(oldItemPosition).getValue()).getId(),
+                        Objects.requireNonNull(newUsers.get(newItemPosition).getValue()).getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                User newUser = newUsers.get(newItemPosition);
-                User oldUser = oldUsers.get(oldItemPosition);
+                User newUser = newUsers.get(newItemPosition).getValue();
+                User oldUser = oldUsers.get(oldItemPosition).getValue();
 
-                return Objects.equals(newUser.getId(), oldUser.getId())
+                return Objects.equals(Objects.requireNonNull(newUser).getId(), Objects.requireNonNull(oldUser).getId())
                         && Objects.equals(newUser.getFirstName(), oldUser.getFirstName())
                         && Objects.equals(newUser.getLastName(), oldUser.getLastName())
                         && Objects.equals(newUser.getUsername(), oldUser.getUsername());
             }
         });
     }
-
-
-}
+    }
