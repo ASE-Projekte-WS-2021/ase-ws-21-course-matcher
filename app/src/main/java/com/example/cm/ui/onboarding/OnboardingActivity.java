@@ -20,12 +20,8 @@ import com.example.cm.ui.auth.RegisterActivity;
 
 public class OnboardingActivity extends AppCompatActivity {
 
-    private ViewPager viewPager;
     private LinearLayout dotsLayout;
-    private OnboardingAdapter onboardingAdapter;
-    private TextView[] dots;
     private Button registerBtn;
-    private Animation btnAnimation;
     private int currentPos;
 
     ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -38,7 +34,7 @@ public class OnboardingActivity extends AppCompatActivity {
             addDots(position);
             currentPos = position;
             if (position == 3) {
-                btnAnimation = AnimationUtils.loadAnimation(OnboardingActivity.this, R.anim.bottom_anim);
+                Animation btnAnimation = AnimationUtils.loadAnimation(OnboardingActivity.this, R.anim.bottom_anim);
                 registerBtn.setAnimation(btnAnimation);
                 registerBtn.setVisibility(View.VISIBLE);
             } else {
@@ -61,11 +57,11 @@ public class OnboardingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        viewPager = findViewById(R.id.onboarding_viewpager);
+        ViewPager viewPager = findViewById(R.id.onboarding_viewpager);
         dotsLayout = findViewById(R.id.layout_onboarding_indicator);
         registerBtn = findViewById(R.id.onboarding_btn_register);
 
-        onboardingAdapter = new OnboardingAdapter(this);
+        OnboardingAdapter onboardingAdapter = new OnboardingAdapter(this);
 
         viewPager.setAdapter(onboardingAdapter);
         addDots(0);
@@ -85,7 +81,7 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     private void addDots(int position) {
-        dots = new TextView[4];
+        TextView[] dots = new TextView[4];
         dotsLayout.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new TextView(this);
@@ -94,9 +90,7 @@ public class OnboardingActivity extends AppCompatActivity {
 
             dotsLayout.addView(dots[i]);
         }
-        if (dots.length > 0) {
-            dots[position].setTextColor(getResources().getColor(R.color.orange500));
-        }
+        dots[position].setTextColor(getResources().getColor(R.color.orange500));
     }
 
     @Override

@@ -27,7 +27,7 @@ public class AuthActivity extends AppCompatActivity {
         initUI();
     }
 
-    private void initUI(){
+    private void initUI() {
         registerBtn = findViewById(R.id.start_register_btn);
         loginBtn = findViewById(R.id.loginLoginBtn);
     }
