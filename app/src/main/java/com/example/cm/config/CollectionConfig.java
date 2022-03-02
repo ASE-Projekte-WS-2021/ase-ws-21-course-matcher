@@ -1,5 +1,7 @@
 package com.example.cm.config;
 
+import androidx.annotation.NonNull;
+
 public enum CollectionConfig {
 
     USERS("users"),
@@ -13,6 +15,7 @@ public enum CollectionConfig {
         this.collection = collection;
     }
 
+    @NonNull
     public String toString() {
         return collection;
     }

@@ -7,27 +7,25 @@
     android:gravity="center_vertical"
     android:padding="@dimen/activity_horizontal_margin">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cvImageWrapper"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="#98A3C3"
-        app:cardCornerRadius="50dp">
-
-        <ImageView
-            android:id="@+id/ivUserImage"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:contentDescription="@string/profile_picture_decription" />
-    </androidx.cardview.widget.CardView>
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivUserImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/default_screen_padding"
+        android:background="@color/gray500"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toStartOf="@+id/btnSendFriendRequest"
-        android:layout_toEndOf="@+id/cvImageWrapper"
+        android:layout_toEndOf="@+id/ivUserImage"
+        android:layout_centerVertical="true"
         android:orientation="vertical">
 
         <TextView
@@ -35,6 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:includeFontPadding="false"
             android:maxLines="1"
             android:text="@{username}"
             android:textColor="#22283A"
@@ -46,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:includeFontPadding="false"
             android:maxLines="1"
             android:text="@{username}"
             android:textColor="#98A3C3"
@@ -59,6 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
         android:background="@drawable/btn_rounded"
         android:backgroundTint="@color/orange500"
         android:text="@string/btn_send_friend_request_default" />

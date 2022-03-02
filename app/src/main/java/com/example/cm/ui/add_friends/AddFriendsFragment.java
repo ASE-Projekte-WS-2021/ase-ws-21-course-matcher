@@ -16,8 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentAddFriendsBinding;
 import com.example.cm.ui.adapters.AddFriendsAdapter;
 import com.example.cm.ui.adapters.AddFriendsAdapter.OnItemClickListener;
@@ -41,10 +39,8 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         initUI();
         initListener();
         initViewModel();
-
         return binding.getRoot();
     }
-
 
     private void initUI() {
         selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
@@ -103,11 +99,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             if (sentFriendRequests == null) {
                 return;
             }
-            ArrayList<Request> requestsToSet = new ArrayList<>();
-            for (FriendRequest request : sentFriendRequests) {
-                requestsToSet.add((Request) request);
-            }
-            selectFriendsAdapter.setSentFriendRequests(requestsToSet);
+            selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
         });
     }
 
@@ -123,7 +115,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         addFriendsViewModel.sendOrDeleteFriendRequest(receiverId);
     }
 
-
     @Override
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
@@ -135,7 +126,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onRequestAdded() {
         Snackbar.make(binding.getRoot(), R.string.snackbar_sent_request, Snackbar.LENGTH_LONG).show();
-
     }
 
     @Override
@@ -149,13 +139,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             if (users == null) {
                 return;
             }
-
-            if (users.size() == 0) {
-                binding.rvUserList.setVisibility(View.GONE);
-                binding.noFriendsWrapper.setVisibility(View.VISIBLE);
-                return;
-            }
-
             selectFriendsAdapter.setUsers(users);
             binding.noFriendsWrapper.setVisibility(View.GONE);
             binding.loadingCircle.setVisibility(View.GONE);
