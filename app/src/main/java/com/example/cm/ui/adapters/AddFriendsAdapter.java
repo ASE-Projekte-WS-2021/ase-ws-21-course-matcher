@@ -92,17 +92,15 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
 
         boolean notificationExists = false;
         for (int i = 0; i < pendingFriendRequests.size(); i++) {
-            if (i < pendingFriendRequestsSent.size()) {
-                if (Objects.requireNonNull(pendingFriendRequests.get(i).getValue()).getReceiverId().equals(user.getId())) {
-                    notificationExists = true;
-                    break;
-                } else if (Objects.requireNonNull(pendingFriendRequests.get(i).getValue()).getSenderId().equals(user.getId())) {
-                    notificationExists = true;
-                    break;
-                }
+            FriendRequest request = Objects.requireNonNull(pendingFriendRequests.get(i).getValue());
+            if ((i < pendingFriendRequestsSent.size() && request.getReceiverId().equals(user.getId())) ||
+                    (i >= pendingFriendRequestsSent.size() && request.getSenderId().equals(user.getId()))) {
+                notificationExists = true;
+                break;
             }
             notificationExists = false;
         }
+
 
         int btnContent, btnTextColor;
         ColorStateList btnBackground;
