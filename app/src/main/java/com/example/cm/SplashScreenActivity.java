@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.ui.auth.AuthViewModel;
 import com.example.cm.ui.auth.LoginActivity;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -24,7 +25,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
-        FirebaseUser firebaseUser = authViewModel.getUserLiveData().getValue();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         Intent intent;
         if (firebaseUser != null) {
@@ -32,6 +33,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         } else {
             intent = new Intent(this, LoginActivity.class);
         }
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 }
