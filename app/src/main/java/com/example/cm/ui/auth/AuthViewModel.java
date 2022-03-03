@@ -1,7 +1,6 @@
 package com.example.cm.ui.auth;
 
 import android.app.Application;
-import android.net.Uri;
 import android.os.Build;
 import android.widget.Toast;
 
@@ -14,32 +13,41 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.UserRepository;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Objects;
-
-/**
- * inspired by https://learntodroid.com/how-to-use-firebase-authentication-in-an-android-app-using-mvvm/
- */
 
 public class AuthViewModel extends AndroidViewModel {
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
     private final MutableLiveData<FirebaseUser> userLiveData;
     private final Application application;
+    private final FirebaseAuth firebaseAuth;
 
     public AuthViewModel(@NonNull Application application) {
         super(application);
         this.application = application;
-        authRepository = new AuthRepository(application);
+        this.firebaseAuth = FirebaseAuth.getInstance();
+        authRepository = new AuthRepository();
         userRepository = new UserRepository();
-        userLiveData = authRepository.getUserLiveData();
+        userLiveData = new MutableLiveData<>();
+
+        if (firebaseAuth.getCurrentUser() != null) {
+            userLiveData.postValue(firebaseAuth.getCurrentUser());
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     public void login(String email, String password) {
-        authRepository.login(email, password);
+        authRepository.login(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                userLiveData.postValue(firebaseAuth.getCurrentUser());
+            } else {
+                Toast.makeText(application.getApplicationContext(), "Login Failure: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
