@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         return navController.navigateUp() || super.onSupportNavigateUp();
     }
 
+    // do nothing when backbutton is pressed
     @Override
     public void onBackPressed() {
     }
