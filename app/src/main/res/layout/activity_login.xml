@@ -47,19 +47,19 @@
             android:id="@+id/loginLoginBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="login"
             android:text="@string/loginLoginBtn"
-            tools:ignore="UsingOnClickInXml" />
+            android:layout_marginTop="@dimen/small_margin"
+            tools:ignore="UsingOnClickInXml,TextContrastCheck" />
 
         <Button
             android:id="@+id/loginRegisterBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
-            android:onClick="goToRegister"
             android:text="@string/loginRegisterBtn"
             android:textAllCaps="false"
             android:textColor="@color/black"
+            android:layout_marginTop="@dimen/small_margin"
             tools:ignore="UsingOnClickInXml" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
