@@ -10,10 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.cm.ui.auth.AuthViewModel;
-import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.ui.onboarding.OnboardingActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,18 +28,14 @@ public class SplashScreenActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        AuthViewModel authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
-
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        Intent intent;
         if (firebaseUser != null) {
-            intent = new Intent(this, MainActivity.class);
-        } else {
-            intent = new Intent(this, OnboardingActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
+
 
         setContentView(R.layout.activity_splash_screen);
 
@@ -66,14 +59,15 @@ public class SplashScreenActivity extends AppCompatActivity {
                 editor.putBoolean("firstTime", false);
                 editor.apply();
 
-                Intent intent = new Intent(getApplication(), AuthActivity.class);
+                Intent intent = new Intent(getApplication(), OnboardingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             } else {
-                Intent intent = new Intent(getApplication(), LoginActivity.class);
+                Intent intent = new Intent(getApplication(), AuthActivity.class);
                 startActivity(intent);
             }
             finish();
 
-        }, Constants.SPLASH_TIMER);
+        }, 2000);
     }
 }

@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.MainActivity;
 import com.example.cm.R;
-import com.example.cm.ui.onboarding.OnboardingActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -51,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void goToRegister(View view) {
-        Intent intent = new Intent(LoginActivity.this, OnboardingActivity.class);
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
         finish();
     }

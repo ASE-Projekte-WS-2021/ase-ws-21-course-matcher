@@ -1,14 +1,14 @@
 package com.example.cm;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.cm.databinding.ActivityAuthBinding;
 import com.example.cm.ui.auth.LoginActivity;
-import com.example.cm.ui.onboarding.OnboardingActivity;
+import com.example.cm.ui.auth.RegisterActivity;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -42,7 +42,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     public void toRegister(View view) {
-        startActivity(new Intent(this, OnboardingActivity.class));
+        startActivity(new Intent(this, RegisterActivity.class));
         finish();
     }
 }
