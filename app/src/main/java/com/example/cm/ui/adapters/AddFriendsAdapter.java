@@ -90,17 +90,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         holder.getTvUsername().setText(username);
         holder.getFriendRequestButton().setEnabled(true);
 
-        boolean notificationExists = false;
-        for (int i = 0; i < pendingFriendRequests.size(); i++) {
-            FriendRequest request = Objects.requireNonNull(pendingFriendRequests.get(i).getValue());
-            if ((i < pendingFriendRequestsSent.size() && request.getReceiverId().equals(user.getId())) ||
-                    (i >= pendingFriendRequestsSent.size() && request.getSenderId().equals(user.getId()))) {
-                notificationExists = true;
-                break;
-            }
-            notificationExists = false;
-        }
-
+        boolean notificationExists = isNotificationExisting(user.getId());
 
         int btnContent, btnTextColor;
         ColorStateList btnBackground;
@@ -116,6 +106,17 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         holder.getFriendRequestButton().setText(btnContent);
         holder.getFriendRequestButton().setBackgroundTintList(btnBackground);
         holder.getFriendRequestButton().setTextColor(btnTextColor);
+    }
+
+    private boolean isNotificationExisting(String userId) {
+        for (int i = 0; i < pendingFriendRequests.size(); i++) {
+            FriendRequest request = Objects.requireNonNull(pendingFriendRequests.get(i).getValue());
+            if ((i < pendingFriendRequestsSent.size() && request.getReceiverId().equals(userId)) ||
+                    (i >= pendingFriendRequestsSent.size() && request.getSenderId().equals(userId))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Return the size of the list
