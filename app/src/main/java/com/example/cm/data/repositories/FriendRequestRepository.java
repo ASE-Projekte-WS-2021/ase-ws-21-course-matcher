@@ -67,6 +67,9 @@ public class FriendRequestRepository extends Repository {
                     if (error != null) {
                         return;
                     }
+                    if(value != null && value.isEmpty()) {
+                        mutableRequestList.postValue(new ArrayList<>());
+                    }
                     if (value != null && !value.isEmpty()) {
                         List<MutableLiveData<FriendRequest>> requests = snapshotToMutableFriendRequestList(value);
                         mutableRequestList.postValue(requests);
