@@ -5,14 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
+import com.example.cm.databinding.ActivityAuthBinding;
 import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.ui.onboarding.OnboardingActivity;
 
 public class AuthActivity extends AppCompatActivity {
 
-    private Button registerBtn, loginBtn;
+    private ActivityAuthBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +22,18 @@ public class AuthActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-        setContentView(R.layout.activity_auth);
 
-        initUI();
+        binding = ActivityAuthBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        initListeners();
+
     }
 
-    private void initUI() {
-        registerBtn = findViewById(R.id.start_register_btn);
-        loginBtn = findViewById(R.id.loginLoginBtn);
+
+    private void initListeners() {
+        binding.startLoginBtn.setOnClickListener(this::toLogin);
+        binding.startRegisterBtn.setOnClickListener(this::toRegister);
     }
 
     public void toLogin(View view) {

@@ -13,11 +13,13 @@
         android:id="@+id/start_img"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@string/img_uni"
         android:scaleType="centerCrop"
         android:src="@drawable/uni_start" />
 
 
     <View
+        android:id="@+id/start_gradient"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/start_gradient" />
@@ -25,12 +27,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/default_screen_padding"
-        android:layout_marginStart="@dimen/default_screen_padding"
-        android:layout_marginTop="@dimen/default_screen_padding"
-        android:layout_marginBottom="@dimen/default_screen_padding">
-
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_double"
+        android:layout_alignBottom="@id/start_img"
+        android:layout_marginEnd="@dimen/padding_double">
 
         <TextView
             android:id="@+id/start_title"
@@ -38,10 +38,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="150dp"
             android:gravity="center"
-            android:justificationMode="inter_word"
             android:text="@string/start_title"
             android:textColor="@color/white"
-            android:textSize="38dp"
+            android:textSize="38sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -57,10 +56,10 @@
                 android:id="@+id/start_login_btn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="false"
                 android:layout_weight="0.5"
-                android:onClick="toLogin"
-                android:text="@string/loginLoginBtn" />
+                android:text="@string/loginLoginBtn"
+                tools:ignore="ButtonStyle,UsingOnClickInXml,TextContrastCheck" />
+
 
             <Button
                 android:id="@+id/start_register_btn"
@@ -68,8 +67,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/big_margin"
                 android:layout_weight="0.5"
-                android:onClick="toRegister"
-                android:text="@string/registerRegisterBtn" />
+                android:text="@string/registerRegisterBtn"
+                tools:ignore="ButtonStyle,UsingOnClickInXml,TextContrastCheck" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
