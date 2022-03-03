@@ -39,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void goToLogin(View view) {
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        finish();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)

@@ -7,6 +7,8 @@ public class Constants {
     public static final String KEY_USER_ID = "keyUserId";
     public static final String KEY_MEETUP_ID = "keyMeetupId";
     public static final int MAX_CHAR_COUNT = 125;
+    public static final int SPLASH_TIMER = 000;
+
 
     public static Date getCurrentDay(){
         Calendar calendar = Calendar.getInstance();
@@ -24,4 +26,5 @@ public class Constants {
     public static final int MIN_PASSWORD_LENGTH = 6;
     public static final int TRASH_ICON_MARGIN = 15;
     public static final int TRASH_ICON_SIZE = 175;
+
 }
