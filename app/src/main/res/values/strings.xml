@@ -177,4 +177,5 @@
     <string name="location_header">um dich am Campus zu treffen.</string>
     <string name="onboarding_btn">Registrieren</string>
     <string name="skiptoLogin">Login</string>
+    <string name="img_uni">Picture of the University</string>
 </resources>
