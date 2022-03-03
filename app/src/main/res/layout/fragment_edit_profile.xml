@@ -24,8 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/default_screen_padding"
-            android:paddingVertical="40dp">
+            android:paddingHorizontal="@dimen/padding_big"
+            android:paddingVertical="@dimen/padding_double" >
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -63,21 +63,21 @@
                 layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp" />
+                android:layout_marginBottom="@dimen/padding_big" />
 
             <include
                 android:id="@+id/inputFirstName"
                 layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp" />
+                android:layout_marginBottom="@dimen/padding_big" />
 
             <include
                 android:id="@+id/inputLastName"
                 layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp" />
+                android:layout_marginBottom="@dimen/padding_big" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -96,7 +96,7 @@
                         android:includeFontPadding="false"
                         android:text="@string/input_label_bio"
                         android:textColor="@color/gray700"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/text_size_small" />
 
                     <TextView
                         android:id="@+id/bioCharacterCount"
@@ -106,7 +106,7 @@
                         android:fontFamily="@font/readexpro_regular"
                         android:includeFontPadding="false"
                         android:textColor="@color/gray600"
-                        android:textSize="14sp"
+                        android:textSize="@dimen/text_size_small"
                         tools:text="50/125" />
 
                 </RelativeLayout>
@@ -115,7 +115,7 @@
                     android:id="@+id/inputFieldBio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/padding_half"
                     android:background="@drawable/style_edittext"
                     android:focusable="false"
                     android:gravity="top"
@@ -124,8 +124,8 @@
                     android:lines="3"
                     android:maxLength="125"
                     android:maxLines="3"
-                    android:paddingHorizontal="15dp"
-                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="@dimen/padding_medium"
+                    android:paddingVertical="@dimen/padding_small"
                     android:scrollbars="vertical"
                     tools:ignore="LabelFor" />
             </LinearLayout>

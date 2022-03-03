@@ -16,6 +16,7 @@ import androidx.navigation.Navigation;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
+import com.example.cm.utils.Navigator;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -26,15 +27,17 @@ import java.util.Locale;
 public class CreateMeetupFragment extends Fragment {
 
     int sMin, sHour;
-    Calendar calendarMeetup = Calendar.getInstance();
-    Calendar calendarNow = Calendar.getInstance();
+    private final Calendar calendarMeetup = Calendar.getInstance();
+    private final Calendar calendarNow = Calendar.getInstance();
 
-    ArrayAdapter<CharSequence> adapter;
+    private ArrayAdapter<CharSequence> adapter;
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentMeetupBinding binding;
+    private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupBinding.inflate(inflater, container, false);
+        navigator = new Navigator(requireActivity());
         setTodaysDate();
         initUI();
         initViewModel();
@@ -54,11 +57,13 @@ public class CreateMeetupFragment extends Fragment {
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.meetup_locations, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding.meetupLocationSpinner.setAdapter(adapter);
+        binding.btnBack.bringToFront();
     }
 
     private void initListener() {
         binding.meetupTimeText.setOnClickListener(v -> onTimePickerDialogClicked());
         binding.meetupInfoBtn.setOnClickListener(v -> checkTime());
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 
     @SuppressLint("DefaultLocale")

@@ -4,10 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:layout_margin="@dimen/padding_small"
     android:layout_marginTop="0dp"
     android:orientation="vertical"
     tools:context=".ui.invite_friends.InviteFriendsFragment">
 
+    <ImageView
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/content_description_back_button"
+        android:src="@drawable/ic_back_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnSendInvite"
@@ -38,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
-        android:indeterminateTint="#98A3C3"
+        android:indeterminateTint="@color/gray500"
         app:layout_constraintBottom_toTopOf="@+id/btnSendInvite"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +59,7 @@
         android:layout_height="wrap_content"
         android:text="@string/invite_friends_header_desc"
         android:textAlignment="center"
-        android:textSize="@dimen/text_size_description"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/invite_friends_header"
         app:layout_constraintTop_toBottomOf="@+id/invite_friends_header" />
@@ -62,17 +71,17 @@
         android:text="@string/invite_friends"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size_title"
+        android:textSize="@dimen/text_size_big"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/inviteFriendsSearchBtn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/padding_double"
+        android:layout_height="@dimen/padding_double"
         android:backgroundTint="@color/grey_medium"
-        app:cardCornerRadius="40dp"
+        app:cardCornerRadius="@dimen/padding_double"
         app:layout_constraintBottom_toBottomOf="@+id/inviteUserSearch"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/inviteUserSearch">

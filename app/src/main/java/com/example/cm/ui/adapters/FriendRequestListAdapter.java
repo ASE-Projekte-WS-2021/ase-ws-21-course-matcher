@@ -104,6 +104,10 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         String date = request.getCreationTimeAgo();
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
+        // todo: get username from user id, then setText to username
+        holder.getTvSenderUsername().setVisibility(View.INVISIBLE);
+        // todo end
+
         holder.getTvSender().setText(user);
         holder.getTvSentDate().setText(date);
         holder.getTvDescription().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);
@@ -181,6 +185,10 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
         public TextView getTvSender() {
             return binding.senderTextView;
+        }
+
+        public TextView getTvSenderUsername() {
+            return binding.tvSenderUsername;
         }
 
         public TextView getTvDescription() {

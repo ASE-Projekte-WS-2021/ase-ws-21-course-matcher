@@ -6,7 +6,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_header"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="@dimen/padding_small">
 
         <ImageView
             android:id="@+id/btnBack"
@@ -21,7 +21,7 @@
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="@dimen/padding_small"
             android:fontFamily="@font/readexpro_semibold"
             tools:text="@string/title_edit_profile"
             android:textAlignment="center"

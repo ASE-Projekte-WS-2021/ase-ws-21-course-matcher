@@ -5,15 +5,15 @@
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_dialog_bg"
     android:orientation="vertical"
-    android:padding="40dp">
+    android:padding="@dimen/padding_double">
 
     <TextView
         android:id="@+id/dialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_screen_padding"
+        android:layout_marginBottom="@dimen/padding_big"
         android:fontFamily="@font/readexpro_semibold"
-        android:textSize="20sp"
+        android:textSize="@dimen/text_size_medium"
         tools:text="%FIELDNAME% bearbeiten" />
 
     <LinearLayout
@@ -33,7 +33,7 @@
                 android:fontFamily="@font/readexpro_regular"
                 android:includeFontPadding="false"
                 android:textColor="@color/gray600"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_small"
                 tools:text="50/125" />
 
         </RelativeLayout>
@@ -42,7 +42,7 @@
             android:id="@+id/inputField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="@dimen/padding_half"
             android:background="@drawable/style_edittext"
             android:gravity="top"
             android:importantForAutofill="no"
@@ -50,8 +50,8 @@
             android:lines="3"
             android:maxLength="125"
             android:maxLines="3"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="10dp"
+            android:paddingHorizontal="@dimen/padding_medium"
+            android:paddingVertical="@dimen/padding_small"
             android:scrollbars="vertical"
             tools:ignore="LabelFor" />
     </LinearLayout>
@@ -59,7 +59,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_screen_padding"
+        android:layout_marginTop="@dimen/padding_big"
         android:orientation="horizontal">
 
         <Button
@@ -70,11 +70,11 @@
             android:layout_weight="1"
             android:background="@drawable/btn_rounded"
             android:backgroundTint="@color/gray400"
-            android:text="Abbrechen"
+            android:text="@string/edit_cancel"
             android:textColor="@color/gray700" />
 
         <Space
-            android:layout_width="@dimen/default_screen_padding"
+            android:layout_width="@dimen/padding_big"
             android:layout_height="wrap_content" />
 
         <Button
@@ -84,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/btn_rounded"
-            android:text="Speichern" />
+            android:text="@string/edit_save" />
 
     </LinearLayout>
 

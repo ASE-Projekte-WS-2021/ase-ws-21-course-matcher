@@ -8,7 +8,7 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
-        android:padding="@dimen/default_screen_padding">
+        android:padding="@dimen/padding_big">
 
         <ImageView
             android:id="@+id/linkIcon"
@@ -27,12 +27,12 @@
             android:layout_marginStart="@dimen/big_margin"
             android:layout_toStartOf="@+id/btnLink"
             android:layout_toEndOf="@+id/linkIcon"
-            tools:text="Profil bearbeiten" />
+            tools:text="" />
 
         <ImageView
             android:id="@+id/btnLink"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/padding_big"
+            android:layout_height="@dimen/padding_big"
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             android:contentDescription="@string/content_description_back_button"
