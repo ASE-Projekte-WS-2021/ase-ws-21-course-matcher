@@ -1,10 +1,8 @@
 package com.example.cm.data.repositories;
 
 import android.app.Application;
-import android.os.Build;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.android.gms.tasks.Task;
@@ -73,7 +71,6 @@ public class AuthRepository extends Repository {
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public void login(String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(executorService, task -> {
@@ -85,7 +82,6 @@ public class AuthRepository extends Repository {
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public Task<AuthResult> register(String email, String password, String userName) {
         return firebaseAuth.createUserWithEmailAndPassword(email, password);
     }

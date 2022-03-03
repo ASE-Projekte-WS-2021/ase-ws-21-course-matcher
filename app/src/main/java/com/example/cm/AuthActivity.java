@@ -44,8 +44,4 @@ public class AuthActivity extends AppCompatActivity {
         finish();
     }
 
-    // do nothing when backbutton is pressed
-    @Override
-    public void onBackPressed() {
-    }
 }

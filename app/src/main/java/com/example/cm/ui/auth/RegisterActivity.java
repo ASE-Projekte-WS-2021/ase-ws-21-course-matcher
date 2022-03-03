@@ -1,39 +1,52 @@
 package com.example.cm.ui.auth;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.MainActivity;
 import com.example.cm.R;
+import com.example.cm.databinding.ActivityRegisterBinding;
+
 
 public class RegisterActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
+    private ActivityRegisterBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
 
+        setContentView(binding.getRoot());
+
+        initViewModel();
+        initListeners();
+    }
+
+    private void initViewModel() {
         authViewModel = new ViewModelProvider(RegisterActivity.this).get(AuthViewModel.class);
-        setContentView(R.layout.activity_register);
-
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
+    }
+
+    private void initListeners() {
+        binding.registerRegisterBtn.setOnClickListener(v -> register(v));
+        binding.registerLoginBtn.setOnClickListener(v -> goToLogin(v));
     }
 
     public void goToLogin(View view) {
@@ -41,7 +54,6 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public void register(View view) {
         String userName = ((EditText) findViewById(R.id.registerUserNameEditText)).getText().toString();
         String email = ((EditText) findViewById(R.id.registerEmailEditText)).getText().toString();
@@ -54,10 +66,5 @@ public class RegisterActivity extends AppCompatActivity {
         } else {
             Toast.makeText(RegisterActivity.this, "All fields must be entered", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    // do nothing when backbutton is pressed
-    @Override
-    public void onBackPressed() {
     }
 }

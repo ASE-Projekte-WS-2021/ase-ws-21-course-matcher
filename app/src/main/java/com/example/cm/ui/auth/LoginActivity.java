@@ -13,12 +13,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.MainActivity;
 import com.example.cm.R;
+import com.example.cm.databinding.ActivityLoginBinding;
 import com.example.cm.ui.onboarding.OnboardingActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,17 +29,30 @@ public class LoginActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        setContentView(R.layout.activity_login);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+
+        setContentView(binding.getRoot());
+
+        initViewModel();
+        initListeners();
+    }
+
+    private void initViewModel() {
         authViewModel = new ViewModelProvider(LoginActivity.this).get(AuthViewModel.class);
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
+    private void initListeners() {
+        binding.loginLoginBtn.setOnClickListener(v -> login(v));
+        binding.loginRegisterBtn.setOnClickListener(v -> goToRegister(v));
+    }
+
     public void login(View view) {
         String email = ((EditText) findViewById(R.id.loginEmailEditText)).getText().toString();
         String password = ((EditText) findViewById(R.id.loginPasswordEditText)).getText().toString();
@@ -53,10 +68,5 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this, OnboardingActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    // do nothing when backbutton is pressed
-    @Override
-    public void onBackPressed() {
     }
 }
