@@ -43,5 +43,4 @@ public class AuthActivity extends AppCompatActivity {
         startActivity(new Intent(this, OnboardingActivity.class));
         finish();
     }
-
 }

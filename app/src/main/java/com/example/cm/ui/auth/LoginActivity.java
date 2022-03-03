@@ -54,14 +54,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        String email = ((EditText) findViewById(R.id.loginEmailEditText)).getText().toString();
-        String password = ((EditText) findViewById(R.id.loginPasswordEditText)).getText().toString();
+        String email = binding.loginEmailEditText.getText().toString();
+        String password = binding.loginPasswordEditText.getText().toString();
 
-        if (email.length() > 0 && password.length() > 0) {
-            authViewModel.login(email, password);
-        } else {
+        if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(LoginActivity.this, "Email Address and Password Must Be Entered", Toast.LENGTH_SHORT).show();
+            return;
         }
+        authViewModel.login(email, password);
     }
 
     public void goToRegister(View view) {
