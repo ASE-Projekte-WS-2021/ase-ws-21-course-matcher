@@ -27,9 +27,7 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initListeners();
-
     }
-
 
     private void initListeners() {
         binding.startLoginBtn.setOnClickListener(this::toLogin);
@@ -44,5 +42,9 @@ public class AuthActivity extends AppCompatActivity {
     public void toRegister(View view) {
         startActivity(new Intent(this, OnboardingActivity.class));
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }
