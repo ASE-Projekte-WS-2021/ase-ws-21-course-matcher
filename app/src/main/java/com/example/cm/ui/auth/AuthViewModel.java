@@ -37,12 +37,10 @@ public class AuthViewModel extends AndroidViewModel {
         userLiveData = authRepository.getUserLiveData();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public void login(String email, String password) {
         authRepository.login(email, password);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public void register(String email, String password, String userName, String firstName, String lastName) {
         authRepository.register(email, password, userName).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
