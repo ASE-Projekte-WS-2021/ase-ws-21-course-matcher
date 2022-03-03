@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -32,11 +31,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         if (firebaseUser != null) {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         }
-
-
+        
         setContentView(R.layout.activity_splash_screen);
 
         setupUI();
@@ -48,26 +46,23 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         splashImage.setAnimation(splashAnim);
 
-        new Handler().postDelayed(() -> {
-            onBoardingSP = getSharedPreferences("onBoarding", MODE_PRIVATE);
+        onBoardingSP = getSharedPreferences("onBoarding", MODE_PRIVATE);
 
-            boolean isFirstTime = onBoardingSP.getBoolean("firstTime", true);
+        boolean isFirstTime = onBoardingSP.getBoolean("firstTime", true);
 
-            if (isFirstTime) {
+        if (isFirstTime) {
 
-                SharedPreferences.Editor editor = onBoardingSP.edit();
-                editor.putBoolean("firstTime", false);
-                editor.apply();
+            SharedPreferences.Editor editor = onBoardingSP.edit();
+            editor.putBoolean("firstTime", false);
+            editor.apply();
 
-                Intent intent = new Intent(getApplication(), OnboardingActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(getApplication(), AuthActivity.class);
-                startActivity(intent);
-            }
-            finish();
-
-        }, 2000);
+            Intent intent = new Intent(getApplication(), OnboardingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getApplication(), AuthActivity.class);
+            startActivity(intent);
+        }
+        finish();
     }
 }
