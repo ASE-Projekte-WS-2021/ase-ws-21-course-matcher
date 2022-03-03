@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 @SuppressLint("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
 
-    private SharedPreferences onBoardingSP;
+    private boolean isAuthenticated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,30 +28,29 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
         if (firebaseUser != null) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            isAuthenticated = true;
         }
-        
-        setContentView(R.layout.activity_splash_screen);
 
         setupUI();
     }
 
     private void setupUI() {
+        setContentView(R.layout.activity_splash_screen);
         ImageView splashImage = findViewById(R.id.splash_img);
         Animation splashAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_anim);
 
         splashImage.setAnimation(splashAnim);
 
-        onBoardingSP = getSharedPreferences("onBoarding", MODE_PRIVATE);
+        SharedPreferences onBoardingSP = getSharedPreferences("onBoarding", MODE_PRIVATE);
 
         boolean isFirstTime = onBoardingSP.getBoolean("firstTime", true);
 
-        if (isFirstTime) {
-
+        if (isAuthenticated) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (isFirstTime) {
             SharedPreferences.Editor editor = onBoardingSP.edit();
             editor.putBoolean("firstTime", false);
             editor.apply();
