@@ -21,7 +21,8 @@ public class AddFriendsViewModel extends ViewModel {
     public MutableLiveData<List<MutableLiveData<User>>> users;
     public MutableLiveData<User> currentUser;
     public MutableLiveData<List<MutableLiveData<FriendRequest>>> receivedFriendRequests;
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> sentFriendRequests;
+    public MutableLiveData<List<MutableLiveData<FriendRequest>>> sentFriendRequestsPending;
+    public MutableLiveData<List<MutableLiveData<FriendRequest>>> receivedFriendRequestsPending;
 
     public OnRequestSentListener listener;
 
@@ -32,15 +33,21 @@ public class AddFriendsViewModel extends ViewModel {
 
         requestRepository = new FriendRequestRepository();
         receivedFriendRequests = requestRepository.getFriendRequestsForUser();
-        sentFriendRequests = requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
+
+        sentFriendRequestsPending = requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
+        receivedFriendRequestsPending = requestRepository.getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
     }
 
     public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
         return users;
     }
 
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getSentFriendRequests() {
-        return sentFriendRequests;
+    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getSentFriendRequestsPending() {
+        return sentFriendRequestsPending;
+    }
+
+    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getReceivedFriendRequestsPending() {
+        return receivedFriendRequestsPending;
     }
 
     public void setOnRequestSentListener(OnRequestSentListener listener) {
@@ -67,11 +74,11 @@ public class AddFriendsViewModel extends ViewModel {
      * @param receiverId the id of the receiver
      */
     public void sendOrDeleteFriendRequest(String receiverId) {
-        if (sentFriendRequests.getValue() == null) {
+        if (sentFriendRequestsPending.getValue() == null) {
             return;
         }
 
-        if (hasReceivedFriendRequest(sentFriendRequests.getValue(), receiverId)) {
+        if (hasReceivedFriendRequest(sentFriendRequestsPending.getValue(), receiverId)) {
             onFriendRequestExists(receiverId);
         } else {
             onFriendRequestDoesNotExist(receiverId);
