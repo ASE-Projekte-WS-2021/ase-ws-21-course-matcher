@@ -92,9 +92,4 @@ public class OnboardingActivity extends AppCompatActivity {
         }
         dots[position].setTextColor(getResources().getColor(R.color.orange500));
     }
-
-    // do nothing when backbutton is pressed
-    @Override
-    public void onBackPressed() {
-    }
 }

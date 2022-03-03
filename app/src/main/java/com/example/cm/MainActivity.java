@@ -11,6 +11,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.cm.databinding.ActivityMainBinding;
 import com.example.cm.ui.auth.AuthViewModel;
+import com.example.cm.utils.Navigator;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import timber.log.Timber;
@@ -26,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
 
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initTimberLogging();
         initViewModel();
@@ -65,10 +66,5 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         return navController.navigateUp() || super.onSupportNavigateUp();
-    }
-
-    // do nothing when backbutton is pressed
-    @Override
-    public void onBackPressed() {
     }
 }
