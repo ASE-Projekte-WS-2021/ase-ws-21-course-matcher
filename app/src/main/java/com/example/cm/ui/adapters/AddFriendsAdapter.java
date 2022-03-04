@@ -5,7 +5,7 @@ import static com.example.cm.utils.Utils.calculateDiff;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,12 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSendFriendRequestBinding;
 import com.example.cm.ui.add_friends.AddFriendsViewModel;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,15 +34,19 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     private final OnItemClickListener listener;
     private final Context context;
     private List<MutableLiveData<User>> mUsers;
-    private List<MutableLiveData<FriendRequest>> sentFriendRequests;
+    private List<MutableLiveData<FriendRequest>> pendingFriendRequestsSent;
+    private final List<MutableLiveData<FriendRequest>> pendingFriendRequests = new ArrayList<>();
 
     public AddFriendsAdapter(AddFriendsAdapter.OnItemClickListener listener, Context context) {
         this.listener = listener;
         this.context = context;
     }
 
-    public void setSentFriendRequests(List<MutableLiveData<FriendRequest>> sentFriendRequests) {
-        this.sentFriendRequests = sentFriendRequests;
+    public void setFriendRequests(List<MutableLiveData<FriendRequest>> sentFriendRequests, List<MutableLiveData<FriendRequest>> receivedFriendRequests) {
+        this.pendingFriendRequestsSent = sentFriendRequests;
+
+        pendingFriendRequests.addAll(pendingFriendRequestsSent);
+        pendingFriendRequests.addAll(receivedFriendRequests);
         listener.onFriendRequestsSet();
     }
 
@@ -86,25 +90,33 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         holder.getTvUsername().setText(username);
         holder.getFriendRequestButton().setEnabled(true);
 
-        for (MutableLiveData<FriendRequest> request : sentFriendRequests) {
-            boolean notificationExists = Objects.requireNonNull(request.getValue()).getReceiverId().equals(user.getId()) &&
-                    request.getValue().getState() == Request.RequestState.REQUEST_PENDING;
+        boolean notificationExists = isNotificationExisting(user.getId());
 
-            int btnContent, btnTextColor;
-            ColorStateList btnBackground;
-            if (!notificationExists) {
-                btnContent = R.string.btn_send_friend_request_default;
-                btnBackground = ContextCompat.getColorStateList(context, R.color.orange500);
-                btnTextColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.white);
-            } else {
-                btnContent = R.string.btn_send_friend_request_pending;
-                btnBackground = ContextCompat.getColorStateList(context, R.color.gray400);
-                btnTextColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.gray700);
-            }
-            holder.getFriendRequestButton().setText(btnContent);
-            holder.getFriendRequestButton().setBackgroundTintList(btnBackground);
-            holder.getFriendRequestButton().setTextColor(btnTextColor);
+        int btnContent, btnTextColor;
+        ColorStateList btnBackground;
+        if (!notificationExists) {
+            btnContent = R.string.btn_send_friend_request_default;
+            btnBackground = ContextCompat.getColorStateList(context, R.color.orange500);
+            btnTextColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.white);
+        } else {
+            btnContent = R.string.btn_send_friend_request_pending;
+            btnBackground = ContextCompat.getColorStateList(context, R.color.gray400);
+            btnTextColor = holder.getFriendRequestButton().getContext().getResources().getColor(R.color.gray700);
         }
+        holder.getFriendRequestButton().setText(btnContent);
+        holder.getFriendRequestButton().setBackgroundTintList(btnBackground);
+        holder.getFriendRequestButton().setTextColor(btnTextColor);
+    }
+
+    private boolean isNotificationExisting(String userId) {
+        for (int i = 0; i < pendingFriendRequests.size(); i++) {
+            FriendRequest request = Objects.requireNonNull(pendingFriendRequests.get(i).getValue());
+            if ((i < pendingFriendRequestsSent.size() && request.getReceiverId().equals(userId)) ||
+                    (i >= pendingFriendRequestsSent.size() && request.getSenderId().equals(userId))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Return the size of the list

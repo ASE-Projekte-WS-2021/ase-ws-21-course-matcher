@@ -13,14 +13,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.MainActivity;
 import com.example.cm.R;
+import com.example.cm.databinding.ActivityLoginBinding;
 import com.example.cm.ui.onboarding.OnboardingActivity;
 import com.google.android.material.snackbar.Snackbar;
-
 
 public class LoginActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
     private Button loginBtn;
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +32,21 @@ public class LoginActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login);
         loginBtn = findViewById(R.id.loginLoginBtn);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+
+        setContentView(binding.getRoot());
+
+        initViewModel();
+        initListeners();
+    }
+
+    private void initViewModel() {
         authViewModel = new ViewModelProvider(LoginActivity.this).get(AuthViewModel.class);
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         authViewModel.getErrorLiveData().observe(this, errorMsg -> {
@@ -44,17 +55,23 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
+    private void initListeners() {
+        binding.loginLoginBtn.setOnClickListener(v -> login(v));
+        binding.loginRegisterBtn.setOnClickListener(v -> goToRegister(v));
+    }
+
     public void login(View view) {
-        String email = ((EditText) findViewById(R.id.loginEmailEditText)).getText().toString();
-        String password = ((EditText) findViewById(R.id.loginPasswordEditText)).getText().toString();
+        String email = binding.loginEmailEditText.getText().toString();
+        String password = binding.loginPasswordEditText.getText().toString();
 
         if (email.length() > 0 && password.length() > 0) {
             authViewModel.login(email, password);
             loginBtn.setEnabled(false);
         } else {
-            Snackbar.make(findViewById(R.id.loginLayout), R.string.loginEmailPasswordNeeded, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(findViewById(R.id.loginLayout), R.string.loginEmailPasswordNeeded, Snackbar.LENGTH_LONG)
+                    .show();
         }
+        authViewModel.login(email, password);
     }
 
     public void goToRegister(View view) {
@@ -62,6 +79,4 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-
 }

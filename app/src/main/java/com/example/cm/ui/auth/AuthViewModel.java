@@ -25,12 +25,10 @@ public class AuthViewModel extends ViewModel implements AuthRepository.RegisterC
         error = authRepository.getErrorLiveData();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public void login(String email, String password) {
         authRepository.login(email, password);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public void register(String email, String password, String userName, String firstName, String lastName) {
         authRepository.register(email, password, userName, firstName, lastName, this);
     }

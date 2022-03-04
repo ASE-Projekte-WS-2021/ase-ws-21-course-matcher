@@ -21,25 +21,43 @@ public class OtherProfileFragment extends Fragment {
 
     private OtherProfileViewModel otherProfileViewModel;
     private FragmentOtherProfileBinding binding;
+    private Bundle bundle;
+    private String profileId;
     private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOtherProfileBinding.inflate(inflater, container, false);
+        bundle = this.getArguments();
         initViewModel();
         initListener();
-
         return binding.getRoot();
     }
 
     private void initListener() {
         navigator = new Navigator(getActivity());
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+        binding.btnAddRemoveFriend.setOnClickListener(view -> onBtnClick());
+    }
+
+    private void onBtnClick() {
+        if (bundle.containsKey(Constants.KEY_USER_ID)) {
+            String profileId = bundle.getString(Constants.KEY_USER_ID);
+            otherProfileViewModel.getUserById(profileId);
+            observeFriendship(profileId);
+        }
+
+        if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_add_friend)){
+            otherProfileViewModel.sendFriendRequestTo(profileId);
+            binding.btnAddRemoveFriend.setText(getResources().getString(R.string.btn_send_friend_request_pending));
+        } else if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_remove_friend)){
+            otherProfileViewModel.unfriend(profileId);
+            binding.btnAddRemoveFriend.setText(getResources().getString(R.string.profile_btn_add_friend));
+        }
     }
 
     private void initViewModel() {
         otherProfileViewModel = new ViewModelProvider(this).get(OtherProfileViewModel.class);
         getProfileInformation();
-
         otherProfileViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
             if (currentUser == null) {
                 return;
@@ -57,14 +75,12 @@ public class OtherProfileFragment extends Fragment {
     }
 
     private void getProfileInformation() {
-        Bundle bundle = this.getArguments();
-
         if (bundle == null) {
             return;
         }
 
         if (bundle.containsKey(Constants.KEY_USER_ID)) {
-            String profileId = bundle.getString(Constants.KEY_USER_ID);
+            profileId = bundle.getString(Constants.KEY_USER_ID);
             otherProfileViewModel.getUserById(profileId);
             observeFriendship(profileId);
         }
@@ -82,9 +98,25 @@ public class OtherProfileFragment extends Fragment {
             if (isBefriended) {
                 onIsAlreadyBefriended();
             } else {
-                onIsNotBefriended();
+                otherProfileViewModel.isFriendRequestPending(profileId).observe(getViewLifecycleOwner(), isPending -> {
+                    if (isPending) {
+                        onFriendRequestPending();
+                    } else {
+                        onIsNotBefriended();
+                    }
+                });
+
             }
         });
+    }
+
+    private void onFriendRequestPending() {
+        ColorStateList btnBackground = ContextCompat.getColorStateList(requireActivity(), R.color.outgreyed);
+        int btnTextColor = ContextCompat.getColor(requireActivity(), R.color.white);
+
+        binding.btnAddRemoveFriend.setBackgroundTintList(btnBackground);
+        binding.btnAddRemoveFriend.setTextColor(btnTextColor);
+        binding.btnAddRemoveFriend.setText(R.string.btn_send_friend_request_pending);
     }
 
     private void onIsNotBefriended() {

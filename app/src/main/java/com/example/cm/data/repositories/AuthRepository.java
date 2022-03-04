@@ -1,8 +1,6 @@
 package com.example.cm.data.repositories;
 
-import android.os.Build;
 
-import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.data.models.User;
@@ -48,7 +46,6 @@ public class AuthRepository extends Repository {
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public void login(String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -59,7 +56,6 @@ public class AuthRepository extends Repository {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     public void register(String email, String password, String userName, String firstName, String lastName, RegisterCallback callback) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

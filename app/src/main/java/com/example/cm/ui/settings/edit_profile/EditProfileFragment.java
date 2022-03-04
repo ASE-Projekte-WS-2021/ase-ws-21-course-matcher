@@ -89,7 +89,10 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
             binding.inputFirstName.inputField.setText(user.getFirstName());
             binding.inputLastName.inputField.setText(user.getLastName());
             binding.inputFieldBio.setText(user.getBio());
-            Picasso.get().load(user.getProfileImageUrl()).fit().centerCrop().into(binding.profileImage);
+
+            if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
+                Picasso.get().load(user.getProfileImageUrl()).fit().centerCrop().into(binding.profileImage);
+            }
         });
 
         editProfileViewModel.status.observe(getViewLifecycleOwner(), status -> {

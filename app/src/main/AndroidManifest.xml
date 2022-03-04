@@ -16,13 +16,17 @@
         android:theme="@style/Theme.CM">
         <activity
             android:name=".AuthActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true"/>
         <activity
             android:name=".ui.onboarding.OnboardingActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true"
+            />
         <activity
             android:name=".ui.auth.RegisterActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true"/>
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true">
@@ -33,7 +37,8 @@
         </activity>
         <activity
             android:name=".ui.auth.LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true" />

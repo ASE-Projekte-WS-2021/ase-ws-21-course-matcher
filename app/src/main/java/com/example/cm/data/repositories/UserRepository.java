@@ -415,4 +415,13 @@ public class UserRepository extends Repository {
         userCollection.document(friend1Id).update("friends", FieldValue.arrayUnion(friend2Id));
         userCollection.document(friend2Id).update("friends", FieldValue.arrayUnion(friend1Id));
     }
+
+    public void unfriend(String friendIdToUnfriend) {
+        if (auth.getCurrentUser() == null) {
+            return;
+        }
+        String ownId = auth.getCurrentUser().getUid();
+        userCollection.document(ownId).update("friends", FieldValue.arrayRemove(friendIdToUnfriend));
+        userCollection.document(friendIdToUnfriend).update("friends", FieldValue.arrayRemove(ownId));
+    }
 }
