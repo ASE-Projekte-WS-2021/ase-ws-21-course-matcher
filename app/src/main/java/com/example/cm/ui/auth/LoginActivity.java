@@ -13,12 +13,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.MainActivity;
 import com.example.cm.R;
+import com.example.cm.databinding.ActivityLoginBinding;
 import com.example.cm.ui.onboarding.OnboardingActivity;
 
 
 public class LoginActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,26 +29,39 @@ public class LoginActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        setContentView(R.layout.activity_login);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+
+        setContentView(binding.getRoot());
+
+        initViewModel();
+        initListeners();
+    }
+
+    private void initViewModel() {
         authViewModel = new ViewModelProvider(LoginActivity.this).get(AuthViewModel.class);
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    public void login(View view) {
-        String email = ((EditText) findViewById(R.id.loginEmailEditText)).getText().toString();
-        String password = ((EditText) findViewById(R.id.loginPasswordEditText)).getText().toString();
+    private void initListeners() {
+        binding.loginLoginBtn.setOnClickListener(v -> login(v));
+        binding.loginRegisterBtn.setOnClickListener(v -> goToRegister(v));
+    }
 
-        if (email.length() > 0 && password.length() > 0) {
-            authViewModel.login(email, password);
-        } else {
+    public void login(View view) {
+        String email = binding.loginEmailEditText.getText().toString();
+        String password = binding.loginPasswordEditText.getText().toString();
+
+        if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(LoginActivity.this, "Email Address and Password Must Be Entered", Toast.LENGTH_SHORT).show();
+            return;
         }
+        authViewModel.login(email, password);
     }
 
     public void goToRegister(View view) {
@@ -54,6 +69,4 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-
 }
