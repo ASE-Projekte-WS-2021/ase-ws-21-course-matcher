@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +14,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.MainActivity;
 import com.example.cm.R;
 import com.example.cm.ui.onboarding.OnboardingActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 
 public class LoginActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
+    private Button loginBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +30,17 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_login);
+        loginBtn = findViewById(R.id.loginLoginBtn);
         authViewModel = new ViewModelProvider(LoginActivity.this).get(AuthViewModel.class);
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
             }
+        });
+        authViewModel.getErrorLiveData().observe(this, errorMsg -> {
+            Snackbar.make(findViewById(R.id.loginLayout), errorMsg, Snackbar.LENGTH_LONG).show();
+            loginBtn.setEnabled(true);
         });
     }
 
@@ -44,8 +51,9 @@ public class LoginActivity extends AppCompatActivity {
 
         if (email.length() > 0 && password.length() > 0) {
             authViewModel.login(email, password);
+            loginBtn.setEnabled(false);
         } else {
-            Toast.makeText(LoginActivity.this, "Email Address and Password Must Be Entered", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.loginLayout), R.string.loginEmailPasswordNeeded, Snackbar.LENGTH_LONG).show();
         }
     }
 
