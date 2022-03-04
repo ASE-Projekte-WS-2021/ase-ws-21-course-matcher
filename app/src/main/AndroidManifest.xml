@@ -17,16 +17,15 @@
         <activity
             android:name=".AuthActivity"
             android:exported="false"
-            android:noHistory="true"/>
+            android:noHistory="true" />
         <activity
             android:name=".ui.onboarding.OnboardingActivity"
             android:exported="false"
-            android:noHistory="true"
-            />
+            android:noHistory="true" />
         <activity
             android:name=".ui.auth.RegisterActivity"
             android:exported="false"
-            android:noHistory="true"/>
+            android:noHistory="true" />
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true">
@@ -38,14 +37,20 @@
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false"
-            android:noHistory="true"/>
+            android:noHistory="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true" />
- />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
     </application>
+
+
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 </manifest>

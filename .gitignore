@@ -17,3 +17,4 @@ app/build.gradle
 .cxx
 local.properties
 firebase-debug.log
+local_maps.properties
