@@ -70,25 +70,3 @@ dependencies {
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
 }
-
-// From https://entwicklernotizen.de/blog/how-to-handle-secret-api-keys-in-flutter-for-android-and-i-os/
-def mapsProperties = new Properties()
-def localMapsPropertiesFile = rootProject.file('local_maps.properties')
-if (localMapsPropertiesFile.exists()) {
-    project.logger.info('Load maps properties from local file')
-    localMapsPropertiesFile.withReader('UTF-8') { reader ->
-        mapsProperties.load(reader)
-    }
-} else {
-    project.logger.info('Load maps properties from environment')
-    try {
-        mapsProperties['MAPS_API_KEY'] = System.getenv('MAPS_API_KEY')
-    } catch(NullPointerException e) {
-        project.logger.warn('Failed to load MAPS_API_KEY from environment.', e)
-    }
-}
-def mapsApiKey = mapsProperties.getProperty('MAPS_API_KEY')
-if(mapsApiKey == null){
-    mapsApiKey = ""
-    project.logger.error('Google Maps Api Key not configured. Set it in `local_maps.properties` or in the environment variable `MAPS_API_KEY`')
-}
