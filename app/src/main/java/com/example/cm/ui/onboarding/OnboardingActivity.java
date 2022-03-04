@@ -14,15 +14,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.cm.R;
+import com.example.cm.databinding.ActivityLoginBinding;
+import com.example.cm.databinding.ActivityOnboardingBinding;
 import com.example.cm.ui.adapters.OnboardingAdapter;
 import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.ui.auth.RegisterActivity;
 
 public class OnboardingActivity extends AppCompatActivity {
 
-    private LinearLayout dotsLayout;
-    private Button registerBtn;
     private int currentPos;
+    private ActivityOnboardingBinding binding;
 
     ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -35,10 +36,10 @@ public class OnboardingActivity extends AppCompatActivity {
             currentPos = position;
             if (position == 3) {
                 Animation btnAnimation = AnimationUtils.loadAnimation(OnboardingActivity.this, R.anim.bottom_anim);
-                registerBtn.setAnimation(btnAnimation);
-                registerBtn.setVisibility(View.VISIBLE);
+                binding.onboardingBtnRegister.setAnimation(btnAnimation);
+                binding.onboardingBtnRegister.setVisibility(View.VISIBLE);
             } else {
-                registerBtn.setVisibility(View.INVISIBLE);
+                binding.onboardingBtnRegister.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -53,19 +54,16 @@ public class OnboardingActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_onboarding);
-
-        ViewPager viewPager = findViewById(R.id.onboarding_viewpager);
-        dotsLayout = findViewById(R.id.layout_onboarding_indicator);
-        registerBtn = findViewById(R.id.onboarding_btn_register);
+        setContentView(binding.getRoot());
 
         OnboardingAdapter onboardingAdapter = new OnboardingAdapter(this);
 
-        viewPager.setAdapter(onboardingAdapter);
+        binding.onboardingViewpager.setAdapter(onboardingAdapter);
         addDots(0);
-        viewPager.addOnPageChangeListener(onPageChangeListener);
+        binding.onboardingViewpager.addOnPageChangeListener(onPageChangeListener);
     }
 
     public void skipOB(View view) {
@@ -82,19 +80,14 @@ public class OnboardingActivity extends AppCompatActivity {
 
     private void addDots(int position) {
         TextView[] dots = new TextView[4];
-        dotsLayout.removeAllViews();
+        binding.layoutOnboardingIndicator.removeAllViews();
         for (int i = 0; i < dots.length; i++) {
             dots[i] = new TextView(this);
             dots[i].setText(Html.fromHtml("&#8226;"));
             dots[i].setTextSize(35);
 
-            dotsLayout.addView(dots[i]);
+            binding.layoutOnboardingIndicator.addView(dots[i]);
         }
         dots[position].setTextColor(getResources().getColor(R.color.orange500));
-    }
-
-    @Override
-    public void onBackPressed() {
-
     }
 }

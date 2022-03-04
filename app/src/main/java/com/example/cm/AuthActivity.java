@@ -27,9 +27,7 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initListeners();
-
     }
-
 
     private void initListeners() {
         binding.startLoginBtn.setOnClickListener(this::toLogin);

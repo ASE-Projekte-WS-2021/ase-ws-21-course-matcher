@@ -73,23 +73,21 @@
             android:minHeight="@dimen/edit_text_min_height" />
 
         <Button
-            android:id="@+id/registerLoginBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="register"
-            android:text="@string/registerRegisterBtn"
-            tools:ignore="UsingOnClickInXml" />
-
-        <Button
             android:id="@+id/registerRegisterBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/registerRegisterBtn"
+            android:layout_marginTop="@dimen/small_margin"/>
+
+        <Button
+            android:id="@+id/registerLoginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/white"
-            android:onClick="goToLogin"
             android:text="@string/registerLoginBtn"
             android:textAllCaps="false"
             android:textColor="@color/black"
-            tools:ignore="UsingOnClickInXml" />
+            android:layout_marginTop="@dimen/small_margin"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
