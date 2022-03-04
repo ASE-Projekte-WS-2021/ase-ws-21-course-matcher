@@ -1,21 +1,18 @@
 package com.example.cm.ui.auth;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.MainActivity;
 import com.example.cm.R;
 import com.example.cm.databinding.ActivityLoginBinding;
-import com.example.cm.ui.onboarding.OnboardingActivity;
 import com.google.android.material.snackbar.Snackbar;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -45,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
@@ -75,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void goToRegister(View view) {
-        Intent intent = new Intent(LoginActivity.this, OnboardingActivity.class);
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
         finish();
     }
