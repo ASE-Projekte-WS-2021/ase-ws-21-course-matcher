@@ -22,7 +22,7 @@ jobs:
       - name: Build APK
         env:
           MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
-        run: bash ./gradlew assembleDebug --stacktrace
+        run: bash ./gradlew assembleDebug --stacktrace -PMAPS_API_KEY=$MAPS_API_KEY
 
       # Upload the created APK
       - name: Upload APK
