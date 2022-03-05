@@ -1,49 +1,29 @@
 package com.example.cm.data.repositories;
 
-import android.app.Application;
-import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.android.gms.tasks.Task;
+import com.example.cm.data.models.User;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-
-/**
- * inspired by https://learntodroid.com/how-to-use-firebase-authentication-in-an-android-app-using-mvvm/
- */
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class AuthRepository extends Repository {
-    private static final String TAG = "AuthRepository";
     private final FirebaseAuth firebaseAuth;
     private final MutableLiveData<FirebaseUser> userLiveData;
-    private final MutableLiveData<Boolean> loggedOutLiveData;
-    private Application application = null;
-
-    public AuthRepository(Application application) {
-        this.application = application;
-        this.firebaseAuth = FirebaseAuth.getInstance();
-        this.userLiveData = new MutableLiveData<>();
-        this.loggedOutLiveData = new MutableLiveData<>();
-
-        if (firebaseAuth.getCurrentUser() != null) {
-            userLiveData.postValue(firebaseAuth.getCurrentUser());
-            loggedOutLiveData.postValue(false);
-        }
-    }
+    private final MutableLiveData<String> error;
 
     public AuthRepository() {
         this.firebaseAuth = FirebaseAuth.getInstance();
         this.userLiveData = new MutableLiveData<>();
-        this.loggedOutLiveData = new MutableLiveData<>();
+        this.error = new MutableLiveData<>();
 
         if (firebaseAuth.getCurrentUser() != null) {
             userLiveData.postValue(firebaseAuth.getCurrentUser());
-            loggedOutLiveData.postValue(false);
         }
     }
 
@@ -52,7 +32,8 @@ public class AuthRepository extends Repository {
             return;
         }
 
-        AuthCredential credential = EmailAuthProvider.getCredential(firebaseAuth.getCurrentUser().getEmail(), currentPassword);
+        AuthCredential credential = EmailAuthProvider.getCredential(Objects.requireNonNull(firebaseAuth.getCurrentUser().getEmail()), currentPassword);
+        // User could not be re-authenticated with email and password
         firebaseAuth.getCurrentUser()
                 .reauthenticate(credential)
                 .addOnSuccessListener(executorService, task -> {
@@ -61,34 +42,37 @@ public class AuthRepository extends Repository {
                             .addOnSuccessListener(executorService, updatePasswordTask -> {
                                 callback.onSuccess(null);
                             })
-                            .addOnFailureListener(executorService, e -> {
-                                callback.onError(e);
-                            });
-                })
-                .addOnFailureListener(executorService, e -> {
+                            .addOnFailureListener(executorService, callback::onError);
                     // User could not be re-authenticated with email and password
-                    callback.onError(e);
-                });
+                }).addOnFailureListener(executorService, callback::onError);
     }
 
     public void login(String email, String password) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(executorService, task -> {
-                    if (task.isSuccessful()) {
-                        userLiveData.postValue(firebaseAuth.getCurrentUser());
-                    } else {
-                        Toast.makeText(application.getApplicationContext(), "Login Failure: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                userLiveData.postValue(firebaseAuth.getCurrentUser());
+            } else {
+                error.postValue(Objects.requireNonNull(task.getException()).getMessage());
+            }
+        });
     }
 
-    public Task<AuthResult> register(String email, String password, String userName) {
-        return firebaseAuth.createUserWithEmailAndPassword(email, password);
+    public void register(String email, String password, String userName, String firstName, String lastName, RegisterCallback callback) {
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                FirebaseUser authUser = getCurrentUser();
+                userLiveData.postValue(authUser);
+                User newUser = new User(authUser.getUid(), userName, firstName, lastName, email, "", "", new ArrayList<String>());
+                callback.onRegisterSuccess(newUser);
+
+            } else {
+                error.postValue(Objects.requireNonNull(task.getException()).getMessage());
+            }
+        });
     }
 
     public void logOut() {
         firebaseAuth.signOut();
-        loggedOutLiveData.postValue(true);
     }
 
     public FirebaseUser getCurrentUser() {
@@ -99,7 +83,13 @@ public class AuthRepository extends Repository {
         return userLiveData;
     }
 
-    public MutableLiveData<Boolean> getLoggedOutLiveData() {
-        return loggedOutLiveData;
+    public MutableLiveData<String> getErrorLiveData() {
+        return error;
+    }
+
+    public interface RegisterCallback {
+        void onRegisterSuccess(User user);
     }
 }
+
+
