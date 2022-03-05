@@ -46,6 +46,23 @@
                     layout="@layout/item_settings_link" />
             </LinearLayout>
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:contentDescription="@string/content_description_divider"
+                android:src="@drawable/divider_horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/link_logout"
+                    layout="@layout/item_settings_link" />
+                
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/tvVersionNumber"
                 android:layout_width="match_parent"

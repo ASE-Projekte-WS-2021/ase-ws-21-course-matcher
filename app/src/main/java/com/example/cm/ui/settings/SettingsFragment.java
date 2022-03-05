@@ -44,6 +44,7 @@ public class SettingsFragment extends Fragment {
         binding.linkEditNotifications.linkText.setText(getString(R.string.link_label_edit_notifications));
         binding.linkPrivacyPolicy.linkText.setText(getString(R.string.link_label_privacy_policy));
         binding.linkImprint.linkText.setText(getString(R.string.link_label_imprint));
+        binding.linkLogout.linkText.setText(getString(R.string.link_label_logout));
 
         // Set icons of links
         binding.linkEditProfile.linkIcon.setImageResource(R.drawable.ic_edit_profile);
@@ -51,6 +52,7 @@ public class SettingsFragment extends Fragment {
         binding.linkEditNotifications.linkIcon.setImageResource(R.drawable.ic_edit_notifications);
         binding.linkPrivacyPolicy.linkIcon.setImageResource(R.drawable.ic_privacy_policy);
         binding.linkImprint.linkIcon.setImageResource(R.drawable.ic_imprint);
+        binding.linkLogout.linkIcon.setImageResource(R.drawable.ic_logout);
 
         // Set version number
         try {
