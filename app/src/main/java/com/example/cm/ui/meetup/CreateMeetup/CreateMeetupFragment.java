@@ -17,6 +17,12 @@ import androidx.navigation.Navigation;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
 import com.example.cm.utils.Navigator;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,19 +30,24 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class CreateMeetupFragment extends Fragment {
+public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback {
 
-    int sMin, sHour;
     private final Calendar calendarMeetup = Calendar.getInstance();
     private final Calendar calendarNow = Calendar.getInstance();
-
+    int sMin, sHour;
     private ArrayAdapter<CharSequence> adapter;
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentMeetupBinding binding;
     private Navigator navigator;
+    private GoogleMap map;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupBinding.inflate(inflater, container, false);
+
+        binding.mapView.onCreate(savedInstanceState);
+        binding.mapView.getMapAsync(this);
+        binding.mapView.onResume();
+
         navigator = new Navigator(requireActivity());
         setTodaysDate();
         initUI();
@@ -45,7 +56,7 @@ public class CreateMeetupFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void setTodaysDate(){
+    private void setTodaysDate() {
         calendarNow.setTime(new Date());
         calendarMeetup.set(Calendar.DATE, calendarNow.get(Calendar.DATE));
         calendarMeetup.set(Calendar.MONTH, calendarNow.get(Calendar.MONTH));
@@ -56,14 +67,14 @@ public class CreateMeetupFragment extends Fragment {
         showCurrentTime();
         adapter = ArrayAdapter.createFromResource(getActivity(), R.array.meetup_locations, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-        binding.meetupLocationSpinner.setAdapter(adapter);
-        binding.btnBack.bringToFront();
+        binding.actionBar.tvTitle.setText(R.string.meetup_header);
+        binding.actionBar.btnBack.bringToFront();
     }
 
     private void initListener() {
         binding.meetupTimeText.setOnClickListener(v -> onTimePickerDialogClicked());
         binding.meetupInfoBtn.setOnClickListener(v -> checkTime());
-        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+        binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 
     @SuppressLint("DefaultLocale")
@@ -96,14 +107,11 @@ public class CreateMeetupFragment extends Fragment {
 
 
     private void onMeetupInfoBtnClicked() {
-        String location = binding.meetupLocationSpinner.getSelectedItem().toString();
-
         //TODO den boolean wieder benutzen wenn gefiltert werden kann
         //Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
 
         Boolean isPrivate = true;
 
-        createMeetupViewModel.setLocation(location);
         createMeetupViewModel.setIsPrivate(isPrivate);
         createMeetupViewModel.setMeetupTimestamp(calendarMeetup.getTime());
 
@@ -114,7 +122,6 @@ public class CreateMeetupFragment extends Fragment {
     @SuppressLint("SimpleDateFormat")
     private void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
-        createMeetupViewModel.getMeetupLocation().observe(getViewLifecycleOwner(), location -> binding.meetupLocationSpinner.setSelection(adapter.getPosition(location)));
         createMeetupViewModel.getMeetupIsPrivate().observe(getViewLifecycleOwner(), isPrivate -> binding.meetupPrivateCheckBox.setChecked(isPrivate));
         createMeetupViewModel.getMeetupTimestamp().observe(getViewLifecycleOwner(), timestamp -> new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(calendarMeetup.getTime()));
     }
@@ -149,5 +156,42 @@ public class CreateMeetupFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        map = googleMap;
+
+        LatLng university = new LatLng(48.992162698, 12.090332972);
+
+        Marker initialMarker = map.addMarker(new MarkerOptions().position(university).title("University of Regensburg"));
+        if (initialMarker != null) {
+            initialMarker.setDraggable(true);
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(university, 15));
+        }
+
+        map.setOnMapClickListener(latLng -> {
+            map.clear();
+            Marker meetupMarker = map.addMarker(new MarkerOptions().position(latLng).title("Meetup Location"));
+            if (meetupMarker != null) {
+                meetupMarker.setDraggable(true);
+                map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+            }
+        });
+
+        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker arg) {
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker arg) {
+                map.animateCamera(CameraUpdateFactory.newLatLng(arg.getPosition()));
+            }
+
+            @Override
+            public void onMarkerDrag(Marker arg) {
+            }
+        });
     }
 }
