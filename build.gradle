@@ -20,7 +20,7 @@ task clean(type: Delete) {
 
 // From https://entwicklernotizen.de/blog/how-to-handle-secret-api-keys-in-flutter-for-android-and-i-os/
 def mapsProperties = new Properties()
-def localMapsPropertiesFile = rootProject.file('local_maps.properties')
+def localMapsPropertiesFile = rootProject.file('local.properties')
 if (localMapsPropertiesFile.exists()) {
     project.logger.info('Load maps properties from local file')
     localMapsPropertiesFile.withReader('UTF-8') { reader ->
@@ -37,5 +37,5 @@ if (localMapsPropertiesFile.exists()) {
 def mapsApiKey = mapsProperties.getProperty('MAPS_API_KEY')
 if(mapsApiKey == null){
     mapsApiKey = ""
-    project.logger.error('Google Maps Api Key not configured. Set it in `local_maps.properties` or in the environment variable `MAPS_API_KEY`')
+    project.logger.error('Google Maps Api Key not configured. Set it in `local.properties` or in the environment variable `MAPS_API_KEY`')
 }
