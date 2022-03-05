@@ -18,11 +18,13 @@ jobs:
         with:
           java-version: 1.11
 
-      # Build the APK
-      - name: Build APK
+      - name: Add Maps Key
         env:
           MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
-        run: bash ./gradlew assembleDebug --stacktrace -PMAPS_API_KEY=$MAPS_API_KEY
+        run: echo MAPS_API_KEY=$MAPS_API_KEY > ./local.properties
+      # Build the APK
+      - name: Build APK
+        run: bash ./gradlew assembleDebug --stacktrace
 
       # Upload the created APK
       - name: Upload APK
