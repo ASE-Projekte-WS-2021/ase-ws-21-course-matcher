@@ -1,7 +1,5 @@
 package com.example.cm.data.repositories;
 
-import android.net.Uri;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -58,7 +56,8 @@ public class UserRepository extends Repository {
         userCollection.document(currentUserId).addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
                 return;
-            } if (value != null && value.exists()) {
+            }
+            if (value != null && value.exists()) {
                 User user = snapshotToUser(value);
                 mutableUser.postValue(user);
             }
@@ -169,9 +168,9 @@ public class UserRepository extends Repository {
         });
         return mutableUsers;
     }
-  
 
-  /**
+
+    /**
      * Get list of not-friends by their username
      *
      * @param query String to search for
@@ -190,10 +189,11 @@ public class UserRepository extends Repository {
                 for (int i = 0; i < value.getDocuments().size(); i++) {
                     DocumentSnapshot doc = value.getDocuments().get(i);
                     User user = snapshotToUser(doc);
+                    boolean isCurrentUser = doc.getId().equals(currentUserId);
                     boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
                     boolean isQueryInFullName = user.getFullName().toLowerCase().contains(query.toLowerCase());
 
-                    if (!isQueryInUsername && !isQueryInFullName) {
+                    if (isCurrentUser || (!isQueryInUsername && !isQueryInFullName)) {
                         continue;
                     }
 
@@ -215,7 +215,7 @@ public class UserRepository extends Repository {
         return mutableUsers;
     }
 
-  /**
+    /**
      * Get user with given id
      *
      * @param userId id of user to retrieve
@@ -320,6 +320,9 @@ public class UserRepository extends Repository {
             if (value != null && value.exists()) {
                 User user = snapshotToUser(value);
                 List<String> friends = user.getFriends();
+                if (friends == null || friends.isEmpty()) {
+                    return;
+                }
                 mutableUsers = getUsersByIdsAndName(friends, query);
             }
         });
@@ -330,7 +333,7 @@ public class UserRepository extends Repository {
      * Get users within given list with query matching name
      *
      * @param userIds list of users to search in
-     * @param query String to search for
+     * @param query   String to search for
      * @return MutableLiveData-List of mutable users within given list with query matching name
      */
     public MutableLiveData<List<MutableLiveData<User>>> getUsersByIdsAndName(List<String> userIds, String query) {

@@ -30,8 +30,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     private FriendsListAdapter friendsListAdapter;
     private Navigator navigator;
 
-    private boolean wasClearedByButton;
-
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFriendsListBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
@@ -58,10 +56,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
         binding.etUserSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                if (wasClearedByButton) {
-                    wasClearedByButton = false;
-                    return;
-                }
                 onSearchTextChanged(charSequence);
             }
 
@@ -76,7 +70,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     }
 
     private void onClearInputClicked() {
-        wasClearedByButton = true;
         binding.etUserSearch.setText("");
         friendsViewModel.searchUsers("");
         binding.ivClearInput.setVisibility(View.GONE);
@@ -105,7 +98,8 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
         }
-        friendsViewModel.searchUsers(query);
+
+        friendsViewModel.searchUsers(charSequence.toString());
     }
 
     @Override
