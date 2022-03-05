@@ -182,4 +182,6 @@
     <string name="img_uni">Picture of the University</string>
     <string name="loginEmailPasswordNeeded">E-Mail und Passwort wird benötigt</string>
     <string name="registerFieldsRequired">Alle Felder werden benötigt</string>
+    <string name="dialog_logout_btn">Abmelden</string>
+    <string name="dialog_logout_title">Wirklich abmelden?</string>
 </resources>

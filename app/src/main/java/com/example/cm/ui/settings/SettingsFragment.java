@@ -14,12 +14,16 @@ import androidx.fragment.app.Fragment;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentSettingsBinding;
+import com.example.cm.ui.auth.LoginActivity;
+import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutListener {
 
     private FragmentSettingsBinding binding;
     private Navigator navigator;
+    private SettingsViewModel settingsViewModel;
+    private LogoutDialog logoutDialog;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -30,6 +34,7 @@ public class SettingsFragment extends Fragment {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
 
         initUI();
+        initViewModel();
         initListeners();
 
         return binding.getRoot();
@@ -63,6 +68,10 @@ public class SettingsFragment extends Fragment {
         }
     }
 
+    private void initViewModel() {
+        settingsViewModel = new SettingsViewModel();
+    }
+
     private void initListeners() {
         navigator = new Navigator(requireActivity());
         binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
@@ -71,6 +80,7 @@ public class SettingsFragment extends Fragment {
         binding.linkEditNotifications.linkWrapper.setOnClickListener(v -> onEditNotificationsClicked());
         binding.linkPrivacyPolicy.linkWrapper.setOnClickListener(v -> onPrivacyPolicyClicked());
         binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
+        binding.linkLogout.linkWrapper.setOnClickListener(v -> onLogoutClicked());
     }
 
     private void onEditProfileClicked() {
@@ -95,8 +105,32 @@ public class SettingsFragment extends Fragment {
         openLink(url);
     }
 
+    private void onLogoutClicked() {
+        logoutDialog = new LogoutDialog(requireActivity(), this);
+        logoutDialog.show();
+    }
+
     private void openLink(String url) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (logoutDialog != null) {
+            logoutDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onLogoutApproved() {
+        settingsViewModel.logOut();
+
+        // Navigate to Login Screen
+        Intent intent = new Intent(requireActivity(), LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        requireActivity().finish();
     }
 }
