@@ -41,8 +41,10 @@ public class AuthRepository extends Repository {
                     firebaseAuth.getCurrentUser().updatePassword(newPassword)
                             .addOnSuccessListener(executorService, updatePasswordTask -> {
                                 callback.onSuccess(null);
-                            });
-                });
+                            })
+                            .addOnFailureListener(executorService, callback::onError);
+                    // User could not be re-authenticated with email and password
+                }).addOnFailureListener(executorService, callback::onError);
     }
 
     public void login(String email, String password) {
