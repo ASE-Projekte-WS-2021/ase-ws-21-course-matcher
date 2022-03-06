@@ -2,6 +2,7 @@ package com.example.cm.data.repositories;
 
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
 import static com.example.cm.data.repositories.Repository.executorService;
+import static com.example.cm.utils.Utils.getCurrentDay;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -36,7 +37,7 @@ public class MeetupRepository {
     private void listenToMeetupListChanges() {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         meetupCollection.whereArrayContains("confirmedFriends", currentUserId)
-                .whereGreaterThan("timestamp", Constants.getCurrentDay())
+                .whereGreaterThan("timestamp", getCurrentDay())
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {

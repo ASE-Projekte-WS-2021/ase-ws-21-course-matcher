@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
 import com.example.cm.utils.Navigator;
@@ -174,13 +175,10 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
-
-        LatLng university = new LatLng(48.992162698, 12.090332972);
-
-        Marker initialMarker = map.addMarker(new MarkerOptions().position(university).title("University of Regensburg"));
+        Marker initialMarker = map.addMarker(new MarkerOptions().position(Constants.DEFAULT_LOCATION).title("University of Regensburg"));
         if (initialMarker != null) {
             initialMarker.setDraggable(true);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(university, 15));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(Constants.DEFAULT_LOCATION, 15));
         }
 
         map.setOnMapClickListener(latLng -> {
