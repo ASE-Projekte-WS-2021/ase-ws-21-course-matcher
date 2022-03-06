@@ -175,14 +175,11 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
-        Marker initialMarker = map.addMarker(new MarkerOptions().position(Constants.DEFAULT_LOCATION).title("University of Regensburg"));
-        if (initialMarker != null) {
-            initialMarker.setDraggable(true);
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(Constants.DEFAULT_LOCATION, 15));
-        }
+        setMarker(Constants.DEFAULT_LOCATION, 15);
 
         map.setOnMapClickListener(latLng -> {
-            setMarker(latLng);
+            float zoomLevel = map.getCameraPosition().zoom;
+            setMarker(latLng, zoomLevel);
         });
 
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -192,7 +189,8 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
             @Override
             public void onMarkerDragEnd(Marker arg) {
-                setMarker(arg.getPosition());
+                float zoomLevel = map.getCameraPosition().zoom;
+                setMarker(arg.getPosition(), zoomLevel);
             }
 
             @Override
@@ -201,7 +199,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         });
     }
 
-    private void setMarker(LatLng latLng) {
+    private void setMarker(LatLng latLng, float zoomLevel) {
         map.clear();
 
         Marker meetupMarker = map.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.create_meetup_marker_title)));
@@ -209,7 +207,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
             return;
         }
         meetupMarker.setDraggable(true);
-        map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
         createMeetupViewModel.setMeetupLatLng(latLng);
         geocodeLatLng(latLng);
     }
