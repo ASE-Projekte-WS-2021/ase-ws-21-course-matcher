@@ -1,12 +1,15 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
+import static com.example.cm.data.repositories.Repository.executorService;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.Constants;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.MeetupPOJO;
 import com.example.cm.data.models.MeetupPhase;
-import com.example.cm.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -18,9 +21,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
-import static com.example.cm.data.repositories.Repository.executorService;
 
 public class MeetupRepository {
 
@@ -74,7 +74,8 @@ public class MeetupRepository {
 
     public boolean addMeetup(Meetup meetup) {
         try {
-            meetupCollection.document(meetup.getId()).set(meetup);
+            MeetupPOJO meetupPOJO = new MeetupPOJO(meetup);
+            meetupCollection.document(meetup.getId()).set(meetupPOJO);
             return true;
         } catch (Exception e) {
             return false;
@@ -120,16 +121,10 @@ public class MeetupRepository {
      * @return Returns a meetup
      */
     private Meetup snapshotToMeetup(DocumentSnapshot document) {
-        Meetup meetup = new Meetup();
-        meetup.setId(document.getId());
-        meetup.setConfirmedFriends(Utils.castList(document.get("confirmedFriends"), String.class));
-        meetup.setRequestingUser(document.getString("requestingUser"));
-        meetup.setInvitedFriends(Utils.castList(document.get("invitedFriends"), String.class));
-        meetup.setLocation(document.getString("location"));
-        meetup.setTimestamp(document.getDate("timestamp"));
-        meetup.setPrivate(document.getBoolean("private"));
-        //meetup.setPhase(document.get("phase", MeetupPhase.class));
-        meetup.setDeclinedFriends(Utils.castList(document.get("declinedFriends"), String.class));
-        return meetup;
+        MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
+        assert meetupPOJO != null;
+        meetupPOJO.setId(document.getId());
+
+        return meetupPOJO.toObject();
     }
 }
