@@ -1,6 +1,7 @@
 package com.example.cm.utils;
 
 import android.content.Context;
+import android.location.Geocoder;
 import android.os.Build;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -12,12 +13,13 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.example.cm.R;
-import com.example.cm.data.models.MeetupRequest;
-import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class Utils {
@@ -105,4 +107,23 @@ public class Utils {
             }
         });
     }
+
+    /**
+     * Convert a latitude and longitude to a human readable address
+     *
+     * @param context Context the method is called from
+     * @param latLng  Latitude and longitude
+     * @return Human readable address
+     */
+    public static String convertToAddress(Context context, LatLng latLng) {
+        Geocoder geocoder = new Geocoder(context, Locale.GERMANY);
+        String address = "";
+        try {
+            address = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1).get(0).getAddressLine(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return address;
     }
+
+}
