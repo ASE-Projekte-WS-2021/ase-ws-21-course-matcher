@@ -34,30 +34,30 @@
             android:id="@+id/locationWrapper"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical"
             android:layout_weight="0.6"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/small_margin"
                 android:includeFontPadding="false"
                 android:text="@string/meetup_place"
-                android:layout_marginBottom="@dimen/small_margin"
                 android:textSize="@dimen/text_size_medium" />
 
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardCornerRadius="20dp"
-                >
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/mapView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:focusable="true" />
+                app:cardCornerRadius="@dimen/meetup_corner_radius"
+                app:cardElevation="0dp">
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true" />
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
@@ -66,9 +66,8 @@
             android:id="@+id/timeWrapper"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:orientation="vertical"
             android:layout_weight="0.4"
-            >
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/meetup_time"
@@ -84,16 +83,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_small"
+                android:background="@drawable/style_edittext"
                 android:gravity="center"
                 android:hint="@string/select_time"
-                android:textSize="@dimen/text_size_small"
-                android:background="@drawable/style_edittext"
                 android:importantForAutofill="no"
                 android:lines="1"
                 android:maxLines="1"
                 android:paddingHorizontal="@dimen/padding_medium"
                 android:paddingVertical="@dimen/padding_small"
-                />
+                android:textSize="@dimen/text_size_small" />
         </LinearLayout>
 
         <Button
