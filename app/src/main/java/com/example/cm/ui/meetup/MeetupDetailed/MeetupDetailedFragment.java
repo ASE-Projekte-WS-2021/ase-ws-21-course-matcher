@@ -1,5 +1,7 @@
 package com.example.cm.ui.meetup.MeetupDetailed;
 
+import static com.example.cm.utils.Utils.convertToAddress;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -57,17 +59,19 @@ public class MeetupDetailedFragment extends Fragment {
 
             tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
                 if (position == 0) {
-                    tab.setText("Zugesagt");
+                    tab.setText(R.string.meetup_tabs_label_accepted);
                 } else if (position == 1) {
-                    tab.setText("Abgesagt");
+                    tab.setText(R.string.meetup_tabs_label_declined);
                 } else if (position == 2) {
-                    tab.setText("Offen");
+                    tab.setText(R.string.meetup_tabs_label_open);
                 }
             });
 
             tabLayoutMediator.attach();
 
-            binding.meetupDetailedLocation.setText(meetup.getLocation());
+            String address = convertToAddress(requireActivity(), meetup.getLocation());
+
+            binding.meetupDetailedLocation.setText(address);
             switch (meetup.getPhase()) {
                 case MEETUP_UPCOMING:
                     binding.meetupDetailedTime.setText(meetup.getFormattedTime());

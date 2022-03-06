@@ -1,5 +1,7 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
+import static com.example.cm.utils.Utils.convertToAddress;
+
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -124,6 +126,17 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
         createMeetupViewModel.getMeetupIsPrivate().observe(getViewLifecycleOwner(), isPrivate -> binding.meetupPrivateCheckBox.setChecked(isPrivate));
         createMeetupViewModel.getMeetupTimestamp().observe(getViewLifecycleOwner(), timestamp -> new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(calendarMeetup.getTime()));
+        createMeetupViewModel.getMeetupLatLng().observe(getViewLifecycleOwner(), latLng -> {
+            if (latLng == null) {
+                return;
+            }
+            Marker marker = map.addMarker(new MarkerOptions().position(latLng));
+            if (marker == null) {
+                return;
+            }
+            marker.setDraggable(true);
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+        });
     }
 
     private void checkTime() {
@@ -171,12 +184,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         }
 
         map.setOnMapClickListener(latLng -> {
-            map.clear();
-            Marker meetupMarker = map.addMarker(new MarkerOptions().position(latLng).title("Meetup Location"));
-            if (meetupMarker != null) {
-                meetupMarker.setDraggable(true);
-                map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-            }
+            setMarker(latLng);
         });
 
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
@@ -186,12 +194,34 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
             @Override
             public void onMarkerDragEnd(Marker arg) {
-                map.animateCamera(CameraUpdateFactory.newLatLng(arg.getPosition()));
+                setMarker(arg.getPosition());
             }
 
             @Override
             public void onMarkerDrag(Marker arg) {
             }
         });
+    }
+
+    private void setMarker(LatLng latLng) {
+        map.clear();
+
+        Marker meetupMarker = map.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.create_meetup_marker_title)));
+        if (meetupMarker == null) {
+            return;
+        }
+        meetupMarker.setDraggable(true);
+        map.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+        createMeetupViewModel.setMeetupLatLng(latLng);
+        geocodeLatLng(latLng);
+    }
+
+    private void geocodeLatLng(LatLng latLng) {
+        String address = convertToAddress(requireActivity(), latLng);
+        if (!address.isEmpty()) {
+            createMeetupViewModel.setMeetupLocation(address);
+        } else {
+            createMeetupViewModel.setMeetupLocation(getString(R.string.meetup_location_not_found));
+        }
     }
 }
