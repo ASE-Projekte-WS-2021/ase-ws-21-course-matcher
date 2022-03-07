@@ -30,6 +30,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import timber.log.Timber;
+
 public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener {
 
     private HomeViewModel homeViewModel;
@@ -123,15 +125,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                         .position(location)
                         .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
                         .title(user.getFullName()));
-
             }
 
             @Override
             public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                Timber.d("Bitmap failed for user %s", user.getUsername());
             }
 
             @Override
             public void onPrepareLoad(Drawable placeHolderDrawable) {
+                Timber.d("Preparing bitmap for user %s", user.getUsername());
             }
         });
     }
@@ -147,6 +150,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         if (googleMap == null || currentUser == null) {
             return;
         }
+
+        Timber.d("Position changed: %s", position);
 
         setUserMarker(currentUser, position);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));

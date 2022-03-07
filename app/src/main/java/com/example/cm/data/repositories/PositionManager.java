@@ -10,6 +10,10 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.List;
+
+import timber.log.Timber;
+
 public class PositionManager {
 
     private static PositionManager instance;
@@ -34,6 +38,7 @@ public class PositionManager {
             @SuppressLint("MissingPermission")
             @Override
             public void onLocationChanged(@NonNull Location location) {
+                Timber.d("onLocationChanged location");
                 if (positionListener == null) {
                     return;
                 }
@@ -45,12 +50,22 @@ public class PositionManager {
 
             @Override
             public void onProviderEnabled(@NonNull String provider) {
-                LocationListener.super.onProviderEnabled(provider);
+                Timber.d("onProviderEnabled provider");
             }
 
             @Override
             public void onProviderDisabled(@NonNull String provider) {
-                LocationListener.super.onProviderDisabled(provider);
+                Timber.d("onProviderDisabled provider");
+            }
+
+            @Override
+            public void onLocationChanged(@NonNull List<Location> locations) {
+                Timber.d("onLocationChanged locations");
+            }
+
+            @Override
+            public void onFlushComplete(int requestCode) {
+                Timber.d("onFlushComplete requestCode");
             }
         };
     }
