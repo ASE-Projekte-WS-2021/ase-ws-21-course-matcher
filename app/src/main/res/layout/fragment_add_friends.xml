@@ -62,7 +62,6 @@
                 android:src="@drawable/ic_clear_input_btn"
                 android:visibility="gone"
                 tools:ignore="ContentDescription" />
-
         </RelativeLayout>
 
     </LinearLayout>
