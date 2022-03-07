@@ -80,8 +80,6 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
             public void afterTextChanged(Editable editable) {
             }
         });
-
-
     }
 
     public void initViewModel() {
