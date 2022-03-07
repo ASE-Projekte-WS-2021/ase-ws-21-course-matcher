@@ -58,9 +58,19 @@ public class PositionManager {
                 Timber.d("onProviderDisabled provider");
             }
 
+            @SuppressLint("MissingPermission")
             @Override
             public void onLocationChanged(@NonNull List<Location> locations) {
-                Timber.d("onLocationChanged locations");
+                if (positionListener == null) {
+                    return;
+                }
+                if (locations.size() == 0) {
+                    return;
+                }
+
+                LatLng position = new LatLng(locations.get(0).getLatitude(), locations.get(0).getLongitude());
+                positionListener.onPositionChanged(position);
+                locationManager.removeUpdates(locationListener);
             }
 
             @Override
