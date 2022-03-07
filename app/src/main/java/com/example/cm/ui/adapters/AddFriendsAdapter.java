@@ -33,7 +33,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
 
     private final OnItemClickListener listener;
     private final Context context;
-    private List<MutableLiveData<User>> mUsers;
+    private List<User> mUsers;
     private List<MutableLiveData<FriendRequest>> pendingFriendRequestsSent;
     private final List<MutableLiveData<FriendRequest>> pendingFriendRequests = new ArrayList<>();
 
@@ -50,7 +50,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         listener.onFriendRequestsSet();
     }
 
-    public void setUsers(List<MutableLiveData<User>> newUsers) {
+    public void setUsers(List<User> newUsers) {
         if (mUsers == null) {
             mUsers = newUsers;
             notifyItemRangeInserted(0, newUsers.size());
@@ -76,7 +76,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
-        User user = mUsers.get(position).getValue();
+        User user = mUsers.get(position);
 
         String profileImageUrl = Objects.requireNonNull(user).getProfileImageUrl();
         String name = user.getFullName();
@@ -162,7 +162,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
-            listener.onItemClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
+            listener.onItemClicked(Objects.requireNonNull(mUsers.get(position)).getId());
         }
 
         @SuppressLint("ResourceAsColor")
@@ -172,7 +172,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
-            listener.onFriendRequestButtonClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
+            listener.onFriendRequestButtonClicked(Objects.requireNonNull(mUsers.get(position)).getId());
 
             int btnContent, btnTextColor;
             ColorStateList btnBackground;

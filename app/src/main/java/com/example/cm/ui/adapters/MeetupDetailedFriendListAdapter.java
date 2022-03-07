@@ -18,10 +18,10 @@ import java.util.Objects;
 
 public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
 
-    private final List<MutableLiveData<User>> friends;
+    private final List<User> friends;
     private final OnItemClickListener listener;
 
-    public MeetupDetailedFriendListAdapter(List<MutableLiveData<User>> friends, OnItemClickListener listener) {
+    public MeetupDetailedFriendListAdapter(List<User> friends, OnItemClickListener listener) {
         this.friends = friends;
         this.listener = listener;
     }
@@ -36,7 +36,7 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     @Override
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
         if (friends != null) {
-            User friend = friends.get(position).getValue();
+            User friend = friends.get(position);
           
             String fullName = Objects.requireNonNull(friend).getFullName();
             String username = friend.getUsername();
@@ -83,7 +83,7 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(friends.get(position).getValue().getId());
+            listener.onItemClicked(friends.get(position).getId());
         }
 
         public ImageView getProfileImage() {
