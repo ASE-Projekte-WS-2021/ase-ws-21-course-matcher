@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/readexpro_semibold"
-            android:text=   "@string/title_find_friends"
+            android:text="@string/title_find_friends"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="@dimen/app_bar_title" />
@@ -62,7 +62,6 @@
                 android:src="@drawable/ic_clear_input_btn"
                 android:visibility="gone"
                 tools:ignore="ContentDescription" />
-
         </RelativeLayout>
 
     </LinearLayout>
