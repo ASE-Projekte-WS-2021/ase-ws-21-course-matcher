@@ -93,6 +93,20 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         return meetups.size();
     }
 
+    /**
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
+     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     */
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     public static class MeetupListViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemMeetupBinding binding;
@@ -117,6 +131,5 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         public MaterialCardView getMeetupCard() {
             return binding.card;
         }
-
     }
 }
