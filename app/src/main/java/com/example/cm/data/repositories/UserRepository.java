@@ -1,11 +1,10 @@
 package com.example.cm.data.repositories;
 
-import android.net.Uri;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.User;
+import com.example.cm.data.models.UserPOJO;
 import com.example.cm.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +22,7 @@ import java.util.Objects;
 
 public class UserRepository extends Repository {
 
+    private static UserRepository instance;
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
@@ -30,6 +30,13 @@ public class UserRepository extends Repository {
     private MutableLiveData<List<MutableLiveData<User>>> mutableUsers = new MutableLiveData<>();
 
     public UserRepository() {
+    }
+
+    public static UserRepository getInstance() {
+        if (instance == null) {
+            instance = new UserRepository();
+        }
+        return instance;
     }
 
     /**
@@ -58,7 +65,8 @@ public class UserRepository extends Repository {
         userCollection.document(currentUserId).addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
                 return;
-            } if (value != null && value.exists()) {
+            }
+            if (value != null && value.exists()) {
                 User user = snapshotToUser(value);
                 mutableUser.postValue(user);
             }
@@ -169,9 +177,9 @@ public class UserRepository extends Repository {
         });
         return mutableUsers;
     }
-  
 
-  /**
+
+    /**
      * Get list of not-friends by their username
      *
      * @param query String to search for
@@ -215,7 +223,7 @@ public class UserRepository extends Repository {
         return mutableUsers;
     }
 
-  /**
+    /**
      * Get user with given id
      *
      * @param userId id of user to retrieve
@@ -278,6 +286,31 @@ public class UserRepository extends Repository {
     }
 
     /**
+     * Get static friends list  of current authorized user
+     *
+     * @return MutableLiveData-List of mutable friends
+     */
+    public MutableLiveData<List<MutableLiveData<User>>> getStaticFriends() {
+        if (auth.getCurrentUser() == null) {
+            return mutableUsers;
+        }
+        String currentUserId = auth.getCurrentUser().getUid();
+
+        userCollection.document(currentUserId).get()
+                .addOnFailureListener(executorService, (exception) -> {
+                })
+                .addOnSuccessListener(executorService, (value) -> {
+                    if (value != null && value.exists()) {
+                        User user = snapshotToUser(value);
+                        List<String> friends = user.getFriends();
+                        mutableUsers = getUsersByIds(friends);
+                    }
+
+                });
+        return mutableUsers;
+    }
+
+    /**
      * Get user list by list of userIds
      *
      * @param userIds IDs of users to retrieve
@@ -330,7 +363,7 @@ public class UserRepository extends Repository {
      * Get users within given list with query matching name
      *
      * @param userIds list of users to search in
-     * @param query String to search for
+     * @param query   String to search for
      * @return MutableLiveData-List of mutable users within given list with query matching name
      */
     public MutableLiveData<List<MutableLiveData<User>>> getUsersByIdsAndName(List<String> userIds, String query) {
@@ -393,16 +426,12 @@ public class UserRepository extends Repository {
      * @return Returns a user model
      */
     public User snapshotToUser(DocumentSnapshot document) {
-        User user = new User();
-        user.setId(document.getId());
-        user.setUsername(document.getString("username"));
-        user.setEmail(document.getString("email"));
-        user.setFirstName(document.getString("firstName"));
-        user.setLastName(document.getString("lastName"));
-        user.setFriends(Utils.castList(document.get("friends"), String.class));
-        user.setBio(document.getString("bio"));
-        user.setProfileImageUrl(document.getString("profileImageUrl"));
-        return user;
+        UserPOJO userPOJO = document.toObject(UserPOJO.class);
+        assert userPOJO != null;
+        userPOJO.setId(document.getId());
+        userPOJO.setLocation((List<Double>) document.get("location"));
+
+        return userPOJO.toObject();
     }
 
     /**
