@@ -4,12 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/padding_medium"
-    android:backgroundTint="@color/white"
-    app:cardCornerRadius="@dimen/medium_margin"
-    app:cardElevation="0dp"
-    app:strokeColor="@color/gray300"
-    app:strokeWidth="1dp">
+    android:gravity="center_vertical"
+    android:padding="@dimen/padding_medium"
+    >
 
           <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivUserImage"

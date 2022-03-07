@@ -59,7 +59,7 @@
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
-
+      
         <LinearLayout
             android:id="@+id/timeWrapper"
             android:layout_width="match_parent"
@@ -101,8 +101,5 @@
             android:paddingHorizontal="@dimen/padding_double"
             android:text="@string/meetup_info_submit_btn" />
     </LinearLayout>
-    
+  
 </RelativeLayout>
-
-
-
