@@ -102,7 +102,8 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         Context context = holder.binding.getRoot().getContext();
         MeetupRequest request = mRequests.get(position).getValue();
 
-        String user = String.format("@%s ", Objects.requireNonNull(request).getSenderName());
+        /*String user = String.format("@%s ", Objects.requireNonNull(request).getSenderName());*/
+        String user = "platzhalter";
         String date = request.getCreationTimeAgo();
         String location = request.getLocation();
 

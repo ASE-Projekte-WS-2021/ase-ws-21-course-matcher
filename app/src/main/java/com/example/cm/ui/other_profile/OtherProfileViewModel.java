@@ -42,7 +42,6 @@ public class OtherProfileViewModel extends ViewModel {
         if (!isFriendRequestPending(userIdToAdd).getValue()) {
             FriendRequest friendRequest = new FriendRequest(
                     userRepository.getCurrentAuthUserId(),
-                    Objects.requireNonNull(currentUser.getValue()).getFullName(),
                     userIdToAdd
             );
             friendRequestRepository.addFriendRequest(friendRequest);

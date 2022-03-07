@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
+import com.example.cm.data.models.FriendRequestDTO;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentFriendRequestsBinding;
 import com.example.cm.ui.adapters.FriendRequestListAdapter;
@@ -68,23 +69,23 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     @Override
-    public void onItemDeleted(FriendRequest request) {
-        requestsViewModel.declineOrDeleteFriendRequest(request);
+    public void onItemDeleted(int position) {
+        requestsViewModel.declineOrDeleteFriendRequest(position);
     }
 
     @Override
-    public void onAccept(FriendRequest request) {
-        requestsViewModel.acceptFriendRequest(request);
+    public void onAccept(int position) {
+        requestsViewModel.acceptFriendRequest(position);
     }
 
     @Override
-    public void onDecline(FriendRequest request) {
-        requestsViewModel.declineOrDeleteFriendRequest(request);
+    public void onDecline(int position) {
+        requestsViewModel.declineOrDeleteFriendRequest(position);
     }
 
     @Override
-    public void onUndo(FriendRequest request, int position, Request.RequestState previousState) {
-        requestsViewModel.undoFriendRequest(request, position, previousState);
+    public void onUndo(int position, Request.RequestState previousState) {
+        requestsViewModel.undoFriendRequest(position, previousState);
     }
 
 }

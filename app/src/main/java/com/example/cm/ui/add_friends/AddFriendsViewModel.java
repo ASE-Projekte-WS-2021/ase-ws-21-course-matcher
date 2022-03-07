@@ -13,7 +13,7 @@ import java.util.Objects;
 
 import timber.log.Timber;
 
-public class AddFriendsViewModel extends ViewModel {
+public class AddFriendsViewModel extends ViewModel implements FriendRequestRepository.Callback {
 
     private final UserRepository userRepository;
     private final FriendRequestRepository requestRepository;
@@ -32,7 +32,7 @@ public class AddFriendsViewModel extends ViewModel {
         currentUser = userRepository.getCurrentUser();
 
         requestRepository = new FriendRequestRepository();
-        receivedFriendRequests = requestRepository.getFriendRequestsForUser();
+        receivedFriendRequests = requestRepository.getFriendRequestsForUser(this);
 
         sentFriendRequestsPending = requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
         receivedFriendRequestsPending = requestRepository.getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
@@ -96,7 +96,7 @@ public class AddFriendsViewModel extends ViewModel {
             return;
         }
 
-        FriendRequest request = new FriendRequest(currentUser.getValue().getId(), currentUser.getValue().getFullName(), receiverId);
+        FriendRequest request = new FriendRequest(currentUser.getValue().getId(), receiverId);
         requestRepository.addFriendRequest(request);
         listener.onRequestAdded();
     }
@@ -127,6 +127,11 @@ public class AddFriendsViewModel extends ViewModel {
             }
         }
         return false;
+    }
+
+    @Override
+    public void onFriendRequestsRetrieved(List<FriendRequest> friendRequests) {
+
     }
 
 
