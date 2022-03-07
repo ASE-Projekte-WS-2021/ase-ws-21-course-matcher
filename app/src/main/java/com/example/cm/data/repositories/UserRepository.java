@@ -198,10 +198,11 @@ public class UserRepository extends Repository {
                 for (int i = 0; i < value.getDocuments().size(); i++) {
                     DocumentSnapshot doc = value.getDocuments().get(i);
                     User user = snapshotToUser(doc);
+                    boolean isCurrentUser = doc.getId().equals(currentUserId);
                     boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
                     boolean isQueryInFullName = user.getFullName().toLowerCase().contains(query.toLowerCase());
 
-                    if (!isQueryInUsername && !isQueryInFullName) {
+                    if (isCurrentUser || (!isQueryInUsername && !isQueryInFullName)) {
                         continue;
                     }
 
@@ -353,6 +354,9 @@ public class UserRepository extends Repository {
             if (value != null && value.exists()) {
                 User user = snapshotToUser(value);
                 List<String> friends = user.getFriends();
+                if (friends == null || friends.isEmpty()) {
+                    return;
+                }
                 mutableUsers = getUsersByIdsAndName(friends, query);
             }
         });
