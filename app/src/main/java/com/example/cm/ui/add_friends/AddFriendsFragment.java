@@ -25,6 +25,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
+import timber.log.Timber;
+
 
 public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnRequestSentListener {
 
@@ -137,12 +139,17 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onFriendRequestsSet() {
         addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-            if (users == null) {
+            binding.loadingCircle.setVisibility(View.GONE);
+
+            if (users == null || users.size() == 0) {
+                Timber.d("No users found");
+                binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+                binding.rvUserList.setVisibility(View.GONE);
                 return;
             }
+
             selectFriendsAdapter.setUsers(users);
             binding.noFriendsWrapper.setVisibility(View.GONE);
-            binding.loadingCircle.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);
         });
     }
