@@ -53,5 +53,4 @@
             android:exported="true"
             android:theme="@style/Theme.CM.NoActionBar" />
     </application>
-
 </manifest>
