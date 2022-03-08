@@ -1,5 +1,7 @@
 package com.example.cm.utils;
 
+import static com.example.cm.Constants.HALVING_FACTOR;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
@@ -17,8 +19,8 @@ public class PicassoCircleTransform implements Transformation {
     public Bitmap transform(Bitmap source) {
         int size = Math.min(source.getWidth(), source.getHeight());
 
-        int x = (source.getWidth() - size) / 2;
-        int y = (source.getHeight() - size) / 2;
+        int x = (source.getWidth() - size) / HALVING_FACTOR;
+        int y = (source.getHeight() - size) / HALVING_FACTOR;
 
         Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
         if (squaredBitmap != source) {

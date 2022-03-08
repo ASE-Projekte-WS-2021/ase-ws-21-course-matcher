@@ -12,7 +12,7 @@ public class UserPOJO {
     private List<Double> location;
 
     public UserPOJO() {
-
+        // Required empty constructor
     }
 
     public UserPOJO(User user) {
