@@ -20,9 +20,9 @@ public class AddFriendsViewModel extends ViewModel implements FriendRequestRepos
 
     public MutableLiveData<List<User>> users;
     public MutableLiveData<User> currentUser;
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> receivedFriendRequests;
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> sentFriendRequestsPending;
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> receivedFriendRequestsPending;
+    public MutableLiveData<List<FriendRequest>> receivedFriendRequests;
+    public MutableLiveData<List<FriendRequest>> sentFriendRequestsPending;
+    public MutableLiveData<List<FriendRequest>> receivedFriendRequestsPending;
 
     public OnRequestSentListener listener;
 
@@ -42,11 +42,11 @@ public class AddFriendsViewModel extends ViewModel implements FriendRequestRepos
         return users;
     }
 
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getSentFriendRequestsPending() {
+    public MutableLiveData<List<FriendRequest>> getSentFriendRequestsPending() {
         return sentFriendRequestsPending;
     }
 
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getReceivedFriendRequestsPending() {
+    public MutableLiveData<List<FriendRequest>> getReceivedFriendRequestsPending() {
         return receivedFriendRequestsPending;
     }
 
@@ -119,10 +119,10 @@ public class AddFriendsViewModel extends ViewModel implements FriendRequestRepos
      * @param receiverId id of the friend to check if has received friend request of current
      * @return has current user sent an friend request to user with given id
      */
-    private boolean hasReceivedFriendRequest(List<MutableLiveData<FriendRequest>> requests, String receiverId) {
-        for (MutableLiveData<FriendRequest> request : requests) {
-            if (Objects.requireNonNull(request.getValue()).getReceiverId().equals(receiverId)
-                    && request.getValue().getSenderId().equals(userRepository.getFirebaseUser().getUid())) {
+    private boolean hasReceivedFriendRequest(List<FriendRequest> requests, String receiverId) {
+        for (FriendRequest request : requests) {
+            if (Objects.requireNonNull(request).getReceiverId().equals(receiverId)
+                    && request.getSenderId().equals(userRepository.getFirebaseUser().getUid())) {
                 return true;
             }
         }

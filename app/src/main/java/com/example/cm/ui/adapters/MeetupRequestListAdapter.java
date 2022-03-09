@@ -105,7 +105,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         /*String user = String.format("@%s ", Objects.requireNonNull(request).getSenderName());*/
         String user = "platzhalter";
         String date = request.getCreationTimeAgo();
-        String location = request.getLocation();
+        String location = /*request.getLocation();*/ "platzhalter";
 
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 

@@ -92,7 +92,6 @@ public class MeetupRequestRepository extends Repository {
         request.setCreatedAt(document.getDate("createdAt"));
         request.setState(document.get("state", Request.RequestState.class));
         request.setMeetupId(document.getString("meetupId"));
-        request.setLocation(document.getString("location"));
         request.setMeetupAt(document.getDate("meetupAt"));
         request.setPhase(document.get("phase", MeetupPhase.class));
 

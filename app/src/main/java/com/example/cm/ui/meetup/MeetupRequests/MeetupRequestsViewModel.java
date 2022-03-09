@@ -55,9 +55,7 @@ public class MeetupRequestsViewModel extends ViewModel {
         meetupRequestRepository.addMeetupRequest(new MeetupRequest(
                 request.getMeetupId(),
                 currentUser.getValue().getId(),
-                currentUser.getValue().getFullName(),
                 request.getSenderId(),
-                request.getLocation(),
                 request.getMeetupAt(),
                 MEETUP_INFO_ACCEPTED
         ));
@@ -72,9 +70,7 @@ public class MeetupRequestsViewModel extends ViewModel {
         meetupRequestRepository.addMeetupRequest(new MeetupRequest(
                 request.getMeetupId(),
                 currentUser.getValue().getId(),
-                currentUser.getValue().getFullName(),
                 request.getSenderId(),
-                request.getLocation(),
                 request.getMeetupAt(),
                 MEETUP_INFO_DECLINED
         ));

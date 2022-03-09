@@ -23,7 +23,7 @@ import timber.log.Timber;
 public class FriendRequestsViewModel extends ViewModel implements FriendRequestRepository.Callback, UserRepository.UserNamesCallback {
 
     private final UserRepository userRepository;
-    private MutableLiveData<List<MutableLiveData<FriendRequest>>> receivedRequests;
+    private final MutableLiveData<List<FriendRequest>> receivedRequests;
     public MutableLiveData<List<FriendRequestDTO>> receivedRequestDTOs = new MutableLiveData<>();
 
     private final FriendRequestRepository friendRequestRepository;
@@ -59,17 +59,15 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
     public void undoFriendRequest(int position, Request.RequestState previousState) {
         FriendRequest request = getFriendRequestByPosition(position);
         if (request != null) {
-            MutableLiveData<FriendRequest> requestMDL = new MutableLiveData<>();
             request.setState(previousState);
             friendRequestRepository.addFriendRequest(request);
-            requestMDL.postValue(request);
-            Objects.requireNonNull(receivedRequests.getValue()).add(position, requestMDL);
+            Objects.requireNonNull(receivedRequests.getValue()).add(position, request);
         }
     }
 
     private FriendRequest getFriendRequestByPosition(int position) {
         if (receivedRequests.getValue() != null) {
-            return receivedRequests.getValue().get(position).getValue();
+            return receivedRequests.getValue().get(position);
         }
         return null;
     }
@@ -79,7 +77,7 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
         List<FriendRequestDTO> friendRequestDTOs = new ArrayList<>();
         if(receivedRequests.getValue() != null || receivedRequests.getValue().isEmpty() || userNames.isEmpty()) {
             for (int i = 0; i < receivedRequests.getValue().size(); i++) {
-                FriendRequest friendRequest = receivedRequests.getValue().get(i).getValue();
+                FriendRequest friendRequest = receivedRequests.getValue().get(i);
                 FriendRequestDTO friendRequestDTO = new FriendRequestDTO(
                         friendRequest.getSenderId(),
                         userNames.get(i),
