@@ -26,7 +26,7 @@ public class MeetupRequestRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());
-    private final MutableLiveData<List<MutableLiveData<MeetupRequest>>> receivedRequests = new MutableLiveData<>();
+    private final MutableLiveData<List<MeetupRequest>> receivedRequests = new MutableLiveData<>();
 
     public MeetupRequestRepository() {
     }
@@ -34,7 +34,7 @@ public class MeetupRequestRepository extends Repository {
     /**
      * Get all meetup requests for currently signed in user
      */
-    public MutableLiveData<List<MutableLiveData<MeetupRequest>>> getMeetupRequestsForUser() {
+    public MutableLiveData<List<MeetupRequest>> getMeetupRequestsForUser() {
         if (auth.getCurrentUser() == null) {
             return receivedRequests;
         }
@@ -47,11 +47,11 @@ public class MeetupRequestRepository extends Repository {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<MeetupRequest>> requestsToReturn = new ArrayList<>();
+                        List<MeetupRequest> requestsToReturn = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
                             if (currentState != REQUEST_DECLINED) {
-                                requestsToReturn.add(new MutableLiveData<>(snapshotToMeetupRequest(snapshot)));
+                                requestsToReturn.add(snapshotToMeetupRequest(snapshot));
                             }
                         }
                         receivedRequests.postValue(requestsToReturn);

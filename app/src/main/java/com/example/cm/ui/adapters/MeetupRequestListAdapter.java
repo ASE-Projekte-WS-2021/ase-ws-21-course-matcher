@@ -25,14 +25,14 @@ import java.util.Objects;
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
     private ViewGroup parent;
-    private List<MutableLiveData<MeetupRequest>> mRequests;
+    private List<MeetupRequest> mRequests;
     private final OnMeetupRequestListener listener;
 
     public MeetupRequestListAdapter(OnMeetupRequestListener listener) {
         this.listener = listener;
     }
 
-    public void setRequests(List<MutableLiveData<MeetupRequest>> newRequests) {
+    public void setRequests(List<MeetupRequest> newRequests) {
         if (mRequests == null) {
             mRequests = newRequests;
             notifyItemRangeInserted(0, newRequests.size());
@@ -44,7 +44,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         result.dispatchUpdatesTo(this);
     }
 
-    public static DiffUtil.DiffResult calculateDiffMeetupRequests(List<MutableLiveData<MeetupRequest>> oldRequests, List<MutableLiveData<MeetupRequest>> newRequests) {
+    public static DiffUtil.DiffResult calculateDiffMeetupRequests(List<MeetupRequest> oldRequests, List<MeetupRequest> newRequests) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -58,14 +58,14 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(Objects.requireNonNull(oldRequests.get(oldItemPosition).getValue()).getId(),
-                        Objects.requireNonNull(newRequests.get(newItemPosition).getValue()).getId());
+                return Objects.equals(Objects.requireNonNull(oldRequests.get(oldItemPosition)).getId(),
+                        Objects.requireNonNull(newRequests.get(newItemPosition)).getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                MeetupRequest newRequest = newRequests.get(newItemPosition).getValue();
-                MeetupRequest oldRequest = oldRequests.get(oldItemPosition).getValue();
+                MeetupRequest newRequest = newRequests.get(newItemPosition);
+                MeetupRequest oldRequest = oldRequests.get(oldItemPosition);
 
                 return Objects.equals(Objects.requireNonNull(newRequest).getId(), Objects.requireNonNull(oldRequest).getId());
             }
@@ -73,7 +73,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     }
 
     public void deleteItem(int position) {
-        MeetupRequest request = mRequests.get(position).getValue();
+        MeetupRequest request = mRequests.get(position);
         Request.RequestState previousState = Objects.requireNonNull(request).getState();
         mRequests.remove(position);
         notifyItemRemoved(position);
@@ -85,7 +85,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     private void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState){
         listener.onUndoDelete(request, position, previousState);
-        mRequests.add(position, new MutableLiveData<>(request));
+        mRequests.add(position, request);
         notifyItemInserted(position);
     }
 
@@ -100,7 +100,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     @Override
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
         Context context = holder.binding.getRoot().getContext();
-        MeetupRequest request = mRequests.get(position).getValue();
+        MeetupRequest request = mRequests.get(position);
 
         /*String user = String.format("@%s ", Objects.requireNonNull(request).getSenderName());*/
         String user = "platzhalter";
@@ -190,11 +190,11 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(Objects.requireNonNull(mRequests.get(position).getValue()).getMeetupId());
+            listener.onItemClicked(Objects.requireNonNull(mRequests.get(position)).getMeetupId());
         }
 
         private void onAccept() {
-            MeetupRequest request = mRequests.get(getAdapterPosition()).getValue();
+            MeetupRequest request = mRequests.get(getAdapterPosition());
             listener.onAccept(request);
             notifyItemChanged(getAdapterPosition());
         }
@@ -206,7 +206,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
         private void onDecline(){
             int position = getAdapterPosition();
-            MeetupRequest request = mRequests.get(position).getValue();
+            MeetupRequest request = mRequests.get(position);
             mRequests.remove(position);
             notifyItemRemoved(position);
             listener.onDecline(request);

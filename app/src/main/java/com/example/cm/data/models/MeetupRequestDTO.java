@@ -1,28 +1,22 @@
 package com.example.cm.data.models;
 
-import android.annotation.SuppressLint;
-
-import androidx.annotation.NonNull;
-
-import com.google.firebase.firestore.Exclude;
-
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
 
 public class MeetupRequestDTO extends Request {
 
     private String meetupId;
-    private Date meetupAt;
+    private final Date meetupAt;
     private MeetupRequest.MeetupRequestType type;
     private MeetupPhase phase;
-
+    private String location;
+    private String senderName;
 
     public MeetupRequestDTO(String meetupId, String senderId,
-                            String receiverId, Date meetupAt, MeetupRequest.MeetupRequestType type, MeetupPhase phase) {
+                            String receiverId, String senderName, String location, Date meetupAt, MeetupRequest.MeetupRequestType type, MeetupPhase phase) {
         super(senderId, receiverId);
         this.meetupId = meetupId;
+        this.senderName = senderName;
+        this.location = location;
         this.meetupAt = meetupAt;
         this.type = type;
         this.phase = phase;
@@ -50,5 +44,25 @@ public class MeetupRequestDTO extends Request {
 
     public void setPhase(MeetupPhase phase) {
         this.phase = phase;
+    }
+
+    public MeetupPhase getPhase() {
+        return phase;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 }
