@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.Constants;
+import com.example.cm.data.map.MarkerClusterRenderer;
+import com.example.cm.data.models.MarkerClusterItem;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.PositionManager;
 import com.example.cm.databinding.FragmentHomeBinding;
@@ -27,6 +29,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -34,11 +37,13 @@ import timber.log.Timber;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener {
 
-    private HomeViewModel homeViewModel;
-    private FragmentHomeBinding binding;
-    private GoogleMap googleMap;
-    private PositionManager positionManager;
     private ActivityResultLauncher<String> locationPermissionLauncher;
+    private ClusterManager<MarkerClusterItem> clusterManager;
+    private MarkerClusterRenderer<MarkerClusterItem> markerClusterRenderer;
+    private PositionManager positionManager;
+    private FragmentHomeBinding binding;
+    private HomeViewModel homeViewModel;
+    private GoogleMap googleMap;
     private User currentUser;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -79,7 +84,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     private void initViewModel() {
         homeViewModel = new HomeViewModel();
-        observeFriends();
         observeCurrentUser();
     }
 
@@ -111,7 +115,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                     continue;
                 }
 
-                setUserMarker(user, location);
+                // Needed to animate zoom changes for markers
+                googleMap.setOnCameraIdleListener(clusterManager);
+                googleMap.setOnMarkerClickListener(clusterManager);
+
+                MarkerClusterItem marker = new MarkerClusterItem(location.latitude, location.longitude, user.getFullName(), user.getUsername());
+                clusterManager.addItem(marker);
+                //setUserMarker(user, location);
             }
         });
     }
@@ -142,7 +152,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.googleMap = googleMap;
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Constants.DEFAULT_LOCATION, 15));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Constants.DEFAULT_LOCATION, 10));
+        clusterManager = new ClusterManager<>(requireActivity(), googleMap);
+        markerClusterRenderer = new MarkerClusterRenderer<>(requireActivity(), googleMap, clusterManager);
+        clusterManager.setRenderer(markerClusterRenderer);
+        observeFriends();
     }
 
     @Override
@@ -153,8 +167,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
         Timber.d("Position changed: %s", position);
 
-        setUserMarker(currentUser, position);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
+        //setUserMarker(currentUser, position);
+        MarkerClusterItem marker = new MarkerClusterItem(position.latitude, position.longitude, currentUser.getFullName(), currentUser.getUsername());
+        clusterManager.addItem(marker);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 10));
         homeViewModel.updateLocation(position);
     }
 
