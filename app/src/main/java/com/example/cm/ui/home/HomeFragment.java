@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.Constants;
+import com.example.cm.R;
 import com.example.cm.data.map.MarkerClusterRenderer;
 import com.example.cm.data.models.MarkerClusterItem;
 import com.example.cm.data.models.User;
@@ -103,6 +104,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             }
             // Clear previously set markers
             googleMap.clear();
+            clusterManager.cluster();
 
             for (MutableLiveData<User> friend : friends) {
                 User user = friend.getValue();
@@ -119,15 +121,44 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 googleMap.setOnCameraIdleListener(clusterManager);
                 googleMap.setOnMarkerClickListener(clusterManager);
 
-                MarkerClusterItem marker = new MarkerClusterItem(location.latitude, location.longitude, user.getFullName(), user.getUsername());
-                clusterManager.addItem(marker);
-                //setUserMarker(user, location);
-            }
+                // Load image
+                loadMarkerImage(user);}
         });
     }
 
+    private void loadMarkerImage(User user) {
+        Timber.d("Trying to load image...");
+        if (user.getProfileImageUrl() == null) {
+            MarkerClusterItem marker = new MarkerClusterItem(user, R.drawable.ic_profile);
+            clusterManager.addItem(marker);
+            clusterManager.cluster();
+        } else {
+
+            Timber.d("Loading image from url");
+            Picasso.get().load(user.getProfileImageUrl()).resize(150, 150).centerCrop().transform(new PicassoCircleTransform()).into(new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    Timber.d("Created marker with bitmap profile image");
+                    MarkerClusterItem marker = new MarkerClusterItem(user, bitmap);
+                    clusterManager.addItem(marker);
+                    clusterManager.cluster();
+                }
+
+                @Override
+                public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                }
+            });
+        }
+    }
+
     private void setUserMarker(User user, LatLng location) {
-        Picasso.get().load(user.getProfileImageUrl()).resize(150, 150).transform(new PicassoCircleTransform()).into(new Target() {
+        Picasso.get().load(user.getProfileImageUrl()).resize(150, 150).into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 // Add marker with image loaded from Picasso
@@ -152,7 +183,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.googleMap = googleMap;
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Constants.DEFAULT_LOCATION, 10));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Constants.DEFAULT_LOCATION, 12.5f));
         clusterManager = new ClusterManager<>(requireActivity(), googleMap);
         markerClusterRenderer = new MarkerClusterRenderer<>(requireActivity(), googleMap, clusterManager);
         clusterManager.setRenderer(markerClusterRenderer);
@@ -165,12 +196,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             return;
         }
 
-        Timber.d("Position changed: %s", position);
-
-        //setUserMarker(currentUser, position);
-        MarkerClusterItem marker = new MarkerClusterItem(position.latitude, position.longitude, currentUser.getFullName(), currentUser.getUsername());
-        clusterManager.addItem(marker);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 10));
+        User user = currentUser;
+        user.setLocation(position);
+        loadMarkerImage(user);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 12.5f));
         homeViewModel.updateLocation(position);
     }
 
