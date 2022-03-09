@@ -1,7 +1,8 @@
 package com.example.cm.data.repositories;
 
-import android.net.Uri;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -20,6 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class UserRepository extends Repository {
 
@@ -58,7 +60,8 @@ public class UserRepository extends Repository {
         userCollection.document(currentUserId).addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
                 return;
-            } if (value != null && value.exists()) {
+            }
+            if (value != null && value.exists()) {
                 User user = snapshotToUser(value);
                 mutableUser.postValue(user);
             }
@@ -169,9 +172,9 @@ public class UserRepository extends Repository {
         });
         return mutableUsers;
     }
-  
 
-  /**
+
+    /**
      * Get list of not-friends by their username
      *
      * @param query String to search for
@@ -215,7 +218,7 @@ public class UserRepository extends Repository {
         return mutableUsers;
     }
 
-  /**
+    /**
      * Get user with given id
      *
      * @param userId id of user to retrieve
@@ -272,6 +275,7 @@ public class UserRepository extends Repository {
                 User user = snapshotToUser(value);
                 List<String> friends = user.getFriends();
                 mutableUsers = getUsersByIds(friends);
+
             }
         });
         return mutableUsers;
@@ -299,6 +303,24 @@ public class UserRepository extends Repository {
             }
         });
         return mutableUsers;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void getUserNamesByIds(List<String> userIds, UserNamesCallback callback) {
+        if (userIds == null || userIds.isEmpty()) {
+            return;
+        }
+
+        userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener(executorService, (value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null && !value.isEmpty()) {
+                List<User> users = snapshotToMutableUserList(value);
+                List<String> userNames = users.stream().map(User::getFullName).collect(Collectors.toList());
+                callback.onUsersRetrieved(userNames);
+            }
+        });
     }
 
     /**
@@ -330,7 +352,7 @@ public class UserRepository extends Repository {
      * Get users within given list with query matching name
      *
      * @param userIds list of users to search in
-     * @param query String to search for
+     * @param query   String to search for
      * @return MutableLiveData-List of mutable users within given list with query matching name
      */
     public MutableLiveData<List<User>> getUsersByIdsAndName(List<String> userIds, String query) {
@@ -421,5 +443,9 @@ public class UserRepository extends Repository {
         String ownId = auth.getCurrentUser().getUid();
         userCollection.document(ownId).update("friends", FieldValue.arrayRemove(friendIdToUnfriend));
         userCollection.document(friendIdToUnfriend).update("friends", FieldValue.arrayRemove(ownId));
+    }
+
+    public interface UserNamesCallback {
+        void onUsersRetrieved(List<String> userNames);
     }
 }

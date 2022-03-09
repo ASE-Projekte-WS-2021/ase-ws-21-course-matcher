@@ -25,14 +25,14 @@ import java.util.Objects;
 public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder>{
 
     private ViewGroup parent;
-    private List<MutableLiveData<FriendRequestDTO>> mRequests;
+    private List<FriendRequestDTO> mRequests;
     private final OnFriendRequestListener listener;
 
     public FriendRequestListAdapter(OnFriendRequestListener listener) {
         this.listener = listener;
     }
 
-    public void setRequests(List<MutableLiveData<FriendRequestDTO>> newRequests) {
+    public void setRequests(List<FriendRequestDTO> newRequests) {
         if (mRequests == null) {
             mRequests = newRequests;
             notifyItemRangeInserted(0, newRequests.size());
@@ -44,7 +44,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         result.dispatchUpdatesTo(this);
     }
 
-    public static DiffUtil.DiffResult calculateDiffFriendRequests(List<MutableLiveData<FriendRequestDTO>> oldRequests, List<MutableLiveData<FriendRequestDTO>> newRequests) {
+    public static DiffUtil.DiffResult calculateDiffFriendRequests(List<FriendRequestDTO> oldRequests, List<FriendRequestDTO> newRequests) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -58,14 +58,14 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(Objects.requireNonNull(oldRequests.get(oldItemPosition).getValue()).getId(),
-                        Objects.requireNonNull(newRequests.get(newItemPosition).getValue()).getId());
+                return Objects.equals(Objects.requireNonNull(oldRequests.get(oldItemPosition)).getId(),
+                        Objects.requireNonNull(newRequests.get(newItemPosition)).getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                FriendRequestDTO newRequest = newRequests.get(newItemPosition).getValue();
-                FriendRequestDTO oldRequest = oldRequests.get(oldItemPosition).getValue();
+                FriendRequestDTO newRequest = newRequests.get(newItemPosition);
+                FriendRequestDTO oldRequest = oldRequests.get(oldItemPosition);
 
                 return Objects.equals(Objects.requireNonNull(newRequest).getId(), Objects.requireNonNull(oldRequest).getId());
             }
@@ -73,7 +73,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     public void deleteItem(int position) {
-        FriendRequestDTO request = mRequests.get(position).getValue();
+        FriendRequestDTO request = mRequests.get(position);
         Request.RequestState previousState = Objects.requireNonNull(request).getState();
         mRequests.remove(position);
         notifyItemRemoved(position);
@@ -85,7 +85,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     private void onUndoDelete(FriendRequestDTO request, int position, Request.RequestState previousState){
         listener.onUndo(position, previousState);
-        mRequests.add(position, new MutableLiveData<>(request));
+        mRequests.add(position, request);
         notifyItemInserted(position);
     }
 
@@ -99,7 +99,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     @Override
     public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
-        FriendRequestDTO request = mRequests.get(position).getValue();
+        FriendRequestDTO request = mRequests.get(position);
 
         String user = Objects.requireNonNull(request).getSenderName();
         String date = request.getCreationTimeAgo();
@@ -151,11 +151,11 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(Objects.requireNonNull(mRequests.get(position).getValue()).getSenderId());
+            listener.onItemClicked(Objects.requireNonNull(mRequests.get(position)).getSenderId());
         }
 
         private void onAccept() {
-            FriendRequestDTO request = mRequests.get(getAdapterPosition()).getValue();
+            FriendRequestDTO request = mRequests.get(getAdapterPosition());
             listener.onAccept(getAdapterPosition());
             notifyItemChanged(getAdapterPosition());
         }
@@ -167,7 +167,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
         private void onDecline(){
             int position = getAdapterPosition();
-            FriendRequestDTO request = mRequests.get(position).getValue();
+            FriendRequestDTO request = mRequests.get(position);
             Request.RequestState previousState = Objects.requireNonNull(request).getState();
             listener.onDecline(position);
             notifyItemRemoved(position);
