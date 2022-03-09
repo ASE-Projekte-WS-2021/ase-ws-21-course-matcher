@@ -14,7 +14,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
@@ -27,14 +26,10 @@ import com.example.cm.utils.PicassoCircleTransform;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-
-import timber.log.Timber;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener {
 
@@ -99,15 +94,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     private void observeFriends() {
         homeViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
-            if (googleMap == null || friends.isEmpty()) {
+            if (friends.isEmpty()) {
                 return;
             }
-            // Clear previously set markers
-            googleMap.clear();
+            clusterManager.clearItems();
             clusterManager.cluster();
 
-            for (MutableLiveData<User> friend : friends) {
-                User user = friend.getValue();
+            for (int i = 0; i < friends.size(); i++) {
+                User user = friends.get(i).getValue();
                 if (user == null) {
                     continue;
                 }
@@ -117,28 +111,20 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                     continue;
                 }
 
-                // Needed to animate zoom changes for markers
-                googleMap.setOnCameraIdleListener(clusterManager);
-                googleMap.setOnMarkerClickListener(clusterManager);
-
-                // Load image
-                loadMarkerImage(user);}
+                loadMarkerImage(user);
+            }
         });
     }
 
     private void loadMarkerImage(User user) {
-        Timber.d("Trying to load image...");
-        if (user.getProfileImageUrl() == null) {
+        if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
             MarkerClusterItem marker = new MarkerClusterItem(user, R.drawable.ic_profile);
             clusterManager.addItem(marker);
             clusterManager.cluster();
         } else {
-
-            Timber.d("Loading image from url");
             Picasso.get().load(user.getProfileImageUrl()).resize(150, 150).centerCrop().transform(new PicassoCircleTransform()).into(new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                    Timber.d("Created marker with bitmap profile image");
                     MarkerClusterItem marker = new MarkerClusterItem(user, bitmap);
                     clusterManager.addItem(marker);
                     clusterManager.cluster();
@@ -157,28 +143,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         }
     }
 
-    private void setUserMarker(User user, LatLng location) {
-        Picasso.get().load(user.getProfileImageUrl()).resize(150, 150).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                // Add marker with image loaded from Picasso
-                googleMap.addMarker(new MarkerOptions()
-                        .position(location)
-                        .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                        .title(user.getFullName()));
-            }
-
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                Timber.d("Bitmap failed for user %s", user.getUsername());
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                Timber.d("Preparing bitmap for user %s", user.getUsername());
-            }
-        });
-    }
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -187,6 +151,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         clusterManager = new ClusterManager<>(requireActivity(), googleMap);
         markerClusterRenderer = new MarkerClusterRenderer<>(requireActivity(), googleMap, clusterManager);
         clusterManager.setRenderer(markerClusterRenderer);
+
+        // Needed to animate zoom changes for markers and cluster items correctly
+        googleMap.setOnCameraIdleListener(clusterManager);
+        googleMap.setOnMarkerClickListener(clusterManager);
         observeFriends();
     }
 
@@ -196,11 +164,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             return;
         }
 
-        User user = currentUser;
-        user.setLocation(position);
-        loadMarkerImage(user);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 12.5f));
         homeViewModel.updateLocation(position);
+        loadMarkerImage(currentUser);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 12.5f));
     }
 
     @Override
