@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.MeetupRequestDTO;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentMeetupRequestsBinding;
@@ -39,7 +38,7 @@ public class MeetupRequestsFragment extends Fragment implements
     }
 
     private void initUI() {
-        requestsListAdapter = new MeetupRequestListAdapter( this);
+        requestsListAdapter = new MeetupRequestListAdapter(this);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
         binding.notificationsRecyclerView.setAdapter(requestsListAdapter);

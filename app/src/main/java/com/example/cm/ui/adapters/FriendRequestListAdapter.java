@@ -7,14 +7,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
-import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.FriendRequestDTO;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -22,7 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 import java.util.Objects;
 
-public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder>{
+public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder> {
 
     private ViewGroup parent;
     private List<FriendRequestDTO> mRequests;
@@ -81,7 +78,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         snackbar.show();
     }
 
-    private void onUndoDelete(FriendRequestDTO request, int position, Request.RequestState previousState){
+    private void onUndoDelete(FriendRequestDTO request, int position, Request.RequestState previousState) {
         listener.onUndo(request, position, previousState);
         mRequests.add(position, request);
         notifyItemInserted(position);
@@ -114,7 +111,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     @Override
     public int getItemCount() {
-        if(mRequests == null){
+        if (mRequests == null) {
             return 0;
         }
         return mRequests.size();
@@ -122,9 +119,13 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     public interface OnFriendRequestListener {
         void onItemClicked(String id);
+
         void onItemDeleted(int position);
+
         void onAccept(int position);
+
         void onDecline(int position);
+
         void onUndo(FriendRequestDTO request, int position, Request.RequestState previousState);
     }
 
@@ -169,12 +170,12 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             notifyItemChanged(getAdapterPosition());
         }
 
-        private void onUndo(FriendRequestDTO request, int position, Request.RequestState previousState){
+        private void onUndo(FriendRequestDTO request, int position, Request.RequestState previousState) {
             listener.onUndo(request, position, previousState);
             notifyItemInserted(position);
         }
 
-        private void onDecline(){
+        private void onDecline() {
             int position = getAdapterPosition();
             FriendRequestDTO request = mRequests.get(position);
             Request.RequestState previousState = Objects.requireNonNull(request).getState();
@@ -189,7 +190,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
          * Getters for the views in the list item
          */
 
-        public ImageView getIvProfilePicture(){
+        public ImageView getIvProfilePicture() {
             return binding.senderProfileImageView;
         }
 
@@ -209,11 +210,11 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             return binding.sentDateTextView;
         }
 
-        public ImageView getBtnAccept(){
+        public ImageView getBtnAccept() {
             return binding.acceptButton;
         }
 
-        public ImageView getBtnDecline(){
+        public ImageView getBtnDecline() {
             return binding.declineButton;
         }
     }

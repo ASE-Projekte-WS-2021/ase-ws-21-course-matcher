@@ -25,7 +25,7 @@ public class MeetupRequest extends Request {
     public MeetupRequest(MeetupRequestType type) {
         super();
         this.type = type;
-        if(type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED){
+        if (type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED) {
             state = RequestState.REQUEST_ANSWERED;
         }
     }
@@ -38,7 +38,7 @@ public class MeetupRequest extends Request {
         this.meetupAt = meetupAt;
         calendarMeetup.setTime(meetupAt);
         this.type = type;
-        if(type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED){
+        if (type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED) {
             state = RequestState.REQUEST_ANSWERED;
         }
         phase = getPhase();
@@ -79,7 +79,7 @@ public class MeetupRequest extends Request {
 
     @SuppressLint("DefaultLocale")
     @Exclude
-    public String getFormattedTime(){
+    public String getFormattedTime() {
         return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
     }
 
@@ -110,7 +110,7 @@ public class MeetupRequest extends Request {
     @Override
     public String toString() {
         String meetupString = "Treffen " + meetupAt + " Uhr - " + location;
-        switch(type){
+        switch (type) {
             case MEETUP_REQUEST:
                 return meetupString + "?";
             case MEETUP_INFO_ACCEPTED:

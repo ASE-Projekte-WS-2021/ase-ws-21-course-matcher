@@ -67,7 +67,7 @@ public class MeetupRequestsViewModel extends ViewModel implements MeetupRequestR
         request.setCreatedAtToNow();
         meetupRequestRepository.accept(request);
 
-        if(requestDTOList.getValue() != null){
+        if (requestDTOList.getValue() != null) {
             requestDTOList.getValue().get(position).setState(request.getState());
             requestDTOList.getValue().get(position).setCreatedAtToNow();
         }
@@ -146,8 +146,8 @@ public class MeetupRequestsViewModel extends ViewModel implements MeetupRequestR
             return friendRequestDTOs;
         }
     }
-    
-    private MeetupRequest convertToMeetupRequest(MeetupRequestDTO requestDTO){
+
+    private MeetupRequest convertToMeetupRequest(MeetupRequestDTO requestDTO) {
         MeetupRequest request = new MeetupRequest(
                 requestDTO.getMeetupId(),
                 requestDTO.getSenderId(),

@@ -42,7 +42,6 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
         FriendRequest request = getFriendRequestByPosition(position);
         if (request != null) {
             friendRequestRepository.decline(request);
-            Objects.requireNonNull(receivedRequestDTOs.getValue()).remove(position);
         }
     }
 

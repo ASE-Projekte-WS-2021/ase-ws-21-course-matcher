@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.FriendRequestDTO;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentFriendRequestsBinding;

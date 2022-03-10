@@ -8,12 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.MeetupRequestDTO;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
@@ -84,7 +82,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         snackbar.show();
     }
 
-    private void onUndoDelete(MeetupRequestDTO request, int position, Request.RequestState previousState){
+    private void onUndoDelete(MeetupRequestDTO request, int position, Request.RequestState previousState) {
         listener.onUndoDelete(request, position, previousState);
         mRequests.add(position, request);
         notifyItemInserted(position);
@@ -109,7 +107,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
-        switch (request.getPhase()){
+        switch (request.getPhase()) {
             case MEETUP_UPCOMING:
                 holder.getTvMeetupTime().setText(request.getFormattedTime());
                 break;
@@ -156,7 +154,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     @Override
     public int getItemCount() {
-        if(mRequests == null){
+        if (mRequests == null) {
             return 0;
         }
         return mRequests.size();
@@ -164,10 +162,15 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     public interface OnMeetupRequestListener {
         void onItemClicked(String id);
+
         void onItemDeleted(int position);
+
         void onAccept(int position);
+
         void onDecline(int position);
+
         void onUndoDecline(MeetupRequestDTO request, int position);
+
         void onUndoDelete(MeetupRequestDTO request, int position, Request.RequestState previousState);
     }
 
@@ -212,12 +215,12 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
             notifyItemChanged(getAdapterPosition());
         }
 
-        private void onUndo(MeetupRequestDTO request, int position){
+        private void onUndo(MeetupRequestDTO request, int position) {
             listener.onUndoDecline(request, position);
             notifyItemInserted(position);
         }
 
-        private void onDecline(){
+        private void onDecline() {
             int position = getAdapterPosition();
             MeetupRequestDTO request = mRequests.get(position);
             mRequests.remove(position);
@@ -252,11 +255,11 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
             return binding.sentDateTextView;
         }
 
-        public ImageView getBtnAccept(){
+        public ImageView getBtnAccept() {
             return binding.acceptButton;
         }
 
-        public ImageView getBtnDecline(){
+        public ImageView getBtnDecline() {
             return binding.declineButton;
         }
     }
