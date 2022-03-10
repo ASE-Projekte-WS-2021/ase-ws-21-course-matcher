@@ -37,6 +37,15 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
         return mUsers.get(position).getValue();
     }
 
+    public int getPositionBy(String userId) {
+        for (int i = 0; i < mUsers.size(); i++) {
+            if (mUsers.get(i).getValue().getId().equals(userId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     // Create new views (invoked by the layout manager)
     @NonNull
     @Override

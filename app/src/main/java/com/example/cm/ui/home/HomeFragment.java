@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
@@ -38,15 +39,23 @@ import com.example.cm.data.repositories.PositionManager;
 import com.example.cm.databinding.FragmentHomeBinding;
 import com.example.cm.ui.adapters.MapUserAdapter;
 import com.example.cm.utils.Utils;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import timber.log.Timber;
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener, MapUserAdapter.OnItemClickListener, SnapPagerScrollListener.OnChangeListener {
+public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener, MapUserAdapter.OnItemClickListener, SnapPagerScrollListener.OnChangeListener, ClusterManager.OnClusterItemClickListener<MarkerClusterItem>, ClusterManager.OnClusterClickListener<MarkerClusterItem>, GoogleMap.OnMapClickListener {
 
     private ActivityResultLauncher<String> locationPermissionLauncher;
     private ClusterManager<MarkerClusterItem> clusterManager;
@@ -77,13 +86,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void initRecyclerView() {
-        mapUserAdapter = new MapUserAdapter(this);
         PagerSnapHelper snapHelper = new PagerSnapHelper();
+        mapUserAdapter = new MapUserAdapter(this);
+
         binding.rvUserCards.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvUserCards.setHasFixedSize(true);
         binding.rvUserCards.setAdapter(mapUserAdapter);
-        snapHelper.attachToRecyclerView(binding.rvUserCards);
         binding.rvUserCards.addOnScrollListener(new SnapPagerScrollListener(snapHelper, SnapPagerScrollListener.ON_SCROLL, false, this));
+        snapHelper.attachToRecyclerView(binding.rvUserCards);
 
     }
 
@@ -111,7 +121,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     private void initViewModel() {
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-        observeCurrentUser();
     }
 
     private void observeCurrentUser() {
@@ -121,6 +130,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             }
 
             this.currentUser = currentUser;
+            homeViewModel.addUserToShow(currentUser);
         });
     }
 
@@ -128,25 +138,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.googleMap = googleMap;
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM));
+        googleMap.setOnMapClickListener(this);
         setupClusterManager(googleMap);
         // Needed to animate zoom changes for markers and cluster items correctly
         googleMap.setOnCameraIdleListener(clusterManager);
-
-        observeFriends();
     }
 
     private void setupClusterManager(GoogleMap googleMap) {
         clusterManager = new ClusterManager<>(requireActivity(), googleMap);
         clusterManager.clearItems();
         clusterManager.setRenderer(new MarkerClusterRenderer<>(requireActivity(), googleMap, clusterManager));
-        clusterManager.setOnClusterClickListener(cluster -> {
-            Timber.d("cluster clicked");
-            return false;
-        });
-        clusterManager.setOnClusterItemClickListener(item -> {
-            Timber.d("Clicked on %s", item.getUser().getFullName());
-            return false;
-        });
+        clusterManager.setOnClusterClickListener(this);
+        clusterManager.setOnClusterItemClickListener(this);
+
+        observeCurrentUser();
+        observeFriends();
     }
 
     private void observeFriends() {
@@ -155,8 +161,26 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 return;
             }
 
-            for (int i = 0; i < friends.size(); i++) {
-                User user = friends.get(i).getValue();
+            for (MutableLiveData<User> mutableFriend : friends) {
+                User user = mutableFriend.getValue();
+                if (user != null) {
+                    homeViewModel.addUserToShow(user);
+                }
+            }
+            observeUsersToShow();
+        });
+    }
+
+    private void observeUsersToShow() {
+        homeViewModel.getUsersToShow().observe(getViewLifecycleOwner(), users -> {
+            clusterManager.clearItems();
+            clusterManager.cluster();
+            if (users.isEmpty()) {
+                return;
+            }
+            List<User> usersToShow = new ArrayList<>(users);
+            for (int i = 0; i < usersToShow.size(); i++) {
+                User user = usersToShow.get(i);
                 if (user == null) {
                     continue;
                 }
@@ -179,9 +203,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             return;
         }
 
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_MAP_ZOOM));
         homeViewModel.updateLocation(position);
-        addMarker(currentUser);
     }
 
     private void addMarker(User user) {
@@ -245,7 +268,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             return;
         }
 
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20.0f));
     }
 
     @Override
@@ -278,5 +301,54 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     public void onLowMemory() {
         super.onLowMemory();
         binding.mapView.onLowMemory();
+    }
+
+    @Override
+    public boolean onClusterItemClick(MarkerClusterItem item) {
+        Timber.d("Clicked on %s", item.getUser().getFullName());
+        showUserCards(item.getUser());
+
+        return false;
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster<MarkerClusterItem> cluster) {
+        // Show user cards
+        Collection<MarkerClusterItem> clusterItems = cluster.getItems();
+        List<MarkerClusterItem> users = new ArrayList<>(clusterItems);
+        User user = users.get(0).getUser();
+        showUserCards(user);
+
+        // Zoom in to show all markers inside the cluster
+        // From: https://stackoverflow.com/a/14828739
+        LatLngBounds.Builder builder = LatLngBounds.builder();
+        for (ClusterItem item : cluster.getItems()) {
+            Timber.d("Adding %s, %s", item.getPosition(), item.getTitle());
+            builder.include(item.getPosition());
+        }
+        LatLngBounds bounds = builder.build();
+        Timber.d("Bounds: %s", bounds);
+        int screenOffset = 25;
+        int width = getResources().getDisplayMetrics().widthPixels;
+        int height = getResources().getDisplayMetrics().heightPixels;
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, screenOffset);
+        googleMap.animateCamera(cu);
+
+        return false;
+    }
+
+    private void showUserCards(User user) {
+        binding.rvUserCards.animate().alpha(1f).setDuration(250);
+        String userId = user.getId();
+        int position = mapUserAdapter.getPositionBy(userId);
+        binding.rvUserCards.smoothScrollToPosition(position);
+    }
+
+    @Override
+    public void onMapClick(@NonNull LatLng latLng) {
+        // Hide user cards
+        binding.rvUserCards.animate().alpha(0f).setDuration(250);
+        // Reset the map to default zoom
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM));
     }
 }
