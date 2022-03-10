@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import timber.log.Timber;
+
 public class UserRepository extends Repository {
 
     private static UserRepository instance;
@@ -66,6 +68,26 @@ public class UserRepository extends Repository {
             if (error != null) {
                 return;
             }
+            if (value != null && value.exists()) {
+                User user = snapshotToUser(value);
+                mutableUser.postValue(user);
+            }
+        });
+        return mutableUser;
+    }
+
+    /**
+     * Get the current user
+     *
+     * @return MutableLiveData of current user
+     */
+    public MutableLiveData<User> getStaticCurrentUser() {
+        if (auth.getCurrentUser() == null) {
+            return null;
+        }
+
+        String currentUserId = auth.getCurrentUser().getUid();
+        userCollection.document(currentUserId).get().addOnSuccessListener(executorService, (value) -> {
             if (value != null && value.exists()) {
                 User user = snapshotToUser(value);
                 mutableUser.postValue(user);
@@ -301,10 +323,11 @@ public class UserRepository extends Repository {
                 .addOnFailureListener(executorService, (exception) -> {
                 })
                 .addOnSuccessListener(executorService, (value) -> {
+                    Timber.d("Loading Static Friends");
                     if (value != null && value.exists()) {
                         User user = snapshotToUser(value);
                         List<String> friends = user.getFriends();
-                        mutableUsers = getUsersByIds(friends);
+                        mutableUsers = getStaticUsersByIds(friends);
                     }
 
                 });
@@ -332,6 +355,29 @@ public class UserRepository extends Repository {
                 mutableUsers.postValue(users);
             }
         });
+        return mutableUsers;
+    }
+
+
+    /**
+     * Get user list by list of userIds
+     *
+     * @param userIds IDs of users to retrieve
+     * @return MutableLiveData-List of mutable users with ids
+     */
+    public MutableLiveData<List<MutableLiveData<User>>> getStaticUsersByIds(List<String> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            mutableUsers.postValue(new ArrayList<>());
+            return mutableUsers;
+        }
+
+        userCollection.whereIn(FieldPath.documentId(), userIds).get()
+                .addOnSuccessListener(executorService, (value) -> {
+                    if (value != null && !value.isEmpty()) {
+                        List<MutableLiveData<User>> users = snapshotToMutableUserList(value);
+                        mutableUsers.postValue(users);
+                    }
+                });
         return mutableUsers;
     }
 

@@ -1,8 +1,13 @@
 package com.example.cm.ui.home;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
-import android.graphics.Bitmap;
+import static com.example.cm.Constants.DEFAULT_LOCATION;
+import static com.example.cm.Constants.DEFAULT_MAP_ZOOM;
+import static com.example.cm.Constants.MARKER_SIZE;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,42 +17,56 @@ import android.view.ViewGroup;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.cm.Constants;
+import com.example.cm.R;
+import com.example.cm.data.map.MarkerClusterRenderer;
+import com.example.cm.data.models.MarkerClusterItem;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.PositionManager;
 import com.example.cm.databinding.FragmentHomeBinding;
-import com.example.cm.utils.PicassoCircleTransform;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
 
 import timber.log.Timber;
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener {
+public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener, ClusterManager.OnClusterClickListener<MarkerClusterItem>, ClusterManager.OnClusterItemClickListener<MarkerClusterItem> {
 
-    private HomeViewModel homeViewModel;
-    private FragmentHomeBinding binding;
-    private GoogleMap googleMap;
-    private PositionManager positionManager;
     private ActivityResultLauncher<String> locationPermissionLauncher;
+    private ClusterManager<MarkerClusterItem> clusterManager;
+    private PositionManager positionManager;
+    private FragmentHomeBinding binding;
+    private HomeViewModel homeViewModel;
+    private GoogleMap googleMap;
     private User currentUser;
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        positionManager = PositionManager.getInstance(requireActivity());
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+
         binding.mapView.onCreate(savedInstanceState);
         binding.mapView.getMapAsync(this);
         binding.mapView.onResume();
 
-        positionManager = PositionManager.getInstance(requireActivity());
         initLocationPermissionLauncher();
         initPermissionCheck();
         initViewModel();
@@ -56,13 +75,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void initPermissionCheck() {
-        boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
-        boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED;
+        boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
+        boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED;
 
         if (hasCoarseLocationPermission && hasFineLocationPermission) {
             positionManager.requestCurrentLocation(this);
         } else {
-            locationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION);
+            locationPermissionLauncher.launch(ACCESS_FINE_LOCATION);
         }
     }
 
@@ -78,8 +97,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void initViewModel() {
-        homeViewModel = new HomeViewModel();
-        observeFriends();
+        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         observeCurrentUser();
     }
 
@@ -88,20 +106,38 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             if (currentUser == null) {
                 return;
             }
+
             this.currentUser = currentUser;
         });
     }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM));
+        setupClusterManager(googleMap);
+        // Needed to animate zoom changes for markers and cluster items correctly
+        googleMap.setOnCameraIdleListener(clusterManager);
+
+        observeFriends();
+    }
+
+    private void setupClusterManager(@NonNull GoogleMap googleMap) {
+        clusterManager = new ClusterManager<>(requireActivity(), googleMap);
+        clusterManager.clearItems();
+        clusterManager.setRenderer(new MarkerClusterRenderer<>(requireActivity(), googleMap, clusterManager));
+        clusterManager.setOnClusterClickListener(this);
+        clusterManager.setOnClusterItemClickListener(this);
+    }
+
     private void observeFriends() {
         homeViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
-            if (googleMap == null || friends.isEmpty()) {
+            if (friends.isEmpty()) {
                 return;
             }
-            // Clear previously set markers
-            googleMap.clear();
 
-            for (MutableLiveData<User> friend : friends) {
-                User user = friend.getValue();
+            for (int i = 0; i < friends.size(); i++) {
+                User user = friends.get(i).getValue();
                 if (user == null) {
                     continue;
                 }
@@ -111,38 +147,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                     continue;
                 }
 
-                setUserMarker(user, location);
+                Timber.d("Adding friend: %s", user.getFullName());
+
+                addMarker(user);
+                clusterManager.cluster();
             }
         });
-    }
-
-    private void setUserMarker(User user, LatLng location) {
-        Picasso.get().load(user.getProfileImageUrl()).resize(150, 150).transform(new PicassoCircleTransform()).into(new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                // Add marker with image loaded from Picasso
-                googleMap.addMarker(new MarkerOptions()
-                        .position(location)
-                        .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
-                        .title(user.getFullName()));
-            }
-
-            @Override
-            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                Timber.d("Bitmap failed for user %s", user.getUsername());
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                Timber.d("Preparing bitmap for user %s", user.getUsername());
-            }
-        });
-    }
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Constants.DEFAULT_LOCATION, 15));
     }
 
     @Override
@@ -151,11 +161,38 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             return;
         }
 
-        Timber.d("Position changed: %s", position);
-
-        setUserMarker(currentUser, position);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
         homeViewModel.updateLocation(position);
+        addMarker(currentUser);
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+    }
+
+    private void addMarker(User user) {
+        if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
+            MarkerClusterItem markerClusterItem = getDefaultMarker(user);
+            clusterManager.addItem(markerClusterItem);
+            clusterManager.cluster();
+            return;
+        }
+        Glide.with(requireActivity()).load(user.getProfileImageUrl()).placeholder(R.drawable.ic_profile).apply(new RequestOptions().override(MARKER_SIZE, MARKER_SIZE)).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource);
+                clusterManager.addItem(markerClusterItem);
+                clusterManager.cluster();
+            }
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) {
+                MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, placeholder);
+                clusterManager.addItem(markerClusterItem);
+                clusterManager.cluster();
+            }
+        });
+    }
+
+    private MarkerClusterItem getDefaultMarker(User user) {
+        Drawable drawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_profile);
+        return new MarkerClusterItem(user, drawable);
     }
 
     @Override
@@ -188,5 +225,30 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     public void onLowMemory() {
         super.onLowMemory();
         binding.mapView.onLowMemory();
+    }
+
+    @Override
+    public boolean onClusterClick(Cluster<MarkerClusterItem> cluster) {
+        // TODO: Show bottom info sheet with friends information (horizontal scroll view)
+        for (MarkerClusterItem item : cluster.getItems()) {
+            User user = item.getUser();
+            if (user == null) {
+                break;
+            }
+            Timber.d("Clicked on cluster with user: %s", user.getFullName());
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onClusterItemClick(MarkerClusterItem item) {
+        // TODO: Show bottom info sheet with friends information (single card)
+        User user = item.getUser();
+        if (user == null) {
+            return false;
+        }
+        Timber.d("Clicked on cluster item with user: %s", user.getFullName());
+
+        return false;
     }
 }
