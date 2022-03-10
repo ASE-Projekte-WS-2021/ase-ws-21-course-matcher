@@ -180,7 +180,9 @@
     <string name="onboarding_btn">Registrieren</string>
     <string name="skiptoLogin">Login</string>
     <string name="img_uni">Picture of the University</string>
-    <string name="loginEmailPasswordNeeded">E-Mail und Passwort wird benötigt</string>
+    <string name="loginEmailPasswordNeeded">E-Mail und Passwort werden benötigt</string>
+    <string name="loginEmailNeeded">Bitte gebe eine E-Mail an.</string>
+    <string name="loginPasswordNeeded">Bitte gebe eine Passwort ein.</string>
     <string name="registerFieldsRequired">Alle Felder werden benötigt</string>
     <string name="create_meetup_marker_title">Meetup Treffpunkt</string>
     <string name="meetup_location_not_found">Adresse nicht gefunden.</string>
