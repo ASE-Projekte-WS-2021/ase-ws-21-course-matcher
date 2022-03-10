@@ -33,6 +33,7 @@
     <string name="invitation_success_dialog">Dein Meetup wurde erfolgreich versendet. Warte auf die Reaktion deiner Freunde und viel Spaß bei eurem Treffen!</string>
     <string name="invitation_success_title">"Meetup versendet!"</string>
     <string name="invitation_success_close_dialog">"ok"</string>
+    <string name="content_description_edit_button">meetup edit button</string>
 
     <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
     <string name="title_notifications">Benachrichtigungen</string>
