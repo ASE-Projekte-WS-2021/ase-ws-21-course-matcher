@@ -193,7 +193,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 clusterManager.cluster();
             }
         });
-        
+
         if (clusterManager != null) {
             clusterManager.setOnClusterClickListener(this);
             clusterManager.setOnClusterItemClickListener(this);
