@@ -189,4 +189,8 @@
     <string name="meetup_tabs_label_open">Offen</string>
     <string name="dialog_logout_btn">Abmelden</string>
     <string name="dialog_logout_title">Wirklich abmelden?</string>
+
+    <!-- Map -->
+    <string name="map_user_item_btn">Treffen</string>
+
 </resources>
