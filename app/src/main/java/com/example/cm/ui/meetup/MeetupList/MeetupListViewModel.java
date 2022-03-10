@@ -10,14 +10,14 @@ import java.util.List;
 
 public class MeetupListViewModel extends ViewModel {
 
-    private final MutableLiveData<List<MutableLiveData<Meetup>>> meetupList;
+    private final MutableLiveData<List<Meetup>> meetupList;
     private final MeetupRepository meetupRepository = new MeetupRepository();
 
     public MeetupListViewModel() {
         meetupList = meetupRepository.getMeetups();
     }
 
-    public MutableLiveData<List<MutableLiveData<Meetup>>> getMeetups() {
+    public MutableLiveData<List<Meetup>> getMeetups() {
         return meetupList;
     }
 }

@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Objects;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
-    List<MutableLiveData<Meetup>> meetups;
+    List<Meetup> meetups;
 
-    public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups) {
+    public MeetupListAdapter(List<Meetup> meetups) {
         this.meetups = meetups;
     }
 
@@ -40,7 +40,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
     @Override
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
-        Meetup meetup = meetups.get(position).getValue();
+        Meetup meetup = meetups.get(position);
 
         if (meetup == null) {
             return;

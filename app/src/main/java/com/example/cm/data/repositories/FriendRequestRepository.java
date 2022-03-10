@@ -71,17 +71,14 @@ public class FriendRequestRepository extends Repository {
                     }
                     if (value != null && !value.isEmpty()) {
                         List<FriendRequest> requests = new ArrayList<>();
-                        List<FriendRequest> requests2 = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
                             if (currentState != REQUEST_DECLINED) {
                                 requests.add(snapshotToFriendRequest(snapshot));
-                                requests2.add(snapshotToFriendRequest(snapshot));
                             }
                         }
                         mutableRequestList.postValue(requests);
-                        callback.onFriendRequestsRetrieved(requests2);
-                        System.out.println("requests received");
+                        callback.onFriendRequestsRetrieved(requests);
                     }
                 }));
         return mutableRequestList;

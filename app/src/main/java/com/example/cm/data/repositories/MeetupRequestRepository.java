@@ -3,6 +3,7 @@ package com.example.cm.data.repositories;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
@@ -34,7 +35,7 @@ public class MeetupRequestRepository extends Repository {
     /**
      * Get all meetup requests for currently signed in user
      */
-    public MutableLiveData<List<MeetupRequest>> getMeetupRequestsForUser() {
+    public MutableLiveData<List<MeetupRequest>> getMeetupRequestsForUser(Callback callback) {
         if (auth.getCurrentUser() == null) {
             return receivedRequests;
         }
@@ -55,6 +56,7 @@ public class MeetupRequestRepository extends Repository {
                             }
                         }
                         receivedRequests.postValue(requestsToReturn);
+                        callback.onMeetupRequestsRetrieved(requestsToReturn);
                     }
                 });
         return receivedRequests;
@@ -159,5 +161,9 @@ public class MeetupRequestRepository extends Repository {
                 }
             }
         });
+    }
+
+    public interface Callback {
+        void onMeetupRequestsRetrieved(List<MeetupRequest> meetupRequests);
     }
 }

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.MeetupRequest;
+import com.example.cm.data.models.MeetupRequestDTO;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -25,14 +26,14 @@ import java.util.Objects;
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
     private ViewGroup parent;
-    private List<MeetupRequest> mRequests;
+    private List<MeetupRequestDTO> mRequests;
     private final OnMeetupRequestListener listener;
 
     public MeetupRequestListAdapter(OnMeetupRequestListener listener) {
         this.listener = listener;
     }
 
-    public void setRequests(List<MeetupRequest> newRequests) {
+    public void setRequests(List<MeetupRequestDTO> newRequests) {
         if (mRequests == null) {
             mRequests = newRequests;
             notifyItemRangeInserted(0, newRequests.size());
@@ -44,7 +45,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         result.dispatchUpdatesTo(this);
     }
 
-    public static DiffUtil.DiffResult calculateDiffMeetupRequests(List<MeetupRequest> oldRequests, List<MeetupRequest> newRequests) {
+    public static DiffUtil.DiffResult calculateDiffMeetupRequests(List<MeetupRequestDTO> oldRequests, List<MeetupRequestDTO> newRequests) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -64,8 +65,8 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                MeetupRequest newRequest = newRequests.get(newItemPosition);
-                MeetupRequest oldRequest = oldRequests.get(oldItemPosition);
+                MeetupRequestDTO newRequest = newRequests.get(newItemPosition);
+                MeetupRequestDTO oldRequest = oldRequests.get(oldItemPosition);
 
                 return Objects.equals(Objects.requireNonNull(newRequest).getId(), Objects.requireNonNull(oldRequest).getId());
             }
@@ -73,17 +74,17 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     }
 
     public void deleteItem(int position) {
-        MeetupRequest request = mRequests.get(position);
+        MeetupRequestDTO request = mRequests.get(position);
         Request.RequestState previousState = Objects.requireNonNull(request).getState();
         mRequests.remove(position);
         notifyItemRemoved(position);
-        listener.onItemDeleted(request);
+        listener.onItemDeleted(position);
         Snackbar snackbar = Snackbar.make(parent, R.string.delete_snackbar_text, Snackbar.LENGTH_LONG);
         snackbar.setAction(R.string.undo_snackbar_text, view -> onUndoDelete(request, position, previousState));
         snackbar.show();
     }
 
-    private void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState){
+    private void onUndoDelete(MeetupRequestDTO request, int position, Request.RequestState previousState){
         listener.onUndoDelete(request, position, previousState);
         mRequests.add(position, request);
         notifyItemInserted(position);
@@ -100,12 +101,11 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     @Override
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
         Context context = holder.binding.getRoot().getContext();
-        MeetupRequest request = mRequests.get(position);
+        MeetupRequestDTO request = mRequests.get(position);
 
-        /*String user = String.format("@%s ", Objects.requireNonNull(request).getSenderName());*/
-        String user = "platzhalter";
+        String user = String.format("@%s ", Objects.requireNonNull(request).getSenderName());
         String date = request.getCreationTimeAgo();
-        String location = /*request.getLocation();*/ "platzhalter";
+        String location = request.getLocation();
 
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
@@ -164,11 +164,11 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     public interface OnMeetupRequestListener {
         void onItemClicked(String id);
-        void onItemDeleted(MeetupRequest request);
-        void onAccept(MeetupRequest request);
-        void onDecline(MeetupRequest request);
-        void onUndoDecline(MeetupRequest request, int position);
-        void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState);
+        void onItemDeleted(int position);
+        void onAccept(int position);
+        void onDecline(int position);
+        void onUndoDecline(MeetupRequestDTO request, int position);
+        void onUndoDelete(MeetupRequestDTO request, int position, Request.RequestState previousState);
     }
 
     public class MeetupRequestViewHolder extends RecyclerView.ViewHolder {
@@ -194,22 +194,21 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
 
         private void onAccept() {
-            MeetupRequest request = mRequests.get(getAdapterPosition());
-            listener.onAccept(request);
+            listener.onAccept(getAdapterPosition());
             notifyItemChanged(getAdapterPosition());
         }
 
-        private void onUndo(MeetupRequest request, int position){
+        private void onUndo(MeetupRequestDTO request, int position){
             listener.onUndoDecline(request, position);
             notifyItemInserted(position);
         }
 
         private void onDecline(){
             int position = getAdapterPosition();
-            MeetupRequest request = mRequests.get(position);
+            MeetupRequestDTO request = mRequests.get(position);
             mRequests.remove(position);
             notifyItemRemoved(position);
-            listener.onDecline(request);
+            listener.onDecline(position);
 
             Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.decline_snackbar_text, Snackbar.LENGTH_LONG);
             snackbar.setAction(R.string.undo_snackbar_text, view -> onUndo(request, position));

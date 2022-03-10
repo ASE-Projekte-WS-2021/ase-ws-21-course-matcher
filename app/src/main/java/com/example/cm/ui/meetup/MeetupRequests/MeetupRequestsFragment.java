@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.MeetupRequest;
+import com.example.cm.data.models.MeetupRequestDTO;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.FragmentMeetupRequestsBinding;
 import com.example.cm.ui.adapters.MeetupRequestListAdapter;
@@ -67,27 +68,27 @@ public class MeetupRequestsFragment extends Fragment implements
     }
 
     @Override
-    public void onItemDeleted(MeetupRequest request) {
-        requestsViewModel.deleteMeetupRequest(request);
+    public void onItemDeleted(int position) {
+        requestsViewModel.deleteMeetupRequest(position);
     }
 
     @Override
-    public void onAccept(MeetupRequest request) {
-        requestsViewModel.acceptMeetupRequest(request);
+    public void onAccept(int position) {
+        requestsViewModel.acceptMeetupRequest(position);
     }
 
     @Override
-    public void onDecline(MeetupRequest request) {
-        requestsViewModel.declineMeetupRequest(request);
+    public void onDecline(int position) {
+        requestsViewModel.declineMeetupRequest(position);
     }
 
     @Override
-    public void onUndoDecline(MeetupRequest request, int position) {
+    public void onUndoDecline(MeetupRequestDTO request, int position) {
         requestsViewModel.undoDeclineMeetupRequest(request, position);
     }
 
     @Override
-    public void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState) {
+    public void onUndoDelete(MeetupRequestDTO request, int position, Request.RequestState previousState) {
         requestsViewModel.undoDeleteMeetupRequest(request, position, previousState);
     }
 }

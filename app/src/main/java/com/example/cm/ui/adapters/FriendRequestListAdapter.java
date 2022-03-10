@@ -101,15 +101,13 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
         FriendRequestDTO request = mRequests.get(position);
 
-        String user = Objects.requireNonNull(request).getSenderName();
+        String senderName = Objects.requireNonNull(request).getSenderName();
         String date = request.getCreationTimeAgo();
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
-        // todo: get username from user id, then setText to username
         holder.getTvSenderUsername().setVisibility(View.INVISIBLE);
-        // todo end
 
-        holder.getTvSender().setText(user);
+        holder.getTvSender().setText(senderName);
         holder.getTvSentDate().setText(date);
         holder.getTvDescription().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
@@ -155,7 +153,6 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         }
 
         private void onAccept() {
-            FriendRequestDTO request = mRequests.get(getAdapterPosition());
             listener.onAccept(getAdapterPosition());
             notifyItemChanged(getAdapterPosition());
         }

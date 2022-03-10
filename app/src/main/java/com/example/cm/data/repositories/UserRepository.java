@@ -19,8 +19,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class UserRepository extends Repository {
@@ -306,7 +309,7 @@ public class UserRepository extends Repository {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    public void getUserNamesByIds(List<String> userIds, UserNamesCallback callback) {
+    public void getUserNamesMapByIds(List<String> userIds, UserNamesCallback callback) {
         if (userIds == null || userIds.isEmpty()) {
             return;
         }
@@ -317,8 +320,11 @@ public class UserRepository extends Repository {
             }
             if (value != null && !value.isEmpty()) {
                 List<User> users = snapshotToMutableUserList(value);
-                List<String> userNames = users.stream().map(User::getFullName).collect(Collectors.toList());
-                callback.onUsersRetrieved(userNames);
+                HashMap<String, String> userNamesMap = new HashMap<>();
+                for (int i = 0; i < users.size(); i++) {
+                    userNamesMap.put(users.get(i).getId(), users.get(i).getFullName());
+                }
+                callback.onUsersMapRetrieved(userNamesMap);
             }
         });
     }
@@ -446,6 +452,6 @@ public class UserRepository extends Repository {
     }
 
     public interface UserNamesCallback {
-        void onUsersRetrieved(List<String> userNames);
+        void onUsersMapRetrieved(HashMap<String, String> userNames);
     }
 }

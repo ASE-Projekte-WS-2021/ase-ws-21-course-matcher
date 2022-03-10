@@ -14,9 +14,11 @@ import java.util.concurrent.TimeUnit;
 public class MeetupRequest extends Request {
 
     private String meetupId;
+    private String location;
     private Date meetupAt;
     private MeetupRequestType type;
     private MeetupPhase phase;
+
     private final Calendar calendarNow = GregorianCalendar.getInstance();
     private final Calendar calendarMeetup = GregorianCalendar.getInstance();
 
@@ -29,9 +31,10 @@ public class MeetupRequest extends Request {
     }
 
     public MeetupRequest(String meetupId, String senderId,
-                         String receiverId, Date meetupAt, MeetupRequestType type) {
+                         String receiverId, String location, Date meetupAt, MeetupRequestType type) {
         super(senderId, receiverId);
         this.meetupId = meetupId;
+        this.location = location;
         this.meetupAt = meetupAt;
         calendarMeetup.setTime(meetupAt);
         this.type = type;
@@ -55,6 +58,14 @@ public class MeetupRequest extends Request {
 
     public void setMeetupId(String meetupId) {
         this.meetupId = meetupId;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Date getMeetupAt() {
@@ -98,7 +109,7 @@ public class MeetupRequest extends Request {
     @NonNull
     @Override
     public String toString() {
-        String meetupString = "Treffen " + meetupAt + " Uhr - " + "location deleted";
+        String meetupString = "Treffen " + meetupAt + " Uhr - " + location;
         switch(type){
             case MEETUP_REQUEST:
                 return meetupString + "?";

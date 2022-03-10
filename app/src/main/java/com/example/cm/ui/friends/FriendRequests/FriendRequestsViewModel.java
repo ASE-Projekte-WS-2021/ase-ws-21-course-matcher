@@ -14,11 +14,10 @@ import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import timber.log.Timber;
 
 public class FriendRequestsViewModel extends ViewModel implements FriendRequestRepository.Callback, UserRepository.UserNamesCallback {
 
@@ -51,6 +50,10 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
         if (request != null) {
             request.setState(Request.RequestState.REQUEST_ACCEPTED);
             request.setCreatedAtToNow();
+            if(receivedRequestDTOs.getValue() != null){
+                receivedRequestDTOs.getValue().get(position).setState(Request.RequestState.REQUEST_ACCEPTED);
+                receivedRequestDTOs.getValue().get(position).setCreatedAtToNow();
+            }
             friendRequestRepository.accept(request);
             userRepository.addFriends(request.getSenderId(), request.getReceiverId());
         }
@@ -72,15 +75,23 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
         return null;
     }
 
-    private List<FriendRequestDTO> convertToRequestDTOs(List<String> userNames) {
-        Timber.d("on convert");
+    private FriendRequestDTO getFriendRequestDTOByPosition(int position) {
+        if (receivedRequestDTOs.getValue() != null) {
+            return receivedRequestDTOs.getValue().get(position);
+        }
+        return null;
+    }
+
+    private List<FriendRequestDTO> convertToRequestDTOs(HashMap<String, String> userNames) {
         List<FriendRequestDTO> friendRequestDTOs = new ArrayList<>();
-        if(receivedRequests.getValue() != null || receivedRequests.getValue().isEmpty() || userNames.isEmpty()) {
+        if (receivedRequests.getValue() == null || receivedRequests.getValue().isEmpty() || userNames.isEmpty()) {
+            return friendRequestDTOs;
+        } else {
             for (int i = 0; i < receivedRequests.getValue().size(); i++) {
                 FriendRequest friendRequest = receivedRequests.getValue().get(i);
                 FriendRequestDTO friendRequestDTO = new FriendRequestDTO(
                         friendRequest.getSenderId(),
-                        userNames.get(i),
+                        userNames.get(friendRequest.getSenderId()),
                         friendRequest.getReceiverId()
                 );
                 friendRequestDTO.setState(friendRequest.getState());
@@ -95,11 +106,11 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
     @Override
     public void onFriendRequestsRetrieved(List<FriendRequest> friendRequests) {
         List<String> userIds = friendRequests.stream().map(Request::getSenderId).collect(Collectors.toList());
-        userRepository.getUserNamesByIds(userIds, this);
+        userRepository.getUserNamesMapByIds(userIds, this);
     }
 
     @Override
-    public void onUsersRetrieved(List<String> names) {
-        receivedRequestDTOs.postValue(convertToRequestDTOs(names));
+    public void onUsersMapRetrieved(HashMap<String, String> userNames) {
+        receivedRequestDTOs.postValue(convertToRequestDTOs(userNames));
     }
 }
