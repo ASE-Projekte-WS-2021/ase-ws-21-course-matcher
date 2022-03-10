@@ -36,6 +36,16 @@
                 android:src="@drawable/ic_back_button"
                 tools:ignore="RtlSymmetry" />
 
+            <ImageView
+                android:id="@+id/btnEdit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:paddingTop="@dimen/padding_small"
+                android:paddingEnd="@dimen/padding_small"
+                android:src="@drawable/ic_edit_button_round_transparent"
+                tools:ignore="RtlSymmetry" />
+
             <TextView
                 android:id="@+id/meetupDetailedTime"
                 android:layout_width="wrap_content"
