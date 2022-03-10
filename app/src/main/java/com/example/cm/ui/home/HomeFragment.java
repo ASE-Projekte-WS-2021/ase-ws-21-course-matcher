@@ -4,6 +4,10 @@ import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
+import static com.example.cm.Constants.DEFAULT_LOCATION;
+import static com.example.cm.Constants.DEFAULT_MAP_ZOOM;
+import static com.example.cm.Constants.MARKER_SIZE;
+
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -102,6 +106,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             if (currentUser == null) {
                 return;
             }
+
             this.currentUser = currentUser;
         });
     }
@@ -109,7 +114,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         this.googleMap = googleMap;
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(Constants.DEFAULT_LOCATION, 12.5f));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM));
         setupClusterManager(googleMap);
         // Needed to animate zoom changes for markers and cluster items correctly
         googleMap.setOnCameraIdleListener(clusterManager);
@@ -142,6 +147,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                     continue;
                 }
 
+                Timber.d("Adding friend: %s", user.getFullName());
+
                 addMarker(user);
                 clusterManager.cluster();
             }
@@ -166,7 +173,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             clusterManager.cluster();
             return;
         }
-        Glide.with(requireActivity()).load(user.getProfileImageUrl()).placeholder(R.drawable.ic_profile).apply(new RequestOptions().override(150, 150)).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
+        Glide.with(requireActivity()).load(user.getProfileImageUrl()).placeholder(R.drawable.ic_profile).apply(new RequestOptions().override(MARKER_SIZE, MARKER_SIZE)).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
             @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource);
