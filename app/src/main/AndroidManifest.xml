@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.cm"
-    tools:ignore="CoarseFineLocation">
+    tools:ignore="CoarseFineLocation|LockedOrientationActivity">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -23,21 +23,29 @@
             android:name=".AuthActivity"
             android:exported="false"
             android:noHistory="true"
-            android:theme="@style/Theme.CM.NoActionBar" />
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ui.onboarding.OnboardingActivity"
             android:exported="false"
             android:noHistory="true"
-            android:theme="@style/Theme.CM.NoActionBar" />
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ui.auth.RegisterActivity"
             android:exported="false"
             android:noHistory="true"
-            android:theme="@style/Theme.CM.NoActionBar" />
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true"
-            android:theme="@style/Theme.CM.NoActionBar">
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -47,10 +55,14 @@
             android:name=".ui.auth.LoginActivity"
             android:exported="false"
             android:noHistory="true"
-            android:theme="@style/Theme.CM.NoActionBar" />
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+             />
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.CM.NoActionBar" />
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+            />
     </application>
 </manifest>
