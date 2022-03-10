@@ -62,7 +62,7 @@ public class AuthRepository extends Repository {
             if (task.isSuccessful()) {
                 FirebaseUser authUser = getCurrentUser();
                 userLiveData.postValue(authUser);
-                User newUser = new User(authUser.getUid(), userName, firstName, lastName, email, "", "", new ArrayList<String>());
+                User newUser = new User(authUser.getUid(), userName, firstName, lastName, email);
                 callback.onRegisterSuccess(newUser);
 
             } else {

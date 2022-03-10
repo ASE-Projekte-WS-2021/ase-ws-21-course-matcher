@@ -35,19 +35,4 @@ public class MeetupInviteSuccessFragment extends Fragment {
             navigator.getNavController().navigate(R.id.action_global_navigate_to_meetups);
         });
     }
-
-    @SuppressLint("RestrictedApi")
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Prevent show/hide animation of action bar
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).setShowHideAnimationEnabled(false);
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
-    }
 }

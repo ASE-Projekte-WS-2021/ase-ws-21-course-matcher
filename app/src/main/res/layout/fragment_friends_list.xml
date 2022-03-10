@@ -91,12 +91,6 @@
                 android:textAlignment="center"
                 android:textSize="@dimen/text_size_medium" />
 
-            <Button
-                android:id="@+id/btnAddFriends"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/frindslist_btn_find_friends" />
-
         </LinearLayout>
     </LinearLayout>
 

@@ -63,6 +63,20 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
         void onItemClicked(String id);
     }
 
+    /**
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
+     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     */
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     public class MeetupDetailedFriendsListViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemSingleFriendBinding binding;
