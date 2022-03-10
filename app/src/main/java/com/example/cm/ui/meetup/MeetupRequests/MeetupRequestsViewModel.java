@@ -67,6 +67,11 @@ public class MeetupRequestsViewModel extends ViewModel implements MeetupRequestR
         request.setCreatedAtToNow();
         meetupRequestRepository.accept(request);
 
+        if(requestDTOList.getValue() != null){
+            requestDTOList.getValue().get(position).setState(request.getState());
+            requestDTOList.getValue().get(position).setCreatedAtToNow();
+        }
+
         meetupRepository.addConfirmed(request.getMeetupId(), request.getReceiverId());
         meetupRequestRepository.addMeetupRequest(new MeetupRequest(
                 request.getMeetupId(),
@@ -131,9 +136,9 @@ public class MeetupRequestsViewModel extends ViewModel implements MeetupRequestR
                         meetupRequest.getLocation(),
                         meetupRequest.getMeetupAt(), meetupRequest.getType(),
                         meetupRequest.getPhase(),
-                        meetupRequest.getFormattedTime(),
-                        meetupRequest.getState()
+                        meetupRequest.getFormattedTime()
                 );
+                meetupRequestDTO.setState(meetupRequest.getState());
                 meetupRequestDTO.setId(meetupRequest.getId());
 
                 friendRequestDTOs.add(meetupRequestDTO);

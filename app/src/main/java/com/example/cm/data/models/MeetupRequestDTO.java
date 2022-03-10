@@ -14,7 +14,7 @@ public class MeetupRequestDTO extends Request {
     private RequestState requestState;
 
     public MeetupRequestDTO(String meetupId, String senderId,
-                            String receiverId, String senderName, String location, Date meetupAt, MeetupRequest.MeetupRequestType type, MeetupPhase phase, String formattedTime, RequestState state) {
+                            String receiverId, String senderName, String location, Date meetupAt, MeetupRequest.MeetupRequestType type, MeetupPhase phase, String formattedTime) {
         super(senderId, receiverId);
         this.meetupId = meetupId;
         this.senderName = senderName;
@@ -23,7 +23,6 @@ public class MeetupRequestDTO extends Request {
         this.type = type;
         this.phase = phase;
         this.formattedTime = formattedTime;
-        this.requestState = state;
     }
 
     public RequestState getRequestState() {

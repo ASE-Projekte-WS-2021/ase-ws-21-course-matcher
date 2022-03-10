@@ -64,7 +64,7 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
         FriendRequest request = convertToFriendRequest(requestDTO);
         request.setState(previousState);
         friendRequestRepository.addFriendRequest(request);
-/*        Objects.requireNonNull(receivedRequestDTOs.getValue()).add(position, requestDTO);*/
+        Objects.requireNonNull(receivedRequestDTOs.getValue()).add(position, requestDTO);
     }
 
     private FriendRequest getFriendRequestByPosition(int position) {

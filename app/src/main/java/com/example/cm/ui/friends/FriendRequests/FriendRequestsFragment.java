@@ -49,7 +49,6 @@ public class FriendRequestsFragment extends Fragment implements
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(FriendRequestsViewModel.class);
         requestsViewModel.getFriendRequests().observe(getViewLifecycleOwner(), requests -> {
-            System.out.println("on observer");
             requestsListAdapter.setRequests(requests);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
             itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
