@@ -69,6 +69,10 @@ dependencies {
     // Picasso for image loading
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    // Use Glide as an alternative to Picasso
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
+
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
 }

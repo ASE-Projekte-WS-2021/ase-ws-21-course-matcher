@@ -1,6 +1,7 @@
 package com.example.cm.data.models;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
 
@@ -10,25 +11,15 @@ import com.google.maps.android.clustering.ClusterItem;
 public class MarkerClusterItem implements ClusterItem {
 
     private final User user;
-    private int iconPicture;
-    private Bitmap profileImage;
+    private Drawable profileImage;
 
-    public MarkerClusterItem(@NonNull User user, int iconPicture) {
-        this.user = user;
-        this.iconPicture = iconPicture;
-    }
-
-    public MarkerClusterItem(@NonNull User user, Bitmap profileImage) {
+    public MarkerClusterItem(@NonNull User user, Drawable profileImage) {
         this.user = user;
         this.profileImage = profileImage;
     }
 
-    public Bitmap getProfileImage() {
+    public Drawable getProfileImage() {
         return profileImage;
-    }
-
-    public int getIconPicture() {
-        return iconPicture;
     }
 
     public User getUser() {

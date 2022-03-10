@@ -4,6 +4,8 @@ import static com.example.cm.Constants.MARKER_PADDING;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import com.example.cm.data.models.MarkerClusterItem;
 import com.example.cm.data.models.User;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
@@ -30,24 +33,23 @@ public class MarkerClusterRenderer<T extends MarkerClusterItem> extends DefaultC
         iconGenerator.setContentView(imageView);
     }
 
+
     @Override
     protected void onBeforeClusterItemRendered(@NonNull MarkerClusterItem item, @NonNull MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
-        User user = item.getUser();
-        String profileImageUrl = user.getProfileImageUrl();
-
-        // User does not have a custom profile image set
-        // Choose a default image
-        if (profileImageUrl == null || profileImageUrl.isEmpty()) {
-            imageView.setImageResource(item.getIconPicture());
-            Bitmap icon = iconGenerator.makeIcon();
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.getTitle());
-            return;
-        }
-
-        imageView.setImageBitmap(item.getProfileImage());
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(item.getProfileImage())).title(item.getTitle());
+        BitmapDescriptor markerIcon = getMarkerIconFromDrawable(item.getProfileImage());
+        markerOptions.icon(markerIcon).title(item.getTitle());
     }
+
+    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
 
     // Only show clusters when 2 or more items are close together
     @Override
