@@ -54,8 +54,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initListeners() {
-        binding.loginLoginBtn.setOnClickListener(v -> login(v));
-        binding.loginRegisterBtn.setOnClickListener(v -> goToRegister(v));
+        binding.loginLoginBtn.setOnClickListener(this::login);
+        binding.loginRegisterBtn.setOnClickListener(this::goToRegister);
     }
 
     public void login(View view) {
