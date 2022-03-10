@@ -2,6 +2,7 @@ package com.example.cm.data.models;
 
 import android.annotation.SuppressLint;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.DocumentId;
 import com.google.firebase.firestore.Exclude;
 
@@ -18,7 +19,7 @@ public class Meetup {
     private String id;
 
     private String requestingUser;
-    private String location;
+    private LatLng location;
     private Date timestamp;
     private boolean isPrivate;
     private List<String> invitedFriends;
@@ -32,7 +33,7 @@ public class Meetup {
     public Meetup() {
     }
 
-    public Meetup(String id, String requestingUser, String location, Date timestamp, boolean isPrivate, List<String> invitedFriends) {
+    public Meetup(String id, String requestingUser, LatLng location, Date timestamp, boolean isPrivate, List<String> invitedFriends) {
         this.id = id;
         this.requestingUser = requestingUser;
         this.location = location;
@@ -106,11 +107,11 @@ public class Meetup {
         this.phase = phase;
     }
 
-    public String getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 

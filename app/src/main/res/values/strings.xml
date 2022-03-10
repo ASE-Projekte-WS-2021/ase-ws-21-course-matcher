@@ -125,6 +125,7 @@
     <string name="profile_btn_add_friend">Anfragen</string>
     <string name="profile_btn_remove_friend">Entfernen</string>
     <string name="content_description_profile_settings">Navigate to Profile Settings</string>
+    <string name="content_description_divider">Divider</string>
     <string name="title_settings">Einstellungen</string>
     <string name="app_version_prefix">App-Version:</string>
     <string name="link_label_edit_profile">Profil bearbeiten</string>
@@ -132,6 +133,7 @@
     <string name="link_label_edit_notifications">Benachrichtigungen</string>
     <string name="link_label_privacy_policy">Datenschutzerklärung</string>
     <string name="link_label_imprint">Impressum</string>
+    <string name="link_label_logout">Abmelden</string>
     <string name="url_imprint">https://www.uni-regensburg.de/impressum/startseite/index.html</string>
     <string name="url_privacy_policy">https://www.uni-regensburg.de/datenschutz/startseite/index.html</string>
     <string name="title_edit_profile">Profil bearbeiten</string>
@@ -179,4 +181,13 @@
     <string name="onboarding_btn">Registrieren</string>
     <string name="skiptoLogin">Login</string>
     <string name="img_uni">Picture of the University</string>
+    <string name="loginEmailPasswordNeeded">E-Mail und Passwort wird benötigt</string>
+    <string name="registerFieldsRequired">Alle Felder werden benötigt</string>
+    <string name="create_meetup_marker_title">Meetup Treffpunkt</string>
+    <string name="meetup_location_not_found">Adresse nicht gefunden.</string>
+    <string name="meetup_tabs_label_accepted">Zugesagt</string>
+    <string name="meetup_tabs_label_declined">Abgesagt</string>
+    <string name="meetup_tabs_label_open">Offen</string>
+    <string name="dialog_logout_btn">Abmelden</string>
+    <string name="dialog_logout_title">Wirklich abmelden?</string>
 </resources>

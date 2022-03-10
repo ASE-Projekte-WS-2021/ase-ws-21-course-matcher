@@ -70,6 +70,9 @@
             app:destination="@+id/navigation_meetup_success"
             app:popUpTo="@id/navigation_meetup"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_navigation_invite_friends_to_navigation_other_profile"
+            app:destination="@id/navigation_other_profile" />
 
     </fragment>
 

@@ -12,7 +12,7 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
-import com.example.cm.utils.Navigator;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,13 +25,13 @@ public class CreateMeetupViewModel extends ViewModel {
     private final UserRepository userRepository;
     private final MutableLiveData<User> currentUser;
     private final MeetupRepository meetupRepository;
+    private final MutableLiveData<LatLng> meetupLatLng = new MutableLiveData<>();
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
     public MutableLiveData<List<MutableLiveData<User>>> users;
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
-    private Navigator navigator;
 
     public CreateMeetupViewModel() {
         userRepository = new UserRepository();
@@ -66,8 +66,16 @@ public class CreateMeetupViewModel extends ViewModel {
         selectedUsers.postValue(currentlySelectedUsers);
     }
 
-    public LiveData<String> getMeetupLocation() {
-        return meetupLocation;
+    public LiveData<LatLng> getMeetupLatLng() {
+        return meetupLatLng;
+    }
+
+    public void setMeetupLatLng(LatLng latLng) {
+        meetupLatLng.postValue(latLng);
+    }
+
+    public void setMeetupLocation(String location) {
+        meetupLocation.postValue(location);
     }
 
     public LiveData<Boolean> getMeetupIsPrivate() {
@@ -82,10 +90,6 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupTimestamp.postValue(timestamp);
     }
 
-    public void setLocation(String location) {
-        meetupLocation.postValue(location);
-    }
-
     public void setIsPrivate(Boolean isPrivate) {
         meetupIsPrivate.postValue(isPrivate);
     }
@@ -93,10 +97,11 @@ public class CreateMeetupViewModel extends ViewModel {
     public boolean createMeetup() {
         Objects.requireNonNull(selectedUsers.getValue());
         String meetupId = UUID.randomUUID().toString();
+
         Meetup meetupToAdd = new Meetup(
                 meetupId,
                 userRepository.getFirebaseUser().getUid(),
-                meetupLocation.getValue(),
+                meetupLatLng.getValue(),
                 meetupTimestamp.getValue(),
                 Boolean.TRUE.equals(meetupIsPrivate.getValue()),
                 selectedUsers.getValue());
@@ -129,11 +134,10 @@ public class CreateMeetupViewModel extends ViewModel {
         }
     }
 
-    public void searchFriends(String query) {
-        if (query.isEmpty()) {
-            userRepository.getFriends();
-            return;
+    public void searchUsers(String query) {
+        if (users.getValue() != null) {
+            users.getValue().clear();
+            users = userRepository.getFriendsByUsername(query);
         }
-        userRepository.getFriendsByUsername(query);
     }
 }

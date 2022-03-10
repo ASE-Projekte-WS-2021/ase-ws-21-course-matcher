@@ -2,10 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.cm"
-    tools:ignore="CoarseFineLocation">
+    tools:ignore="CoarseFineLocation|LockedOrientationActivity">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,22 +15,37 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CM">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
         <activity
             android:name=".AuthActivity"
             android:exported="false"
-            android:noHistory="true"/>
+            android:noHistory="true"
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ui.onboarding.OnboardingActivity"
             android:exported="false"
             android:noHistory="true"
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
             />
         <activity
             android:name=".ui.auth.RegisterActivity"
             android:exported="false"
-            android:noHistory="true"/>
+            android:noHistory="true"
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".SplashScreenActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -38,14 +54,15 @@
         <activity
             android:name=".ui.auth.LoginActivity"
             android:exported="false"
-            android:noHistory="true"/>
+            android:noHistory="true"
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+             />
         <activity
             android:name=".MainActivity"
-            android:exported="true" />
- />
+            android:exported="true"
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+            />
     </application>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
 </manifest>

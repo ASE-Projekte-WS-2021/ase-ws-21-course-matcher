@@ -137,6 +137,20 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     }
 
     /**
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
+     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     */
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    /**
      * ViewHolder class for the list items
      */
     public class UserViewHolder extends RecyclerView.ViewHolder

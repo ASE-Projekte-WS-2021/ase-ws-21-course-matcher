@@ -1,25 +1,23 @@
 package com.example.cm.ui.auth;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.Button;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.MainActivity;
 import com.example.cm.R;
 import com.example.cm.databinding.ActivityLoginBinding;
-import com.example.cm.ui.onboarding.OnboardingActivity;
+import com.google.android.material.snackbar.Snackbar;
 
 
 public class LoginActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
+    private Button loginBtn;
     private ActivityLoginBinding binding;
 
     @Override
@@ -29,6 +27,8 @@ public class LoginActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+        setContentView(R.layout.activity_login);
+        loginBtn = findViewById(R.id.loginLoginBtn);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
@@ -42,9 +42,14 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
+        });
+        authViewModel.getErrorLiveData().observe(this, errorMsg -> {
+            Snackbar.make(findViewById(R.id.loginLayout), errorMsg, Snackbar.LENGTH_LONG).show();
+            loginBtn.setEnabled(true);
         });
     }
 
@@ -57,15 +62,18 @@ public class LoginActivity extends AppCompatActivity {
         String email = binding.loginEmailEditText.getText().toString();
         String password = binding.loginPasswordEditText.getText().toString();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Email Address and Password Must Be Entered", Toast.LENGTH_SHORT).show();
-            return;
+        if (email.length() > 0 && password.length() > 0) {
+            authViewModel.login(email, password);
+            loginBtn.setEnabled(false);
+        } else {
+            Snackbar.make(findViewById(R.id.loginLayout), R.string.loginEmailPasswordNeeded, Snackbar.LENGTH_LONG)
+                    .show();
         }
         authViewModel.login(email, password);
     }
 
     public void goToRegister(View view) {
-        Intent intent = new Intent(LoginActivity.this, OnboardingActivity.class);
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
         finish();
     }
