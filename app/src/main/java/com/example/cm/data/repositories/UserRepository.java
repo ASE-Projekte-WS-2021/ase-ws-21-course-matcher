@@ -76,6 +76,26 @@ public class UserRepository extends Repository {
         return mutableUser;
     }
 
+    /**
+     * Get the current user
+     *
+     * @return MutableLiveData of current user
+     */
+    public MutableLiveData<User> getStaticCurrentUser() {
+        if (auth.getCurrentUser() == null) {
+            return null;
+        }
+
+        String currentUserId = auth.getCurrentUser().getUid();
+        userCollection.document(currentUserId).get().addOnSuccessListener(executorService, (value) -> {
+            if (value != null && value.exists()) {
+                User user = snapshotToUser(value);
+                mutableUser.postValue(user);
+            }
+        });
+        return mutableUser;
+    }
+
     public String getCurrentAuthUserId() {
         if (auth.getCurrentUser() == null) {
             return null;

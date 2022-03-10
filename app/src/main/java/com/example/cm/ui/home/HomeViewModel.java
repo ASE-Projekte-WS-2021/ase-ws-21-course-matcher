@@ -20,7 +20,7 @@ public class HomeViewModel extends ViewModel implements Callback {
     public HomeViewModel() {
         userRepository = UserRepository.getInstance();
         friends = userRepository.getStaticFriends();
-        currentUser = userRepository.getCurrentUser();
+        currentUser = userRepository.getStaticCurrentUser();
     }
 
     public MutableLiveData<List<MutableLiveData<User>>> getFriends() {
