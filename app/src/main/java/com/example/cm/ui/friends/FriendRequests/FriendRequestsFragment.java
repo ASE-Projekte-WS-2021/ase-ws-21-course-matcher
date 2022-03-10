@@ -49,6 +49,7 @@ public class FriendRequestsFragment extends Fragment implements
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(FriendRequestsViewModel.class);
         requestsViewModel.getFriendRequests().observe(getViewLifecycleOwner(), requests -> {
+            System.out.println("on observer");
             requestsListAdapter.setRequests(requests);
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
             itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
@@ -84,8 +85,8 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     @Override
-    public void onUndo(int position, Request.RequestState previousState) {
-        requestsViewModel.undoFriendRequest(position, previousState);
+    public void onUndo(FriendRequestDTO request, int position, Request.RequestState previousState) {
+        requestsViewModel.undoFriendRequest(request, position, previousState);
     }
 
 }

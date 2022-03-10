@@ -42,6 +42,7 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
         FriendRequest request = getFriendRequestByPosition(position);
         if (request != null) {
             friendRequestRepository.decline(request);
+            Objects.requireNonNull(receivedRequestDTOs.getValue()).remove(position);
         }
     }
 
@@ -50,7 +51,7 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
         if (request != null) {
             request.setState(Request.RequestState.REQUEST_ACCEPTED);
             request.setCreatedAtToNow();
-            if(receivedRequestDTOs.getValue() != null){
+            if (receivedRequestDTOs.getValue() != null) {
                 receivedRequestDTOs.getValue().get(position).setState(Request.RequestState.REQUEST_ACCEPTED);
                 receivedRequestDTOs.getValue().get(position).setCreatedAtToNow();
             }
@@ -59,13 +60,11 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
         }
     }
 
-    public void undoFriendRequest(int position, Request.RequestState previousState) {
-        FriendRequest request = getFriendRequestByPosition(position);
-        if (request != null) {
-            request.setState(previousState);
-            friendRequestRepository.addFriendRequest(request);
-            Objects.requireNonNull(receivedRequests.getValue()).add(position, request);
-        }
+    public void undoFriendRequest(FriendRequestDTO requestDTO, int position, Request.RequestState previousState) {
+        FriendRequest request = convertToFriendRequest(requestDTO);
+        request.setState(previousState);
+        friendRequestRepository.addFriendRequest(request);
+/*        Objects.requireNonNull(receivedRequestDTOs.getValue()).add(position, requestDTO);*/
     }
 
     private FriendRequest getFriendRequestByPosition(int position) {
@@ -75,14 +74,18 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
         return null;
     }
 
-    private FriendRequestDTO getFriendRequestDTOByPosition(int position) {
-        if (receivedRequestDTOs.getValue() != null) {
-            return receivedRequestDTOs.getValue().get(position);
-        }
-        return null;
+    private FriendRequest convertToFriendRequest(FriendRequestDTO requestDTO) {
+        FriendRequest request = new FriendRequest(
+                requestDTO.getSenderId(),
+                requestDTO.getReceiverId()
+        );
+        request.setCreatedAt(requestDTO.getCreatedAt());
+        request.setId(requestDTO.getId());
+        request.setState(requestDTO.getState());
+        return request;
     }
 
-    private List<FriendRequestDTO> convertToRequestDTOs(HashMap<String, String> userNames) {
+    private List<FriendRequestDTO> convertToRequestDTOs(HashMap<String, String> names, HashMap<String, String> userNames) {
         List<FriendRequestDTO> friendRequestDTOs = new ArrayList<>();
         if (receivedRequests.getValue() == null || receivedRequests.getValue().isEmpty() || userNames.isEmpty()) {
             return friendRequestDTOs;
@@ -91,9 +94,11 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
                 FriendRequest friendRequest = receivedRequests.getValue().get(i);
                 FriendRequestDTO friendRequestDTO = new FriendRequestDTO(
                         friendRequest.getSenderId(),
+                        names.get(friendRequest.getSenderId()),
                         userNames.get(friendRequest.getSenderId()),
                         friendRequest.getReceiverId()
                 );
+                friendRequestDTO.setId(friendRequest.getId());
                 friendRequestDTO.setState(friendRequest.getState());
                 friendRequestDTO.setCreatedAt(friendRequest.getCreatedAt());
                 friendRequestDTOs.add(friendRequestDTO);
@@ -110,7 +115,7 @@ public class FriendRequestsViewModel extends ViewModel implements FriendRequestR
     }
 
     @Override
-    public void onUsersMapRetrieved(HashMap<String, String> userNames) {
-        receivedRequestDTOs.postValue(convertToRequestDTOs(userNames));
+    public void onUsersMapRetrieved(HashMap<String, String> names, HashMap<String, String> userNames) {
+        receivedRequestDTOs.postValue(convertToRequestDTOs(names, userNames));
     }
 }

@@ -172,7 +172,7 @@ public class MeetupRequestsViewModel extends ViewModel implements MeetupRequestR
     }
 
     @Override
-    public void onUsersMapRetrieved(HashMap<String, String> userNames) {
+    public void onUsersMapRetrieved(HashMap<String, String> names, HashMap<String, String> userNames) {
         requestDTOList.postValue(convertToRequestDTOs(userNames));
     }
 }

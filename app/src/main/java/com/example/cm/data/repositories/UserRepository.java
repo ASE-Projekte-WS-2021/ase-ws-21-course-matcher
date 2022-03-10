@@ -320,11 +320,13 @@ public class UserRepository extends Repository {
             }
             if (value != null && !value.isEmpty()) {
                 List<User> users = snapshotToMutableUserList(value);
+                HashMap<String, String> fullNamesMap = new HashMap<>();
                 HashMap<String, String> userNamesMap = new HashMap<>();
                 for (int i = 0; i < users.size(); i++) {
-                    userNamesMap.put(users.get(i).getId(), users.get(i).getFullName());
+                    fullNamesMap.put(users.get(i).getId(), users.get(i).getFullName());
+                    userNamesMap.put(users.get(i).getId(), users.get(i).getUsername());
                 }
-                callback.onUsersMapRetrieved(userNamesMap);
+                callback.onUsersMapRetrieved(fullNamesMap, userNamesMap);
             }
         });
     }
@@ -452,6 +454,6 @@ public class UserRepository extends Repository {
     }
 
     public interface UserNamesCallback {
-        void onUsersMapRetrieved(HashMap<String, String> userNames);
+        void onUsersMapRetrieved(HashMap<String, String> names, HashMap<String, String> userNames);
     }
 }
