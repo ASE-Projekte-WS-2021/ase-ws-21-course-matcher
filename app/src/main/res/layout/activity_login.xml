@@ -102,15 +102,6 @@
             />
 
 
-        <LinearLayout
-            android:layout_marginTop="@dimen/small_margin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="bottom|center_horizontal"
-            android:gravity="bottom"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_weight="0.5">
 
         <Button
             android:id="@+id/loginLoginBtn"
@@ -119,7 +110,7 @@
             android:text="@string/loginLoginBtn"
             android:gravity="center"
             android:layout_gravity="bottom"
-            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginTop="@dimen/padding_ultra"
             tools:ignore="UsingOnClickInXml,TextContrastCheck" />
 
         <Button
@@ -130,9 +121,10 @@
             android:text="@string/loginRegisterBtn"
             android:textAllCaps="false"
             android:textColor="@color/black"
+            android:enabled="false"
             android:layout_marginTop="@dimen/small_margin"
             tools:ignore="UsingOnClickInXml"
+            app:layout_constraintBottom_toBottomOf="parent"
             />
-        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
