@@ -148,8 +148,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         clusterManager = new ClusterManager<>(requireActivity(), googleMap);
         clusterManager.clearItems();
         clusterManager.setRenderer(new MarkerClusterRenderer<>(requireActivity(), googleMap, clusterManager));
-        clusterManager.setOnClusterClickListener(this);
-        clusterManager.setOnClusterItemClickListener(this);
 
         observeCurrentUser();
         observeFriends();
@@ -195,6 +193,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 clusterManager.cluster();
             }
         });
+        
+        if (clusterManager != null) {
+            clusterManager.setOnClusterClickListener(this);
+            clusterManager.setOnClusterItemClickListener(this);
+        }
     }
 
     @Override
@@ -305,7 +308,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     @Override
     public boolean onClusterItemClick(MarkerClusterItem item) {
-        Timber.d("Clicked on %s", item.getUser().getFullName());
+        Timber.d("cluster item clicked");
         showUserCards(item.getUser());
 
         return false;
@@ -313,6 +316,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     @Override
     public boolean onClusterClick(Cluster<MarkerClusterItem> cluster) {
+        Timber.d("cluster clicked");
         // Show user cards
         Collection<MarkerClusterItem> clusterItems = cluster.getItems();
         List<MarkerClusterItem> users = new ArrayList<>(clusterItems);
@@ -323,11 +327,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         // From: https://stackoverflow.com/a/14828739
         LatLngBounds.Builder builder = LatLngBounds.builder();
         for (ClusterItem item : cluster.getItems()) {
-            Timber.d("Adding %s, %s", item.getPosition(), item.getTitle());
             builder.include(item.getPosition());
         }
         LatLngBounds bounds = builder.build();
-        Timber.d("Bounds: %s", bounds);
         int screenOffset = 25;
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
