@@ -161,5 +161,6 @@
     <string name="edit_profile_last_name_min_length">Nachname muss mindestens 2 Zeichen lang sein</string>
     <string name="edit_profile_success">Erfolgreich aktualisiert</string>
     <string name="edit_profile_general_error">Ein Fehler ist aufgetreten</string>
+    <string name="title_meetups">Meetups</string>
 
 </resources>
