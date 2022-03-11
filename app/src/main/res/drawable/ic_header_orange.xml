@@ -15,7 +15,7 @@
       android:right="0dp"
       android:top="00dp">
     <shape>
-      <solid android:color="@color/orange" />
+      <solid android:color="@color/orange500" />
       <corners
           android:bottomLeftRadius="0dp"
           android:bottomRightRadius="25dp"
