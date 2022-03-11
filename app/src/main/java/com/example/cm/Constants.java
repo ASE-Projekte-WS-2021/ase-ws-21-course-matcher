@@ -19,6 +19,7 @@ public class Constants {
     public static final int TRASH_ICON_MARGIN = 15;
     public static final int TRASH_ICON_SIZE = 175;
     public static final int HALVING_FACTOR = 2;
+    public static final int PASSWORD_MIN = 6;
     public static final LatLng DEFAULT_LOCATION = new LatLng(48.992162698, 12.090332972);
 
 }
