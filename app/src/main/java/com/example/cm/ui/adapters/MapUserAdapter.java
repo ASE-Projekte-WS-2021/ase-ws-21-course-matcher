@@ -6,7 +6,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.data.models.User;
@@ -19,27 +18,32 @@ import java.util.List;
 public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserViewHolder> {
 
     private final OnItemClickListener listener;
-    private final List<MutableLiveData<User>> mUsers = new ArrayList<>();
+    private final List<User> mUsers = new ArrayList<>();
 
     public MapUserAdapter(OnItemClickListener listener) {
         this.listener = listener;
     }
 
     public void addUser(User user) {
-        mUsers.add(new MutableLiveData<>(user));
-        notifyItemInserted(mUsers.size() - 1);
+        mUsers.add(user);
+    }
+
+    public void setUsers(List<User> users) {
+        for (User user : users) {
+            addUser(user);
+        }
     }
 
     public User getUserAt(int position) {
         if (position >= mUsers.size()) {
             return null;
         }
-        return mUsers.get(position).getValue();
+        return mUsers.get(position);
     }
 
     public int getPositionBy(String userId) {
         for (int i = 0; i < mUsers.size(); i++) {
-            if (mUsers.get(i).getValue().getId().equals(userId)) {
+            if (mUsers.get(i).getId().equals(userId)) {
                 return i;
             }
         }
@@ -58,7 +62,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
-        User user = mUsers.get(position).getValue();
+        User user = mUsers.get(position);
         if (user == null) {
             return;
         }
@@ -129,7 +133,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
 
-            User user = mUsers.get(position).getValue();
+            User user = mUsers.get(position);
             if (user == null) {
                 return;
             }
@@ -140,7 +144,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
 
-            User user = mUsers.get(position).getValue();
+            User user = mUsers.get(position);
             if (user == null) {
                 return;
             }

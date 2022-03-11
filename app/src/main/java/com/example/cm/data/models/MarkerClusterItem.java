@@ -1,6 +1,5 @@
 package com.example.cm.data.models;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
