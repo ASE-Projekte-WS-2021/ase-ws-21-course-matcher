@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_header_orange"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/padding_small"
+        android:paddingHorizontal="@dimen/padding_big"
         android:paddingVertical="@dimen/padding_medium"
         tools:ignore="MissingConstraints">
 
@@ -58,132 +58,47 @@
             android:padding="@dimen/padding_big"
             android:weightSum="3">
 
-            <TextView
-                android:id="@+id/registerUsernameText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_big"
-                android:layout_marginBottom="@dimen/small_margin"
-                android:gravity="start"
-                android:text="@string/registerUsernameTxt"
-                android:textColor="@color/gray500"
-                android:textSize="@dimen/text_size_medium" />
 
-            <EditText
+            <include
                 android:id="@+id/registerUsernameEditText"
+                layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="username"
-                android:background="@color/gray300"
-                android:ems="10"
-                android:hint="@string/loginUserNameEditText"
-                android:inputType="textPersonName"
-                android:minHeight="@dimen/edit_text_min_height"
-                android:paddingStart="@dimen/padding_small"
-                android:textColorHint="@color/gray500" />
+                android:layout_marginBottom="@dimen/padding_big"/>
 
-            <TextView
-                android:id="@+id/registerFirstnameText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_big"
-                android:layout_marginBottom="@dimen/small_margin"
-                android:gravity="start"
-                android:text="@string/registerFirstnameText"
-                android:textColor="@color/gray500"
-                android:textSize="@dimen/text_size_medium" />
-
-            <EditText
+            <include
                 android:id="@+id/registerFirstNameEditText"
+                layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="Firstname"
-                android:background="@color/gray300"
-                android:ems="10"
-                android:hint="@string/registerFirstNameEditText"
-                android:inputType="textPersonName"
-                android:minHeight="@dimen/edit_text_min_height"
-                android:paddingStart="@dimen/padding_small"
-                android:textColorHint="@color/gray500" />
+                android:layout_marginBottom="@dimen/padding_big"/>
 
-            <TextView
-                android:id="@+id/registerLastnameText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_big"
-                android:layout_marginBottom="@dimen/small_margin"
-                android:gravity="start"
-                android:text="@string/registerLastnameText"
-                android:textColor="@color/gray500"
-                android:textSize="@dimen/text_size_medium" />
-
-            <EditText
+            <include
                 android:id="@+id/registerLastNameEditText"
+                layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="Lastname"
-                android:background="@color/gray300"
-                android:ems="10"
-                android:hint="@string/registerLastNameEditText"
-                android:inputType="textPersonName"
-                android:minHeight="@dimen/edit_text_min_height"
-                android:paddingStart="@dimen/padding_small"
-                android:textColorHint="@color/gray500" />
+                android:layout_marginBottom="@dimen/padding_big"/>
 
-            <TextView
-                android:id="@+id/registerEmailText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_big"
-                android:layout_marginBottom="@dimen/small_margin"
-                android:gravity="start"
-                android:text="@string/registerEmailText"
-                android:textColor="@color/gray500"
-                android:textSize="@dimen/text_size_medium" />
-
-            <EditText
+            <include
                 android:id="@+id/registerEmailEditText"
+                layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="emailAddress"
-                android:background="@color/gray300"
-                android:ems="10"
-                android:hint="@string/registerEmailEditText"
-                android:inputType="textEmailAddress"
-                android:minHeight="@dimen/edit_text_min_height"
-                android:paddingStart="@dimen/padding_small"
-                android:textColorHint="@color/gray500" />
+                android:layout_marginBottom="@dimen/padding_big"/>
 
-            <TextView
-                android:id="@+id/registerPasswordText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_big"
-                android:layout_marginBottom="@dimen/small_margin"
-                android:gravity="start"
-                android:text="@string/registerPasswordText"
-                android:textColor="@color/gray500"
-                android:textSize="@dimen/text_size_medium" />
-
-            <EditText
+            <include
                 android:id="@+id/registerPasswordEditText"
+                layout="@layout/input_password_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autofillHints="password"
-                android:background="@color/gray300"
-                android:ems="10"
-                android:hint="@string/registerPasswordEditText"
-                android:inputType="textPassword"
-                android:minHeight="@dimen/edit_text_min_height"
-                android:paddingStart="@dimen/padding_small"
-                android:textColorHint="@color/gray500"
-                android:paddingBottom="@dimen/big_margin"/>
+                android:layout_marginBottom="@dimen/padding_big"/>
 
             <Button
                 android:id="@+id/registerRegisterBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_big"
+                android:layout_marginTop="@dimen/padding_double"
                 android:gravity="center"
                 android:text="@string/registerRegisterBtn" />
 
@@ -194,6 +109,7 @@
                 android:layout_marginTop="@dimen/small_margin"
                 android:background="@color/white"
                 android:text="@string/registerLoginBtn"
+                android:gravity="center"
                 android:textAllCaps="false"
                 android:textColor="@color/black" />
         </LinearLayout>
