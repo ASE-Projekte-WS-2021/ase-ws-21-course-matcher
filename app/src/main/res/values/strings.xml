@@ -49,13 +49,14 @@
     <string name="registerTitle">Registrieren</string>
     <string name="registerEmailEditText">mau.musterkatze@stud.uni-regensburg.de</string>
     <string name="registerPasswordEditText">musterkatze123</string>
-    <string name="registerFirstNameEditText">Mau</string>
-    <string name="registerLastNameEditText">Musterkatze</string>
-    <string name="registerLoginBtn"><u>Zum Login</u></string>
+    <string name="registerFirstNameHint">Mau</string>
+    <string name="registerLastNameHint">Musterkatze</string>
+    <string name="registerLoginBtn">Bereits registriert? <u>Zum Login</u></string>
+    <string name="registerUsernameHint">maumusterkatze</string>
     <string name="registerRegisterBtn">Registrieren</string>
     <string name="loginTitle">Login</string>
-    <string name="loginEmailEditText">    mau.musterkatze@stud.uni-regensburg.de</string>
-    <string name="loginPasswordEditText">    maumusterkatze123</string>
+    <string name="userEmailHint">mau.musterkatze@stud.uni-regensburg.de</string>
+    <string name="userPasswordHint">maumusterkatze123</string>
     <string name="loginLoginBtn">Einloggen</string>
     <string name="loginRegisterBtn">Noch kein Account? <u>Jetzt registrieren.</u></string>
     <string name="loginUserNameEditText">maumusterkatze</string>
@@ -181,8 +182,8 @@
     <string name="skiptoLogin">Login</string>
     <string name="img_uni">Picture of the University</string>
     <string name="loginEmailPasswordNeeded">E-Mail und Passwort werden benötigt</string>
-    <string name="loginEmailNeeded">Bitte gebe eine E-Mail an.</string>
-    <string name="loginPasswordNeeded">Bitte gebe eine Passwort ein.</string>
+    <string name="loginEmailNeeded">Bitte gib eine E-Mail an.</string>
+    <string name="loginPasswordNeeded">Bitte gib eine Passwort ein.</string>
     <string name="registerFieldsRequired">Alle Felder werden benötigt</string>
     <string name="create_meetup_marker_title">Meetup Treffpunkt</string>
     <string name="meetup_location_not_found">Adresse nicht gefunden.</string>
@@ -195,9 +196,14 @@
     <string name="loginEmailTxt">E-Mail</string>
     <string name="loginPasswordTxt">Passwort</string>
     <string name="registerTitleDesc">Erstelle einen Account um Treffen mit deinen Freunden am Campus zu vereinbaren!</string>
-    <string name="registerUsernameTxt">Nutzername</string>
+    <string name="registerUsernameText">Nutzername</string>
     <string name="registerFirstnameText">Vorname</string>
     <string name="registerLastnameText">Nachname</string>
     <string name="registerEmailText">E-Mail</string>
     <string name="registerPasswordText">Passwort</string>
+    <string name="registerUsernameEmpty">Bitte gib einen Nutzernamen ein.</string>
+    <string name="registerEmailEmpty">Bitte gib einen E-Mail Adresse ein.</string>
+    <string name="registerPasswordEmpty">Bitte gib ein Passwort mit 6 Zeichen ein.</string>
+    <string name="registerFirstnameEmpty">Bitte gib deinen Vornamen ein.</string>
+    <string name="registerLastnameEmpty">Bitte gib deinen Nachnamen ein.</string>
 </resources>
