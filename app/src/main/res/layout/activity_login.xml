@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loginLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -22,7 +22,7 @@
             android:gravity="center"
             android:text="@string/loginTitle"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_title" />
+            android:textSize="@dimen/text_size_big" />
 
         <EditText
             android:id="@+id/loginEmailEditText"
@@ -48,19 +48,19 @@
             android:id="@+id/loginLoginBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="login"
             android:text="@string/loginLoginBtn"
-            tools:ignore="UsingOnClickInXml" />
+            android:layout_marginTop="@dimen/small_margin"
+            tools:ignore="UsingOnClickInXml,TextContrastCheck" />
 
         <Button
             android:id="@+id/loginRegisterBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#00FFFFFF"
-            android:onClick="goToRegister"
+            android:background="@color/white"
             android:text="@string/loginRegisterBtn"
             android:textAllCaps="false"
             android:textColor="@color/black"
+            android:layout_marginTop="@dimen/small_margin"
             tools:ignore="UsingOnClickInXml" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

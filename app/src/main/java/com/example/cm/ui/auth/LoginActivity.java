@@ -1,56 +1,80 @@
 package com.example.cm.ui.auth;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.Button;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.MainActivity;
 import com.example.cm.R;
+import com.example.cm.databinding.ActivityLoginBinding;
+import com.google.android.material.snackbar.Snackbar;
+
 
 public class LoginActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
+    private Button loginBtn;
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
         setContentView(R.layout.activity_login);
+        loginBtn = findViewById(R.id.loginLoginBtn);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+
+        setContentView(binding.getRoot());
+
+        initViewModel();
+        initListeners();
+    }
+
+    private void initViewModel() {
         authViewModel = new ViewModelProvider(LoginActivity.this).get(AuthViewModel.class);
         authViewModel.getUserLiveData().observe(this, firebaseUser -> {
             if (firebaseUser != null) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+                finish();
             }
+        });
+        authViewModel.getErrorLiveData().observe(this, errorMsg -> {
+            Snackbar.make(findViewById(R.id.loginLayout), errorMsg, Snackbar.LENGTH_LONG).show();
+            loginBtn.setEnabled(true);
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
+    private void initListeners() {
+        binding.loginLoginBtn.setOnClickListener(v -> login(v));
+        binding.loginRegisterBtn.setOnClickListener(v -> goToRegister(v));
+    }
+
     public void login(View view) {
-        String email = ((EditText) findViewById(R.id.loginEmailEditText)).getText().toString();
-        String password = ((EditText) findViewById(R.id.loginPasswordEditText)).getText().toString();
+        String email = binding.loginEmailEditText.getText().toString();
+        String password = binding.loginPasswordEditText.getText().toString();
 
         if (email.length() > 0 && password.length() > 0) {
             authViewModel.login(email, password);
+            loginBtn.setEnabled(false);
         } else {
-            Toast.makeText(LoginActivity.this, "Email Address and Password Must Be Entered", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(R.id.loginLayout), R.string.loginEmailPasswordNeeded, Snackbar.LENGTH_LONG)
+                    .show();
         }
+        authViewModel.login(email, password);
     }
 
     public void goToRegister(View view) {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
+        finish();
     }
-
-
 }

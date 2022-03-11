@@ -28,6 +28,11 @@
         <item name="materialButtonStyle">@style/BtnOrangeLarge</item>
     </style>
 
+    <style name="Theme.CM.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <!-- Button Style Large -->
     <style name="BtnOrangeLarge">
         <item name="android:background">@drawable/btn_rounded</item>

@@ -23,8 +23,9 @@ import com.example.cm.ui.add_friends.AddFriendsViewModel.OnRequestSentListener;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
 import java.util.Objects;
+
+import timber.log.Timber;
 
 
 public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnRequestSentListener {
@@ -36,6 +37,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentAddFriendsBinding.inflate(inflater, container, false);
+        navigator = new Navigator(requireActivity());
         initUI();
         initListener();
         initViewModel();
@@ -50,10 +52,10 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(selectFriendsAdapter);
+        binding.btnBack.bringToFront();
     }
 
     private void initListener() {
-        navigator = new Navigator(requireActivity());
         binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
         binding.etUserSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -69,6 +71,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             public void afterTextChanged(Editable editable) {
             }
         });
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 
     private void onClearInputClicked() {
@@ -95,14 +98,15 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void observeSentFriendRequests() {
-        addFriendsViewModel.getSentFriendRequests().observe(getViewLifecycleOwner(), sentFriendRequests -> {
+        addFriendsViewModel.getSentFriendRequestsPending().observe(getViewLifecycleOwner(), sentFriendRequests -> {
             if (sentFriendRequests == null) {
                 return;
             }
-            selectFriendsAdapter.setSentFriendRequests(sentFriendRequests);
+            addFriendsViewModel.getReceivedFriendRequestsPending().observe(getViewLifecycleOwner(), receivedFriendRequests -> {
+                selectFriendsAdapter.setFriendRequests(sentFriendRequests, receivedFriendRequests);
+            });
         });
     }
-
 
     @Override
     public void onDestroyView() {
@@ -119,7 +123,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_USER_ID, id);
-
         navigator.getNavController().navigate(R.id.fromSelectFriendsToProfile, bundle);
     }
 
@@ -136,12 +139,17 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     @Override
     public void onFriendRequestsSet() {
         addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-            if (users == null) {
+            binding.loadingCircle.setVisibility(View.GONE);
+
+            if (users == null || users.size() == 0) {
+                Timber.d("No users found");
+                binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+                binding.rvUserList.setVisibility(View.GONE);
                 return;
             }
+
             selectFriendsAdapter.setUsers(users);
             binding.noFriendsWrapper.setVisibility(View.GONE);
-            binding.loadingCircle.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);
         });
     }

@@ -9,6 +9,7 @@
     <color name="gray500">#98A3C3</color>
     <color name="gray400">#CCD1E1</color>
     <color name="gray300">#F2F3F7</color>
+    <color name="gray_gradient">#EE2E323E</color>
     <color name="gray700_transparent">#992E323E</color>
 
     <!-- Accent -->
@@ -30,6 +31,7 @@
     <color name="gray_600">#FF757575</color>
     <color name="green">#009944</color>
     <color name="red">#cf000f</color>
+    <color name="onbarding_background">#f2f2f2</color>
 
     <color name="outgreyed">#73505971</color>
 </resources>

@@ -1,130 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_margin="10dp"
     android:orientation="vertical"
-    tools:context=".ui.meetup.MeetupFragment">
+    tools:context=".ui.meetup.CreateMeetup.CreateMeetupFragment">
 
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/action_bar_with_back_button" />
 
-    <Button
-        android:id="@+id/meetup_info_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:gravity="center"
-        android:text="@string/meetup_info_submit_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <CheckBox
-        android:id="@+id/meetup_private_checkBox"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/medium_margin_items"
-        android:buttonTint="@color/orange"
-        android:checked="false"
-        android:text="@string/meetup_private"
-        android:textSize="@dimen/text_size_description"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meetup_location_spinner" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/actionBar"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_big">
 
+        <CheckBox
+            android:id="@+id/meetup_private_checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/medium_margin_items"
+            android:buttonTint="@color/orange"
+            android:checked="false"
+            android:text="@string/meetup_private"
+            android:textSize="@dimen/text_size_medium"
+            android:visibility="gone" />
 
-    <Spinner
-        android:id="@+id/meetup_location_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/orange"
-        android:minHeight="@dimen/edit_text_min_height"
-        android:spinnerMode="dropdown"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meetup_location"
-        tools:ignore="SpeakableTextPresentCheck" />
+        <LinearLayout
+            android:id="@+id/locationWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:includeFontPadding="false"
+                android:text="@string/meetup_place"
+                android:textSize="@dimen/text_size_medium" />
 
-    <TextView
-        android:id="@+id/meetup_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/medium_margin_items"
-        android:gravity="left"
-        android:text="@string/meetup_place"
-        android:textSize="@dimen/text_size_description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meetup_time_text" />
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="@dimen/meetup_corner_radius"
+                app:cardElevation="0dp">
 
-    <TextView
-        android:id="@+id/meetup_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/meetup_header"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </androidx.cardview.widget.CardView>
 
+        </LinearLayout>
+      
+        <LinearLayout
+            android:id="@+id/timeWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/meetup_header_desc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/meetup_header_desc"
-        android:textAlignment="center"
-        android:textSize="@dimen/text_size_description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meetup_header" />
+            <TextView
+                android:id="@+id/meetup_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_double"
+                android:includeFontPadding="false"
+                android:text="@string/meetup_time"
+                android:textSize="@dimen/text_size_medium" />
 
+            <TextView
+                android:id="@+id/meetup_time_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_small"
+                android:background="@drawable/style_edittext"
+                android:gravity="center"
+                android:hint="@string/select_time"
+                android:importantForAutofill="no"
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/padding_medium"
+                android:paddingVertical="@dimen/padding_small"
+                android:textSize="@dimen/text_size_small" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/meetup_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:gravity="left"
-        android:text="@string/meetup_time"
-        android:textSize="@dimen/text_size_description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.017"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meetup_header_desc" />
-
-    <TextView
-        android:id="@+id/meetup_time_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="@android:drawable/editbox_background"
-        android:gravity="center"
-        android:hint="@string/select_time"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meetup_time" />
-    />
-
-
-
-    <!--<TimePicker
-        android:id="@+id/meetup_time_picker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:timePickerMode="clock"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/meetup_time"
-        android:visibility="invisible"/>-->
-</androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
+        <Button
+            android:id="@+id/meetup_info_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/padding_double"
+            android:text="@string/meetup_info_submit_btn" />
+    </LinearLayout>
+  
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.example.cm.data.models;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.Exclude;
 
 import java.util.List;
@@ -9,18 +10,27 @@ public class User {
     private String id;
     private String username, firstName, lastName, email, bio, profileImageUrl;
     private List<String> friends;
+    private LatLng location;
 
     public User() {
     }
 
-    public User(String id, String username, String firstName, String lastName, String email, String bio, String profileImageUrl, List<String> friends) {
+    public User(String id, String username, String firstName, String lastName, String email) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.bio = bio;
-        this.profileImageUrl = profileImageUrl;
+    }
+
+    public User(String id, String username, String firstName, String lastName, String email, List<String> friends, LatLng location) {
+        this.id = id;
+        this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.friends = friends;
+        this.location = location;
     }
 
     public String getId() {
@@ -90,5 +100,13 @@ public class User {
 
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public LatLng getLocation() {
+        return location;
+    }
+
+    public void setLocation(LatLng location) {
+        this.location = location;
     }
 }

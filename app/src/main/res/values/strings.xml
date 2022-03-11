@@ -51,13 +51,13 @@
     <string name="registerPasswordEditText">Passwort</string>
     <string name="registerFirstNameEditText">Vorname</string>
     <string name="registerLastNameEditText">Nachname</string>
-    <string name="registerLoginBtn">Zurück zum Login</string>
+    <string name="registerLoginBtn">Zum Login</string>
     <string name="registerRegisterBtn">Registrieren</string>
     <string name="loginTitle">Login</string>
     <string name="loginEmailEditText">Email</string>
     <string name="loginPasswordEditText">Passwort</string>
     <string name="loginLoginBtn">Einloggen</string>
-    <string name="loginRegisterBtn">Kein Account? Hier registrieren.</string>
+    <string name="loginRegisterBtn">Noch kein Account? <u>Jetzt registrieren.</u></string>
     <string name="loginUserNameEditText">Benutzername</string>
     <string name="btn_meetup_send_invite">Abschicken</string>
     <string name="profile_picture_decription">Profilbild</string>
@@ -84,6 +84,7 @@
     <string name="friends_tabs_requests">Freundschaftsanfragen</string>
 
     <string name="title_meetup">Meetup</string>
+    <string name="meetup_success_icon">🙌</string>
     <string name="meetup_success_title">Du hast es geschafft!</string>
     <string name="meetup_success_description">Euer Treffen wurde erfolgreich erstellt. Genieße die Zeit mit deinen Freunden.</string>
     <string name="meetup_success_btn_text">Zur Meetup-Übersicht</string>
@@ -123,6 +124,7 @@
     <string name="profile_btn_add_friend">Anfragen</string>
     <string name="profile_btn_remove_friend">Entfernen</string>
     <string name="content_description_profile_settings">Navigate to Profile Settings</string>
+    <string name="content_description_divider">Divider</string>
     <string name="title_settings">Einstellungen</string>
     <string name="app_version_prefix">App-Version:</string>
     <string name="link_label_edit_profile">Profil bearbeiten</string>
@@ -130,6 +132,7 @@
     <string name="link_label_edit_notifications">Benachrichtigungen</string>
     <string name="link_label_privacy_policy">Datenschutzerklärung</string>
     <string name="link_label_imprint">Impressum</string>
+    <string name="link_label_logout">Abmelden</string>
     <string name="url_imprint">https://www.uni-regensburg.de/impressum/startseite/index.html</string>
     <string name="url_privacy_policy">https://www.uni-regensburg.de/datenschutz/startseite/index.html</string>
     <string name="title_edit_profile">Profil bearbeiten</string>
@@ -145,10 +148,14 @@
     <string name="input_label_username">Benutzername</string>
     <string name="input_label_first_name">Vorname</string>
     <string name="input_label_last_name">Nachname</string>
+    <string name="edit_cancel">Abbrechen</string>
+    <string name="edit_save">Speichern</string>
     <string name="edit_profile_success_message">Änderungen wurden gespeichert</string>
     <string name="edit_profile_error_message">Ein Fehler ist aufgetreten. Versuche es erneut.</string>
     <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
     <string name="dialog_title_field">{field} bearbeiten</string>
+    <string name="edit_account_email">Die E-Mail Adresse ist mit deinem RZ-Account verknüpft und kann deshalb nicht nachträglich angepasst werden.</string>
+    <string name="edit_account_password">Passwort ändern</string>
     <string name="edit_account_error_password_not_empty">Passwort-Felder dürfen nicht leer sein</string>
     <string name="edit_account_error_password_min_length">Passwort muss mindestens 6 Zeichen lang sein</string>
     <string name="edit_account_error_password_must_differ">Das neue Passwort darf nicht mit dem alten übereinstimmen</string>
@@ -163,4 +170,24 @@
     <string name="edit_profile_general_error">Ein Fehler ist aufgetreten</string>
     <string name="title_meetups">Meetups</string>
 
+    <string name="start_title">Willkommen bei\n Course Matcher!</string>
+    <string name="start_header">Triff deine Freunde am Campus\n - spontan und einfach.</string>
+    <string name="profile_title">Erstelle ein Profil</string>
+    <string name="profile_header">und füge deine Freunde hinzu!</string>
+    <string name="meet_title">Vereinbart ein Treffen am Campus</string>
+    <string name="meet_header">mit nur wenigen Klicks!</string>
+    <string name="location_title">Teile deinen Standort</string>
+    <string name="location_header">um dich am Campus zu treffen.</string>
+    <string name="onboarding_btn">Registrieren</string>
+    <string name="skiptoLogin">Login</string>
+    <string name="img_uni">Picture of the University</string>
+    <string name="loginEmailPasswordNeeded">E-Mail und Passwort wird benötigt</string>
+    <string name="registerFieldsRequired">Alle Felder werden benötigt</string>
+    <string name="create_meetup_marker_title">Meetup Treffpunkt</string>
+    <string name="meetup_location_not_found">Adresse nicht gefunden.</string>
+    <string name="meetup_tabs_label_accepted">Zugesagt</string>
+    <string name="meetup_tabs_label_declined">Abgesagt</string>
+    <string name="meetup_tabs_label_open">Offen</string>
+    <string name="dialog_logout_btn">Abmelden</string>
+    <string name="dialog_logout_title">Wirklich abmelden?</string>
 </resources>

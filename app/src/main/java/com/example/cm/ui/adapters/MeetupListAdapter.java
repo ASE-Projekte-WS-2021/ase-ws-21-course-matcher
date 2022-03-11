@@ -1,5 +1,7 @@
 package com.example.cm.ui.adapters;
 
+import static com.example.cm.utils.Utils.convertToAddress;
+
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -40,6 +42,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
         Meetup meetup = meetups.get(position).getValue();
 
+        if (meetup == null) {
+            return;
+        }
+
         MaterialCardView meetupCard = holder.getMeetupCard();
 
         meetupCard.setOnClickListener(view -> {
@@ -48,7 +54,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             Navigation.findNavController(view).navigate(R.id.navigateToMeetupDetailed, bundle);
         });
 
-        holder.getTvLocation().setText(Objects.requireNonNull(meetup).getLocation());
+        String address = convertToAddress(meetupCard.getContext(), meetup.getLocation());
+
+        holder.getTvLocation().setText(address);
         switch (meetup.getPhase()) {
             case MEETUP_UPCOMING:
                 holder.getTvTime().setText(meetup.getFormattedTime());
@@ -93,6 +101,20 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         return meetups.size();
     }
 
+    /**
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
+     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     */
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     public static class MeetupListViewHolder extends RecyclerView.ViewHolder {
 
         private final ItemMeetupBinding binding;
@@ -117,6 +139,5 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         public MaterialCardView getMeetupCard() {
             return binding.card;
         }
-
     }
 }

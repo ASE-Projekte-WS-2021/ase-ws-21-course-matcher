@@ -1,6 +1,8 @@
 package com.example.cm.ui.invite_friends;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +15,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
 import com.example.cm.utils.Navigator;
-import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
@@ -50,10 +52,12 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(inviteFriendsListAdapter);
+        binding.btnBack.bringToFront();
     }
 
     private void initListener() {
-        binding.inviteFriendsSearchBtn.setOnClickListener(v -> onSearchButtonClicked());
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+        binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
         binding.btnSendInvite.setOnClickListener(v -> {
             boolean isSuccessful = createMeetupViewModel.createMeetup();
             if (isSuccessful) {
@@ -62,24 +66,36 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
                 Snackbar.make(binding.getRoot(), R.string.meetup_create_error, Snackbar.LENGTH_LONG).show();
             }
         });
+        binding.etUserSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                onSearchTextChanged(charSequence);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
     }
 
     public void initViewModel() {
         createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-            if (users == null) {
-                return;
-            } else if (users.size() == 0) {
-                Snackbar snackbar = Snackbar.make(binding.getRoot(),
-                        getContext().getText(R.string.snackbar_no_friends_text), Snackbar.LENGTH_LONG);
-                // todo: set snackbar action -> go to add-friends-fragment
-                snackbar.show();
-                binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
+            binding.loadingCircle.setVisibility(View.GONE);
+
+            if (users.isEmpty()) {
+                binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+                binding.rvUserList.setVisibility(View.GONE);
                 return;
             }
+
             inviteFriendsListAdapter.setUsers(users);
-            binding.inviteFriendsLoadingCircle.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);
+            binding.noFriendsWrapper.setVisibility(View.GONE);
         });
 
         createMeetupViewModel.getSelectedUsers().observe(getViewLifecycleOwner(), selectedUsers -> {
@@ -97,12 +113,22 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     }
 
-    private void onSearchButtonClicked() {
-        String query = binding.inviteUserSearch.getText().toString();
-        createMeetupViewModel.searchFriends(query);
-
-        Utils.hideKeyboard(requireActivity(), binding.getRoot());
+    private void onClearInputClicked() {
+        binding.etUserSearch.setText("");
+        createMeetupViewModel.searchUsers("");
+        binding.ivClearInput.setVisibility(View.GONE);
     }
+
+    private void onSearchTextChanged(CharSequence charSequence) {
+        String query = charSequence.toString();
+        if (query.length() > 0) {
+            binding.ivClearInput.setVisibility(View.VISIBLE);
+        } else {
+            binding.ivClearInput.setVisibility(View.GONE);
+        }
+        createMeetupViewModel.searchUsers(query);
+    }
+
 
     private void showInvitationButton(boolean showButton) {
         if (showButton) {
@@ -125,6 +151,8 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     @Override
     public void onItemClicked(String id) {
-        // do nothing
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_USER_ID, id);
+        navigator.getNavController().navigate(R.id.action_navigation_invite_friends_to_navigation_other_profile, bundle);
     }
 }

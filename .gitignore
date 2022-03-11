@@ -8,6 +8,7 @@
 /.idea/navEditor.xml
 .idea/gradle.xml
 .idea/misc.xml
+.idea/deploymentTargetDropDown.xml
 app/build.gradle
 /.idea/assetWizardSettings.xml
 .DS_Store
@@ -17,3 +18,4 @@ app/build.gradle
 .cxx
 local.properties
 firebase-debug.log
+local_maps.properties
