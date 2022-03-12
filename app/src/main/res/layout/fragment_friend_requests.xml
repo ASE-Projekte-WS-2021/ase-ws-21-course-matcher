@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_header"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="@dimen/padding_big">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/readexpro_semibold"
-            android:text="@string/title_friends"
+            android:text="@string/title_friends_requests"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="24sp" />
