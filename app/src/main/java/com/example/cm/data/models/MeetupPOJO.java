@@ -33,7 +33,7 @@ public class MeetupPOJO {
         this.phase = meetup.getPhase();
         this.timestamp = meetup.getTimestamp();
 
-        this.location = new ArrayList<>();
+        this.location = new ArrayList<Double>();
         this.location.add(meetup.getLocation().latitude);
         this.location.add(meetup.getLocation().longitude);
     }

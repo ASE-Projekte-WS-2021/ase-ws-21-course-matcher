@@ -19,6 +19,7 @@ import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.example.cm.utils.Navigator;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -92,10 +93,22 @@ public class MeetupDetailedFragment extends Fragment {
     }
 
     private void initButtons(Meetup meetup) {
-        if (meetup.getConfirmedFriends().contains(meetupDetailedViewModel.getCurrentUserId())) {
-            binding.meetupJoinBtn.setVisibility(View.GONE);
+        String currentUserId = meetupDetailedViewModel.getCurrentUserId();
+        if (meetup.getConfirmedFriends() != null && meetup.getConfirmedFriends().contains(currentUserId)) {
+            binding.meetupJoinBtn.setVisibility(View.INVISIBLE);
             binding.meetupLateBtn.setVisibility(View.VISIBLE);
+        } else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)){
+            binding.meetupJoinBtn.setVisibility(View.VISIBLE);
+            binding.meetupLateBtn.setVisibility(View.GONE);
         }
+        if (meetup.getRequestingUser().equals(currentUserId)) {
+            initMeetupDelete();
+        }
+    }
+
+    private void initMeetupDelete() {
+        binding.btnDelete.setVisibility(View.VISIBLE);
+        binding.btnDelete.setOnClickListener(v -> onDelete());
     }
 
     private void initListeners() {
@@ -103,6 +116,7 @@ public class MeetupDetailedFragment extends Fragment {
         binding.meetupLeaveBtn.setOnClickListener(v -> onLeave());
         binding.meetupJoinBtn.setOnClickListener(v -> onJoin());
         binding.meetupLateBtn.setOnClickListener(v -> onLate());
+        // todo: binding.meetupAddMoreBtn.setOnClickListener(v -> onAddMore());
     }
 
     private void onLeave() {
@@ -115,5 +129,16 @@ public class MeetupDetailedFragment extends Fragment {
 
     private void onLate() {
         meetupDetailedViewModel.onLate();
+    }
+
+    private void onAddMore() {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_MEETUP_ID, meetupId);
+        navigator.getNavController().navigate(R.id.action_global_navigate_to_invite_friends, bundle);
+    }
+
+    private void onDelete() {
+        meetupDetailedViewModel.onDelete();
+        navigator.getNavController().navigate(R.id.action_global_navigate_to_meetups);
     }
 }

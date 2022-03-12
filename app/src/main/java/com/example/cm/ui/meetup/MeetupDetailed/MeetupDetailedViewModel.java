@@ -5,7 +5,12 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.repositories.MeetupRepository;
+import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class MeetupDetailedViewModel extends ViewModel {
 
@@ -13,10 +18,12 @@ public class MeetupDetailedViewModel extends ViewModel {
     private MutableLiveData<Meetup> meetup;
     private UserRepository userRepository;
     private MeetupRepository meetupRepository;
+    private MeetupRequestRepository meetupRequestRepository;
 
     public MeetupDetailedViewModel(String meetupId) {
         userRepository = new UserRepository();
         meetupRepository = new MeetupRepository();
+        meetupRequestRepository = new MeetupRequestRepository();
         meetup = meetupRepository.getMeetup(meetupId);
         currentUserId = userRepository.getCurrentAuthUserId();
         this.meetupId = meetupId;
@@ -41,4 +48,10 @@ public class MeetupDetailedViewModel extends ViewModel {
     public void onLate() {
         meetupRepository.addLate(meetupId, currentUserId);
     }
+
+    public void onDelete() {
+        meetupRepository.deleteMeetup(meetupId);
+        meetupRequestRepository.deleteRequestForMeetup(meetupId);
+    }
+
 }

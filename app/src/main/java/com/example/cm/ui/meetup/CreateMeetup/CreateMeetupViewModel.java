@@ -1,11 +1,14 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
+import android.os.Bundle;
+
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.Constants;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.User;
@@ -94,26 +97,35 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupIsPrivate.postValue(isPrivate);
     }
 
-    public boolean createMeetup() {
+    public boolean createMeetup(Bundle bundle) {
         Objects.requireNonNull(selectedUsers.getValue());
-        String meetupId = UUID.randomUUID().toString();
 
-        Meetup meetupToAdd = new Meetup(
-                meetupId,
-                userRepository.getFirebaseUser().getUid(),
-                meetupLatLng.getValue(),
-                meetupTimestamp.getValue(),
-                Boolean.TRUE.equals(meetupIsPrivate.getValue()),
-                selectedUsers.getValue());
+        if (bundle == null) {
+            String meetupId = UUID.randomUUID().toString();
 
-        boolean isSuccessful = meetupRepository.addMeetup(meetupToAdd);
+            Meetup meetupToAdd = new Meetup(
+                    meetupId,
+                    userRepository.getFirebaseUser().getUid(),
+                    meetupLatLng.getValue(),
+                    meetupTimestamp.getValue(),
+                    Boolean.TRUE.equals(meetupIsPrivate.getValue()),
+                    selectedUsers.getValue());
 
-        if (isSuccessful) {
-            sendMeetupRequest(meetupToAdd.getId());
-            return true;
+            boolean isSuccessful = meetupRepository.addMeetup(meetupToAdd);
+
+            if (isSuccessful) {
+                sendMeetupRequest(meetupToAdd.getId());
+                return true;
+            }
+            return false;
         }
 
-        return false;
+        // add friends to existing meetup
+        else {
+            String meetupId = bundle.getString(Constants.KEY_MEETUP_ID);
+            sendMeetupRequestForExistingMeetup(meetupRepository.getMeetup(meetupId));
+            return true;
+        }
     }
 
     private void sendMeetupRequest(String meetupId) {
@@ -129,6 +141,25 @@ public class CreateMeetupViewModel extends ViewModel {
                         meetupTimestamp.getValue(),
                         MEETUP_REQUEST);
                 meetupRequestRepository.addMeetupRequest(request);
+            }
+            selectedUsers.getValue().clear();
+        }
+    }
+
+    private void sendMeetupRequestForExistingMeetup(MutableLiveData<Meetup> meetupMutableLiveData) {
+        // Create notifications for each invited user
+        Meetup meetup = meetupMutableLiveData.getValue(); // todo: meetup is null
+        if (selectedUsers.getValue() != null && currentUser.getValue() != null) {
+            for (String invitedFriendId : selectedUsers.getValue()) {
+                /*MeetupRequest request = new MeetupRequest(
+                        meetup.getId(),
+                        userRepository.getFirebaseUser().getUid(),
+                        currentUser.getValue().getFullName(),
+                        invitedFriendId,
+                        meetup.getLocation(),
+                        meetupTimestamp.getValue(),
+                        MEETUP_REQUEST);
+                meetupRequestRepository.addMeetupRequest(request);*/
             }
             selectedUsers.getValue().clear();
         }

@@ -29,6 +29,7 @@ public class MeetupRepository {
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
     private MutableLiveData<List<MutableLiveData<Meetup>>> meetupListMLD = new MutableLiveData<>();
     private MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
+    private MutableLiveData<List<String>> lateUsersMLD = new MutableLiveData<>();
 
     public MeetupRepository() {
         listenToMeetupListChanges();
@@ -73,6 +74,19 @@ public class MeetupRepository {
         return meetupMLD;
     }
 
+    public MutableLiveData<List<String>> getLateUsers(String meetupId) {
+        meetupCollection.document(meetupId).addSnapshotListener(executorService, (value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null && value.exists()) {
+                List<String> lateUsers = (List<String>) value.get("lateFriends");
+                lateUsersMLD.postValue(lateUsers);
+            }
+        });
+        return lateUsersMLD;
+    }
+
     public boolean addMeetup(Meetup meetup) {
         try {
             MeetupPOJO meetupPOJO = new MeetupPOJO(meetup);
@@ -83,14 +97,29 @@ public class MeetupRepository {
         }
     }
 
+    public void deleteMeetup(String meetupId) {
+        meetupCollection.document(meetupId).get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null) {
+                    return;
+                }
+                if (task.getResult().exists()) {
+                    task.getResult().getReference().delete();
+                }
+            }
+        });
+    }
+
     public void addConfirmed(String meetupId, String participantId) {
-        meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayUnion(participantId));
         meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayUnion(participantId));
     }
 
     public void addDeclined(String meetupId, String participantId) {
         meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayUnion(participantId));
     }
 

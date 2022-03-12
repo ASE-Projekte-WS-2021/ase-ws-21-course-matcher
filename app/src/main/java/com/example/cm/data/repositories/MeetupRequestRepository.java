@@ -6,6 +6,7 @@ import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -122,6 +123,26 @@ public class MeetupRequestRepository extends Repository {
      */
     public void deleteMeetupRequest(MeetupRequest request) {
         meetupRequestCollection.document(request.getId()).delete();
+    }
+
+
+    /**
+     * Delete Meetup Requests with given meetupId
+     *
+     * @param meetupId meetup id
+     */
+    public void deleteRequestForMeetup(String meetupId) {
+        meetupRequestCollection.whereEqualTo("meetupId", meetupId)
+                .get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null) {
+                    return;
+                }
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    document.getReference().delete();
+                }
+            }
+        });
     }
 
     /**

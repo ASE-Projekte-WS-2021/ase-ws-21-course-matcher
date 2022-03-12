@@ -38,7 +38,7 @@ public class SwipeToDelete extends ItemTouchHelper.SimpleCallback {
             View itemView = viewHolder.itemView;
             Context context = recyclerView.getContext();
             ColorDrawable background = new ColorDrawable();
-            Drawable icon = AppCompatResources.getDrawable(context, R.drawable.ic_delete_item);
+            Drawable icon = AppCompatResources.getDrawable(context, R.drawable.ic_trash);
 
             background.setColor(context.getResources().getColor(R.color.orange600));
             background.setBounds(itemView.getRight() + (int) dX,

@@ -3,16 +3,28 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable-anydpi/ic_button_accept_disabled.xml" value="0.2518518518518518" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable-anydpi/ic_button_decline_disabled.xml" value="0.2518518518518518" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable-anydpi/ic_button_decline_light.xml" value="0.2518518518518518" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable-anydpi/ic_delete_item.xml" value="0.2518518518518518" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable-anydpi/ic_late.xml" value="0.2518518518518518" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable-hdpi/ic_edit_button_round_transparent.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/baseline_emoji_people_24.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/btn_rounded.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/divider_horizontal.xml" value="0.2703125" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_accept_btn.xml" value="0.2546875" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_add_friends_to_meetup.xml" value="0.24351851851851852" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_back_button.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_baseline_emoji_people_24.xml" value="0.11041666666666666" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_button_accept.xml" value="0.25076923076923074" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_button_decline.xml" value="0.25076923076923074" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_delete.xml" value="0.2703125" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_delete_circle_outline.xml" value="0.2703125" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_edit_account.xml" value="0.2546875" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_edit_button_round.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_edit_notifications.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.18333333333333332" />
@@ -22,6 +34,8 @@
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_profile.xml" value="0.2703125" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_round_person_add_alt_1_24.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_round_search_24.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_trash_btn.xml" value="0.264" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/drawable/ic_trash_round.xml" value="0.24351851851851852" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/activity_login.xml" value="0.24592391304347827" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/activity_main.xml" value="0.1671875" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/dialog_edit_meetup.xml" value="0.25416666666666665" />
@@ -33,7 +47,7 @@
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_friends_tabs.xml" value="0.23097826086956522" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_invite_friends.xml" value="0.264" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup.xml" value="0.264" />
-        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed.xml" value="0.176" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed.xml" value="0.264" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_detailed_friends_list.xml" value="0.21240942028985507" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_list.xml" value="0.23233695652173914" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_meetup_notifications.xml" value="0.23233695652173914" />
@@ -43,6 +57,7 @@
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_notifications.xml" value="0.2427536231884058" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_other_profile.xml" value="0.1" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_own_profile.xml" value="0.1" />
+        <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/fragment_settings.xml" value="0.24818840579710144" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_friend_request.xml" value="0.4" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup.xml" value="0.17889492753623187" />
         <entry key="..\:/Users/Martina Emmert/Documents/Projects/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup_friend.xml" value="0.17889492753623187" />

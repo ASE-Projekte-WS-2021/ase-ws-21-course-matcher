@@ -22,11 +22,11 @@ public class MeetupDetailedTabAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if (position == 0) {
-            return new MeetupDetailedFriendsListFragment(meetup.getConfirmedFriends());
+            return new MeetupDetailedFriendsListFragment(meetup.getConfirmedFriends(), meetup.getId());
         } else if (position == 1) {
-            return new MeetupDetailedFriendsListFragment(meetup.getDeclinedFriends());
+            return new MeetupDetailedFriendsListFragment(meetup.getDeclinedFriends(), meetup.getId());
         } else {
-            return new MeetupDetailedFriendsListFragment(meetup.getInvitedFriends());
+            return new MeetupDetailedFriendsListFragment(meetup.getInvitedFriends(), meetup.getId());
         }
     }
 
