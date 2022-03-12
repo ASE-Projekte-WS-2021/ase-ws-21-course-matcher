@@ -208,7 +208,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     @Override
     public void onPositionChanged(LatLng position) {
-        if (googleMap == null || currentUser == null) {
+        if (googleMap == null || currentUser == null || clusterManager == null) {
             return;
         }
 
