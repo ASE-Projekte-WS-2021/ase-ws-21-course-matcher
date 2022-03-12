@@ -172,6 +172,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                         addMarker(user, false);
                     }
                 }
+                // Set initial position of user cards offset of screen
+                binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(0f).setDuration(250);
             }
 
             @Override
@@ -180,7 +182,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             }
         });
     }
-
 
 
     @Override
@@ -296,19 +297,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     @Override
     public boolean onClusterItemClick(MarkerClusterItem item) {
-        String clickedItemId = item.getUser().getId();
-        if (clickedItemId.equals(currentUser.getId())) {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(item.getUser().getLocation()));
+        boolean isCurrentUser = item.isCurrentUser();
+
+        if (!isCurrentUser) {
+            showUserCards(item.getUser());
         }
 
-        showUserCards(item.getUser());
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(item.getUser().getLocation()));
         return false;
     }
 
     @Override
     public boolean onClusterClick(Cluster<MarkerClusterItem> cluster) {
-        Timber.d("cluster clicked");
-        // Show user cards
         Collection<MarkerClusterItem> clusterItems = cluster.getItems();
         List<MarkerClusterItem> users = new ArrayList<>(clusterItems);
         User user = users.get(0).getUser();
@@ -319,7 +319,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void showUserCards(User user) {
-        binding.rvUserCards.animate().alpha(1f).setDuration(250);
+        binding.rvUserCards.animate().translationY(0).alpha(1f).setDuration(250);
         String userId = user.getId();
         int position = mapUserAdapter.getPositionBy(userId);
         if (position == -1) {
@@ -331,6 +331,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
         // Hide user cards
-        binding.rvUserCards.animate().alpha(0f).setDuration(250);
+        binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(0f).setDuration(250);
     }
 }
