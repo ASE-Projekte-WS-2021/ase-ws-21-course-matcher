@@ -219,6 +219,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void addMarker(User user, boolean isCurrentUser) {
+        if(clusterManager == null) {
+            return;
+        }
         if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
             MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
             clusterManager.addItem(markerClusterItem);
