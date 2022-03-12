@@ -191,7 +191,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 for (User user : users) {
                     if (user.getLocation() != null) {
                         mapUserAdapter.addUser(user);
-                        addMarker(user, false);
+                        requireActivity().runOnUiThread(() -> {
+                            addMarker(user, true);
+                            clusterManager.cluster();
+                        });
                     }
                 }
                 // Set initial position of user cards offset of screen
@@ -214,12 +217,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_MAP_ZOOM));
         homeViewModel.updateLocation(position);
-        addMarker(currentUser, true);
-        clusterManager.cluster();
+        requireActivity().runOnUiThread(() -> {
+            addMarker(currentUser, true);
+            clusterManager.cluster();
+        });
     }
 
     private void addMarker(User user, boolean isCurrentUser) {
-        if(clusterManager == null) {
+        if (clusterManager == null) {
             return;
         }
         if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
