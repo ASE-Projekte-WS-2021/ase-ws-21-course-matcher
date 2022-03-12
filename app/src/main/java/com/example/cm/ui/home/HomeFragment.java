@@ -3,9 +3,15 @@ package com.example.cm.ui.home;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.example.cm.Constants.DEFAULT_CARD_OFFSET;
 import static com.example.cm.Constants.DEFAULT_LOCATION;
 import static com.example.cm.Constants.DEFAULT_MAP_ZOOM;
+import static com.example.cm.Constants.FINAL_CARD_ALPHA;
+import static com.example.cm.Constants.INITIAL_CARD_ALPHA;
+import static com.example.cm.Constants.MAP_CARD_ANIMATION_DURATION;
 import static com.example.cm.Constants.MARKER_SIZE;
+import static com.example.cm.Constants.MAX_CLUSTER_ITEM_DISTANCE;
+import static com.example.cm.Constants.ON_SNAPPED_MAP_ZOOM;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,6 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -79,10 +86,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     private void initListeners() {
         binding.btnCenterOnUser.setOnClickListener(v -> {
-          if(currentUser != null) {
-              LatLng currentPosition = currentUser.getLocation();
-              googleMap.animateCamera(CameraUpdateFactory.newLatLng(currentPosition));
-          }
+            if (currentUser != null) {
+                LatLng currentPosition = currentUser.getLocation();
+                googleMap.animateCamera(CameraUpdateFactory.newLatLng(currentPosition));
+            }
         });
     }
 
@@ -161,9 +168,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         clusterManager.setOnClusterItemClickListener(this);
 
         NonHierarchicalDistanceBasedAlgorithm<MarkerClusterItem> clusterAlgorithm = new NonHierarchicalDistanceBasedAlgorithm<>();
-        clusterAlgorithm.setMaxDistanceBetweenClusteredItems(20);
+        clusterAlgorithm.setMaxDistanceBetweenClusteredItems(MAX_CLUSTER_ITEM_DISTANCE);
         clusterManager.setAlgorithm(clusterAlgorithm);
-
         observeCurrentUser();
     }
 
@@ -189,7 +195,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                     }
                 }
                 // Set initial position of user cards offset of screen
-                binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(0f).setDuration(250);
+                binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
             }
 
             @Override
@@ -273,7 +279,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             return;
         }
 
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, ON_SNAPPED_MAP_ZOOM));
     }
 
     @Override
@@ -306,10 +312,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void showUserCards(User user) {
-        binding.rvUserCards.animate().translationY(0).alpha(1f).setDuration(250);
+        binding.rvUserCards.animate().translationY(DEFAULT_CARD_OFFSET).alpha(FINAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
         String userId = user.getId();
         int position = mapUserAdapter.getPositionBy(userId);
-        if (position == -1) {
+        if (position == RecyclerView.NO_POSITION) {
             return;
         }
         binding.rvUserCards.smoothScrollToPosition(position);
@@ -318,6 +324,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
         // Hide user cards
-        binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(0f).setDuration(250);
+        binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
     }
 }
