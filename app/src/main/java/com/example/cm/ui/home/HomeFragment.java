@@ -92,7 +92,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         binding.rvUserCards.setAdapter(mapUserAdapter);
         binding.rvUserCards.addOnScrollListener(new SnapPagerScrollListener(snapHelper, SnapPagerScrollListener.ON_SCROLL, false, this));
         snapHelper.attachToRecyclerView(binding.rvUserCards);
-
     }
 
     private void initPermissionCheck() {
@@ -333,7 +332,5 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     public void onMapClick(@NonNull LatLng latLng) {
         // Hide user cards
         binding.rvUserCards.animate().alpha(0f).setDuration(250);
-        // Reset the map to default zoom
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_MAP_ZOOM));
     }
 }
