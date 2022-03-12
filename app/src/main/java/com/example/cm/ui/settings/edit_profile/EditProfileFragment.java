@@ -110,9 +110,15 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
 
     private void initUI() {
         binding.actionBar.tvTitle.setText(getString(R.string.title_edit_profile));
+
         binding.inputUsername.inputLabel.setText(R.string.input_label_username);
+        binding.inputUsername.inputField.setFocusable(false);
+
         binding.inputFirstName.inputLabel.setText(getString(R.string.input_label_first_name));
+        binding.inputFirstName.inputField.setFocusable(false);
+
         binding.inputLastName.inputLabel.setText(getString(R.string.input_label_last_name));
+        binding.inputLastName.inputField.setFocusable(false);
     }
 
     private void initListeners() {

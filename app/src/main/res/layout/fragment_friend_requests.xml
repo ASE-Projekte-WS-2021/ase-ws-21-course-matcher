@@ -6,13 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".ui.friends.FriendRequests.FriendRequestsFragment"
     android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/friendrequestheader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_header"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_big">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/readexpro_semibold"
+            android:text="@string/title_friends_requests"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notificationsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/friendrequestheader"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/friendrequestheader" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -48,18 +48,19 @@
     <string name="title_activity_splash_screen">SplashScreen</string>
     <string name="hello_blank_fragment">Meetuplist</string>
     <string name="registerTitle">Registrieren</string>
-    <string name="registerEmailEditText">Email</string>
-    <string name="registerPasswordEditText">Passwort</string>
-    <string name="registerFirstNameEditText">Vorname</string>
-    <string name="registerLastNameEditText">Nachname</string>
-    <string name="registerLoginBtn">Zum Login</string>
+    <string name="registerEmailEditText">mau.musterkatze@stud.uni-regensburg.de</string>
+    <string name="registerPasswordEditText">musterkatze123</string>
+    <string name="registerFirstNameHint">Mau</string>
+    <string name="registerLastNameHint">Musterkatze</string>
+    <string name="registerLoginBtn">Bereits registriert? <u>Zum Login</u></string>
+    <string name="registerUsernameHint">maumusterkatze</string>
     <string name="registerRegisterBtn">Registrieren</string>
     <string name="loginTitle">Login</string>
-    <string name="loginEmailEditText">Email</string>
-    <string name="loginPasswordEditText">Passwort</string>
+    <string name="userEmailHint">mau.musterkatze@stud.uni-regensburg.de</string>
+    <string name="userPasswordHint">maumusterkatze123</string>
     <string name="loginLoginBtn">Einloggen</string>
     <string name="loginRegisterBtn">Noch kein Account? <u>Jetzt registrieren.</u></string>
-    <string name="loginUserNameEditText">Benutzername</string>
+    <string name="loginUserNameEditText">maumusterkatze</string>
     <string name="btn_meetup_send_invite">Abschicken</string>
     <string name="profile_picture_decription">Profilbild</string>
 
@@ -169,6 +170,7 @@
     <string name="edit_profile_last_name_min_length">Nachname muss mindestens 2 Zeichen lang sein</string>
     <string name="edit_profile_success">Erfolgreich aktualisiert</string>
     <string name="edit_profile_general_error">Ein Fehler ist aufgetreten</string>
+    <string name="title_meetups">Meetups</string>
 
     <string name="start_title">Willkommen bei\n Course Matcher!</string>
     <string name="start_header">Triff deine Freunde am Campus\n - spontan und einfach.</string>
@@ -181,7 +183,9 @@
     <string name="onboarding_btn">Registrieren</string>
     <string name="skiptoLogin">Login</string>
     <string name="img_uni">Picture of the University</string>
-    <string name="loginEmailPasswordNeeded">E-Mail und Passwort wird benötigt</string>
+    <string name="loginEmailPasswordNeeded">E-Mail und Passwort werden benötigt</string>
+    <string name="loginEmailNeeded">Bitte gib eine E-Mail an.</string>
+    <string name="loginPasswordNeeded">Bitte gib eine Passwort ein.</string>
     <string name="registerFieldsRequired">Alle Felder werden benötigt</string>
     <string name="create_meetup_marker_title">Meetup Treffpunkt</string>
     <string name="meetup_location_not_found">Adresse nicht gefunden.</string>
@@ -191,7 +195,20 @@
     <string name="dialog_logout_btn">Abmelden</string>
     <string name="dialog_logout_title">Wirklich abmelden?</string>
 
-    <string name="edit_delete">Meetup löschen</string>
-    <string name="edit_invited_friends">Mit wem willst du dich treffen?</string>
-    <string name="edit_invited_friends_btn">Teilnehmer bearbeiten</string>
+    <string name="shareLocation">Standort mit Freunden teilen:</string>
+    <string name="title_friends_requests">Anfragen</string>
+    <string name="loginTitleDesc">Du hast bereits ein Profil? Log dich ein und schon kannst du wie gewohnt wieder Treffen vereinbaren!</string>
+    <string name="loginEmailTxt">E-Mail</string>
+    <string name="loginPasswordTxt">Passwort</string>
+    <string name="registerTitleDesc">Erstelle einen Account um Treffen mit deinen Freunden am Campus zu vereinbaren!</string>
+    <string name="registerUsernameText">Nutzername</string>
+    <string name="registerFirstnameText">Vorname</string>
+    <string name="registerLastnameText">Nachname</string>
+    <string name="registerEmailText">E-Mail</string>
+    <string name="registerPasswordText">Passwort</string>
+    <string name="registerUsernameEmpty">Bitte gib einen Nutzernamen ein.</string>
+    <string name="registerEmailEmpty">Bitte gib einen E-Mail Adresse ein.</string>
+    <string name="registerPasswordEmpty">Bitte gib ein Passwort mit 6 Zeichen ein.</string>
+    <string name="registerFirstnameEmpty">Bitte gib deinen Vornamen ein.</string>
+    <string name="registerLastnameEmpty">Bitte gib deinen Nachnamen ein.</string>
 </resources>

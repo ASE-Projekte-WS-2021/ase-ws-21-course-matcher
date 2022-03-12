@@ -4,11 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cm.Constants;
 import com.example.cm.MainActivity;
 import com.example.cm.R;
 import com.example.cm.databinding.ActivityRegisterBinding;
@@ -36,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         initViewModel();
         initListeners();
+        initTexts();
     }
 
     private void initViewModel() {
@@ -55,9 +55,27 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    private void initTexts() {
+        binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
+        binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
+
+        binding.registerFirstNameEditText.inputLabel.setText(R.string.registerFirstnameText);
+        binding.registerFirstNameEditText.inputField.setHint(R.string.registerFirstNameHint);
+
+        binding.registerLastNameEditText.inputLabel.setText(R.string.registerLastnameText);
+        binding.registerLastNameEditText.inputField.setHint(R.string.registerLastNameHint);
+
+        binding.registerEmailEditText.inputLabel.setText(R.string.registerEmailText);
+        binding.registerEmailEditText.inputField.setHint(R.string.userEmailHint);
+
+        binding.registerPasswordEditText.inputLabel.setText(R.string.registerPasswordText);
+        binding.registerPasswordEditText.inputField.setHint(R.string.userPasswordHint);
+    }
+
+
     private void initListeners() {
-        binding.registerRegisterBtn.setOnClickListener(v -> register(v));
-        binding.registerLoginBtn.setOnClickListener(v -> goToLogin(v));
+        binding.registerRegisterBtn.setOnClickListener(this::register);
+        binding.registerLoginBtn.setOnClickListener(this::goToLogin);
     }
 
     public void goToLogin(View view) {
@@ -66,19 +84,39 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void register(View view) {
-        String userName = ((EditText) findViewById(R.id.registerUserNameEditText)).getText().toString();
-        String email = ((EditText) findViewById(R.id.registerEmailEditText)).getText().toString();
-        String password = ((EditText) findViewById(R.id.registerPasswordEditText)).getText().toString();
-        String firstName = ((EditText) findViewById(R.id.registerFirstNameEditText)).getText().toString();
-        String lastName = ((EditText) findViewById(R.id.registerLastNameEditText)).getText().toString();
+        String userName = binding.registerUsernameEditText.inputField.getText().toString();
+        String email = binding.registerEmailEditText.inputField.getText().toString();
+        String password = binding.registerPasswordEditText.inputField.getText().toString();
+        String firstName = binding.registerFirstNameEditText.inputField.getText().toString();
+        String lastName = binding.registerLastNameEditText.inputField.getText().toString();
 
-        if (userName.length() > 0 && email.length() > 0 && password.length() > 0 && firstName.length() > 0
-                && lastName.length() > 0) {
-            authViewModel.register(email, password, userName, firstName, lastName);
-            registerBtn.setEnabled(false);
-        } else {
-            Snackbar.make(findViewById(R.id.registerLayout), R.string.registerFieldsRequired, Snackbar.LENGTH_LONG)
-                    .show();
+        if (userName.isEmpty()) {
+            Snackbar.make(binding.getRoot(), R.string.registerUsernameEmpty, Snackbar.LENGTH_LONG).show();
+            return;
         }
+
+        if (firstName.isEmpty()) {
+            Snackbar.make(binding.getRoot(), R.string.registerFirstnameEmpty, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        if (lastName.isEmpty()) {
+            Snackbar.make(binding.getRoot(), R.string.registerLastnameEmpty, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        if (email.isEmpty()) {
+            Snackbar.make(binding.getRoot(), R.string.registerEmailEmpty, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        if (password.isEmpty() || password.length() < Constants.MIN_PASSWORD_LENGTH) {
+            Snackbar.make(binding.getRoot(), R.string.registerPasswordEmpty, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+
+        authViewModel.register(email, password, userName, firstName, lastName);
+        registerBtn.setEnabled(false);
     }
 }
