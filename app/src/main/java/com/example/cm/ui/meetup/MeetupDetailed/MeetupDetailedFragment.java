@@ -27,6 +27,7 @@ public class MeetupDetailedFragment extends Fragment {
     private ViewPager2 viewPager;
     private FragmentMeetupDetailedBinding binding;
     private TabLayoutMediator tabLayoutMediator;
+    private MeetupDetailedViewModel meetupDetailedViewModel;
     private Navigator navigator;
 
     private String meetupId;
@@ -44,12 +45,13 @@ public class MeetupDetailedFragment extends Fragment {
         binding = FragmentMeetupDetailedBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
         initUIAndViewModel();
+        initListeners();
         return binding.getRoot();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void initUIAndViewModel() {
-        MeetupDetailedViewModel meetupDetailedViewModel = new ViewModelProvider(this, new MeetupDetailedFactory(meetupId)).get(MeetupDetailedViewModel.class);
+        meetupDetailedViewModel = new ViewModelProvider(this, new MeetupDetailedFactory(meetupId)).get(MeetupDetailedViewModel.class);
         meetupDetailedViewModel.getMeetup().observe(getViewLifecycleOwner(), meetup -> {
             tabAdapter = new MeetupDetailedTabAdapter(this, meetup);
             viewPager = binding.meetupDetailedTabPager;
@@ -70,8 +72,8 @@ public class MeetupDetailedFragment extends Fragment {
             tabLayoutMediator.attach();
 
             String address = convertToAddress(requireActivity(), meetup.getLocation());
-
             binding.meetupDetailedLocation.setText(address);
+
             switch (meetup.getPhase()) {
                 case MEETUP_UPCOMING:
                     binding.meetupDetailedTime.setText(meetup.getFormattedTime());
@@ -83,7 +85,29 @@ public class MeetupDetailedFragment extends Fragment {
                     binding.meetupDetailedTime.setText(R.string.meetup_ended_text);
                     break;
             }
+
+            if (meetup.getConfirmedFriends().contains(meetupDetailedViewModel.getCurrentUserId())) {
+                binding.meetupJoinBtn.setVisibility(View.GONE);
+            }
         });
+    }
+
+    private void initListeners() {
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+        binding.meetupLeaveBtn.setOnClickListener(v -> onLeave());
+        binding.meetupJoinBtn.setOnClickListener(v -> onJoin());
+        binding.meetupLateBtn.setOnClickListener(v -> onLate());
+    }
+
+    private void onLeave() {
+        meetupDetailedViewModel.onLeave();
+    }
+
+    private void onJoin() {
+        meetupDetailedViewModel.onJoin();
+    }
+
+    private void onLate() {
+        meetupDetailedViewModel.onLate();
     }
 }

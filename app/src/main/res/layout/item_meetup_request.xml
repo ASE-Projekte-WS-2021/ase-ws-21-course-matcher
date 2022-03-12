@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/acceptButton"
-        android:layout_width="@dimen/request_btn_size"
-        android:layout_height="@dimen/request_btn_size"
+        android:layout_width="@dimen/btn_size"
+        android:layout_height="@dimen/btn_size"
         android:src="@drawable/accept_btn"
         app:layout_constraintBottom_toBottomOf="@+id/meetupRequestImageView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,8 +19,8 @@
 
     <ImageView
         android:id="@+id/declineButton"
-        android:layout_width="@dimen/request_btn_size"
-        android:layout_height="@dimen/request_btn_size"
+        android:layout_width="@dimen/btn_size"
+        android:layout_height="@dimen/btn_size"
         android:layout_marginEnd="@dimen/padding_small"
         android:src="@drawable/decline_btn"
         app:layout_constraintBottom_toBottomOf="@+id/acceptButton"

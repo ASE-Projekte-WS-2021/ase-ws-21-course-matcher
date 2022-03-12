@@ -11,7 +11,7 @@
     <string name="meetup_place">Wo wollt ihr euch treffen?</string>
     <string name="meetup_submit_btn">weiter und Freunde auswählen</string>
     <string name="meetup_info_submit_btn">weiter</string>
-    <string name="invite_friends_header_desc">Wähle aus mit wem du dich treffen möchtest:</string>
+    <string name="invite_friends_header_desc">Wähle aus, mit wem du dich treffen möchtest:</string>
     <string name="invite_friends_back_btn">zurück</string>
     <string name="invite_friends_submit_btn">abschicken</string>
     <string name="meetup_time_in_past">Die gewählte Uhrzeit liegt in der Vergangenheit. Bitte wähle eine neue Uhrzeit.</string>
@@ -190,4 +190,8 @@
     <string name="meetup_tabs_label_open">Offen</string>
     <string name="dialog_logout_btn">Abmelden</string>
     <string name="dialog_logout_title">Wirklich abmelden?</string>
+
+    <string name="edit_delete">Meetup löschen</string>
+    <string name="edit_invited_friends">Mit wem willst du dich treffen?</string>
+    <string name="edit_invited_friends_btn">Teilnehmer bearbeiten</string>
 </resources>

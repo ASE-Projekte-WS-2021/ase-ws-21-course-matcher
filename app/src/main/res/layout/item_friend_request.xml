@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/acceptButton"
-        android:layout_width="@dimen/request_btn_size"
-        android:layout_height="@dimen/request_btn_size"
+        android:layout_width="@dimen/btn_size"
+        android:layout_height="@dimen/btn_size"
         android:src="@drawable/accept_btn"
         app:layout_constraintBottom_toBottomOf="@+id/senderProfileImageView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,8 +20,8 @@
 
     <ImageView
         android:id="@+id/declineButton"
-        android:layout_width="@dimen/request_btn_size"
-        android:layout_height="@dimen/request_btn_size"
+        android:layout_width="@dimen/btn_size"
+        android:layout_height="@dimen/btn_size"
         android:layout_marginEnd="@dimen/medium_margin"
         android:src="@drawable/decline_btn"
         app:layout_constraintBottom_toBottomOf="@+id/acceptButton"
