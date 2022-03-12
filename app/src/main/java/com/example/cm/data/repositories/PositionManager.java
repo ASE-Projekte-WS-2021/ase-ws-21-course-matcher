@@ -45,6 +45,7 @@ public class PositionManager {
 
                 LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
                 positionListener.onPositionChanged(position);
+                locationManager.removeUpdates(locationListener);
             }
 
             @Override
@@ -69,6 +70,7 @@ public class PositionManager {
 
                 LatLng position = new LatLng(locations.get(0).getLatitude(), locations.get(0).getLongitude());
                 positionListener.onPositionChanged(position);
+                locationManager.removeUpdates(locationListener);
             }
 
             @Override
