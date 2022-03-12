@@ -23,14 +23,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_half"
             android:background="@drawable/style_edittext"
-            android:focusable="false"
             android:importantForAutofill="no"
             android:inputType="textNoSuggestions"
             android:lines="1"
             android:maxLines="1"
             android:paddingHorizontal="@dimen/padding_medium"
             android:paddingVertical="@dimen/padding_small"
-            tools:ignore="LabelFor" />
+            tools:ignore="LabelFor"/>
 
     </LinearLayout>
 
