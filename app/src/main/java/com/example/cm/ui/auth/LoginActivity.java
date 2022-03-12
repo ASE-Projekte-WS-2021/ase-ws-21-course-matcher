@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
         initViewModel();
         initListeners();
+        initTexts();
     }
 
     private void initViewModel() {
@@ -53,22 +54,38 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void initTexts() {
+        binding.loginEmailEditText.inputLabel.setText(R.string.registerEmailText);
+        binding.loginEmailEditText.inputField.setHint(R.string.userEmailHint);
+
+        binding.loginPasswordEditText.inputLabel.setText(R.string.registerPasswordText);
+        binding.loginPasswordEditText.inputField.setHint(R.string.userPasswordHint);
+    }
+
     private void initListeners() {
-        binding.loginLoginBtn.setOnClickListener(v -> login(v));
-        binding.loginRegisterBtn.setOnClickListener(v -> goToRegister(v));
+        binding.loginLoginBtn.setOnClickListener(this::login);
+        binding.loginRegisterBtn.setOnClickListener(this::goToRegister);
     }
 
     public void login(View view) {
-        String email = binding.loginEmailEditText.getText().toString();
-        String password = binding.loginPasswordEditText.getText().toString();
+        String email = binding.loginEmailEditText.inputField.getText().toString();
+        String password = binding.loginPasswordEditText.inputField.getText().toString();
 
-        if (email.length() > 0 && password.length() > 0) {
-            authViewModel.login(email, password);
-            loginBtn.setEnabled(false);
-        } else {
-            Snackbar.make(findViewById(R.id.loginLayout), R.string.loginEmailPasswordNeeded, Snackbar.LENGTH_LONG)
-                    .show();
+        if (email.isEmpty()) {
+            Snackbar.make(binding.getRoot(), R.string.loginEmailNeeded, Snackbar.LENGTH_LONG).show();
+            return;
         }
+
+        if (password.isEmpty()) {
+            Snackbar.make(binding.getRoot(), R.string.loginPasswordNeeded, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
+        if (email.isEmpty() && password.isEmpty()) {
+            Snackbar.make(binding.getRoot(), R.string.loginEmailPasswordNeeded, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
         authViewModel.login(email, password);
     }
 

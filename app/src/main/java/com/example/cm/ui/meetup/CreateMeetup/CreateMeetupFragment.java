@@ -26,6 +26,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -163,10 +164,11 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
         if (localHour > selectedHour) {
             binding.meetupInfoBtn.setEnabled(false);
-            Toast.makeText(getActivity(), R.string.meetup_time_in_past, Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.meetup_time_in_past, Snackbar.LENGTH_LONG).show();
         } else if (localHour == selectedHour && localMin > selectedMin) {
             binding.meetupInfoBtn.setEnabled(false);
-            Toast.makeText(getActivity(), R.string.meetup_time_in_past, Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.meetup_time_in_past, Snackbar.LENGTH_LONG).show();
+
         } else {
             onMeetupInfoBtnClicked();
         }

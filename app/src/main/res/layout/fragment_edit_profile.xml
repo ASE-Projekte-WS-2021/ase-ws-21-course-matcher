@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/padding_big"
-            android:paddingVertical="@dimen/padding_double" >
+            android:paddingVertical="@dimen/padding_double">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
