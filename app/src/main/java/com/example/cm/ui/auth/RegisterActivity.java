@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -76,8 +74,8 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     private void initListeners() {
-        binding.registerRegisterBtn.setOnClickListener(v -> register(v));
-        binding.registerLoginBtn.setOnClickListener(v -> goToLogin(v));
+        binding.registerRegisterBtn.setOnClickListener(this::register);
+        binding.registerLoginBtn.setOnClickListener(this::goToLogin);
     }
 
     public void goToLogin(View view) {
@@ -112,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if (password.isEmpty() || password.length() < Constants.PASSWORD_MIN) {
+        if (password.isEmpty() || password.length() < Constants.MIN_PASSWORD_LENGTH) {
             Snackbar.make(binding.getRoot(), R.string.registerPasswordEmpty, Snackbar.LENGTH_LONG).show();
             return;
         }
