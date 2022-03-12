@@ -15,6 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.example.cm.utils.Navigator;
@@ -86,10 +87,15 @@ public class MeetupDetailedFragment extends Fragment {
                     break;
             }
 
-            if (meetup.getConfirmedFriends().contains(meetupDetailedViewModel.getCurrentUserId())) {
-                binding.meetupJoinBtn.setVisibility(View.GONE);
-            }
+            initButtons(meetup);
         });
+    }
+
+    private void initButtons(Meetup meetup) {
+        if (meetup.getConfirmedFriends().contains(meetupDetailedViewModel.getCurrentUserId())) {
+            binding.meetupJoinBtn.setVisibility(View.GONE);
+            binding.meetupLateBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initListeners() {

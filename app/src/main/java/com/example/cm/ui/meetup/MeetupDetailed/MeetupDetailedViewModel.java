@@ -9,7 +9,7 @@ import com.example.cm.data.repositories.UserRepository;
 
 public class MeetupDetailedViewModel extends ViewModel {
 
-    private String meetupId;
+    private String meetupId, currentUserId;
     private MutableLiveData<Meetup> meetup;
     private UserRepository userRepository;
     private MeetupRepository meetupRepository;
@@ -18,6 +18,7 @@ public class MeetupDetailedViewModel extends ViewModel {
         userRepository = new UserRepository();
         meetupRepository = new MeetupRepository();
         meetup = meetupRepository.getMeetup(meetupId);
+        currentUserId = userRepository.getCurrentAuthUserId();
         this.meetupId = meetupId;
     }
 
@@ -26,18 +27,18 @@ public class MeetupDetailedViewModel extends ViewModel {
     }
 
     public String getCurrentUserId() {
-        return userRepository.getCurrentAuthUserId();
+        return currentUserId;
     }
 
     public void onLeave() {
-        //todo
+        meetupRepository.addDeclined(meetupId, currentUserId);
     }
 
     public void onJoin() {
-        //todo
+        meetupRepository.addConfirmed(meetupId, currentUserId);
     }
 
     public void onLate() {
-        //todo
+        meetupRepository.addLate(meetupId, currentUserId);
     }
 }
