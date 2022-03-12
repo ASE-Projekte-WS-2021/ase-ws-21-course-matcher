@@ -72,8 +72,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         initLocationPermissionLauncher();
         initPermissionCheck();
         initViewModel();
+        initListeners();
 
         return binding.getRoot();
+    }
+
+    private void initListeners() {
+        binding.btnCenterOnUser.setOnClickListener(v -> {
+          if(currentUser != null) {
+              LatLng currentPosition = currentUser.getLocation();
+              googleMap.animateCamera(CameraUpdateFactory.newLatLng(currentPosition));
+          }
+        });
     }
 
     private void initGoogleMap() {
