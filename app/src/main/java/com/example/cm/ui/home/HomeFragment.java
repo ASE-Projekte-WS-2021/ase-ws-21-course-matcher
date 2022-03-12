@@ -227,8 +227,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     private void addMarker(User user, boolean isCurrentUser) {
         if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
             MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
-            clusterManager.addItem(markerClusterItem);
-            clusterManager.cluster();
+            requireActivity().runOnUiThread(() -> {
+                clusterManager.addItem(markerClusterItem);
+                clusterManager.cluster();
+            });
             return;
         }
         Glide.with(requireActivity()).load(user.getProfileImageUrl()).placeholder(R.drawable.ic_profile).apply(new RequestOptions().override(MARKER_SIZE, MARKER_SIZE)).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
