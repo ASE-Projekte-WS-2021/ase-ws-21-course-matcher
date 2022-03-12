@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -104,6 +105,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         binding.rvUserCards.setAdapter(mapUserAdapter);
         binding.rvUserCards.addOnScrollListener(new SnapPagerScrollListener(snapHelper, SnapPagerScrollListener.ON_SCROLL, false, this));
         snapHelper.attachToRecyclerView(binding.rvUserCards);
+        binding.rvUserCards.setAlpha(0f);
+        binding.rvUserCards.setTranslationY(binding.rvUserCards.getHeight());
     }
 
     private void initPermissionCheck() {
@@ -201,7 +204,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         if (googleMap == null || currentUser == null) {
             return;
         }
-
         Timber.d("Position changed: %s", position);
 
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_MAP_ZOOM));
@@ -333,13 +335,21 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void showUserCards(User user) {
-        binding.rvUserCards.animate().translationY(0).alpha(1f).setDuration(250);
         String userId = user.getId();
         int position = mapUserAdapter.getPositionBy(userId);
-        if (position == -1) {
+
+        if (position == RecyclerView.NO_POSITION) {
             return;
         }
-        binding.rvUserCards.smoothScrollToPosition(position);
+
+        // Have to differentiate here since card does not show up correctly on first click
+        if(binding.rvUserCards.getAlpha() == 0f) {
+            binding.rvUserCards.scrollToPosition(position);
+        } else {
+            binding.rvUserCards.smoothScrollToPosition(position);
+        }
+
+        binding.rvUserCards.animate().translationY(0).alpha(1f).setDuration(250);
     }
 
     @Override
