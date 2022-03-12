@@ -39,6 +39,11 @@ public class MarkerClusterRenderer<T extends MarkerClusterItem> extends DefaultC
         super.onBeforeClusterItemRendered(item, markerOptions);
         BitmapDescriptor markerIcon = getMarkerIconFromDrawable(item.getProfileImage());
         markerOptions.icon(markerIcon).title(item.getTitle());
+
+        // Make sure to render current user above other users
+        if(item.isCurrentUser()) {
+            markerOptions.zIndex(999);
+        }
     }
 
     private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {

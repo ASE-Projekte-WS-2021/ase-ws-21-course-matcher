@@ -164,12 +164,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 if (clusterManager == null || mapUserAdapter == null) {
                     return;
                 }
-                clusterManager.clearItems();
 
+                clusterManager.clearItems();
                 for (User user : users) {
                     if (user.getLocation() != null) {
                         mapUserAdapter.addUser(user);
-                        addMarker(user);
+                        addMarker(user, false);
                     }
                 }
             }
@@ -191,13 +191,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_MAP_ZOOM));
         homeViewModel.updateLocation(position);
-        addMarker(currentUser);
+        addMarker(currentUser, true);
         clusterManager.cluster();
     }
 
-    private void addMarker(User user) {
+    private void addMarker(User user, boolean isCurrentUser) {
         if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
-            MarkerClusterItem markerClusterItem = getDefaultMarker(user);
+            MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
             clusterManager.addItem(markerClusterItem);
             clusterManager.cluster();
             return;
@@ -205,23 +205,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         Glide.with(requireActivity()).load(user.getProfileImageUrl()).placeholder(R.drawable.ic_profile).apply(new RequestOptions().override(MARKER_SIZE, MARKER_SIZE)).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
             @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource);
+                MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource, isCurrentUser);
                 clusterManager.addItem(markerClusterItem);
                 clusterManager.cluster();
             }
 
             @Override
             public void onLoadCleared(@Nullable Drawable placeholder) {
-                MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, placeholder);
+                MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, placeholder, isCurrentUser);
                 clusterManager.addItem(markerClusterItem);
                 clusterManager.cluster();
             }
         });
     }
 
-    private MarkerClusterItem getDefaultMarker(User user) {
+    private MarkerClusterItem getDefaultMarker(User user, boolean isCurrentUser) {
         Drawable drawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_profile);
-        return new MarkerClusterItem(user, drawable);
+        return new MarkerClusterItem(user, drawable, isCurrentUser);
     }
 
 
@@ -256,7 +256,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             return;
         }
 
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20.0f));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
     }
 
     @Override
