@@ -42,6 +42,7 @@ import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -63,12 +64,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     private HomeViewModel homeViewModel;
     private GoogleMap googleMap;
     private User currentUser;
-    private Bundle savedInstanceState;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         positionManager = PositionManager.getInstance(requireActivity());
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        this.savedInstanceState = savedInstanceState;
         initRecyclerView();
         initLocationPermissionLauncher();
         initPermissionCheck();
@@ -77,10 +76,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         return binding.getRoot();
     }
 
-    private void initGoogleMap(Bundle savedInstanceState) {
-        binding.mapView.onCreate(savedInstanceState);
-        binding.mapView.getMapAsync(this);
-        binding.mapView.onResume();
+    private void initGoogleMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapView);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
     }
 
     private void initRecyclerView() {
@@ -100,12 +100,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
         if (hasCoarseLocationPermission && hasFineLocationPermission) {
             positionManager.requestCurrentLocation(this);
-            initGoogleMap(savedInstanceState);
+            initGoogleMap();
         } else if (!hasCoarseLocationPermission && !hasFineLocationPermission) {
             locationPermissionLauncher.launch(ACCESS_FINE_LOCATION);
         } else {
             positionManager.requestCurrentLocation(this);
-            initGoogleMap(savedInstanceState);
+            initGoogleMap();
         }
     }
 
@@ -151,10 +151,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         clusterManager.setOnClusterItemClickListener(this);
 
         NonHierarchicalDistanceBasedAlgorithm<MarkerClusterItem> clusterAlgorithm = new NonHierarchicalDistanceBasedAlgorithm<>();
-        clusterAlgorithm.setMaxDistanceBetweenClusteredItems(10);
+        clusterAlgorithm.setMaxDistanceBetweenClusteredItems(20);
         clusterManager.setAlgorithm(clusterAlgorithm);
 
         observeCurrentUser();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        observeFriends();
     }
 
     private void observeFriends() {
@@ -264,35 +270,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        observeFriends();
-        if (binding != null) {
-            binding.mapView.onResume();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        binding.mapView.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (binding != null) {
-            binding.mapView.onDestroy();
-        }
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        binding.mapView.onLowMemory();
     }
 
     @Override
