@@ -37,7 +37,7 @@
     <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
     <string name="title_notifications">Benachrichtigungen</string>
     <string name="title_profile">Profil</string>
-    <string name="title_friends">Freundesliste</string>
+    <string name="title_friends">Freunde</string>
     <string name="title_find_friends">Freunde finden</string>
     <string name="add_friend">Freunde hinzufügen</string>
     <string name="btn_send_friend_request">Anfrage senden</string>
@@ -82,7 +82,7 @@
 
     <string name="add_friends">add friends</string>
     <string name="friends_tabs_list">Deine Freunde</string>
-    <string name="friends_tabs_requests">Freundschaftsanfragen</string>
+    <string name="friends_tabs_requests">Anfragen</string>
 
     <string name="title_meetup">Meetup</string>
     <string name="meetup_success_icon">🙌</string>
@@ -194,7 +194,7 @@
     <string name="dialog_logout_btn">Abmelden</string>
     <string name="dialog_logout_title">Wirklich abmelden?</string>
     <string name="shareLocation">Standort mit Freunden teilen:</string>
-    <string name="title_friends_requests">Anfragen</string>
+    <string name="title_friends_requests">Freunde</string>
     <string name="loginTitleDesc">Du hast bereits ein Profil? Log dich ein und schon kannst du wie gewohnt wieder Treffen vereinbaren!</string>
     <string name="loginEmailTxt">E-Mail</string>
     <string name="loginPasswordTxt">Passwort</string>
@@ -209,4 +209,5 @@
     <string name="registerPasswordEmpty">Bitte gib ein Passwort mit 6 Zeichen ein.</string>
     <string name="registerFirstnameEmpty">Bitte gib deinen Vornamen ein.</string>
     <string name="registerLastnameEmpty">Bitte gib deinen Nachnamen ein.</string>
+    <string name="searbardesc">Searchbar for searching in your friendslist</string>
 </resources>

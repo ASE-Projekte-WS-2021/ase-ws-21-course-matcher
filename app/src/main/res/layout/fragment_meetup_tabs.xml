@@ -31,12 +31,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="@dimen/big_margin"
+                android:layout_marginBottom="@dimen/big_margin"
                 android:fontFamily="@font/readexpro_semibold"
                 android:text="@string/title_meetups"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="24sp" />
+                android:textSize="@dimen/app_bar_title" />
         </LinearLayout>
 
         <androidx.viewpager2.widget.ViewPager2

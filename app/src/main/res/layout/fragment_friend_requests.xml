@@ -12,17 +12,19 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_header"
         android:orientation="vertical"
-        android:padding="@dimen/padding_big">
+        android:padding="@dimen/padding_big"
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="@dimen/big_margin"
+            android:layout_marginBottom="@dimen/big_margin"
             android:fontFamily="@font/readexpro_semibold"
             android:text="@string/title_friends_requests"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="24sp" />
+            android:textSize="@dimen/app_bar_title" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
