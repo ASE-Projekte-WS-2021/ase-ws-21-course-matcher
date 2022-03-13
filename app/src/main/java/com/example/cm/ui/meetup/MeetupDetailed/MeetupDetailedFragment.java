@@ -47,7 +47,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     private MeetupDetailedViewModel meetupDetailedViewModel;
     private FragmentMeetupDetailedBinding binding;
     private TabLayoutMediator tabLayoutMediator;
-    private MeetupDetailedViewModel meetupDetailedViewModel;
     private Navigator navigator;
     private PopupMenu popup;
     private DeleteDialog deleteDialog;
