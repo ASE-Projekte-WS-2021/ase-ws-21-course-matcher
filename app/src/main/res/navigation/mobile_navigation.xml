@@ -54,6 +54,9 @@
         <action
             android:id="@+id/fromMeetupDetailedToOtherProfile"
             app:destination="@id/navigation_other_profile" />
+        <action
+            android:id="@+id/action_navigation_meetup_detailed_to_meetupLocationFragment"
+            app:destination="@id/meetupLocationFragment" />
     </fragment>
 
     <fragment
@@ -171,5 +174,9 @@
         android:name="com.example.cm.ui.settings.edit_notifications.EditNotificationsFragment"
         android:label="fragment_edit_notifications"
         tools:layout="@layout/fragment_edit_notifications" />
+    <fragment
+        android:id="@+id/meetupLocationFragment"
+        android:name="com.example.cm.ui.meetup.MeetupLocation.MeetupLocationFragment"
+        android:label="MeetupLocationFragment" />
 
 </navigation>

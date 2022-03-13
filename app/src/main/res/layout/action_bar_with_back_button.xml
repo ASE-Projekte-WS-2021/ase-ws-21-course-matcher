@@ -21,14 +21,13 @@
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginBottom="@dimen/padding_small"
             android:fontFamily="@font/readexpro_semibold"
-            tools:text="@string/title_edit_profile"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="@dimen/app_bar_title"
-            android:layout_centerVertical="true"
-            />
+            tools:text="@string/title_edit_profile" />
     </RelativeLayout>
 
 </layout>

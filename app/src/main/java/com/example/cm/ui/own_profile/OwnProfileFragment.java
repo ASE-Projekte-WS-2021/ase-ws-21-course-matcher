@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentOwnProfileBinding;
 import com.example.cm.utils.Navigator;
+import com.google.android.gms.maps.GoogleMap;
 import com.squareup.picasso.Picasso;
 
 public class OwnProfileFragment extends Fragment {
@@ -19,6 +20,7 @@ public class OwnProfileFragment extends Fragment {
     private OwnProfileViewModel ownProfileViewModel;
     private FragmentOwnProfileBinding binding;
     private Navigator navigator;
+    private GoogleMap map;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOwnProfileBinding.inflate(inflater, container, false);

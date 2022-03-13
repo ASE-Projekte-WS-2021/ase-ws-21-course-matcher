@@ -32,6 +32,7 @@ import com.example.cm.utils.DeleteDialog;
 import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -43,6 +44,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
 
     private MeetupDetailedTabAdapter tabAdapter;
     private ViewPager2 viewPager;
+    private MeetupDetailedViewModel meetupDetailedViewModel;
     private FragmentMeetupDetailedBinding binding;
     private TabLayoutMediator tabLayoutMediator;
     private MeetupDetailedViewModel meetupDetailedViewModel;
@@ -184,7 +186,15 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void onMap() {
-        // todo: meetup auf karte anzeigen
+        LatLng latLng = meetupDetailedViewModel.getMeetupLocation();
+        if (latLng == null) {
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putDouble(Constants.KEY_MEETUP_LOCATION_LAT, latLng.latitude);
+        bundle.putDouble(Constants.KEY_MEETUP_LOCATION_LNG, latLng.longitude);
+        navigator.getNavController().navigate(R.id.action_navigation_meetup_detailed_to_meetupLocationFragment, bundle);
     }
 
     private void onLeave() {
