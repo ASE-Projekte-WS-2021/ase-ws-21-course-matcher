@@ -1,8 +1,10 @@
 package com.example.cm.ui.settings;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.listener.UserListener;
+import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.Callback;
 import com.example.cm.data.repositories.UserRepository;
@@ -15,6 +17,10 @@ public class SettingsViewModel extends ViewModel {
     public SettingsViewModel() {
         authRepository = new AuthRepository();
         userRepository = UserRepository.getInstance();
+    }
+
+    public MutableLiveData<User> getUser() {
+        return userRepository.getStaticCurrentUser();
     }
 
     public void updateLocationSharing(boolean enabled, UserListener<Boolean> listener) {

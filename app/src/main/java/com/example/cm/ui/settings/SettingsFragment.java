@@ -75,11 +75,6 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private void initUI() {
         binding.actionBar.tvTitle.setText(R.string.title_settings);
 
-        // Setup switch for location sharing
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_SETTINGS_KEY, Context.MODE_PRIVATE);
-        boolean shareLocation = sharedPreferences.getBoolean(PREFS_SHARE_LOCATION_KEY, false);
-        binding.switchShareLocation.setChecked(shareLocation);
-
         // Set labels of links
         binding.linkEditProfile.linkText.setText(getString(R.string.link_label_edit_profile));
         binding.linkEditAccount.linkText.setText(getString(R.string.link_label_edit_account));
@@ -107,6 +102,12 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
 
     private void initViewModel() {
         settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
+        settingsViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                boolean isSharingLocation = user.getIsSharingLocation();
+                binding.switchShareLocation.setChecked(isSharingLocation);
+            }
+        });
     }
 
     private void initListeners() {

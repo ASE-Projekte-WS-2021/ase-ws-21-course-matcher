@@ -143,6 +143,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 request -> {
                     if (request) {
                         positionManager.requestCurrentLocation(this);
+                        homeViewModel.updateLocationSharing(true);
                     }
                 }
         );
