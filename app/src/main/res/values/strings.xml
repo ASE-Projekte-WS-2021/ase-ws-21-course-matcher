@@ -223,5 +223,7 @@
 
     <!-- Settings -->
     <string name="location_permission_denied">Der Standort-Zugriff muss in deinen App-Einstellungen erlaubt sein.</string>
+    <string name="dialog_delete_meetup_title">Meetup wirklich löschen?</string>
+    <string name="dialog_delete_btn">Löschen</string>
 
 </resources>

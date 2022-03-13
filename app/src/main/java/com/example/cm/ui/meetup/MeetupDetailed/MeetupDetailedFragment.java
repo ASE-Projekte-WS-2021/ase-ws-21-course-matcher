@@ -28,6 +28,8 @@ import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
+import com.example.cm.utils.DeleteDialog;
+import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -37,7 +39,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class MeetupDetailedFragment extends Fragment {
+public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener {
 
     private MeetupDetailedTabAdapter tabAdapter;
     private ViewPager2 viewPager;
@@ -46,6 +48,7 @@ public class MeetupDetailedFragment extends Fragment {
     private MeetupDetailedViewModel meetupDetailedViewModel;
     private Navigator navigator;
     private PopupMenu popup;
+    private DeleteDialog deleteDialog;
 
     private String meetupId;
 
@@ -203,7 +206,22 @@ public class MeetupDetailedFragment extends Fragment {
     }
 
     private void onDelete() {
+        deleteDialog = new DeleteDialog(requireActivity(), this);
+        deleteDialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (deleteDialog != null) {
+            deleteDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onDeleteApproved() {
         meetupDetailedViewModel.onDelete();
         navigator.getNavController().navigate(R.id.action_global_navigate_to_meetups);
+        deleteDialog.dismiss();
     }
 }
