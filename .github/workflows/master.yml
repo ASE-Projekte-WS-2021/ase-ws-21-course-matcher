@@ -14,6 +14,11 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
           cache: 'gradle'
+          
+      - name: Add Maps Key
+        env:
+            MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
+        run: echo MAPS_API_KEY=$MAPS_API_KEY > ./local.properties
 
       # Execute unit tests
       - name: Unit Test
