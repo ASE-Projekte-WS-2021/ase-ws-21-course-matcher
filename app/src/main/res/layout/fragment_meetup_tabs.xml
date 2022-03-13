@@ -20,25 +20,26 @@
             app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
             app:tabUnboundedRipple="true"
             tools:ignore="SpeakableTextPresentCheck"/>
-        <LinearLayout
+
+        <RelativeLayout
             android:id="@+id/searchBarWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_header"
             android:orientation="vertical"
-            android:padding="@dimen/padding_big">
+            android:padding="@dimen/padding_small">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/big_margin"
-                android:layout_marginBottom="@dimen/big_margin"
+                android:layout_marginBottom="@dimen/padding_small"
                 android:fontFamily="@font/readexpro_semibold"
                 android:text="@string/title_meetups"
                 android:textAlignment="center"
                 android:textColor="@color/white"
+                android:layout_centerVertical="true"
                 android:textSize="@dimen/app_bar_title" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/meetup_tab_pager"
