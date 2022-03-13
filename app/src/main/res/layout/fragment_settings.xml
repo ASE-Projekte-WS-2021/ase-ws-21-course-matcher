@@ -24,12 +24,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchShareLocation"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:padding="@dimen/padding_big"
-                    android:text="@string/shareLocation"></Switch>
+                    android:text="@string/shareLocation" />
 
                 <include
                     android:id="@+id/link_edit_profile"
