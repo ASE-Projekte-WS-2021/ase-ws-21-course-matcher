@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,8 +45,8 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     private GoogleMap map;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle bundle = this.getArguments();
         binding = FragmentMeetupBinding.inflate(inflater, container, false);
-
         binding.mapView.onCreate(savedInstanceState);
         binding.mapView.getMapAsync(this);
         binding.mapView.onResume();
@@ -56,7 +56,19 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         initUI();
         initViewModel();
         initListener();
+        readBundle(bundle);
+
         return binding.getRoot();
+    }
+
+    private void readBundle(Bundle bundle) {
+        if (bundle == null) {
+            return;
+        }
+        if (bundle.containsKey(Constants.KEY_USER_ID)) {
+            String profileId = bundle.getString(Constants.KEY_USER_ID);
+            createMeetupViewModel.toggleSelectUser(profileId);
+        }
     }
 
     private void setTodaysDate() {
@@ -124,11 +136,11 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
     @SuppressLint("SimpleDateFormat")
     private void initViewModel() {
-        createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
+        createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
         createMeetupViewModel.getMeetupIsPrivate().observe(getViewLifecycleOwner(), isPrivate -> binding.meetupPrivateCheckBox.setChecked(isPrivate));
         createMeetupViewModel.getMeetupTimestamp().observe(getViewLifecycleOwner(), timestamp -> new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(calendarMeetup.getTime()));
         createMeetupViewModel.getMeetupLatLng().observe(getViewLifecycleOwner(), latLng -> {
-            if (latLng == null) {
+            if (latLng == null || map == null) {
                 return;
             }
             Marker marker = map.addMarker(new MarkerOptions().position(latLng));
@@ -151,10 +163,11 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
         if (localHour > selectedHour) {
             binding.meetupInfoBtn.setEnabled(false);
-            Toast.makeText(getActivity(), R.string.meetup_time_in_past, Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.meetup_time_in_past, Snackbar.LENGTH_LONG).show();
         } else if (localHour == selectedHour && localMin > selectedMin) {
             binding.meetupInfoBtn.setEnabled(false);
-            Toast.makeText(getActivity(), R.string.meetup_time_in_past, Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), R.string.meetup_time_in_past, Snackbar.LENGTH_LONG).show();
+
         } else {
             onMeetupInfoBtnClicked();
         }
