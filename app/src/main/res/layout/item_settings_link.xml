@@ -1,0 +1,43 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:id="@+id/linkWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:paddingVertical="@dimen/padding_small"
+        android:paddingHorizontal="@dimen/padding_big"
+        >
+
+        <ImageView
+            android:id="@+id/linkIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/content_description_back_button"
+            android:src="@drawable/ic_edit_profile" />
+
+        <TextView
+            android:id="@+id/linkText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/big_margin"
+            android:layout_toStartOf="@+id/btnLink"
+            android:layout_toEndOf="@+id/linkIcon"
+            tools:text="" />
+
+        <ImageView
+            android:id="@+id/btnLink"
+            android:layout_width="@dimen/padding_double"
+            android:layout_height="@dimen/padding_double"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/content_description_back_button"
+            android:src="@drawable/ic_link_button" />
+    </RelativeLayout>
+</layout>

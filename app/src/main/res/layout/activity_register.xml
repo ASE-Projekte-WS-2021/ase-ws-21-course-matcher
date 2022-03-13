@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.auth.RegisterActivity">
+
+    <LinearLayout
+        android:id="@+id/headerRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_header_orange"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/padding_big"
+        android:paddingVertical="@dimen/padding_medium"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/registerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_double"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:gravity="start"
+            android:text="@string/registerTitle"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="@dimen/text_size_big" />
+
+        <TextView
+            android:id="@+id/registerTitleDes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_big"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:gravity="start"
+            android:text="@string/registerTitleDesc"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_medium" />
+
+    </LinearLayout>
+<!-- TODO: SCROLLVIEW oder kleiner -->
+    <ScrollView
+        android:id="@+id/scrollRegister"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/headerRegister"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_big"
+            android:weightSum="3">
+
+
+            <include
+                android:id="@+id/registerUsernameEditText"
+                layout="@layout/input_text_with_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_big"/>
+
+            <include
+                android:id="@+id/registerFirstNameEditText"
+                layout="@layout/input_text_with_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_big"/>
+
+            <include
+                android:id="@+id/registerLastNameEditText"
+                layout="@layout/input_text_with_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_big"/>
+
+            <include
+                android:id="@+id/registerEmailEditText"
+                layout="@layout/input_text_with_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_big"/>
+
+            <include
+                android:id="@+id/registerPasswordEditText"
+                layout="@layout/input_password_with_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_big"/>
+
+            <Button
+                android:id="@+id/registerRegisterBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_double"
+                android:gravity="center"
+                android:text="@string/registerRegisterBtn" />
+
+            <Button
+                android:id="@+id/registerLoginBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
+                android:background="@color/white"
+                android:text="@string/registerLoginBtn"
+                android:gravity="center"
+                android:textAllCaps="false"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

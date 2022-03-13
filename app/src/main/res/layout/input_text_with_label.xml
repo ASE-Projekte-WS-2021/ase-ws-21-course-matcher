@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/inputLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/readexpro_regular"
+            android:includeFontPadding="false"
+            android:textColor="@color/gray700"
+            android:textSize="@dimen/text_size_small"
+            tools:text="Label" />
+
+        <EditText
+            android:id="@+id/inputField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_half"
+            android:background="@drawable/style_edittext"
+            android:importantForAutofill="no"
+            android:inputType="textNoSuggestions"
+            android:lines="1"
+            android:maxLines="1"
+            android:paddingHorizontal="@dimen/padding_medium"
+            android:paddingVertical="@dimen/padding_small"
+            tools:ignore="LabelFor"/>
+
+    </LinearLayout>
+
+</layout>

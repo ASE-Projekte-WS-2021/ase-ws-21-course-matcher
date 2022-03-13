@@ -2,4 +2,36 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="small_margin">4dp</dimen>
+    <dimen name="medium_margin">8dp</dimen>
+    <dimen name="big_margin">12dp</dimen>
+
+    <dimen name="padding_double">40dp</dimen>
+    <dimen name="padding_big">20dp</dimen>
+    <dimen name="padding_medium">15dp</dimen>
+    <dimen name="padding_small">10dp</dimen>
+    <dimen name="padding_half">5dp</dimen>
+
+    <dimen name="app_bar_title">20sp</dimen>
+    <dimen name="text_size_ultra">70sp</dimen>
+    <dimen name="text_size_big">24sp</dimen>
+    <dimen name="text_size_medium">18sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="edit_text_min_height">48dp</dimen>
+
+    <dimen name="medium_margin_items">32dp</dimen>
+    <dimen name="meetup_location_image_height">100dp</dimen>
+    <dimen name="meetup_corner_radius">16dp</dimen>
+    <dimen name="meetup_card_margin">8dp</dimen>
+    <dimen name="meetup_card_content_padding">16dp</dimen>
+
+    <dimen name="meetup_icon_image_height">55dp</dimen>
+    <dimen name="btn_size">40dp</dimen>
+    <dimen name="medium_margin_negative">-8dp</dimen>
+
+    <dimen name="profile_img_size">50dp</dimen>
+
+    <dimen name="stroke_width">2dp</dimen>
+    <dimen name="padding_ultra">80dp</dimen>
 </resources>

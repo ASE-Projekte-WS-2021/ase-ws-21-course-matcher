@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:tabUnboundedRipple="true"
+            tools:ignore="SpeakableTextPresentCheck"/>
+
+        <RelativeLayout
+            android:id="@+id/searchBarWrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_header"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_small">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:fontFamily="@font/readexpro_semibold"
+                android:text="@string/title_meetups"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:layout_centerVertical="true"
+                android:textSize="@dimen/app_bar_title" />
+        </RelativeLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/meetup_tab_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addMeetupFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/padding_medium"
+        android:contentDescription="@string/add_meeting"
+        android:src="@drawable/ic_baseline_add_24"
+        tools:ignore="ImageContrastCheck" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

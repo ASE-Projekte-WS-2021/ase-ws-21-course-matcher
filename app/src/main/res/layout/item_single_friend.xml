@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="@dimen/padding_medium">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivUserImage"
+        android:layout_width="@dimen/profile_img_size"
+        android:layout_height="@dimen/profile_img_size"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/padding_big"
+        android:background="@color/gray500"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/ivUserImage"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{username}"
+            android:textColor="@color/gray700"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="Name" />
+
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{username}"
+            android:textColor="@color/gray500"
+            tools:text="Username" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivFriendLateInfo"
+        android:layout_width="@dimen/btn_size"
+        android:layout_height="@dimen/btn_size"
+        android:layout_alignTop="@+id/ivUserImage"
+        android:layout_alignBottom="@+id/ivUserImage"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:src="@drawable/ic_late"
+        android:visibility="invisible" />
+</RelativeLayout>

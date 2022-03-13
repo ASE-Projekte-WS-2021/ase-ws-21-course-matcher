@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.meetup.MeetupDetailed.MeetupDetailedFragment"
+    android:orientation="vertical"
+    android:weightSum="13">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="5">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/location"
+                android:scaleType="centerCrop"
+                android:src="@drawable/cafe" />
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/content_description_back_button"
+                android:paddingStart="@dimen/padding_small"
+                android:paddingTop="@dimen/padding_small"
+                android:src="@drawable/ic_back_button"
+                tools:ignore="RtlSymmetry" />
+
+            <ImageView
+                android:id="@+id/meetup_context_menu_btn"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:layout_marginTop="@dimen/padding_small"
+                android:src="@drawable/ic_more_options" />
+
+            <!--
+            <ImageView
+                android:id="@+id/meetup_leave_btn"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:layout_marginTop="@dimen/padding_small"
+                android:layout_toStartOf="@+id/meetup_join_btn"
+                android:src="@drawable/ic_button_decline_light" />
+
+            <ImageView
+                android:id="@+id/meetup_join_btn"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:layout_marginTop="@dimen/padding_small"
+                android:src="@drawable/ic_button_accept"
+                android:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/meetup_late_btn"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:layout_marginTop="@dimen/padding_small"
+                android:src="@drawable/ic_late_btn"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/meetup_add_more_btn"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_marginTop="@dimen/padding_small"
+                android:layout_toStartOf="@+id/meetup_leave_btn"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:src="@drawable/ic_add_more_btn"
+                android:visibility="invisible"/>
+
+            <ImageView
+                android:id="@+id/btnDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_small"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:layout_toStartOf="@+id/meetup_leave_btn"
+                android:contentDescription="@string/content_description_edit_button"
+                android:src="@drawable/ic_trash_btn"
+                android:visibility="invisible"
+                tools:ignore="RtlSymmetry" />
+                -->
+
+            <TextView
+                android:id="@+id/meetupDetailedTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/meetupDetailedLocation"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/padding_medium"
+                android:layout_marginBottom="0dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_small" />
+
+            <TextView
+                android:id="@+id/meetupDetailedLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="@dimen/padding_medium"
+                android:layout_marginBottom="@dimen/padding_medium"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold" />
+
+
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="8">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/meetup_detailed_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:tabUnboundedRipple="true"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/meetup_detailed_tab_pager"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent" />
+
+    </LinearLayout>
+
+    <!--
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:paddingVertical="@dimen/padding_small">
+
+        <ImageView
+            android:id="@+id/meetup_leave_btn"
+            android:layout_width="@dimen/btn_size"
+            android:layout_height="@dimen/btn_size"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:src="@drawable/decline_btn" />
+
+        <ImageView
+            android:id="@+id/meetup_join_btn"
+            android:layout_width="@dimen/btn_size"
+            android:layout_height="@dimen/btn_size"
+            android:src="@drawable/accept_btn" />
+
+        <ImageView
+            android:id="@+id/meetup_late_btn"
+            android:layout_width="@dimen/btn_size"
+            android:layout_height="@dimen/btn_size"
+            android:src="@drawable/ic_late_btn"
+            android:visibility="gone" />
+
+    </LinearLayout>
+    -->
+
+
+</LinearLayout>

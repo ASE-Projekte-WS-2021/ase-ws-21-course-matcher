@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.settings.SettingsFragment">
+
+    <include
+        android:id="@+id/actionBar"
+        layout="@layout/action_bar_with_back_button" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchShareLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/padding_big"
+                    android:text="@string/shareLocation" />
+
+                <include
+                    android:id="@+id/link_edit_profile"
+                    layout="@layout/item_settings_link" />
+
+                <include
+                    android:id="@+id/link_edit_account"
+                    layout="@layout/item_settings_link" />
+
+                <include
+                    android:visibility="gone"
+                    android:id="@+id/link_edit_notifications"
+                    layout="@layout/item_settings_link" />
+
+                <include
+                    android:id="@+id/link_privacy_policy"
+                    layout="@layout/item_settings_link" />
+
+                <include
+                    android:id="@+id/link_imprint"
+                    layout="@layout/item_settings_link" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:contentDescription="@string/content_description_divider"
+                android:src="@drawable/divider_horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <include
+                    android:id="@+id/link_logout"
+                    layout="@layout/item_settings_link" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvVersionNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_big"
+                android:textAlignment="center"
+                android:textColor="@color/gray600"
+                android:textSize="@dimen/text_size_small"
+                tools:text="App-Version 1.3.9" />
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/loginLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".ui.auth.LoginActivity">
+
+    <LinearLayout
+        android:id="@+id/headerLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_header_orange"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/padding_big"
+        android:paddingVertical="@dimen/padding_medium"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/loginTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_double"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:gravity="start"
+            android:text="@string/loginTitle"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_big"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/loginTitleDes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_big"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:gravity="start"
+            android:text="@string/loginTitleDesc"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_medium" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_big"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerLogin">
+
+        <include
+            android:id="@+id/loginEmailEditText"
+            layout="@layout/input_text_with_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_big" />
+
+        <include
+            android:id="@+id/loginPasswordEditText"
+            layout="@layout/input_password_with_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_big" />
+
+        <Button
+            android:id="@+id/loginLoginBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="@dimen/padding_big"
+            android:gravity="center"
+            android:text="@string/loginLoginBtn"
+            tools:ignore="UsingOnClickInXml,TextContrastCheck" />
+
+        <Button
+            android:id="@+id/loginRegisterBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            android:background="@color/white"
+            android:text="@string/loginRegisterBtn"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="UsingOnClickInXml" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

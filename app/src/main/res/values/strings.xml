@@ -1,6 +1,232 @@
 <resources>
-    <string name="app_name">CM</string>
-    <string name="title_home">Test</string>
+    <string name="app_name">CourseMatcher</string>
+    <string name="title_home">Karte</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+
+    <!-- Meetup -->
+    <string name="meetup_header">Freunde treffen</string>
+    <string name="meetup_header_desc">Schlage vor, wo und wann ihr euch trefft.</string>
+    <string name="meetup_time">Wann wollt ihr euch treffen?</string>
+    <string name="meetup_private">lieber privat treffen</string>
+    <string name="meetup_place">Wo wollt ihr euch treffen?</string>
+    <string name="meetup_submit_btn">weiter und Freunde auswählen</string>
+    <string name="meetup_info_submit_btn">weiter</string>
+    <string name="invite_friends_header_desc">Wähle aus, mit wem du dich treffen möchtest:</string>
+    <string name="invite_friends_back_btn">zurück</string>
+    <string name="invite_friends_submit_btn">abschicken</string>
+    <string name="meetup_time_in_past">Die gewählte Uhrzeit liegt in der Vergangenheit. Bitte wähle eine neue Uhrzeit.</string>
+    <string name="invite_friends">Freunde auswählen</string>
+    <string-array name="meetup_locations">
+        <item>ALEA Kaffeebar</item>
+        <item>Cafe Zentral</item>
+        <item>Chemie Cafete</item>
+        <item>Das Unikat</item>
+        <item>Mensa Cafete</item>
+        <item>Primo Cafebar</item>
+        <item>PT Cafete</item>
+        <item>Sport Cafete</item>
+        <item>Wiwi Cafete</item>
+    </string-array>
+    <string name="invitation_success_header">Geschafft!</string>
+    <string name="invitation_success_header_desc">Deine Anfrage für euer Meetup wurde erfolgreich an deine Freunde versandt! Warte auf eine Reaktion und genießt die Zeit zusammen.</string>
+    <string name="back_to_home_btn">zurück zum Homescreen</string>
+    <string name="invitation_success_dialog">Dein Meetup wurde erfolgreich versendet. Warte auf die Reaktion deiner Freunde und viel Spaß bei eurem Treffen!</string>
+    <string name="invitation_success_title">"Meetup versendet!"</string>
+    <string name="invitation_success_close_dialog">"ok"</string>
+    <string name="content_description_edit_button">meetup edit button</string>
+
+    <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
+    <string name="title_notifications">Benachrichtigungen</string>
+    <string name="title_profile">Profil</string>
+    <string name="title_friends">Freunde</string>
+    <string name="title_find_friends">Freunde finden</string>
+    <string name="add_friend">Freunde hinzufügen</string>
+    <string name="btn_send_friend_request">Anfrage senden</string>
+    <string name="title_activity_login_register">LoginRegisterActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_splash_screen">SplashScreen</string>
+    <string name="hello_blank_fragment">Meetuplist</string>
+    <string name="registerTitle">Registrieren</string>
+    <string name="registerEmailEditText">mau.musterkatze@stud.uni-regensburg.de</string>
+    <string name="registerPasswordEditText">musterkatze123</string>
+    <string name="registerFirstNameHint">Mau</string>
+    <string name="registerLastNameHint">Musterkatze</string>
+    <string name="registerLoginBtn">Bereits registriert? <u>Zum Login</u></string>
+    <string name="registerUsernameHint">maumusterkatze</string>
+    <string name="registerRegisterBtn">Registrieren</string>
+    <string name="loginTitle">Login</string>
+    <string name="userEmailHint">mau.musterkatze@stud.uni-regensburg.de</string>
+    <string name="userPasswordHint">maumusterkatze123</string>
+    <string name="loginLoginBtn">Einloggen</string>
+    <string name="loginRegisterBtn">Noch kein Account? <u>Jetzt registrieren.</u></string>
+    <string name="loginUserNameEditText">maumusterkatze</string>
+    <string name="btn_meetup_send_invite">Abschicken</string>
+    <string name="profile_picture_decription">Profilbild</string>
+
+    <!-- FriendsList -->
+    <string name="friendslist_tv_no_friends">Keine Freunde gefunden.</string>
+    <string name="frindslist_btn_find_friends">Freunde finden</string>
+    <string name="btn_send_friend_request_default">Anfragen</string>
+    <string name="btn_send_friend_request_pending">Angefragt</string>
+    <string name="button_color">#FFF3AC41</string>
+    <string name="button_color_disabled">#FFD3D3D3</string>
+    <string name="btn_friends_text">Freunde</string>
+    <string name="snackbar_no_friends_text">Erst Freunde finden?</string>
+    <string name="add_snackbar_text">ADD</string>
+    <string name="snackbar_sent_requests">Anfragen wurden verschickt.</string>
+    <string name="snackbar_sent_request">Anfragen wurden verschickt.</string>
+    <string name="snackbar_remove_request">Anfragen wurden verschickt.</string>
+
+    <string name="searchbar_text_find_friends">Freunde finden...</string>
+    <string name="search_button_decription">Suchbutton</string>
+
+    <string name="add_friends">add friends</string>
+    <string name="friends_tabs_list">Deine Freunde</string>
+    <string name="friends_tabs_requests">Anfragen</string>
+
+    <string name="title_meetup">Meetup</string>
+    <string name="meetup_success_icon">🙌</string>
+    <string name="meetup_success_title">Du hast es geschafft!</string>
+    <string name="meetup_success_description">Euer Treffen wurde erfolgreich erstellt. Genieße die Zeit mit deinen Freunden.</string>
+    <string name="meetup_success_btn_text">Zur Meetup-Übersicht</string>
+    <string name="select_time">wähle eine Zeit aus</string>
+    <string name="meetup_time_desc">Wann soll das Treffen stattfinden?</string>
+    <string name="add_meeting">add meeting</string>
+    <string name="location">Location</string>
+    <string name="time">time</string>
+    <string name="location_card">location</string>
+    <string name="meetup_tabs_list">Anstehend</string>
+    <string name="meetup_tabs_requests">Anfragen</string>
+
+    <string name="searchbar_text_search_through_friends">Freundesliste durchsuchen...</string>
+    <string name="user_image">user image</string>
+    <string name="MeetupDetailedTitle">Meetupinfo</string>
+    <string name="meetup_create_error">Etwas ist schiefgelaufen, versuche es erneut.</string>
+
+    <!-- Requests -->
+    <string name="meetup_request_description">lädt dich ein.</string>
+    <string name="meetup_accepted_text">rechnet mit dir.</string>
+    <string name="meetup_declined_text">kommt leider nicht.</string>
+
+    <string name="decline_snackbar_text">Anfrage abgelehnt.</string>
+    <string name="undo_snackbar_text">UNDO</string>
+
+    <string name="friend_request_text">möchte mit dir befreundet sein.</string>
+    <string name="friend_accepted_text">ist jetzt auf deiner Freundesliste.</string>
+
+    <string name="meetup_active_text">Seit %1$s</string>
+    <string name="meetup_ended_text">Beendet</string>
+    <string name="delete_snackbar_text">Anfrage gelöscht.</string>
+    <string name="meetup_list_no_meetups_found">Keine Meetups gefunden. Du kannst ein neues Meetup erstellen, indem du auf den \"+\" Button klickst.</string>
+    <string name="find_friends_no_friends_found">Es wurden keine Einträge für den Suchbegriff gefunden.</string>
+    <string name="content_description_profile_image">Profile Image of user</string>
+    <string name="profile_title_bio">Bio</string>
+    <string name="content_description_back_button">Navigate to previous screen</string>
+    <string name="profile_btn_add_friend">Anfragen</string>
+    <string name="profile_btn_remove_friend">Entfernen</string>
+    <string name="content_description_profile_settings">Navigate to Profile Settings</string>
+    <string name="content_description_divider">Divider</string>
+    <string name="title_settings">Einstellungen</string>
+    <string name="app_version_prefix">App-Version:</string>
+    <string name="link_label_edit_profile">Profil bearbeiten</string>
+    <string name="link_label_edit_account">Account bearbeiten</string>
+    <string name="link_label_edit_notifications">Benachrichtigungen</string>
+    <string name="link_label_privacy_policy">Datenschutzerklärung</string>
+    <string name="link_label_imprint">Impressum</string>
+    <string name="link_label_logout">Abmelden</string>
+    <string name="url_imprint">https://www.uni-regensburg.de/impressum/startseite/index.html</string>
+    <string name="url_privacy_policy">https://www.uni-regensburg.de/datenschutz/startseite/index.html</string>
+    <string name="title_edit_profile">Profil bearbeiten</string>
+    <string name="title_edit_account">Account bearbeiten</string>
+    <string name="input_label_email">E-Mail Adresse</string>
+    <string name="input_label_current_password">Aktuelles Passwort</string>
+    <string name="input_label_new_password">Neues Passwort</string>
+    <string name="input_label_new_password_confirm">Neues Passwort bestätigen</string>
+
+    <string name="content_description_splash_screen_logo">Splash Screen Logo</string>
+
+    <string name="input_label_bio">Bio</string>
+    <string name="input_label_username">Benutzername</string>
+    <string name="input_label_first_name">Vorname</string>
+    <string name="input_label_last_name">Nachname</string>
+    <string name="edit_cancel">Abbrechen</string>
+    <string name="edit_save">Speichern</string>
+    <string name="edit_profile_success_message">Änderungen wurden gespeichert</string>
+    <string name="edit_profile_error_message">Ein Fehler ist aufgetreten. Versuche es erneut.</string>
+    <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
+    <string name="dialog_title_field">{field} bearbeiten</string>
+    <string name="edit_account_email">Die E-Mail Adresse ist mit deinem RZ-Account verknüpft und kann deshalb nicht nachträglich angepasst werden.</string>
+    <string name="edit_account_password">Passwort ändern</string>
+    <string name="edit_account_error_password_not_empty">Passwort-Felder dürfen nicht leer sein</string>
+    <string name="edit_account_error_password_min_length">Passwort muss mindestens 6 Zeichen lang sein</string>
+    <string name="edit_account_error_password_must_differ">Das neue Passwort darf nicht mit dem alten übereinstimmen</string>
+    <string name="edit_account_error_password_must_match">Das neue Passwort und die Bestätigung müssen übereinstimmen</string>
+    <string name="edit_account_success_password_change">Passwort erfolgreich geändert</string>
+    <string name="edit_account_error_password_not_changed">Passwort konnte nicht geändert werden</string>
+    <string name="edit_profile_field_not_empty">Feld darf nicht leer sein</string>
+    <string name="edit_profile_username_min_length">Benutzername muss mindestens 4 Zeichen lang sein</string>
+    <string name="edit_profile_first_name_min_length">Vorname muss mindestens 2 Zeichen lang sein</string>
+    <string name="edit_profile_last_name_min_length">Nachname muss mindestens 2 Zeichen lang sein</string>
+    <string name="edit_profile_success">Erfolgreich aktualisiert</string>
+    <string name="edit_profile_general_error">Ein Fehler ist aufgetreten</string>
+    <string name="title_meetups">Meetups</string>
+
+    <string name="start_title">Willkommen bei\n Course Matcher!</string>
+    <string name="start_header">Triff deine Freunde am Campus\n - spontan und einfach.</string>
+    <string name="profile_title">Erstelle ein Profil</string>
+    <string name="profile_header">und füge deine Freunde hinzu!</string>
+    <string name="meet_title">Vereinbart ein Treffen am Campus</string>
+    <string name="meet_header">mit nur wenigen Klicks!</string>
+    <string name="location_title">Teile deinen Standort</string>
+    <string name="location_header">um dich am Campus zu treffen.</string>
+    <string name="onboarding_btn">Registrieren</string>
+    <string name="skiptoLogin">Login</string>
+    <string name="img_uni">Picture of the University</string>
+    <string name="loginEmailPasswordNeeded">E-Mail und Passwort werden benötigt</string>
+    <string name="loginEmailNeeded">Bitte gib eine E-Mail an.</string>
+    <string name="loginPasswordNeeded">Bitte gib eine Passwort ein.</string>
+    <string name="registerFieldsRequired">Alle Felder werden benötigt</string>
+    <string name="create_meetup_marker_title">Meetup Treffpunkt</string>
+    <string name="meetup_location_not_found">Adresse nicht gefunden.</string>
+    <string name="meetup_tabs_label_accepted">Zugesagt</string>
+    <string name="meetup_tabs_label_declined">Abgesagt</string>
+    <string name="meetup_tabs_label_open">Offen</string>
+    <string name="dialog_logout_btn">Abmelden</string>
+    <string name="dialog_logout_title">Wirklich abmelden?</string>
+
+    <string name="accept">Zusagen</string>
+    <string name="decline">Absagen</string>
+    <string name="late">Komme etwas später</string>
+    <string name="delete">Meetup löschen</string>
+    <string name="add_more">Weitere Freunde hinzufügen</string>
+    <string name="map">Auf Karte anzeigen</string>
+
+    <!-- Map -->
+    <string name="map_user_item_btn">Treffen</string>
+    <string name="shareLocation">Standort mit Freunden teilen:</string>
+    <string name="title_friends_requests">Freunde</string>
+    <string name="loginTitleDesc">Du hast bereits ein Profil? Log dich ein und schon kannst du wie gewohnt wieder Treffen vereinbaren!</string>
+    <string name="loginEmailTxt">E-Mail</string>
+    <string name="loginPasswordTxt">Passwort</string>
+    <string name="registerTitleDesc">Erstelle einen Account um Treffen mit deinen Freunden am Campus zu vereinbaren!</string>
+    <string name="registerUsernameText">Nutzername</string>
+    <string name="registerFirstnameText">Vorname</string>
+    <string name="registerLastnameText">Nachname</string>
+    <string name="registerEmailText">E-Mail</string>
+    <string name="registerPasswordText">Passwort</string>
+    <string name="registerUsernameEmpty">Bitte gib einen Nutzernamen ein.</string>
+    <string name="registerEmailEmpty">Bitte gib einen E-Mail Adresse ein.</string>
+    <string name="registerPasswordEmpty">Bitte gib ein Passwort mit 6 Zeichen ein.</string>
+    <string name="registerFirstnameEmpty">Bitte gib deinen Vornamen ein.</string>
+    <string name="registerLastnameEmpty">Bitte gib deinen Nachnamen ein.</string>
+    <string name="searchBarDesc">Searchbar for searching in your friendslist</string>
+
+    <!-- Settings -->
+    <string name="location_permission_denied">Der Standort-Zugriff muss in deinen App-Einstellungen erlaubt sein.</string>
+    <string name="dialog_delete_meetup_title">Meetup wirklich löschen?</string>
+    <string name="dialog_delete_btn">Löschen</string>
+
+    <!-- Meetup Location Fragment -->
+    <string name="title_meetup_location">Meetup Treffpunkt</string>
 </resources>

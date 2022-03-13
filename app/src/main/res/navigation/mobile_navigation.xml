@@ -3,23 +3,180 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_home">
+
+    <action
+        android:id="@+id/action_global_navigate_to_profile"
+        app:destination="@id/navigation_profile" />
+
+    <action
+        android:id="@+id/action_global_navigate_to_meetups"
+        app:destination="@+id/navigation_meetup_tabs" />
+
+    <action
+        android:id="@+id/action_global_navigate_to_invite_friends"
+        app:destination="@+id/navigation_invite_friends" />
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.cm.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_other_profile"
+            app:destination="@id/navigation_other_profile" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_meetup"
+            app:destination="@id/navigation_meetup" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.cm.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_meetup_tabs"
+        android:name="com.example.cm.ui.meetup.MeetupTabsFragment"
+        android:label="Meetup"
+        tools:layout="@layout/fragment_meetup_tabs">
+        <action
+            android:id="@+id/navigateToMeetups"
+            app:destination="@+id/navigation_meetup" />
+        <action
+            android:id="@+id/navigateToMeetupDetailed"
+            app:destination="@+id/navigation_meetup_detailed" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.cm.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_meetup_detailed"
+        android:name="com.example.cm.ui.meetup.MeetupDetailed.MeetupDetailedFragment"
+        android:label="@string/MeetupDetailedTitle"
+        tools:layout="@layout/fragment_meetup_detailed">
+        <action
+            android:id="@+id/fromMeetupDetailedToOwnProfile"
+            app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/fromMeetupDetailedToOtherProfile"
+            app:destination="@id/navigation_other_profile" />
+        <action
+            android:id="@+id/action_navigation_meetup_detailed_to_meetupLocationFragment"
+            app:destination="@id/meetupLocationFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_meetup"
+        android:name="com.example.cm.ui.meetup.CreateMeetup.CreateMeetupFragment"
+        android:label="Meetup"
+        tools:layout="@layout/fragment_meetup">
+        <action
+            android:id="@+id/navigateToInviteFriends"
+            app:destination="@+id/navigation_invite_friends" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_invite_friends"
+        android:name="com.example.cm.ui.invite_friends.InviteFriendsFragment"
+        android:label="@string/invite_friends"
+        tools:layout="@layout/fragment_invite_friends">
+        <action
+            android:id="@+id/navigateToInfoMeetup"
+            app:destination="@+id/navigation_meetup" />
+
+        <action
+            android:id="@+id/navigateToMeetupInviteSuccess"
+            app:destination="@+id/navigation_meetup_success"
+            app:popUpTo="@id/navigation_meetup"
+            app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/action_navigation_invite_friends_to_navigation_other_profile"
+            app:destination="@id/navigation_other_profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.example.cm.ui.own_profile.OwnProfileFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_own_profile">
+        <action
+            android:id="@+id/action_navigation_profile_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_friends_tabs"
+        android:name="com.example.cm.ui.friends.FriendsTabsFragment"
+        android:label="@string/title_friends"
+        tools:layout="@layout/fragment_friends_tabs">
+        <action
+            android:id="@+id/navigateToSelectFriends"
+            app:destination="@+id/navigation_select_friends" />
+        <action
+            android:id="@+id/fromFriendsToProfile"
+            app:destination="@id/navigation_other_profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_friends"
+        android:name="com.example.cm.ui.friends.FriendsListFragment"
+        android:label="@string/title_friends"
+        tools:layout="@layout/fragment_friends_list">
+
+        <action
+            android:id="@+id/navigateToSelectFriends"
+            app:destination="@id/navigation_select_friends" />
+        <action
+            android:id="@+id/fromFriendsToProfile"
+            app:destination="@id/navigation_other_profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_select_friends"
+        android:name="com.example.cm.ui.add_friends.AddFriendsFragment"
+        android:label="@string/title_find_friends"
+        tools:layout="@layout/fragment_add_friends">
+        <action
+            android:id="@+id/fromSelectFriendsToProfile"
+            app:destination="@id/navigation_other_profile" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_meetup_success"
+        android:name="com.example.cm.ui.meetup_invite_success.MeetupInviteSuccessFragment"
+        android:label="fragment_meetup_invite_success"
+        tools:layout="@layout/fragment_meetup_invite_success" />
+    <fragment
+        android:id="@+id/navigation_other_profile"
+        android:name="com.example.cm.ui.other_profile.OtherProfileFragment"
+        android:label="@string/title_profile" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.cm.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings">
+        <action
+            android:id="@+id/action_settingsFragment_to_editNotificationsFragment"
+            app:destination="@id/editNotificationsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_editAccountFragment"
+            app:destination="@id/editAccountFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.cm.ui.settings.edit_profile.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/editAccountFragment"
+        android:name="com.example.cm.ui.settings.edit_account.EditAccountFragment"
+        android:label="fragment_edit_account"
+        tools:layout="@layout/fragment_edit_account" />
+    <fragment
+        android:id="@+id/editNotificationsFragment"
+        android:name="com.example.cm.ui.settings.edit_notifications.EditNotificationsFragment"
+        android:label="fragment_edit_notifications"
+        tools:layout="@layout/fragment_edit_notifications" />
+    <fragment
+        android:id="@+id/meetupLocationFragment"
+        android:name="com.example.cm.ui.meetup.MeetupLocation.MeetupLocationFragment"
+        android:label="MeetupLocationFragment" />
+
 </navigation>

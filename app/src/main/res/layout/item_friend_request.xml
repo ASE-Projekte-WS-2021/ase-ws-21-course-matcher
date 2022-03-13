@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/friendRequestLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/padding_medium"
+    android:paddingTop="@dimen/padding_small"
+    android:paddingEnd="@dimen/padding_small"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/topRowWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <LinearLayout
+            android:id="@+id/buttonWrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            >
+
+            <ImageView
+                android:id="@+id/acceptButton"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:src="@drawable/ic_button_accept"
+                app:layout_constraintBottom_toBottomOf="@+id/senderProfileImageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/senderProfileImageView" />
+
+            <ImageView
+                android:id="@+id/declineButton"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:src="@drawable/ic_button_decline"
+                app:layout_constraintBottom_toBottomOf="@+id/acceptButton"
+                app:layout_constraintEnd_toStartOf="@+id/acceptButton"
+                app:layout_constraintTop_toTopOf="@+id/acceptButton" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/userContentWrapper"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_toLeftOf="@id/buttonWrapper"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/senderProfileImageView"
+                android:layout_width="@dimen/profile_img_size"
+                android:layout_height="@dimen/profile_img_size"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/padding_big"
+                android:background="@color/gray500"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                >
+
+                <TextView
+                    android:id="@+id/senderTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:maxLines="1"
+                    android:textColor="@color/gray700"
+                    android:textSize="@dimen/text_size_medium"
+                    tools:text="Name" />
+
+                <TextView
+                    android:id="@+id/tvSenderUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:textColor="@color/gray500"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@+id/senderTextView"
+                    tools:layout_editor_absoluteX="10dp"
+                    tools:text="Username" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/topRowWrapper">
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="10dp"
+            android:layout_toStartOf="@+id/sentDateTextView"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="false"
+            android:textColor="@color/gray500"
+            android:textSize="@dimen/text_size_small"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="ist jetzt auf deiner Freundesliste. aefeafeafja" />
+
+        <TextView
+            android:id="@+id/sentDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="textEnd"
+            android:textColor="@color/gray400"
+            android:textSize="@dimen/text_size_small"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintTop_toTopOf="@+id/descriptionTextView"
+            tools:text="vor 9 Stunden" />
+
+    </RelativeLayout>
+
+</LinearLayout>

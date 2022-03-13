@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/meetupRequestLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/padding_small"
+    android:paddingTop="@dimen/padding_small"
+    android:paddingEnd="@dimen/padding_small">
+
+    <ImageView
+        android:id="@+id/acceptButton"
+        android:layout_width="@dimen/btn_size"
+        android:layout_height="@dimen/btn_size"
+        android:src="@drawable/ic_button_accept"
+        app:layout_constraintBottom_toBottomOf="@+id/meetupRequestImageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/meetupRequestImageView" />
+
+    <ImageView
+        android:id="@+id/declineButton"
+        android:layout_width="@dimen/btn_size"
+        android:layout_height="@dimen/btn_size"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:src="@drawable/ic_button_decline"
+        app:layout_constraintBottom_toBottomOf="@+id/acceptButton"
+        app:layout_constraintEnd_toStartOf="@+id/acceptButton"
+        app:layout_constraintTop_toTopOf="@+id/acceptButton" />
+
+    <ImageView
+        android:id="@+id/meetupRequestImageView"
+        android:layout_width="@dimen/meetup_icon_image_height"
+        android:layout_height="@dimen/meetup_icon_image_height"
+        android:src="@drawable/cafe_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:gravity="center"
+
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/meetupRequestImageView"
+        app:layout_constraintEnd_toStartOf="@+id/declineButton"
+        app:layout_constraintStart_toEndOf="@+id/meetupRequestImageView"
+        app:layout_constraintTop_toTopOf="@+id/meetupRequestImageView">
+
+        <TextView
+            android:id="@+id/meetupTimeTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:includeFontPadding="false"
+            android:textColor="@color/orange_dark"
+            android:textSize="@dimen/text_size_medium" />
+
+        <TextView
+            android:id="@+id/locationTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:singleLine="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_size_medium"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/meetupSenderDescriptionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/small_margin"
+        android:text="@string/meetup_request_description"
+        android:textColor="@color/black"
+
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintStart_toEndOf="@+id/meetupSenderTextView"
+        app:layout_constraintTop_toBottomOf="@+id/meetupRequestImageView" />
+
+    <TextView
+        android:id="@+id/meetupSenderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/small_margin"
+        android:textColor="@color/gray500"
+        android:textSize="@dimen/text_size_small"
+
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/meetupRequestImageView" />
+
+    <TextView
+        android:id="@+id/sentDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textAlignment="textEnd"
+        android:textColor="@color/gray400"
+        android:textSize="@dimen/text_size_small"
+        android:textStyle="italic"
+
+        app:layout_constraintBottom_toBottomOf="@+id/meetupSenderDescriptionTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/meetupSenderDescriptionTextView" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/stroke_width"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:background="@color/gray300"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/meetupSenderDescriptionTextView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
