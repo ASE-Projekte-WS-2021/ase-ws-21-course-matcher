@@ -61,7 +61,8 @@
             android:id="@+id/locationTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:maxLines="1"
+            android:ellipsize="end"
             android:includeFontPadding="false"
             android:singleLine="false"
             android:textColor="@color/black"
