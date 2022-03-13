@@ -37,6 +37,16 @@
                 tools:ignore="RtlSymmetry" />
 
             <ImageView
+                android:id="@+id/meetup_context_menu_btn"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:layout_marginTop="@dimen/padding_small"
+                android:src="@drawable/ic_more_options" />
+
+            <!--
+            <ImageView
                 android:id="@+id/meetup_leave_btn"
                 android:layout_width="@dimen/btn_size"
                 android:layout_height="@dimen/btn_size"
@@ -86,6 +96,7 @@
                 android:src="@drawable/ic_trash_btn"
                 android:visibility="invisible"
                 tools:ignore="RtlSymmetry" />
+                -->
 
             <TextView
                 android:id="@+id/meetupDetailedTime"

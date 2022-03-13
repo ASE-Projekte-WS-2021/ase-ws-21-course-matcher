@@ -194,4 +194,11 @@
     <string name="edit_delete">Meetup löschen</string>
     <string name="edit_invited_friends">Mit wem willst du dich treffen?</string>
     <string name="edit_invited_friends_btn">Teilnehmer bearbeiten</string>
+
+    <string name="accept">Zusagen</string>
+    <string name="decline">Absagen</string>
+    <string name="late">Komme etwas später</string>
+    <string name="delete">Löschen</string>
+    <string name="add_more">Weitere Freunde hinzufügen</string>
+    <string name="map">Auf Karte anzeigen</string>
 </resources>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activities.PatientSelectionActivity">
+
+    <item
+        android:id="@+id/menuMap"
+        android:icon="@drawable/ic_map_small"
+        android:title="@string/map" />
+
+    <item
+        android:id="@+id/menuAccept"
+        android:icon="@drawable/ic_accept"
+        android:title="@string/accept" />
+
+    <item
+        android:id="@+id/menuLate"
+        android:icon="@drawable/ic_late"
+        android:title="@string/late" />
+
+    <item
+        android:id="@+id/menuDecline"
+        android:icon="@drawable/ic_decline"
+        android:title="@string/decline" />
+
+    <item
+        android:id="@+id/menuDelete"
+        android:icon="@drawable/ic_trash_menu"
+        android:title="@string/delete" />
+
+    <!--
+    <item
+        android:id="@+id/menuAddMore"
+        android:icon="@drawable/ic_add_more_btn"
+        android:title="@string/add_more" />
+        -->
+
+</menu>
