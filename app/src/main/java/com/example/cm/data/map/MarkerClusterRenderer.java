@@ -1,5 +1,6 @@
 package com.example.cm.data.map;
 
+import static com.example.cm.Constants.CURRENT_USER_Z_INDEX;
 import static com.example.cm.Constants.MARKER_PADDING;
 
 import android.content.Context;
@@ -11,7 +12,6 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 
 import com.example.cm.data.models.MarkerClusterItem;
-import com.example.cm.data.models.User;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -41,8 +41,8 @@ public class MarkerClusterRenderer<T extends MarkerClusterItem> extends DefaultC
         markerOptions.icon(markerIcon).title(item.getTitle());
 
         // Make sure to render current user above other users
-        if(item.isCurrentUser()) {
-            markerOptions.zIndex(999);
+        if (item.isCurrentUser()) {
+            markerOptions.zIndex(CURRENT_USER_Z_INDEX);
         }
     }
 

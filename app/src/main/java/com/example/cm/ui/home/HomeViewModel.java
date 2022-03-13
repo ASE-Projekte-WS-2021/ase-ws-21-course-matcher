@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.listener.UserListener;
-import com.example.cm.data.models.MarkerClusterItem;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.Callback;
 import com.example.cm.data.repositories.UserRepository;
@@ -17,24 +16,10 @@ import java.util.List;
 public class HomeViewModel extends ViewModel implements Callback {
     private final UserRepository userRepository;
     private final MutableLiveData<User> currentUser;
-    private final List<MarkerClusterItem> markerClusterItems = new ArrayList<>();
 
     public HomeViewModel() {
         userRepository = UserRepository.getInstance();
         currentUser = userRepository.getStaticCurrentUser();
-    }
-
-    public MarkerClusterItem getMarkerClusterItemById(String id) {
-        for (MarkerClusterItem marker : markerClusterItems) {
-            if (marker.getUser().getId().equals(id)) {
-                return marker;
-            }
-        }
-        return null;
-    }
-
-    public void addClusterMarker(MarkerClusterItem marker) {
-        markerClusterItems.add(marker);
     }
 
     public void getFriends(UserListener<List<User>> listener) {

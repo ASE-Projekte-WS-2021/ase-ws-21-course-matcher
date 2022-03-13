@@ -3,9 +3,15 @@ package com.example.cm.ui.home;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.example.cm.Constants.DEFAULT_CARD_OFFSET;
 import static com.example.cm.Constants.DEFAULT_LOCATION;
 import static com.example.cm.Constants.DEFAULT_MAP_ZOOM;
+import static com.example.cm.Constants.FINAL_CARD_ALPHA;
+import static com.example.cm.Constants.INITIAL_CARD_ALPHA;
+import static com.example.cm.Constants.MAP_CARD_ANIMATION_DURATION;
 import static com.example.cm.Constants.MARKER_SIZE;
+import static com.example.cm.Constants.MAX_CLUSTER_ITEM_DISTANCE;
+import static com.example.cm.Constants.ON_SNAPPED_MAP_ZOOM;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -67,19 +73,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     private MapView mapView;
     private GoogleMap googleMap;
     private User currentUser;
-    private Bundle savedInstanceState;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         positionManager = PositionManager.getInstance(requireActivity());
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        this.savedInstanceState = savedInstanceState;
         initRecyclerView();
         initLocationPermissionLauncher();
         initPermissionCheck();
         initGoogleMap(savedInstanceState);
         initViewModel();
         initListeners();
-
 
         return binding.getRoot();
     }
@@ -127,12 +130,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
         if (hasCoarseLocationPermission && hasFineLocationPermission) {
             positionManager.requestCurrentLocation(this);
-            //initGoogleMap(savedInstanceState);
         } else if (!hasCoarseLocationPermission && !hasFineLocationPermission) {
             locationPermissionLauncher.launch(ACCESS_FINE_LOCATION);
         } else {
             positionManager.requestCurrentLocation(this);
-           // initGoogleMap(savedInstanceState);
         }
     }
 
@@ -174,11 +175,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     private void setupClusterManager(GoogleMap googleMap) {
         clusterManager = new ClusterManager<>(requireActivity(), googleMap);
         clusterManager.setRenderer(new MarkerClusterRenderer<>(requireActivity(), googleMap, clusterManager));
+        Timber.d("Setting up cluster click listener");
         clusterManager.setOnClusterClickListener(this);
         clusterManager.setOnClusterItemClickListener(this);
 
         NonHierarchicalDistanceBasedAlgorithm<MarkerClusterItem> clusterAlgorithm = new NonHierarchicalDistanceBasedAlgorithm<>();
-        clusterAlgorithm.setMaxDistanceBetweenClusteredItems(10);
+        clusterAlgorithm.setMaxDistanceBetweenClusteredItems(MAX_CLUSTER_ITEM_DISTANCE);
         clusterManager.setAlgorithm(clusterAlgorithm);
 
         observeCurrentUser();
@@ -192,7 +194,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                     return;
                 }
 
-                clusterManager.clearItems();
+                requireActivity().runOnUiThread(() -> {
+                    Timber.d("Clearing items...");
+                    googleMap.clear();
+                    clusterManager.clearItems();
+                });
+
                 for (User user : users) {
                     if (user.getLocation() != null) {
                         mapUserAdapter.addUser(user);
@@ -200,7 +207,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                     }
                 }
                 // Set initial position of user cards offset of screen
-                binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(0f).setDuration(250);
+                binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
             }
 
             @Override
@@ -210,13 +217,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         });
     }
 
-
     @Override
     public void onPositionChanged(LatLng position) {
         if (googleMap == null || currentUser == null) {
             return;
         }
-        Timber.d("Position changed: %s", position);
 
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_MAP_ZOOM));
         homeViewModel.updateLocation(position);
@@ -259,7 +264,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         return new MarkerClusterItem(user, drawable, isCurrentUser);
     }
 
-
     @Override
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
@@ -291,7 +295,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             return;
         }
 
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15.0f));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, ON_SNAPPED_MAP_ZOOM));
     }
 
     @Override
@@ -302,6 +306,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     @Override
     public boolean onClusterItemClick(MarkerClusterItem item) {
+        Timber.d("cluster item clicked");
         boolean isCurrentUser = item.isCurrentUser();
 
         if (!isCurrentUser) {
@@ -314,6 +319,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     @Override
     public boolean onClusterClick(Cluster<MarkerClusterItem> cluster) {
+        Timber.d("cluster clicked");
         Collection<MarkerClusterItem> clusterItems = cluster.getItems();
         List<MarkerClusterItem> users = new ArrayList<>(clusterItems);
         User user = users.get(0).getUser();
@@ -332,19 +338,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         }
 
         // Have to differentiate here since card does not show up correctly on first click
-        if (binding.rvUserCards.getAlpha() == 0f) {
+        if (binding.rvUserCards.getAlpha() == INITIAL_CARD_ALPHA) {
             binding.rvUserCards.scrollToPosition(position);
         } else {
             binding.rvUserCards.smoothScrollToPosition(position);
         }
 
-        binding.rvUserCards.animate().translationY(0).alpha(1f).setDuration(250);
+        binding.rvUserCards.animate().translationY(DEFAULT_CARD_OFFSET).alpha(FINAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
     }
 
     @Override
     public void onMapClick(@NonNull LatLng latLng) {
         // Hide user cards
-        binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(0f).setDuration(250);
+        binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
     }
 
     @Override

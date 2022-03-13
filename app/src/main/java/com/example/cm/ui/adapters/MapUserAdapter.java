@@ -47,7 +47,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
                 return i;
             }
         }
-        return -1;
+        return RecyclerView.NO_POSITION;
     }
 
     // Create new views (invoked by the layout manager)
@@ -150,7 +150,6 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
             }
             listener.onMeetUserClicked(user.getId());
         }
-
 
         /**
          * Getters for the views in the list item
