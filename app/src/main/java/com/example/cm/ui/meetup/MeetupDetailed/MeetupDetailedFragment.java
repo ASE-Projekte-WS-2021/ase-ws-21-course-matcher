@@ -18,6 +18,7 @@ import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.example.cm.utils.Navigator;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -25,6 +26,7 @@ public class MeetupDetailedFragment extends Fragment {
 
     private MeetupDetailedTabAdapter tabAdapter;
     private ViewPager2 viewPager;
+    private MeetupDetailedViewModel meetupDetailedViewModel;
     private FragmentMeetupDetailedBinding binding;
     private TabLayoutMediator tabLayoutMediator;
     private Navigator navigator;
@@ -44,12 +46,13 @@ public class MeetupDetailedFragment extends Fragment {
         binding = FragmentMeetupDetailedBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
         initUIAndViewModel();
+        initListeners();
         return binding.getRoot();
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private void initUIAndViewModel() {
-        MeetupDetailedViewModel meetupDetailedViewModel = new ViewModelProvider(this, new MeetupDetailedFactory(meetupId)).get(MeetupDetailedViewModel.class);
+        meetupDetailedViewModel = new ViewModelProvider(this, new MeetupDetailedFactory(meetupId)).get(MeetupDetailedViewModel.class);
         meetupDetailedViewModel.getMeetup().observe(getViewLifecycleOwner(), meetup -> {
             tabAdapter = new MeetupDetailedTabAdapter(this, meetup);
             viewPager = binding.meetupDetailedTabPager;
@@ -84,6 +87,24 @@ public class MeetupDetailedFragment extends Fragment {
                     break;
             }
         });
-        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+
     }
+
+    private void initListeners() {
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+        binding.meetupDetailedLocation.setOnClickListener(v -> onMeetupLocationClicked());
+    }
+
+    private void onMeetupLocationClicked() {
+        LatLng latLng = meetupDetailedViewModel.getMeetupLocation();
+        if (latLng == null) {
+            return;
+        }
+
+        Bundle bundle = new Bundle();
+        bundle.putDouble(Constants.KEY_MEETUP_LOCATION_LAT, latLng.latitude);
+        bundle.putDouble(Constants.KEY_MEETUP_LOCATION_LNG, latLng.longitude);
+        navigator.getNavController().navigate(R.id.action_navigation_meetup_detailed_to_meetupLocationFragment, bundle);
+    }
+
 }

@@ -216,4 +216,7 @@
 
     <!-- Settings -->
     <string name="location_permission_denied">Der Standort-Zugriff muss in deinen App-Einstellungen erlaubt sein.</string>
+
+    <!-- Meetup Location Fragment -->
+    <string name="title_meetup_location">Meetup Treffpunkt</string>
 </resources>

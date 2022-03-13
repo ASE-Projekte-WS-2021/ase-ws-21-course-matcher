@@ -105,7 +105,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
         // todo: get username from user id, then setText to username
-        holder.getTvSenderUsername().setVisibility(View.INVISIBLE);
+        holder.getTvSenderUsername().setVisibility(View.GONE);
         // todo end
 
         holder.getTvSender().setText(user);
