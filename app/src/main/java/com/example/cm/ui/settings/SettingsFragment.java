@@ -3,7 +3,6 @@ package com.example.cm.ui.settings;
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-
 import static com.example.cm.Constants.PREFS_SETTINGS_KEY;
 import static com.example.cm.Constants.PREFS_SHARE_LOCATION_KEY;
 
@@ -33,8 +32,6 @@ import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 
-import timber.log.Timber;
-
 public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutListener {
 
     private ActivityResultLauncher<String> locationPermissionLauncher;
@@ -63,7 +60,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         locationPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 request -> {
-                    if(!request) {
+                    if (!request) {
                         Snackbar.make(binding.getRoot(), R.string.location_permission_denied, Snackbar.LENGTH_LONG).show();
                         binding.switchShareLocation.setChecked(false);
                     }

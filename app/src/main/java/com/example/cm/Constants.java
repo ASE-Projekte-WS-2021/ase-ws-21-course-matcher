@@ -2,9 +2,6 @@ package com.example.cm;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.Calendar;
-import java.util.Date;
-
 public class Constants {
     public static final String KEY_USER_ID = "keyUserId";
     public static final String KEY_MEETUP_ID = "keyMeetupId";

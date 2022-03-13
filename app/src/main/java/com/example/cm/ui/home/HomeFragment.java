@@ -199,7 +199,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 });
 
                 for (User user : users) {
-                    Timber.d("User: %s is sharing: %s", user.getUsername(), user.getIsSharingLocation());
                     if (user.getIsSharingLocation() && user.getLocation() != null) {
                         mapUserAdapter.addUser(user);
                         addMarker(user, false);
