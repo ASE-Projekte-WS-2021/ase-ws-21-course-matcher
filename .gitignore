@@ -16,6 +16,5 @@ app/build.gradle
 /captures
 .externalNativeBuild
 .cxx
-local.properties
 firebase-debug.log
 local_maps.properties
