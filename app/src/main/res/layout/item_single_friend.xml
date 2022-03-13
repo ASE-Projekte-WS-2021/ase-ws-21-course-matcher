@@ -50,4 +50,15 @@
             android:textColor="@color/gray500"
             tools:text="Username" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivFriendLateInfo"
+        android:layout_width="@dimen/btn_size"
+        android:layout_height="@dimen/btn_size"
+        android:layout_alignTop="@+id/ivUserImage"
+        android:layout_alignBottom="@+id/ivUserImage"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/padding_small"
+        android:src="@drawable/ic_late"
+        android:visibility="invisible" />
 </RelativeLayout>

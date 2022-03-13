@@ -13,6 +13,10 @@
         android:id="@+id/action_global_navigate_to_meetups"
         app:destination="@+id/navigation_meetup_tabs" />
 
+    <action
+        android:id="@+id/action_global_navigate_to_invite_friends"
+        app:destination="@+id/navigation_invite_friends" />
+
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.cm.ui.home.HomeFragment"
@@ -83,7 +87,6 @@
         <action
             android:id="@+id/action_navigation_invite_friends_to_navigation_other_profile"
             app:destination="@id/navigation_other_profile" />
-
     </fragment>
 
     <fragment

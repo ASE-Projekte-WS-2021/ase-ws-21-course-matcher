@@ -1,6 +1,8 @@
 package com.example.cm.ui.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,10 +21,12 @@ import java.util.Objects;
 public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
 
     private final List<MutableLiveData<User>> friends;
+    private final List<String> lateFriends;
     private final OnItemClickListener listener;
 
-    public MeetupDetailedFriendListAdapter(List<MutableLiveData<User>> friends, OnItemClickListener listener) {
+    public MeetupDetailedFriendListAdapter(List<MutableLiveData<User>> friends, List<String> lateFriends, OnItemClickListener listener) {
         this.friends = friends;
+        this.lateFriends = lateFriends;
         this.listener = listener;
     }
 
@@ -45,6 +49,10 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
             if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                 holder.getProfileImage().setImageTintMode(null);
                 Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+            }
+
+            if (lateFriends != null && lateFriends.contains(friend.getId())) {
+                holder.getIvLate().setVisibility(View.VISIBLE);
             }
             holder.getTvFullName().setText(fullName);
             holder.getTvUserName().setText(username);
@@ -110,6 +118,10 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
 
         public TextView getTvFullName() {
             return binding.tvName;
+        }
+
+        public ImageView getIvLate() {
+            return binding.ivFriendLateInfo;
         }
     }
 }

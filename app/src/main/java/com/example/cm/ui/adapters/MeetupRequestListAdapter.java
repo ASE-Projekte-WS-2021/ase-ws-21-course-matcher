@@ -16,10 +16,13 @@ import com.example.cm.R;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.example.cm.utils.Utils.convertToAddress;
 
 
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
@@ -123,8 +126,8 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
                 holder.getTvLocation().setTextColor(color);
                 holder.getTvSender().setTextColor(color);
                 holder.getTvDescription().setTextColor(color);
-                holder.getBtnAccept().setImageResource(R.drawable.accept_btn_disabled);
-                holder.getBtnDecline().setImageResource(R.drawable.decline_btn_disabled);
+                holder.getBtnAccept().setImageResource(R.drawable.ic_button_accept_disabled);
+                holder.getBtnDecline().setImageResource(R.drawable.ic_button_decline_disabled);
                 holder.getBtnAccept().setOnClickListener(null);
                 holder.getBtnDecline().setOnClickListener(null);
                 break;

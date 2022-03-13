@@ -11,7 +11,7 @@
     <string name="meetup_place">Wo wollt ihr euch treffen?</string>
     <string name="meetup_submit_btn">weiter und Freunde auswählen</string>
     <string name="meetup_info_submit_btn">weiter</string>
-    <string name="invite_friends_header_desc">Wähle aus mit wem du dich treffen möchtest:</string>
+    <string name="invite_friends_header_desc">Wähle aus, mit wem du dich treffen möchtest:</string>
     <string name="invite_friends_back_btn">zurück</string>
     <string name="invite_friends_submit_btn">abschicken</string>
     <string name="meetup_time_in_past">Die gewählte Uhrzeit liegt in der Vergangenheit. Bitte wähle eine neue Uhrzeit.</string>
@@ -33,6 +33,7 @@
     <string name="invitation_success_dialog">Dein Meetup wurde erfolgreich versendet. Warte auf die Reaktion deiner Freunde und viel Spaß bei eurem Treffen!</string>
     <string name="invitation_success_title">"Meetup versendet!"</string>
     <string name="invitation_success_close_dialog">"ok"</string>
+    <string name="content_description_edit_button">meetup edit button</string>
 
     <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
     <string name="title_notifications">Benachrichtigungen</string>
@@ -194,6 +195,13 @@
     <string name="dialog_logout_btn">Abmelden</string>
     <string name="dialog_logout_title">Wirklich abmelden?</string>
 
+    <string name="accept">Zusagen</string>
+    <string name="decline">Absagen</string>
+    <string name="late">Komme etwas später</string>
+    <string name="delete">Meetup löschen</string>
+    <string name="add_more">Weitere Freunde hinzufügen</string>
+    <string name="map">Auf Karte anzeigen</string>
+
     <!-- Map -->
     <string name="map_user_item_btn">Treffen</string>
     <string name="shareLocation">Standort mit Freunden teilen:</string>
@@ -216,6 +224,8 @@
 
     <!-- Settings -->
     <string name="location_permission_denied">Der Standort-Zugriff muss in deinen App-Einstellungen erlaubt sein.</string>
+    <string name="dialog_delete_meetup_title">Meetup wirklich löschen?</string>
+    <string name="dialog_delete_btn">Löschen</string>
 
     <!-- Meetup Location Fragment -->
     <string name="title_meetup_location">Meetup Treffpunkt</string>

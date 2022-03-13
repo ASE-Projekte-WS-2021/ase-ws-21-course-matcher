@@ -15,6 +15,8 @@ public class MeetupPOJO {
     private List<String> invitedFriends;
     private List<String> confirmedFriends;
     private List<String> declinedFriends;
+
+    private List<String> lateFriends;
     private MeetupPhase phase;
 
     public MeetupPOJO() {
@@ -27,10 +29,11 @@ public class MeetupPOJO {
         this.invitedFriends = meetup.getInvitedFriends();
         this.confirmedFriends = meetup.getConfirmedFriends();
         this.declinedFriends = meetup.getDeclinedFriends();
+        this.lateFriends = meetup.getLateFriends();
         this.phase = meetup.getPhase();
         this.timestamp = meetup.getTimestamp();
 
-        this.location = new ArrayList<>();
+        this.location = new ArrayList<Double>();
         this.location.add(meetup.getLocation().latitude);
         this.location.add(meetup.getLocation().longitude);
     }
@@ -99,6 +102,14 @@ public class MeetupPOJO {
         this.declinedFriends = declinedFriends;
     }
 
+    public List<String> getLateFriends() {
+        return lateFriends;
+    }
+
+    public void setLateFriends(List<String> lateFriends) {
+        this.lateFriends = lateFriends;
+    }
+
     public MeetupPhase getPhase() {
         return phase;
     }
@@ -115,6 +126,7 @@ public class MeetupPOJO {
         meetup.setInvitedFriends(this.invitedFriends);
         meetup.setConfirmedFriends(this.confirmedFriends);
         meetup.setDeclinedFriends(this.declinedFriends);
+        meetup.setLateFriends(this.lateFriends);
         meetup.setPhase(this.phase);
         meetup.setTimestamp(this.timestamp);
 

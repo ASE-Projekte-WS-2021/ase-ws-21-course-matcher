@@ -25,6 +25,7 @@ public class Meetup {
     private List<String> invitedFriends;
     private List<String> confirmedFriends;
     private List<String> declinedFriends;
+    private List<String> lateFriends;
     private MeetupPhase phase;
 
     private final Calendar calendarNow = GregorianCalendar.getInstance();
@@ -145,5 +146,13 @@ public class Meetup {
 
     public void setDeclinedFriends(List<String> declinedFriends) {
         this.declinedFriends = declinedFriends;
+    }
+
+    public List<String> getLateFriends() {
+        return lateFriends;
+    }
+
+    public void setLateFriends(List<String> lateFriends) {
+        this.lateFriends = lateFriends;
     }
 }
