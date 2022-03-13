@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentSettingsBinding;
@@ -69,7 +70,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     }
 
     private void initViewModel() {
-        settingsViewModel = new SettingsViewModel();
+        settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
     }
 
     private void initListeners() {

@@ -175,7 +175,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     private void setupClusterManager(GoogleMap googleMap) {
         clusterManager = new ClusterManager<>(requireActivity(), googleMap);
         clusterManager.setRenderer(new MarkerClusterRenderer<>(requireActivity(), googleMap, clusterManager));
-        Timber.d("Setting up cluster click listener");
         clusterManager.setOnClusterClickListener(this);
         clusterManager.setOnClusterItemClickListener(this);
 
@@ -195,7 +194,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 }
 
                 requireActivity().runOnUiThread(() -> {
-                    Timber.d("Clearing items...");
                     googleMap.clear();
                     clusterManager.clearItems();
                 });
@@ -306,7 +304,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     @Override
     public boolean onClusterItemClick(MarkerClusterItem item) {
-        Timber.d("cluster item clicked");
         boolean isCurrentUser = item.isCurrentUser();
 
         if (!isCurrentUser) {
@@ -319,7 +316,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     @Override
     public boolean onClusterClick(Cluster<MarkerClusterItem> cluster) {
-        Timber.d("cluster clicked");
         Collection<MarkerClusterItem> clusterItems = cluster.getItems();
         List<MarkerClusterItem> users = new ArrayList<>(clusterItems);
         User user = users.get(0).getUser();
