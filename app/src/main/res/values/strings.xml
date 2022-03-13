@@ -193,6 +193,9 @@
     <string name="meetup_tabs_label_open">Offen</string>
     <string name="dialog_logout_btn">Abmelden</string>
     <string name="dialog_logout_title">Wirklich abmelden?</string>
+
+    <!-- Map -->
+    <string name="map_user_item_btn">Treffen</string>
     <string name="shareLocation">Standort mit Freunden teilen:</string>
     <string name="title_friends_requests">Freunde</string>
     <string name="loginTitleDesc">Du hast bereits ein Profil? Log dich ein und schon kannst du wie gewohnt wieder Treffen vereinbaren!</string>
@@ -210,4 +213,7 @@
     <string name="registerFirstnameEmpty">Bitte gib deinen Vornamen ein.</string>
     <string name="registerLastnameEmpty">Bitte gib deinen Nachnamen ein.</string>
     <string name="searchBarDesc">Searchbar for searching in your friendslist</string>
+
+    <!-- Settings -->
+    <string name="location_permission_denied">Der Standort-Zugriff muss in deinen App-Einstellungen erlaubt sein.</string>
 </resources>
