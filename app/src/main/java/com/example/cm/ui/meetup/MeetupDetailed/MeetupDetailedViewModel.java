@@ -7,10 +7,10 @@ import com.example.cm.data.models.Meetup;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import com.google.android.gms.maps.model.LatLng;
 
 public class MeetupDetailedViewModel extends ViewModel {
 
@@ -54,4 +54,10 @@ public class MeetupDetailedViewModel extends ViewModel {
         meetupRequestRepository.deleteRequestForMeetup(meetupId);
     }
 
+    public LatLng getMeetupLocation() {
+        if (meetup.getValue() == null) {
+            return null;
+        }
+        return meetup.getValue().getLocation();
+    }
 }

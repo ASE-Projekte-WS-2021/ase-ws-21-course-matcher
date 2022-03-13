@@ -6,8 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -19,6 +21,8 @@ import com.example.cm.databinding.FragmentFriendRequestsBinding;
 import com.example.cm.ui.adapters.FriendRequestListAdapter;
 import com.example.cm.ui.adapters.SwipeToDelete;
 import com.example.cm.utils.Navigator;
+
+import java.util.Objects;
 
 
 public class FriendRequestsFragment extends Fragment implements
@@ -40,6 +44,9 @@ public class FriendRequestsFragment extends Fragment implements
 
     private void initUI() {
         requestsListAdapter = new FriendRequestListAdapter(this);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        binding.notificationsRecyclerView.addItemDecoration(dividerItemDecoration);
         binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);

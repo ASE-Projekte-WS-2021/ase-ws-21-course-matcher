@@ -5,6 +5,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class Constants {
     public static final String KEY_USER_ID = "keyUserId";
     public static final String KEY_MEETUP_ID = "keyMeetupId";
+    public static final String KEY_MEETUP_LOCATION_LAT = "keyMeetupLocationLat";
+    public static final String KEY_MEETUP_LOCATION_LNG = "keyMeetupLocationLng";
     public static final int MAX_CHAR_COUNT = 125;
     public static final int SPLASH_TIMER = 000;
 
