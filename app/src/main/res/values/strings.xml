@@ -209,5 +209,5 @@
     <string name="registerPasswordEmpty">Bitte gib ein Passwort mit 6 Zeichen ein.</string>
     <string name="registerFirstnameEmpty">Bitte gib deinen Vornamen ein.</string>
     <string name="registerLastnameEmpty">Bitte gib deinen Nachnamen ein.</string>
-    <string name="searbardesc">Searchbar for searching in your friendslist</string>
+    <string name="searchBarDesc">Searchbar for searching in your friendslist</string>
 </resources>
