@@ -3,6 +3,7 @@ package com.example.cm.data.repositories;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.data.models.UserPOJO;
 import com.example.cm.utils.Utils;
@@ -19,8 +20,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import timber.log.Timber;
 
 public class UserRepository extends Repository {
 
@@ -87,12 +86,13 @@ public class UserRepository extends Repository {
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
-        userCollection.document(currentUserId).get().addOnSuccessListener(executorService, (value) -> {
-            if (value != null && value.exists()) {
-                User user = snapshotToUser(value);
-                mutableUser.postValue(user);
-            }
-        });
+        userCollection.document(currentUserId).get()
+                .addOnSuccessListener(executorService, (value) -> {
+                    if (value != null && value.exists()) {
+                        User user = snapshotToUser(value);
+                        mutableUser.postValue(user);
+                    }
+                });
         return mutableUser;
     }
 
@@ -313,25 +313,23 @@ public class UserRepository extends Repository {
      *
      * @return MutableLiveData-List of mutable friends
      */
-    public MutableLiveData<List<MutableLiveData<User>>> getStaticFriends() {
+    public void getStaticFriends(UserListener<List<User>> listener) {
         if (auth.getCurrentUser() == null) {
-            return mutableUsers;
+            return;
         }
         String currentUserId = auth.getCurrentUser().getUid();
 
         userCollection.document(currentUserId).get()
                 .addOnFailureListener(executorService, (exception) -> {
+                    listener.onUserError(exception);
                 })
                 .addOnSuccessListener(executorService, (value) -> {
-                    Timber.d("Loading Static Friends");
                     if (value != null && value.exists()) {
                         User user = snapshotToUser(value);
                         List<String> friends = user.getFriends();
-                        mutableUsers = getStaticUsersByIds(friends);
+                        getStaticUsersByIds(friends, listener);
                     }
-
                 });
-        return mutableUsers;
     }
 
     /**
@@ -365,20 +363,21 @@ public class UserRepository extends Repository {
      * @param userIds IDs of users to retrieve
      * @return MutableLiveData-List of mutable users with ids
      */
-    public MutableLiveData<List<MutableLiveData<User>>> getStaticUsersByIds(List<String> userIds) {
+    public void getStaticUsersByIds(List<String> userIds, UserListener<List<User>> listener) {
         if (userIds == null || userIds.isEmpty()) {
-            mutableUsers.postValue(new ArrayList<>());
-            return mutableUsers;
+            return;
         }
 
         userCollection.whereIn(FieldPath.documentId(), userIds).get()
+                .addOnFailureListener(executorService, (exception) -> {
+                    listener.onUserError(exception);
+                })
                 .addOnSuccessListener(executorService, (value) -> {
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<User>> users = snapshotToMutableUserList(value);
-                        mutableUsers.postValue(users);
+                        List<User> users = snapshotToUserList(value);
+                        listener.onUserSuccess(users);
                     }
                 });
-        return mutableUsers;
     }
 
     /**
