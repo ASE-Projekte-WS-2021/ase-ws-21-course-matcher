@@ -11,6 +11,7 @@ public class User {
     private String username, firstName, lastName, email, bio, profileImageUrl;
     private List<String> friends;
     private LatLng location;
+    private boolean isSharingLocation;
 
     public User() {
     }
@@ -23,7 +24,7 @@ public class User {
         this.email = email;
     }
 
-    public User(String id, String username, String firstName, String lastName, String email, List<String> friends, LatLng location) {
+    public User(String id, String username, String firstName, String lastName, String email, List<String> friends, LatLng location, boolean isSharingLocation) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -31,6 +32,7 @@ public class User {
         this.email = email;
         this.friends = friends;
         this.location = location;
+        this.isSharingLocation = isSharingLocation;
     }
 
     public String getId() {
@@ -108,5 +110,13 @@ public class User {
 
     public void setLocation(LatLng location) {
         this.location = location;
+    }
+
+    public boolean getIsSharingLocation() {
+        return isSharingLocation;
+    }
+
+    public void setIsSharingLocation(boolean sharingLocation) {
+        isSharingLocation = sharingLocation;
     }
 }

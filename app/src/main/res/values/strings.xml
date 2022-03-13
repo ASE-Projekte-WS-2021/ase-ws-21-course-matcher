@@ -212,4 +212,7 @@
     <string name="registerPasswordEmpty">Bitte gib ein Passwort mit 6 Zeichen ein.</string>
     <string name="registerFirstnameEmpty">Bitte gib deinen Vornamen ein.</string>
     <string name="registerLastnameEmpty">Bitte gib deinen Nachnamen ein.</string>
+
+    <!-- Settings -->
+    <string name="location_permission_denied">Der Standort-Zugriff muss in deinen App-Einstellungen erlaubt sein.</string>
 </resources>

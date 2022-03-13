@@ -31,4 +31,8 @@ public class Constants {
     public static final int MAX_CLUSTER_ITEM_DISTANCE = 15;
     public static final int CURRENT_USER_Z_INDEX = 999;
 
+    // Shared Preferances Keys
+    public static final String PREFS_SETTINGS_KEY = "settings";
+    public static final String PREFS_SHARE_LOCATION_KEY = "shareLocation";
+
 }

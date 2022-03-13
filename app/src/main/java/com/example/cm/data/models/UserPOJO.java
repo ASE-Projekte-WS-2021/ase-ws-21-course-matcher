@@ -10,6 +10,7 @@ public class UserPOJO {
     private String username, firstName, lastName, email, bio, profileImageUrl;
     private List<String> friends;
     private List<Double> location;
+    private boolean isSharingLocation;
 
     public UserPOJO() {
         // Required empty constructor
@@ -24,6 +25,7 @@ public class UserPOJO {
         this.bio = user.getBio();
         this.profileImageUrl = user.getProfileImageUrl();
         this.friends = user.getFriends();
+        this.isSharingLocation = user.getIsSharingLocation();
 
         this.location = new ArrayList<>();
         if (user.getLocation() != null) {
@@ -104,6 +106,14 @@ public class UserPOJO {
         this.location = location;
     }
 
+    public boolean getIsSharingLocation() {
+        return isSharingLocation;
+    }
+
+    public void setIsSharingLocation(boolean sharingLocation) {
+        this.isSharingLocation = sharingLocation;
+    }
+
     public User toObject() {
         User user = new User();
         user.setId(this.id);
@@ -114,6 +124,7 @@ public class UserPOJO {
         user.setBio(this.bio);
         user.setProfileImageUrl(this.profileImageUrl);
         user.setFriends(this.friends);
+        user.setIsSharingLocation(this.isSharingLocation);
 
         if (this.location != null) {
             LatLng location = new LatLng(this.location.get(0), this.location.get(1));
