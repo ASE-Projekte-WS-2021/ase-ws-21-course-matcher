@@ -45,7 +45,6 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupRequestRepository = new MeetupRequestRepository();
     }
 
-
     public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
         return users;
     }
@@ -169,6 +168,12 @@ public class CreateMeetupViewModel extends ViewModel {
         if (users.getValue() != null) {
             users.getValue().clear();
             users = userRepository.getFriendsByUsername(query);
+        }
+    }
+
+    public void clearSelectedUsers() {
+        if (selectedUsers.getValue() != null) {
+            selectedUsers.getValue().clear();
         }
     }
 }

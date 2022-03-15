@@ -87,6 +87,8 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
                     tab.setText(R.string.meetup_tabs_label_declined);
                 } else if (position == 2) {
                     tab.setText(R.string.meetup_tabs_label_open);
+                } else if (position == 3) {
+                    tab.setText(R.string.meetup_tabs_label_add);
                 }
             });
 

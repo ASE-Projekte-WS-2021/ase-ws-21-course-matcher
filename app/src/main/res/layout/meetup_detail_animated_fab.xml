@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.meetup.MeetupDetailed.MeetupDetailedFragment">
+
+
+    <!--This is a parent Floating Action Button-->
+    <!-- When this FAB Button is been pressed/clicked the following two button will get pop-up with animation -->
+    <!-- the Functionality is been done in MainActivity.java file -->
+    <!-- The other two FAB button is been set to InVisible so when user click on this button those 2 will get visible-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/padding_big"
+        android:layout_marginRight="@dimen/padding_big"
+        android:layout_marginBottom="@dimen/padding_big"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_more_options"
+        tools:ignore="VectorDrawableCompat" />
+
+
+    <!--This act a child Floating Action Button-->
+    <!-- The visibility is been set to INVISIBLE -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/acceptButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_big"
+        android:backgroundTint="@color/gray500"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:fabCustomSize="@dimen/btn_size"
+        app:layout_constraintBottom_toTopOf="@+id/add_f"
+        app:layout_constraintEnd_toEndOf="@+id/add_f"
+        app:layout_constraintStart_toStartOf="@+id/add_f"
+        app:srcCompat="@drawable/ic_accept" />
+
+
+    <!--This act a child Floating Action Button-->
+    <!-- The visibility is been set to INVISIBLE -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/declineButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_big"
+        android:backgroundTint="@color/gray500"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:fabCustomSize="@dimen/btn_size"
+        app:layout_constraintBottom_toTopOf="@+id/acceptButton"
+        app:layout_constraintEnd_toEndOf="@+id/acceptButton"
+        app:layout_constraintStart_toStartOf="@+id/acceptButton"
+        app:srcCompat="@drawable/ic_decline" />
+
+
+    <!--This act a child Floating Action Button-->
+    <!-- The visibility is been set to INVISIBLE -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/lateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_big"
+        android:backgroundTint="@color/gray500"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:fabCustomSize="@dimen/btn_size"
+        app:layout_constraintBottom_toTopOf="@+id/declineButton"
+        app:layout_constraintEnd_toEndOf="@+id/declineButton"
+        app:layout_constraintStart_toStartOf="@+id/declineButton"
+        app:srcCompat="@drawable/ic_late" />
+
+
+
+    <!--This act a child Floating Action Button-->
+    <!-- The visibility is been set to INVISIBLE -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_big"
+        android:backgroundTint="@color/gray500"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:fabCustomSize="@dimen/btn_size"
+        app:layout_constraintBottom_toTopOf="@+id/lateButton"
+        app:layout_constraintEnd_toEndOf="@+id/lateButton"
+        app:layout_constraintStart_toStartOf="@+id/lateButton"
+        app:srcCompat="@drawable/ic_trash_menu" />
+
+
+    <!--This act a child Floating Action Button-->
+    <!-- The visibility is been set to INVISIBLE -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/locationButton"
+        app:fabCustomSize="@dimen/btn_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding_big"
+        android:backgroundTint="@color/gray500"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/deleteButton"
+        app:layout_constraintEnd_toEndOf="@+id/deleteButton"
+        app:layout_constraintStart_toStartOf="@+id/deleteButton"
+        app:srcCompat="@drawable/ic_map_small"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

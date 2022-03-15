@@ -229,4 +229,5 @@
 
     <!-- Meetup Location Fragment -->
     <string name="title_meetup_location">Meetup Treffpunkt</string>
+    <string name="meetup_tabs_label_add">+</string>
 </resources>

@@ -17,28 +17,36 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.databinding.FragmentInviteFriendsBinding;
+import com.example.cm.databinding.FragmentInviteMoreFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
+import com.example.cm.ui.meetup.MeetupDetailed.MeetupDetailedFactory;
+import com.example.cm.ui.meetup.MeetupDetailed.MeetupDetailedViewModel;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
 import java.util.Objects;
 
 
-public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener,
+public class InviteMoreFriendsFragment extends Fragment implements AdapterView.OnItemClickListener,
         InviteFriendsAdapter.OnItemClickListener {
 
-    private CreateMeetupViewModel createMeetupViewModel;
-    private FragmentInviteFriendsBinding binding;
+    private InviteMoreFriendsViewModel inviteMoreFriendsViewModel;
+    private FragmentInviteMoreFriendsBinding binding;
     private InviteFriendsAdapter inviteFriendsListAdapter;
-    private Bundle bundle;
+    private String meetupId;
+    private List<String> userIdsAlreadyInMeetup;
     private Navigator navigator;
 
+    public InviteMoreFriendsFragment(String meetupId, List<String> userIdsAlreadyInMeetup) {
+        this.meetupId = meetupId;
+        this.userIdsAlreadyInMeetup = userIdsAlreadyInMeetup;
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
+        binding = FragmentInviteMoreFriendsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-        bundle = this.getArguments();
         View root = binding.getRoot();
         initUI();
         initViewModel();
@@ -54,19 +62,12 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(inviteFriendsListAdapter);
-        binding.btnBack.bringToFront();
     }
 
     private void initListener() {
-        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
         binding.btnSendInvite.setOnClickListener(v -> {
-            boolean isSuccessful = createMeetupViewModel.createMeetup(bundle);
-            if (isSuccessful) {
-                navigator.getNavController().navigate(R.id.navigateToMeetupInviteSuccess);
-            } else {
-                Snackbar.make(binding.getRoot(), R.string.meetup_create_error, Snackbar.LENGTH_LONG).show();
-            }
+            inviteMoreFriendsViewModel.sendMeetupRequests();
         });
         binding.etUserSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -85,8 +86,8 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     }
 
     public void initViewModel() {
-        createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
-        createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+        inviteMoreFriendsViewModel = new ViewModelProvider(this, new InviteMoreFriendsFactory(meetupId)).get(InviteMoreFriendsViewModel.class);
+        inviteMoreFriendsViewModel.getUsers(userIdsAlreadyInMeetup).observe(getViewLifecycleOwner(), users -> {
             binding.loadingCircle.setVisibility(View.GONE);
 
             if (users.isEmpty()) {
@@ -100,7 +101,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
             binding.noFriendsWrapper.setVisibility(View.GONE);
         });
 
-        createMeetupViewModel.getSelectedUsers().observe(getViewLifecycleOwner(), selectedUsers -> {
+        inviteMoreFriendsViewModel.getSelectedUsers().observe(getViewLifecycleOwner(), selectedUsers -> {
             if (selectedUsers == null) {
                 return;
             }
@@ -117,7 +118,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     private void onClearInputClicked() {
         binding.etUserSearch.setText("");
-        createMeetupViewModel.searchUsers("");
+        inviteMoreFriendsViewModel.searchUsers("", userIdsAlreadyInMeetup);
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
@@ -128,7 +129,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
         }
-        createMeetupViewModel.searchUsers(query);
+        inviteMoreFriendsViewModel.searchUsers(query, userIdsAlreadyInMeetup);
     }
 
 
@@ -144,12 +145,12 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-        createMeetupViewModel.clearSelectedUsers();
+        inviteMoreFriendsViewModel.clearSelectedUsers();
     }
 
     @Override
     public void onCheckBoxClicked(String id) {
-        createMeetupViewModel.toggleSelectUser(id);
+        inviteMoreFriendsViewModel.toggleSelectUser(id);
     }
 
     @Override

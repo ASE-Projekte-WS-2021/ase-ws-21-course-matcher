@@ -111,28 +111,6 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
-        switch (request.getPhase()){
-            case MEETUP_UPCOMING:
-                holder.getTvMeetupTime().setText(request.getFormattedTime());
-                break;
-            case MEETUP_ACTIVE:
-                holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getFormattedTime()));
-                break;
-            case MEETUP_ENDED:
-                int color = context.getResources().getColor(R.color.outgreyed);
-                holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
-
-                holder.getTvMeetupTime().setTextColor(color);
-                holder.getTvLocation().setTextColor(color);
-                holder.getTvSender().setTextColor(color);
-                holder.getTvDescription().setTextColor(color);
-                holder.getBtnAccept().setImageResource(R.drawable.ic_button_accept_disabled);
-                holder.getBtnDecline().setImageResource(R.drawable.ic_button_decline_disabled);
-                holder.getBtnAccept().setOnClickListener(null);
-                holder.getBtnDecline().setOnClickListener(null);
-                break;
-        }
-
         int content = 0;
         switch (request.getType()) {
             case MEETUP_REQUEST:
@@ -154,6 +132,26 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         holder.getTvDescription().setText(content);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
         holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
+
+        switch (request.getPhase()){
+            case MEETUP_UPCOMING:
+                holder.getTvMeetupTime().setText(request.getFormattedTime());
+                break;
+            case MEETUP_ACTIVE:
+                holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getFormattedTime()));
+                break;
+            case MEETUP_ENDED:
+                int color = context.getResources().getColor(R.color.outgreyed);
+                holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
+
+                holder.getTvMeetupTime().setTextColor(color);
+                holder.getTvLocation().setTextColor(color);
+                holder.getTvSender().setTextColor(color);
+                holder.getTvDescription().setTextColor(color);
+                holder.getBtnAccept().setVisibility(View.GONE);
+                holder.getBtnDecline().setVisibility(View.GONE);
+                break;
+        }
     }
 
     @Override

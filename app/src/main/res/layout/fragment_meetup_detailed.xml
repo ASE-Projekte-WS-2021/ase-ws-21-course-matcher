@@ -13,7 +13,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="5">
+        android:layout_weight="4">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -121,9 +121,6 @@
                 android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
-
-
-
         </RelativeLayout>
 
     </LinearLayout>
@@ -132,7 +129,7 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="8">
+        android:layout_weight="9">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/meetup_detailed_tab_layout"
