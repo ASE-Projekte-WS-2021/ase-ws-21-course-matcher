@@ -85,7 +85,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/friendslist_tv_no_friends"
+                android:text="@string/friendslist_tv_no_friends_not_in_meetup"
                 android:textAlignment="center"
                 android:textSize="@dimen/text_size_medium" />
         </LinearLayout>

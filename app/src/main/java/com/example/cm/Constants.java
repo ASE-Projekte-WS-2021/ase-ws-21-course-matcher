@@ -34,4 +34,8 @@ public class Constants {
     public static final String PREFS_SETTINGS_KEY = "settings";
     public static final String PREFS_SHARE_LOCATION_KEY = "shareLocation";
 
+    //Tabbar
+    public static final float PENDING_HEADER_WEIGHT = 0.7f;
+    public static final float ADD_HEADER_WEIGHT = 0.5f;
+
 }

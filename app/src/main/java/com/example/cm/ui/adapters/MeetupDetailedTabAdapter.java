@@ -1,13 +1,10 @@
 package com.example.cm.ui.adapters;
 
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.cm.data.models.Meetup;
-import com.example.cm.ui.invite_friends.InviteFriendsFragment;
 import com.example.cm.ui.invite_friends.InviteMoreFriendsFragment;
 import com.example.cm.ui.meetup.MeetupDetailed.MeetupDetailedFriendsListFragment;
 
@@ -17,7 +14,7 @@ import java.util.List;
 public class MeetupDetailedTabAdapter extends FragmentStateAdapter {
 
     public static final int TAB_COUNT = 4;
-    private List<String> usersAlreadyInMeetup = new ArrayList<>();
+    private final List<String> usersAlreadyInMeetup = new ArrayList<>();
     private final Meetup meetup;
 
     public MeetupDetailedTabAdapter(Fragment fragment, Meetup meetup) {

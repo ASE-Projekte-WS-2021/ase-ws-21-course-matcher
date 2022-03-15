@@ -19,11 +19,7 @@ import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentInviteMoreFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
-import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
-import com.example.cm.ui.meetup.MeetupDetailed.MeetupDetailedFactory;
-import com.example.cm.ui.meetup.MeetupDetailed.MeetupDetailedViewModel;
 import com.example.cm.utils.Navigator;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.Objects;

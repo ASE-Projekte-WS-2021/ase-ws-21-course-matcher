@@ -3,22 +3,15 @@ package com.example.cm.ui.meetup.MeetupDetailed;
 import static com.example.cm.utils.Utils.convertToAddress;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -29,15 +22,12 @@ import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.example.cm.utils.DeleteDialog;
-import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener {
@@ -78,21 +68,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
             viewPager = binding.meetupDetailedTabPager;
             viewPager.setAdapter(tabAdapter);
 
-            TabLayout tabLayout = binding.meetupDetailedTabLayout;
-
-            tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-                if (position == 0) {
-                    tab.setText(R.string.meetup_tabs_label_accepted);
-                } else if (position == 1) {
-                    tab.setText(R.string.meetup_tabs_label_declined);
-                } else if (position == 2) {
-                    tab.setText(R.string.meetup_tabs_label_open);
-                } else if (position == 3) {
-                    tab.setText(R.string.meetup_tabs_label_add);
-                }
-            });
-
-            tabLayoutMediator.attach();
+            initTabbar();
 
             String address = convertToAddress(requireActivity(), meetup.getLocation());
             binding.meetupDetailedLocation.setText(address);
@@ -112,6 +88,35 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
             initMenu(meetup);
         });
 
+    }
+
+    private void initTabbar() {
+        TabLayout tabLayout = binding.meetupDetailedTabLayout;
+
+        tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            if (position == 0) {
+                tab.setText(R.string.meetup_tabs_label_accepted);
+            } else if (position == 1) {
+                tab.setText(R.string.meetup_tabs_label_declined);
+            } else if (position == 2) {
+                tab.setText(R.string.meetup_tabs_label_open);
+            } else if (position == 3) {
+                tab.setText(R.string.meetup_tabs_label_add);
+            }
+        });
+        tabLayoutMediator.attach();
+
+        ViewGroup slidingTabStrip = (ViewGroup)tabLayout.getChildAt(0);
+
+        View tab2 = slidingTabStrip.getChildAt(2);
+        LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) tab2.getLayoutParams();
+        layoutParams2.weight = Constants.PENDING_HEADER_WEIGHT;
+        tab2.setLayoutParams(layoutParams2);
+
+        View tab3 = slidingTabStrip.getChildAt(3);
+        LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) tab3.getLayoutParams();
+        layoutParams3.weight = Constants.ADD_HEADER_WEIGHT;
+        tab3.setLayoutParams(layoutParams3);
     }
 
     private void initMenu(Meetup meetup) {
@@ -208,12 +213,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
 
     private void onLate() {
         meetupDetailedViewModel.onLate();
-    }
-
-    private void onAddMore() {
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.KEY_MEETUP_ID, meetupId);
-        navigator.getNavController().navigate(R.id.action_global_navigate_to_invite_friends, bundle);
     }
 
     private void onDelete() {

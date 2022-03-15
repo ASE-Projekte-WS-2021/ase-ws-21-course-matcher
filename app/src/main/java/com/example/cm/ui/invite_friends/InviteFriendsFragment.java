@@ -32,13 +32,11 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentInviteFriendsBinding binding;
     private InviteFriendsAdapter inviteFriendsListAdapter;
-    private Bundle bundle;
     private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-        bundle = this.getArguments();
         View root = binding.getRoot();
         initUI();
         initViewModel();
@@ -61,7 +59,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
         binding.btnSendInvite.setOnClickListener(v -> {
-            boolean isSuccessful = createMeetupViewModel.createMeetup(bundle);
+            boolean isSuccessful = createMeetupViewModel.createMeetup();
             if (isSuccessful) {
                 navigator.getNavController().navigate(R.id.navigateToMeetupInviteSuccess);
             } else {
