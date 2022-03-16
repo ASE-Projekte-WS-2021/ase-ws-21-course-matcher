@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,7 +23,6 @@ import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
-import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ItemMeetupBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -58,7 +56,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return;
         }
 
-        if (meetup.getRequestingUser().equals(new AuthRepository().getCurrentUser().getUid())){
+        if (meetup.getRequestingUser().equals(new AuthRepository().getCurrentUser().getUid())) {
             holder.getOwnMeetupMarker().setVisibility(View.VISIBLE);
         }
 
@@ -104,7 +102,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
                 if (imageUrl != null && !imageUrl.isEmpty()) {
                     imageRounded.setImageTintMode(null);
                     Picasso.get().load(imageUrl).fit().centerCrop().into(imageRounded);
-                }else{
+                } else {
                     imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
                 }
 
@@ -120,7 +118,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     @RequiresApi(api = Build.VERSION_CODES.N)
     private String getImageUrl(String id) {
         MutableLiveData<User> user = users.stream().filter(userData -> Objects.requireNonNull(userData.getValue()).getId().equals(id)).findAny().orElse(null);
-        if(user != null && user.getValue() != null){
+        if (user != null && user.getValue() != null) {
             return user.getValue().getProfileImageUrl();
         } else {
             return null;
@@ -174,7 +172,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return binding.meetupCard;
         }
 
-        public FrameLayout getOwnMeetupMarker (){
+        public FrameLayout getOwnMeetupMarker() {
             return binding.ownMeetupMarker;
         }
     }

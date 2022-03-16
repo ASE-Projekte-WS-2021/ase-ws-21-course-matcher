@@ -18,8 +18,6 @@ import com.example.cm.ui.adapters.MeetupListAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class MeetupListFragment extends Fragment {
 
@@ -64,21 +62,21 @@ public class MeetupListFragment extends Fragment {
     private List<String> getUserIds(List<MutableLiveData<Meetup>> meetups) {
         List<String> ids = new ArrayList<>();
         for (MutableLiveData<Meetup> meetupLiveData : meetups) {
-            if(meetupLiveData.getValue() != null){
+            if (meetupLiveData.getValue() != null) {
                 Meetup meetup = meetupLiveData.getValue();
                 List<String> confirmedFriends = meetup.getConfirmedFriends();
                 List<String> declinedFriends = meetup.getDeclinedFriends();
                 List<String> invitedFriends = meetup.getInvitedFriends();
 
-                if (confirmedFriends != null){
+                if (confirmedFriends != null) {
                     ids.addAll(confirmedFriends);
                 }
 
-                if (declinedFriends != null){
+                if (declinedFriends != null) {
                     ids.addAll(declinedFriends);
                 }
 
-                if (invitedFriends != null){
+                if (invitedFriends != null) {
                     ids.addAll(invitedFriends);
                 }
             }
