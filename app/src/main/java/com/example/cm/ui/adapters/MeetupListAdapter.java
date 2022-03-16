@@ -6,8 +6,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +23,8 @@ import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.AuthRepository;
+import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ItemMeetupBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -53,6 +58,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return;
         }
 
+        if (meetup.getRequestingUser().equals(new AuthRepository().getCurrentUser().getUid())){
+            holder.getOwnMeetupMarker().setVisibility(View.VISIBLE);
+        }
+
         MaterialCardView meetupCard = holder.getMeetupCard();
 
         meetupCard.setOnClickListener(view -> {
@@ -80,8 +89,6 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         LinearLayout imagesLayout = holder.getImagesLayout();
         imagesLayout.setPadding(-3, 0, 0, 0);
 
-        String imageUrl = "https://firebasestorage.googleapis.com/v0/b/uni-course-matcher.appspot.com/o/profile_images%2F6zYOMBciqQUMl5lznNzailFmkPF3.jpg?alt=media&token=ce5e2666-fdd5-414e-88b6-7726a2d8510a";
-
         addUserImage(confirmedFriends, imagesLayout, R.color.green);
         addUserImage(invitedFriends, imagesLayout, R.color.orange);
         addUserImage(declinedFriends, imagesLayout, R.color.red);
@@ -103,7 +110,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
                 imageRounded.setLayoutParams(new ViewGroup.LayoutParams(80, 80));
                 imageRounded.setStrokeColorResource(color);
-                imageRounded.setStrokeWidth(4);
+                imageRounded.setStrokeWidth(6);
                 imageRounded.setPadding(5, 5, 5, 5);
                 layout.addView(imageRounded);
             }
@@ -164,7 +171,11 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         }
 
         public MaterialCardView getMeetupCard() {
-            return binding.card;
+            return binding.meetupCard;
+        }
+
+        public FrameLayout getOwnMeetupMarker (){
+            return binding.ownMeetupMarker;
         }
     }
 }
