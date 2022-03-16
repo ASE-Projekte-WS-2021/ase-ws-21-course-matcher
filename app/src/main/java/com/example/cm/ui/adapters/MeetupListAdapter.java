@@ -2,6 +2,7 @@ package com.example.cm.ui.adapters;
 
 import static com.example.cm.utils.Utils.convertToAddress;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,18 +19,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemMeetupBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
     List<MutableLiveData<Meetup>> meetups;
+    List<MutableLiveData<User>> users;
 
-    public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups) {
+    public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups, List<MutableLiveData<User>> users) {
         this.meetups = meetups;
+        this.users = users;
     }
 
     @NonNull
@@ -38,6 +44,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         return new MeetupListViewHolder(binding);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
         Meetup meetup = meetups.get(position).getValue();
@@ -73,23 +80,43 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         LinearLayout imagesLayout = holder.getImagesLayout();
         imagesLayout.setPadding(-3, 0, 0, 0);
 
+        String imageUrl = "https://firebasestorage.googleapis.com/v0/b/uni-course-matcher.appspot.com/o/profile_images%2F6zYOMBciqQUMl5lznNzailFmkPF3.jpg?alt=media&token=ce5e2666-fdd5-414e-88b6-7726a2d8510a";
+
         addUserImage(confirmedFriends, imagesLayout, R.color.green);
         addUserImage(invitedFriends, imagesLayout, R.color.orange);
         addUserImage(declinedFriends, imagesLayout, R.color.red);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void addUserImage(List<String> friendIds, LinearLayout layout, int color) {
         if (friendIds != null) {
             for (String id : friendIds) {
-                //toDo: add profile image instead of "R.drawable.ic_baseline_person_24"
                 ShapeableImageView imageRounded = new ShapeableImageView(new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
-                imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
+
+                String imageUrl = getImageUrl(id);
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    imageRounded.setImageTintMode(null);
+                    Picasso.get().load(imageUrl).fit().centerCrop().into(imageRounded);
+                }else{
+                    imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
+                }
+
                 imageRounded.setLayoutParams(new ViewGroup.LayoutParams(80, 80));
                 imageRounded.setStrokeColorResource(color);
                 imageRounded.setStrokeWidth(4);
                 imageRounded.setPadding(5, 5, 5, 5);
                 layout.addView(imageRounded);
             }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String getImageUrl(String id) {
+        MutableLiveData<User> user = users.stream().filter(userData -> Objects.requireNonNull(userData.getValue()).getId().equals(id)).findAny().orElse(null);
+        if(user != null && user.getValue() != null){
+            return user.getValue().getProfileImageUrl();
+        } else {
+            return null;
         }
     }
 
