@@ -13,15 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
+import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 import java.util.Objects;
 
-public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder>{
+public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder> {
 
     private ViewGroup parent;
     private List<MutableLiveData<FriendRequest>> mRequests;
@@ -82,7 +82,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         snackbar.show();
     }
 
-    private void onUndoDelete(FriendRequest request, int position, Request.RequestState previousState){
+    private void onUndoDelete(FriendRequest request, int position, Request.RequestState previousState) {
         listener.onUndo(request, position, previousState);
         mRequests.add(position, new MutableLiveData<>(request));
         notifyItemInserted(position);
@@ -100,6 +100,45 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
         FriendRequest request = mRequests.get(position).getValue();
 
+        String currentUserId = new AuthRepository().getCurrentUser().getUid();
+
+        if (request != null) {
+            if (request.getReceiverId().equals(currentUserId)) {
+                setReceivedRequests(holder, request);
+            }
+            if (request.getSenderId().equals(currentUserId)) {
+                setSentRequests(holder, request);
+            }
+        }
+
+
+    }
+
+    private void setSentRequests(FriendRequestViewHolder holder, FriendRequest request) {
+        String date = request.getCreationTimeAgo();
+
+        String requestDescription = "";
+
+        Request.RequestState requestState = request.getState();
+
+        if (requestState == Request.RequestState.REQUEST_PENDING) {
+            requestDescription = "Du wartest auf eine Antwort.";
+        } else if (requestState == Request.RequestState.REQUEST_ACCEPTED) {
+            requestDescription = "Deine Freundschaftsanfrage wurde bestätigt.";
+        } else if (requestState == Request.RequestState.REQUEST_ANSWERED) {
+            requestDescription = "Deine Freundschaftsanfrage wurde beantwortet.";
+        } else if (requestState == Request.RequestState.REQUEST_DECLINED) {
+            requestDescription = "Deine Freundschaftsanfrage wurde abgelehnt.";
+        }
+
+        holder.getTvSender().setText(request.getReceiverId());
+        holder.getTvDescription().setText(requestDescription);
+        holder.getTvSentDate().setText(date);
+        holder.getBtnAccept().setVisibility(View.GONE);
+        holder.getBtnDecline().setVisibility(View.GONE);
+    }
+
+    private void setReceivedRequests(FriendRequestViewHolder holder, FriendRequest request) {
         String user = Objects.requireNonNull(request).getSenderName();
         String date = request.getCreationTimeAgo();
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
@@ -117,7 +156,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     @Override
     public int getItemCount() {
-        if(mRequests == null){
+        if (mRequests == null) {
             return 0;
         }
         return mRequests.size();
@@ -125,9 +164,13 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     public interface OnFriendRequestListener {
         void onItemClicked(String id);
+
         void onItemDeleted(FriendRequest request);
+
         void onAccept(FriendRequest request);
+
         void onDecline(FriendRequest request);
+
         void onUndo(FriendRequest request, int position, Request.RequestState previousState);
     }
 
@@ -173,12 +216,12 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             notifyItemChanged(getAdapterPosition());
         }
 
-        private void onUndo(FriendRequest request, int position, Request.RequestState previousState){
+        private void onUndo(FriendRequest request, int position, Request.RequestState previousState) {
             listener.onUndo(request, position, previousState);
             notifyItemInserted(position);
         }
 
-        private void onDecline(){
+        private void onDecline() {
             int position = getAdapterPosition();
             FriendRequest request = mRequests.get(position).getValue();
             Request.RequestState previousState = Objects.requireNonNull(request).getState();
@@ -193,7 +236,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
          * Getters for the views in the list item
          */
 
-        public ImageView getIvProfilePicture(){
+        public ImageView getIvProfilePicture() {
             return binding.senderProfileImageView;
         }
 
@@ -213,11 +256,11 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             return binding.sentDateTextView;
         }
 
-        public ImageView getBtnAccept(){
+        public ImageView getBtnAccept() {
             return binding.acceptButton;
         }
 
-        public ImageView getBtnDecline(){
+        public ImageView getBtnDecline() {
             return binding.declineButton;
         }
     }

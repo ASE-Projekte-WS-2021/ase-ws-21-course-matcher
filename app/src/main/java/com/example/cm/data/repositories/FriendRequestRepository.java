@@ -1,5 +1,8 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
+import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -16,9 +19,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
-import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 public class FriendRequestRepository extends Repository {
 
@@ -84,6 +84,50 @@ public class FriendRequestRepository extends Repository {
     }
 
     /**
+     * Get all friend requests for currently signed in user
+     */
+    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getReceivedAndSentRequestsForUser() {
+        if (auth.getCurrentUser() == null) {
+            return mutableRequestList;
+        }
+
+        String userId = auth.getCurrentUser().getUid();
+        friendRequestCollection.whereEqualTo("receiverId", userId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .addSnapshotListener(executorService, ((value, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+                    if (value != null && !value.isEmpty()) {
+                        List<MutableLiveData<FriendRequest>> requests = new ArrayList<>();
+                        for (DocumentSnapshot snapshot : value.getDocuments()) {
+                            Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
+                            if (currentState != REQUEST_DECLINED) {
+                                requests.add(new MutableLiveData<>(snapshotToFriendRequest(snapshot)));
+                            }
+                        }
+                        addSentRequests(requests, userId);
+                    }
+                }));
+        return mutableRequestList;
+    }
+
+    private void addSentRequests(List<MutableLiveData<FriendRequest>> requests, String userId) {
+        friendRequestCollection.whereEqualTo("senderId", userId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .addSnapshotListener(executorService, (val, err) -> {
+                    if (err == null) {
+                        if (val != null && !val.isEmpty()) {
+                            for (DocumentSnapshot snapshot : val.getDocuments()) {
+                                requests.add(new MutableLiveData<>(snapshotToFriendRequest(snapshot)));
+                            }
+                        }
+                    }
+                    mutableRequestList.postValue(requests);
+                });
+    }
+
+    /**
      * Get all sent requests for sender
      *
      * @param senderId Id of the sender
@@ -95,7 +139,7 @@ public class FriendRequestRepository extends Repository {
                     if (error != null) {
                         return;
                     }
-                    if(value != null && value.isEmpty()) {
+                    if (value != null && value.isEmpty()) {
                         mutableRequestList.postValue(new ArrayList<>());
                     }
                     if (value != null && !value.isEmpty()) {
@@ -206,6 +250,7 @@ public class FriendRequestRepository extends Repository {
 
         return request;
     }
+
     /**
      * Add a new Friend Request to collection
      *
