@@ -12,16 +12,16 @@
         android:id="@+id/onboarding_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
+        android:layout_margin="@dimen/padding_double"
         android:adjustViewBounds="true"
-        android:src="@drawable/ic_conversation" />
+        android:src="@drawable/map_ob" />
 
     <TextView
         android:id="@+id/onboarding_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="@dimen/padding_big"
         android:textColor="@color/black"
         android:textSize="@dimen/text_size_big"
         android:text="@string/start_title"
