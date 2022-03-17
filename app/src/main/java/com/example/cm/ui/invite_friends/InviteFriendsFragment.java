@@ -17,8 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.Status;
+import com.example.cm.data.models.StatusFlag;
+import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
+import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupFactory;
 import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
@@ -33,10 +37,12 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     private FragmentInviteFriendsBinding binding;
     private InviteFriendsAdapter inviteFriendsListAdapter;
     private Navigator navigator;
+    private Bundle bundle;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
+        bundle = getArguments();
         View root = binding.getRoot();
         initUI();
         initViewModel();
@@ -59,12 +65,8 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
         binding.btnSendInvite.setOnClickListener(v -> {
-            boolean isSuccessful = createMeetupViewModel.createMeetup();
-            if (isSuccessful) {
-                navigator.getNavController().navigate(R.id.navigateToMeetupInviteSuccess);
-            } else {
-                Snackbar.make(binding.getRoot(), R.string.meetup_create_error, Snackbar.LENGTH_LONG).show();
-            }
+            createMeetupViewModel.createMeetup();
+            navigator.getNavController().navigate(R.id.navigateToMeetupInviteSuccess);
         });
         binding.etUserSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -83,7 +85,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     }
 
     public void initViewModel() {
-        createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
+        createMeetupViewModel = (CreateMeetupViewModel) bundle.getSerializable(Constants.KEY_CREATE_MEETUP_VM);
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             binding.loadingCircle.setVisibility(View.GONE);
 

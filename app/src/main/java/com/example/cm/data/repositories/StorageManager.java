@@ -29,12 +29,20 @@ public class StorageManager extends Repository {
      * @param userId   Id of current user
      * @param callback Callback to handle success or failure
      */
-    public void uploadProfileImage(Uri uri, String userId, Callback callback) {
+    public void uploadImage(Uri uri, String userId, Callback callback, Constants.ImageType type) {
+        String title, folder;
+        if (type == Constants.ImageType.PROFILE_IMAGE) {
+            title = Constants.FIREBASE_STORAGE_TITLE_PROFILE_IMAGES;
+            folder = Constants.FIREBASE_STORAGE_FOLDER_PROFILE_IMAGES;
+        } else {
+            title = Constants.FIREBASE_STORAGE_TITLE_MEETUP_IMAGES;
+            folder = Constants.FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES;
+        }
         Bitmap originalImage = uriToBitmap(uri);
         Bitmap resizedImage = resizeBitmap(originalImage, Constants.PROFILE_IMAGE_MAX_WIDTH);
-        Uri resizedImageUri = bitmapToUri(resizedImage);
+        Uri resizedImageUri = bitmapToUri(resizedImage, title);
 
-        StorageReference profileImageRef = storageReference.child(Constants.FIREBASE_STORAGE_FOLDER + userId + Constants.PROFILE_IMAGE_EXTENSION);
+        StorageReference profileImageRef = storageReference.child(folder + userId + Constants.PROFILE_IMAGE_EXTENSION);
         profileImageRef.putFile(resizedImageUri)
                 .addOnSuccessListener(task -> {
                     profileImageRef.getDownloadUrl().addOnSuccessListener(urlToImage -> {
@@ -72,10 +80,10 @@ public class StorageManager extends Repository {
      * @param bitmap Bitmap to convert
      * @return Uri of the bitmap
      */
-    private Uri bitmapToUri(Bitmap bitmap) {
+    private Uri bitmapToUri(Bitmap bitmap, String title) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Profile Image", null);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, title, null);
         return Uri.parse(path);
     }
 

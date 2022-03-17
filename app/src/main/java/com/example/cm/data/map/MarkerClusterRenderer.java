@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,7 @@ public class MarkerClusterRenderer<T extends MarkerClusterItem> extends DefaultC
         canvas.setBitmap(bitmap);
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         drawable.draw(canvas);
+        Log.e("DRAW", "drawn");
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 

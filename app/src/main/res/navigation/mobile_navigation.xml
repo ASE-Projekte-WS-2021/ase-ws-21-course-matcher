@@ -17,6 +17,10 @@
         android:id="@+id/action_global_navigate_to_invite_friends"
         app:destination="@+id/navigation_invite_friends" />
 
+    <action
+        android:id="@+id/action_global_navigate_to_other_profile"
+        app:destination="@+id/navigation_other_profile" />
+
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.cm.ui.home.HomeFragment"
@@ -86,6 +90,16 @@
             app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_navigation_invite_friends_to_navigation_other_profile"
+            app:destination="@id/navigation_other_profile" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_invite_more_friends"
+        android:name="com.example.cm.ui.invite_friends.InviteMoreFriendsFragment"
+        android:label="@string/invite_more_friends"
+        tools:layout="@layout/fragment_invite_more_friends">
+        <action
+            android:id="@+id/action_navigation_invite_more_friends_to_navigation_other_profile"
             app:destination="@id/navigation_other_profile" />
     </fragment>
 

@@ -231,4 +231,5 @@
     <string name="title_meetup_location">Meetup Treffpunkt</string>
     <string name="meetup_tabs_label_add">+</string>
     <string name="friendslist_tv_no_friends_not_in_meetup">Alle deine Freunde wurden bereits eingeladen.</string>
+    <string name="invite_more_friends">invite more friends</string>
 </resources>

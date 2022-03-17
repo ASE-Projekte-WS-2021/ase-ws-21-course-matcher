@@ -22,6 +22,7 @@ public class Meetup {
     private LatLng location;
     private Date timestamp;
     private boolean isPrivate;
+    private String locationImageUrl;
     private List<String> invitedFriends;
     private List<String> confirmedFriends;
     private List<String> declinedFriends;
@@ -34,7 +35,7 @@ public class Meetup {
     public Meetup() {
     }
 
-    public Meetup(String id, String requestingUser, LatLng location, Date timestamp, boolean isPrivate, List<String> invitedFriends) {
+    public Meetup(String id, String requestingUser, LatLng location, Date timestamp, boolean isPrivate, List<String> invitedFriends, String locationImageUrl) {
         this.id = id;
         this.requestingUser = requestingUser;
         this.location = location;
@@ -42,6 +43,7 @@ public class Meetup {
         calendarMeetup.setTime(timestamp);
         this.isPrivate = isPrivate;
         this.invitedFriends = invitedFriends;
+        this.locationImageUrl = locationImageUrl;
         confirmedFriends = Collections.singletonList(requestingUser);
         phase = getPhase();
     }
@@ -122,6 +124,14 @@ public class Meetup {
 
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
+    }
+
+    public String getLocationImageUrl() {
+        return locationImageUrl;
+    }
+
+    public void setLocationImageUrl(String locationImageUrl) {
+        this.locationImageUrl = locationImageUrl;
     }
 
     public List<String> getInvitedFriends() {

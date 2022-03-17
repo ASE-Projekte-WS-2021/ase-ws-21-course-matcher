@@ -153,6 +153,6 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_USER_ID, id);
-        navigator.getNavController().navigate(R.id.action_navigation_invite_friends_to_navigation_other_profile, bundle);
+        navigator.getNavController().navigate(R.id.action_global_navigate_to_other_profile, bundle);
     }
 }

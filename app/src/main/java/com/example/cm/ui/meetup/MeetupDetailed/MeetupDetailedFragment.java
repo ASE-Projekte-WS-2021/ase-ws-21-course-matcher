@@ -23,14 +23,20 @@ import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.example.cm.utils.DeleteDialog;
 import com.example.cm.utils.Navigator;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener {
+public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener, OnMapReadyCallback {
 
     private MeetupDetailedTabAdapter tabAdapter;
     private ViewPager2 viewPager;
@@ -40,6 +46,8 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     private Navigator navigator;
     private PopupMenu popup;
     private DeleteDialog deleteDialog;
+
+    private GoogleMap map;
 
     private String meetupId;
 
@@ -56,6 +64,11 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         binding = FragmentMeetupDetailedBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
         initUIAndViewModel();
+
+        /*binding.mapView.onCreate(savedInstanceState);
+        binding.mapView.getMapAsync(this);
+        binding.mapView.onResume();*/
+
         initListeners();
         return binding.getRoot();
     }
@@ -84,10 +97,18 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
                     binding.meetupDetailedTime.setText(R.string.meetup_ended_text);
                     break;
             }
-
             initMenu(meetup);
+            initImg(meetup);
         });
+    }
 
+    private void initImg(Meetup meetup) {
+        if (meetup.getLocationImageUrl() != null && !meetup.getLocationImageUrl().isEmpty()) {
+            binding.ivLocation.setImageTintMode(null);
+            binding.ivLocation.setScaleX(1f);
+            binding.ivLocation.setScaleY(1f);
+            Picasso.get().load(meetup.getLocationImageUrl()).fit().centerCrop().into(binding.ivLocation);
+        }
     }
 
     private void initTabbar() {
@@ -233,5 +254,25 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         meetupDetailedViewModel.onDelete();
         navigator.getNavController().navigate(R.id.action_global_navigate_to_meetups);
         deleteDialog.dismiss();
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        map = googleMap;
+        setMarker(meetupDetailedViewModel.getMeetupLocation(), 15);
+        map.setOnMapClickListener(latLng -> {
+            onMap();
+        });
+    }
+
+    private void setMarker(LatLng latLng, float zoomLevel) {
+        map.clear();
+
+        Marker meetupMarker = map.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.create_meetup_marker_title)));
+        if (meetupMarker == null) {
+            return;
+        }
+        meetupMarker.setDraggable(false);
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
     }
 }

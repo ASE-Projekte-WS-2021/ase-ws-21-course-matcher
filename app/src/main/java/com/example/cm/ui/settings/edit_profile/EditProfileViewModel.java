@@ -7,6 +7,7 @@ import android.net.Uri;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
@@ -40,7 +41,7 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
             status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
             return;
         }
-        storageRepository.uploadProfileImage(uri, user.getValue().getId(), this);
+        storageRepository.uploadImage(uri, user.getValue().getId(), this, Constants.ImageType.PROFILE_IMAGE);
     }
 
     public void updateField(String field, String value) {

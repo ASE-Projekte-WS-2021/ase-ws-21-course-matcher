@@ -4,36 +4,60 @@ import static com.example.cm.utils.Utils.convertToAddress;
 
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.databinding.FragmentMeetupBinding;
+import com.example.cm.ui.settings.edit_profile.EditProfileViewModel;
+import com.example.cm.ui.settings.edit_profile.EditProfileViewModelFactory;
 import com.example.cm.utils.Navigator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 
 
-public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback {
+public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback, StorageManager.Callback {
 
     private final Calendar calendarMeetup = Calendar.getInstance();
     private final Calendar calendarNow = Calendar.getInstance();
@@ -43,6 +67,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     private FragmentMeetupBinding binding;
     private Navigator navigator;
     private GoogleMap map;
+    private LatLng latLng;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle bundle = this.getArguments();
@@ -120,23 +145,9 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         timePickerDialog.show();
     }
 
-
-    private void onMeetupInfoBtnClicked() {
-        //TODO den boolean wieder benutzen wenn gefiltert werden kann
-        //Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
-
-        Boolean isPrivate = true;
-
-        createMeetupViewModel.setIsPrivate(isPrivate);
-        createMeetupViewModel.setMeetupTimestamp(calendarMeetup.getTime());
-
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
-    }
-
-
     @SuppressLint("SimpleDateFormat")
     private void initViewModel() {
-        createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
+        createMeetupViewModel = new ViewModelProvider(this, new CreateMeetupFactory(requireContext())).get(CreateMeetupViewModel.class);
         createMeetupViewModel.getMeetupIsPrivate().observe(getViewLifecycleOwner(), isPrivate -> binding.meetupPrivateCheckBox.setChecked(isPrivate));
         createMeetupViewModel.getMeetupTimestamp().observe(getViewLifecycleOwner(), timestamp -> new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(calendarMeetup.getTime()));
         createMeetupViewModel.getMeetupLatLng().observe(getViewLifecycleOwner(), latLng -> {
@@ -173,10 +184,17 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         }
     }
 
+    private void onMeetupInfoBtnClicked() {
+        binding.meetupInfoBtn.setText("Lädt...");
+        binding.meetupInfoBtn.setEnabled(true);
+
+        map.snapshot(bitmap -> createMeetupViewModel.setMeetupImg(bitmap, this));
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
+        //createMeetupViewModel = new ViewModelProvider(this, new CreateMeetupFactory(requireContext())).get(CreateMeetupViewModel.class);
     }
 
     @Override
@@ -232,5 +250,26 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         } else {
             createMeetupViewModel.setMeetupLocation(getString(R.string.meetup_location_not_found));
         }
+    }
+
+    @Override
+    public void onSuccess(String url) {
+        //TODO den boolean wieder benutzen wenn gefiltert werden kann
+        //Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
+
+        Boolean isPrivate = true;
+
+        createMeetupViewModel.setIsPrivate(isPrivate);
+        createMeetupViewModel.setMeetupTimestamp(calendarMeetup.getTime());
+        createMeetupViewModel.setUrl(url);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.KEY_CREATE_MEETUP_VM, createMeetupViewModel);
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends, bundle);
+    }
+
+    @Override
+    public void onError(Exception e) {
+        Snackbar.make(binding.getRoot(), R.string.meetup_create_error, Snackbar.LENGTH_LONG).show();
     }
 }

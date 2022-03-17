@@ -7,10 +7,14 @@ public class Constants {
     public static final String KEY_MEETUP_ID = "keyMeetupId";
     public static final String KEY_MEETUP_LOCATION_LAT = "keyMeetupLocationLat";
     public static final String KEY_MEETUP_LOCATION_LNG = "keyMeetupLocationLng";
+    public static final String KEY_CREATE_MEETUP_VM = "keyCreateMeetupViewModel";
     public static final int MAX_CHAR_COUNT = 125;
     public static final int SPLASH_TIMER = 000;
 
-    public static final String FIREBASE_STORAGE_FOLDER = "profile_images/";
+    public static final String FIREBASE_STORAGE_FOLDER_PROFILE_IMAGES = "profile_images/";
+    public static final String FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES = "meetup_images/";
+    public static final String FIREBASE_STORAGE_TITLE_PROFILE_IMAGES = "Profile Image";
+    public static final String FIREBASE_STORAGE_TITLE_MEETUP_IMAGES = "Meetup Image";
     public static final String PROFILE_IMAGE_EXTENSION = ".jpg";
     public static final int PROFILE_IMAGE_MAX_WIDTH = 800;
     public static final String KEY_IS_OWN_USER = "keyIsOwnUser";
@@ -38,4 +42,9 @@ public class Constants {
     public static final float PENDING_HEADER_WEIGHT = 0.7f;
     public static final float ADD_HEADER_WEIGHT = 0.5f;
 
+
+    public enum ImageType {
+        PROFILE_IMAGE,
+        MEETUP_IMAGE
+    }
 }

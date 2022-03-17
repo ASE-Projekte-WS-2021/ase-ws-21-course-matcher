@@ -59,6 +59,7 @@ public class MeetupRequestsViewModel extends ViewModel {
                 request.getSenderId(),
                 request.getLocation(),
                 request.getMeetupAt(),
+                request.getImageUrl(),
                 MEETUP_INFO_ACCEPTED
         ));
     }
@@ -76,6 +77,7 @@ public class MeetupRequestsViewModel extends ViewModel {
                 request.getSenderId(),
                 request.getLocation(),
                 request.getMeetupAt(),
+                request.getImageUrl(),
                 MEETUP_INFO_DECLINED
         ));
 
