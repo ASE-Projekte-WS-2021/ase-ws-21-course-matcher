@@ -1,5 +1,7 @@
 package com.example.cm.ui.adapters;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.Request;
+import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -25,15 +29,17 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     private ViewGroup parent;
     private List<MutableLiveData<FriendRequest>> mRequests;
+    List<MutableLiveData<User>> users;
     private final OnFriendRequestListener listener;
 
     public FriendRequestListAdapter(OnFriendRequestListener listener) {
         this.listener = listener;
     }
 
-    public void setRequests(List<MutableLiveData<FriendRequest>> newRequests) {
+    public void setRequests(List<MutableLiveData<FriendRequest>> newRequests, List<MutableLiveData<User>> users) {
         if (mRequests == null) {
             mRequests = newRequests;
+            this.users = users;
             notifyItemRangeInserted(0, newRequests.size());
             return;
         }
@@ -96,6 +102,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         return new FriendRequestListAdapter.FriendRequestViewHolder(binding);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
         FriendRequest request = mRequests.get(position).getValue();
@@ -114,7 +121,11 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     }
 
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setSentRequests(FriendRequestViewHolder holder, FriendRequest request) {
+        String fullName = getFullName(request.getReceiverId());
+        String userName = getUserName(request.getReceiverId());
         String date = request.getCreationTimeAgo();
 
         String requestDescription = "";
@@ -131,23 +142,54 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             requestDescription = "Deine Freundschaftsanfrage wurde abgelehnt.";
         }
 
-        holder.getTvSender().setText(request.getReceiverId());
+        if (fullName != null){
+            holder.getTvSender().setText("An: " + fullName);
+        }
+
+        if( userName != null){
+            holder.getTvSenderUsername().setText(userName);
+        }
+
         holder.getTvDescription().setText(requestDescription);
         holder.getTvSentDate().setText(date);
         holder.getBtnAccept().setVisibility(View.GONE);
         holder.getBtnDecline().setVisibility(View.GONE);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String getFullName(String userId) {
+        MutableLiveData<User> user = users.stream().filter(userData -> Objects.requireNonNull(userData.getValue()).getId().equals(userId)).findAny().orElse(null);
+        if (user != null && user.getValue() != null) {
+            return user.getValue().getFirstName() + " " + user.getValue().getLastName();
+        } else {
+            return null;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String getUserName(String userId) {
+        MutableLiveData<User> user = users.stream().filter(userData -> Objects.requireNonNull(userData.getValue()).getId().equals(userId)).findAny().orElse(null);
+        if (user != null && user.getValue() != null) {
+            return user.getValue().getUsername();
+        } else {
+            return null;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private void setReceivedRequests(FriendRequestViewHolder holder, FriendRequest request) {
-        String user = Objects.requireNonNull(request).getSenderName();
+        String fullName = getFullName(request.getSenderId());
+        String userName = getUserName(request.getSenderId());
         String date = request.getCreationTimeAgo();
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
-        // todo: get username from user id, then setText to username
-        holder.getTvSenderUsername().setVisibility(View.GONE);
-        // todo end
+        if( userName != null){
+            holder.getTvSenderUsername().setText(userName);
+        }
 
-        holder.getTvSender().setText(user);
+        if( fullName != null){
+            holder.getTvSender().setText(fullName);
+        }
         holder.getTvSentDate().setText(date);
         holder.getTvDescription().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
