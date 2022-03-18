@@ -150,14 +150,36 @@ public class MeetupRepository {
         meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayUnion(participantId));
     }
 
+    public void addLeft(String meetupId, String participantId) {
+        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).addSnapshotListener(executorService, (value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null && value.exists()) {
+                Meetup meetup = snapshotToMeetup(value);
+                if (meetup.getInvitedFriends().isEmpty() && meetup.getConfirmedFriends().isEmpty()) {
+                    meetupCollection.document(meetupId).update("phase", MEETUP_ENDED);
+                }
+            }
+        });
+    }
+
     public void addPending(String meetupId, String participantId) {
         meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayUnion(participantId));
     }
 
-    public void addLate(String meetupId, String participantId) {
-        meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayUnion(participantId));
+    public void addLate(String meetupId, String participantId, boolean comesLate) {
+        if (comesLate) {
+            meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayUnion(participantId));
+        } else {
+            meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayRemove(participantId));
+        }
     }
 
     /**

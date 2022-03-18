@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -186,9 +187,11 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void onMeetupInfoBtnClicked() {
-        // todo: auslagern
-        binding.meetupInfoBtn.setText("Lädt...");
-        binding.meetupInfoBtn.setEnabled(true);
+        binding.meetupInfoBtn.setEnabled(false);
+        binding.meetupInfoBtn.setText(R.string.meetup_info_submit_btn_loading);
+        Drawable buttonDrawable = DrawableCompat.wrap(binding.meetupInfoBtn.getBackground());
+        DrawableCompat.setTint(buttonDrawable, getResources().getColor(R.color.outgreyed));
+        binding.meetupInfoBtn.setBackground(buttonDrawable);
 
         Utils.setMapViewSize(binding.mapView.getWidth(), binding.mapView.getHeight());
         map.snapshot(bitmap -> createMeetupViewModel.setMeetupImg(bitmap, this));
@@ -209,7 +212,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
-        setMarker(Constants.DEFAULT_LOCATION, 15);
+        setMarker(Constants.DEFAULT_LOCATION, Constants.DEFAULT_MAP_ZOOM);
 
         map.setOnMapClickListener(latLng -> {
             float zoomLevel = map.getCameraPosition().zoom;
@@ -257,6 +260,12 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
     @Override
     public void onSuccess(String url) {
+        setMeetupInfo(url);
+        deleteLocalImg();
+        navigateToInviteFriends();
+    }
+
+    private void setMeetupInfo(String url) {
         //TODO den boolean wieder benutzen wenn gefiltert werden kann
         //Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
 
@@ -265,7 +274,13 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         createMeetupViewModel.setIsPrivate(isPrivate);
         createMeetupViewModel.setMeetupTimestamp(calendarMeetup.getTime());
         createMeetupViewModel.setUrl(url);
+    }
 
+    private void deleteLocalImg() {
+        createMeetupViewModel.deleteLocalImg();
+    }
+
+    private void navigateToInviteFriends() {
         Bundle bundle = new Bundle();
         bundle.putSerializable(Constants.KEY_CREATE_MEETUP_VM, createMeetupViewModel);
         Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends, bundle);

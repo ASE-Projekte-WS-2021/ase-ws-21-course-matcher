@@ -31,22 +31,23 @@ public class StorageManager extends Repository {
      */
     public void uploadImage(Uri uri, String userId, Callback callback, Constants.ImageType type) {
         int quality;
-        String title, folder;
+        String title, folder, extension;
         Bitmap bitmap = uriToBitmap(uri);
         if (type == Constants.ImageType.PROFILE_IMAGE) {
-            quality = 80;
+            quality = Constants.QUALITY_PROFILE_IMG;
             title = Constants.FIREBASE_STORAGE_TITLE_PROFILE_IMAGES;
             folder = Constants.FIREBASE_STORAGE_FOLDER_PROFILE_IMAGES;
             bitmap = resizeBitmap(bitmap, Constants.PROFILE_IMAGE_MAX_WIDTH);
+            extension = Constants.IMAGE_EXTENSION_JPG;
         } else {
-            quality = 100;
+            quality = Constants.QUALITY_MEETUP_IMG;
             title = Constants.FIREBASE_STORAGE_TITLE_MEETUP_IMAGES;
             folder = Constants.FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES;
-
+            extension = Constants.IMAGE_EXTENSION_PNG;
         }
         Uri resizedImageUri = bitmapToUri(bitmap, title, quality);
 
-        StorageReference profileImageRef = storageReference.child(folder + userId + Constants.IMAGE_EXTENSION);
+        StorageReference profileImageRef = storageReference.child(folder + userId + extension);
         profileImageRef.putFile(resizedImageUri)
                 .addOnSuccessListener(task -> {
                     profileImageRef.getDownloadUrl().addOnSuccessListener(urlToImage -> {

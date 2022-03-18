@@ -1,5 +1,7 @@
 package com.example.cm;
 
+import android.os.Environment;
+
 import com.google.android.gms.maps.model.LatLng;
 
 public class Constants {
@@ -11,11 +13,15 @@ public class Constants {
     public static final int MAX_CHAR_COUNT = 125;
     public static final int SPLASH_TIMER = 000;
 
+    public static final String PATH_TO_MEETUP_IMG = Environment.getExternalStorageDirectory() + "/CourseMatcher/meetup_location.png";
     public static final String FIREBASE_STORAGE_FOLDER_PROFILE_IMAGES = "profile_images/";
     public static final String FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES = "meetup_images/";
     public static final String FIREBASE_STORAGE_TITLE_PROFILE_IMAGES = "Profile Image";
     public static final String FIREBASE_STORAGE_TITLE_MEETUP_IMAGES = "Meetup Image";
-    public static final String IMAGE_EXTENSION = ".jpg";
+    public static final String IMAGE_EXTENSION_JPG = ".jpg";
+    public static final String IMAGE_EXTENSION_PNG = ".png";
+    public static final int QUALITY_PROFILE_IMG = 80;
+    public static final int QUALITY_MEETUP_IMG = 100;
     public static final int PROFILE_IMAGE_MAX_WIDTH = 800;
     public static final String KEY_IS_OWN_USER = "keyIsOwnUser";
     public static final int MIN_PASSWORD_LENGTH = 6;

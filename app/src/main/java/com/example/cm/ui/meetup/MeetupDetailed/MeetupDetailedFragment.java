@@ -5,7 +5,6 @@ import static com.example.cm.utils.Utils.convertToAddress;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -20,19 +19,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.models.MarkerClusterItem;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.example.cm.utils.DeleteDialog;
 import com.example.cm.utils.Navigator;
-import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -41,7 +36,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -58,7 +52,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     private DeleteDialog deleteDialog;
 
     private GoogleMap map;
-
     private String meetupId;
 
     @Override
@@ -158,33 +151,45 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         inflater.inflate(R.menu.menu_context_meetup_detailed, popup.getMenu());
 
         String currentUserId = meetupDetailedViewModel.getCurrentUserId();
+
+        // current user has accepted
         if (meetup.getConfirmedFriends() != null && meetup.getConfirmedFriends().contains(currentUserId)) {
             popup.getMenu().findItem(R.id.menuAccept).setVisible(false);
+            popup.getMenu().findItem(R.id.menuLeave).setVisible(true);
+            popup.getMenu().findItem(R.id.menuDecline).setVisible(false);
+
+            int titleRes = meetup.getLateFriends() != null && meetup.getLateFriends().contains(currentUserId) ? R.string.not_late : R.string.late;
+            popup.getMenu().findItem(R.id.menuLate).setTitle(titleRes);
             popup.getMenu().findItem(R.id.menuLate).setVisible(true);
-        } else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)){
+        }
+        // current user has declined
+        else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)){
             popup.getMenu().findItem(R.id.menuAccept).setVisible(true);
             popup.getMenu().findItem(R.id.menuLate).setVisible(false);
             popup.getMenu().findItem(R.id.menuDecline).setVisible(false);
-        } else if (meetup.getInvitedFriends() != null && meetup.getInvitedFriends().contains(currentUserId)) {
-            popup.getMenu().findItem(R.id.menuLate).setVisible(false);
         }
+
+        // current user is creator of meetup
         if (!meetup.getRequestingUser().equals(currentUserId)) {
             popup.getMenu().findItem(R.id.menuDelete).setVisible(false);
         }
 
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
-                case R.id.menuMap:
-                    onMap();
-                    break;
                 case R.id.menuAccept:
-                    onJoin();
+                    meetupDetailedViewModel.onJoin();
                     break;
                 case R.id.menuDecline:
-                    onLeave();
+                    meetupDetailedViewModel.onDecline();
+                    break;
+                case R.id.menuLeave:
+                    meetupDetailedViewModel.onLeave();
                     break;
                 case R.id.menuLate:
-                    onLate();
+                    meetupDetailedViewModel.onLate(item.getTitle().equals(getString(R.string.late)));
+                    break;
+                case R.id.menuMap:
+                    onMap();
                     break;
                 case R.id.menuDelete:
                     onDelete();
@@ -215,12 +220,8 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
 
     private void initListeners() {
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
-        binding.meetupContextMenuBtn.setOnClickListener(v -> onMenuClick());
+        binding.meetupContextMenuBtn.setOnClickListener(v -> popup.show());
         binding.ivLocation.setOnClickListener(v -> onMap());
-    }
-
-    private void onMenuClick() {
-        popup.show();
     }
 
     private void onMap() {
@@ -233,18 +234,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         bundle.putDouble(Constants.KEY_MEETUP_LOCATION_LAT, latLng.latitude);
         bundle.putDouble(Constants.KEY_MEETUP_LOCATION_LNG, latLng.longitude);
         navigator.getNavController().navigate(R.id.action_navigation_meetup_detailed_to_meetupLocationFragment, bundle);
-    }
-
-    private void onLeave() {
-        meetupDetailedViewModel.onLeave();
-    }
-
-    private void onJoin() {
-        meetupDetailedViewModel.onJoin();
-    }
-
-    private void onLate() {
-        meetupDetailedViewModel.onLate();
     }
 
     private void onDelete() {
@@ -270,13 +259,13 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
-        setMarker(meetupDetailedViewModel.getMeetupLocation(), 15);
+        setMarker(meetupDetailedViewModel.getMeetupLocation());
         map.setOnMapClickListener(latLng -> {
             onMap();
         });
     }
 
-    private void setMarker(LatLng latLng, float zoomLevel) {
+    private void setMarker(LatLng latLng) {
         map.clear();
 
         Marker meetupMarker = map.addMarker(new MarkerOptions().position(latLng).title(getString(R.string.create_meetup_marker_title)));
@@ -284,6 +273,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
             return;
         }
         meetupMarker.setDraggable(false);
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constants.DEFAULT_MAP_ZOOM));
     }
 }
