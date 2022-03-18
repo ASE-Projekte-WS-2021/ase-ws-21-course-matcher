@@ -1,15 +1,22 @@
 package com.example.cm.ui.adapters;
 
+import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_PADDING;
+import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_SIZE;
+import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_STROKE;
 import static com.example.cm.utils.Utils.convertToAddress;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,18 +24,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ItemMeetupBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
     List<MutableLiveData<Meetup>> meetups;
+    List<MutableLiveData<User>> users;
 
-    public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups) {
+    public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups, List<MutableLiveData<User>> users) {
         this.meetups = meetups;
+        this.users = users;
     }
 
     @NonNull
@@ -38,12 +50,17 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         return new MeetupListViewHolder(binding);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
         Meetup meetup = meetups.get(position).getValue();
 
         if (meetup == null) {
             return;
+        }
+
+        if (meetup.getRequestingUser().equals(new AuthRepository().getCurrentUser().getUid())) {
+            holder.getOwnMeetupMarker().setVisibility(View.VISIBLE);
         }
 
         MaterialCardView meetupCard = holder.getMeetupCard();
@@ -78,18 +95,36 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         addUserImage(declinedFriends, imagesLayout, R.color.red);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void addUserImage(List<String> friendIds, LinearLayout layout, int color) {
         if (friendIds != null) {
             for (String id : friendIds) {
-                //toDo: add profile image instead of "R.drawable.ic_baseline_person_24"
                 ShapeableImageView imageRounded = new ShapeableImageView(new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
-                imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
-                imageRounded.setLayoutParams(new ViewGroup.LayoutParams(80, 80));
+
+                String imageUrl = getImageUrl(id);
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    imageRounded.setImageTintMode(null);
+                    Picasso.get().load(imageUrl).fit().centerCrop().into(imageRounded);
+                } else {
+                    imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
+                }
+
+                imageRounded.setLayoutParams(new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE, MEETUP_DETAILED_USER_IMAGE_SIZE));
                 imageRounded.setStrokeColorResource(color);
-                imageRounded.setStrokeWidth(4);
-                imageRounded.setPadding(5, 5, 5, 5);
+                imageRounded.setStrokeWidth(MEETUP_DETAILED_USER_IMAGE_STROKE);
+                imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
                 layout.addView(imageRounded);
             }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String getImageUrl(String id) {
+        MutableLiveData<User> user = users.stream().filter(userData -> Objects.requireNonNull(userData.getValue()).getId().equals(id)).findAny().orElse(null);
+        if (user != null && user.getValue() != null) {
+            return user.getValue().getProfileImageUrl();
+        } else {
+            return null;
         }
     }
 
@@ -137,7 +172,11 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         }
 
         public MaterialCardView getMeetupCard() {
-            return binding.card;
+            return binding.meetupCard;
+        }
+
+        public FrameLayout getOwnMeetupMarker() {
+            return binding.ownMeetupMarker;
         }
     }
 }

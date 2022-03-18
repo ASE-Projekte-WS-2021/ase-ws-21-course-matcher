@@ -30,6 +30,10 @@ public class Constants {
     public static final int MAX_CLUSTER_ITEM_DISTANCE = 15;
     public static final int CURRENT_USER_Z_INDEX = 999;
 
+    public static final int MEETUP_DETAILED_USER_IMAGE_SIZE = 80;
+    public static final int MEETUP_DETAILED_USER_IMAGE_PADDING = 5;
+    public static final int MEETUP_DETAILED_USER_IMAGE_STROKE = 6;
+
     // Shared Preferances Keys
     public static final String PREFS_SETTINGS_KEY = "settings";
     public static final String PREFS_SHARE_LOCATION_KEY = "shareLocation";
