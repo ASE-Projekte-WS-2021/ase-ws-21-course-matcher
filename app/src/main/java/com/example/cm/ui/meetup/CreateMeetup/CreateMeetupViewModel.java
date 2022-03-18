@@ -135,7 +135,6 @@ public class CreateMeetupViewModel extends ViewModel {
                 MeetupRequest request = new MeetupRequest(
                         meetupId,
                         userRepository.getFirebaseUser().getUid(),
-                        currentUser.getValue().getFullName(),
                         invitedFriendId,
                         meetupLocation.getValue(),
                         meetupTimestamp.getValue(),

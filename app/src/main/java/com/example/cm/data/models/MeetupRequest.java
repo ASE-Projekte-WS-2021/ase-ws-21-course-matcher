@@ -31,9 +31,9 @@ public class MeetupRequest extends Request {
         }
     }
 
-    public MeetupRequest(String meetupId, String senderId, String senderName,
+    public MeetupRequest(String meetupId, String senderId,
                          String receiverId, String location, Date meetupAt, MeetupRequestType type) {
-        super(senderId, senderName, receiverId);
+        super(senderId, receiverId);
         this.meetupId = meetupId;
         this.location = location;
         this.meetupAt = meetupAt;

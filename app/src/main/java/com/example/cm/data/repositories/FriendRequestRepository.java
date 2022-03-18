@@ -243,7 +243,6 @@ public class FriendRequestRepository extends Repository {
 
         request.setId(document.getId());
         request.setSenderId(document.getString("senderId"));
-        request.setSenderName(document.getString("senderName"));
         request.setReceiverId(document.getString("receiverId"));
         request.setCreatedAt(document.getDate("createdAt"));
         request.setState(document.get("state", Request.RequestState.class));

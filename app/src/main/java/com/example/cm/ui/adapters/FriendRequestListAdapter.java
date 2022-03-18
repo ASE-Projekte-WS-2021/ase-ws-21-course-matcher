@@ -29,7 +29,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     private ViewGroup parent;
     private List<MutableLiveData<FriendRequest>> mRequests;
-    List<MutableLiveData<User>> users;
+    private List<MutableLiveData<User>> users;
     private final OnFriendRequestListener listener;
 
     public FriendRequestListAdapter(OnFriendRequestListener listener) {
@@ -142,11 +142,11 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             requestDescription = "Deine Freundschaftsanfrage wurde abgelehnt.";
         }
 
-        if (fullName != null){
+        if (fullName != null) {
             holder.getTvSender().setText("An: " + fullName);
         }
 
-        if( userName != null){
+        if (userName != null) {
             holder.getTvSenderUsername().setText(userName);
         }
 
@@ -183,11 +183,11 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         String date = request.getCreationTimeAgo();
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
-        if( userName != null){
+        if (userName != null) {
             holder.getTvSenderUsername().setText(userName);
         }
 
-        if( fullName != null){
+        if (fullName != null) {
             holder.getTvSender().setText(fullName);
         }
         holder.getTvSentDate().setText(date);
