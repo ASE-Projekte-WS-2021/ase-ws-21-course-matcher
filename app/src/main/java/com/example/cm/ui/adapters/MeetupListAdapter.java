@@ -1,5 +1,8 @@
 package com.example.cm.ui.adapters;
 
+import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_PADDING;
+import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_SIZE;
+import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_STROKE;
 import static com.example.cm.utils.Utils.convertToAddress;
 
 import android.os.Build;
@@ -106,10 +109,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
                     imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
                 }
 
-                imageRounded.setLayoutParams(new ViewGroup.LayoutParams(80, 80));
+                imageRounded.setLayoutParams(new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE, MEETUP_DETAILED_USER_IMAGE_SIZE));
                 imageRounded.setStrokeColorResource(color);
-                imageRounded.setStrokeWidth(6);
-                imageRounded.setPadding(5, 5, 5, 5);
+                imageRounded.setStrokeWidth(MEETUP_DETAILED_USER_IMAGE_STROKE);
+                imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
                 layout.addView(imageRounded);
             }
         }
