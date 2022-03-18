@@ -5,12 +5,19 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card"
+        android:id="@+id/meetupCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/meetup_card_margin"
         android:clickable="true"
         card_view:cardCornerRadius="@dimen/meetup_corner_radius">
+
+        <FrameLayout
+            android:id="@+id/ownMeetupMarker"
+            android:background="@color/grey_medium"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:visibility="invisible"/>
 
         <LinearLayout
             android:layout_width="match_parent"
