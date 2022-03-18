@@ -84,7 +84,7 @@ public class FriendRequestRepository extends Repository {
     }
 
     /**
-     * Get all friend requests for currently signed in user
+     * Get received and sent friend requests for currently signed in user
      */
     public MutableLiveData<List<MutableLiveData<FriendRequest>>> getReceivedAndSentRequestsForUser() {
         if (auth.getCurrentUser() == null) {
