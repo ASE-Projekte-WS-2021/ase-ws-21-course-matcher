@@ -1,6 +1,7 @@
 package com.example.cm.ui.adapters;
 
-import android.net.Uri;
+import static com.example.cm.utils.Utils.calculateDiff;
+
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,8 +18,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;
-
-import static com.example.cm.utils.Utils.calculateDiff;
 
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.UserViewHolder> {
 
@@ -59,7 +58,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         String name = user.getFullName();
         String username = user.getUsername();
 
-        if(profileImageUrl != null && !profileImageUrl.isEmpty()) {
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
             holder.getProfileImage().setImageTintMode(null);
             Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
         }
