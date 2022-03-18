@@ -41,6 +41,11 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
+        
+    - name: Add Maps Key
+      env:
+          MAPS_API_KEY: ${{ secrets.MAPS_API_KEY }}
+      run: echo MAPS_API_KEY=$MAPS_API_KEY > ./local.properties
 
     # Build the APK
     - name: Build APK

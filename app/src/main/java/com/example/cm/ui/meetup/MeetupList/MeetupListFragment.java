@@ -8,11 +8,16 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupListBinding;
 import com.example.cm.ui.adapters.MeetupListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MeetupListFragment extends Fragment {
 
@@ -26,7 +31,7 @@ public class MeetupListFragment extends Fragment {
         initViewModel();
         return binding.getRoot();
     }
-  
+
     private void initUi() {
         GridLayoutManager gridLayout = new GridLayoutManager(getContext(), 2);
         binding.meetupListRecyclerView.setLayoutManager(gridLayout);
@@ -42,11 +47,41 @@ public class MeetupListFragment extends Fragment {
                 binding.meetupListRecyclerView.setVisibility(View.GONE);
                 return;
             }
-            meetupListAdapter = new MeetupListAdapter(meetups);
-            binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
-            binding.noMeetupsWrapper.setVisibility(View.GONE);
-            binding.meetupListRecyclerView.setVisibility(View.VISIBLE);
+
+            List<String> userIds = getUserIds(meetups);
+            meetupListViewModel.setUserIds(userIds);
+            meetupListViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+                meetupListAdapter = new MeetupListAdapter(meetups, users);
+                binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
+                binding.noMeetupsWrapper.setVisibility(View.GONE);
+                binding.meetupListRecyclerView.setVisibility(View.VISIBLE);
+            });
         });
+    }
+
+    private List<String> getUserIds(List<MutableLiveData<Meetup>> meetups) {
+        List<String> ids = new ArrayList<>();
+        for (MutableLiveData<Meetup> meetupLiveData : meetups) {
+            if (meetupLiveData.getValue() != null) {
+                Meetup meetup = meetupLiveData.getValue();
+                List<String> confirmedFriends = meetup.getConfirmedFriends();
+                List<String> declinedFriends = meetup.getDeclinedFriends();
+                List<String> invitedFriends = meetup.getInvitedFriends();
+
+                if (confirmedFriends != null) {
+                    ids.addAll(confirmedFriends);
+                }
+
+                if (declinedFriends != null) {
+                    ids.addAll(declinedFriends);
+                }
+
+                if (invitedFriends != null) {
+                    ids.addAll(invitedFriends);
+                }
+            }
+        }
+        return ids;
     }
 
     @Override

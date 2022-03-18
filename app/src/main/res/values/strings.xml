@@ -174,13 +174,13 @@
     <string name="title_meetups">Meetups</string>
 
     <string name="start_title">Willkommen bei\n Course Matcher!</string>
-    <string name="start_header">Triff deine Freunde am Campus\n - spontan und einfach.</string>
+    <string name="start_header">Triff deine Freunde am Campus - spontan und einfach.</string>
     <string name="profile_title">Erstelle ein Profil</string>
     <string name="profile_header">und füge deine Freunde hinzu!</string>
     <string name="meet_title">Vereinbart ein Treffen am Campus</string>
     <string name="meet_header">mit nur wenigen Klicks!</string>
     <string name="location_title">Teile deinen Standort</string>
-    <string name="location_header">um dich am Campus zu treffen.</string>
+    <string name="location_header"> damit deine Freunde wissen, dass du am Campus bist.</string>
     <string name="onboarding_btn">Registrieren</string>
     <string name="skiptoLogin">Login</string>
     <string name="img_uni">Picture of the University</string>
@@ -235,5 +235,8 @@
     <string name="friendslist_tv_no_friends_not_in_meetup">Alle deine Freunde wurden bereits eingeladen.</string>
     <string name="invite_more_friends">invite more friends</string>
     <string name="leave">Verlassen</string>
+
+    <string name="app_name2">Sponti</string>
+    <string name="friends_title">Füge deine Freunde hinzu</string>
 
 </resources>
