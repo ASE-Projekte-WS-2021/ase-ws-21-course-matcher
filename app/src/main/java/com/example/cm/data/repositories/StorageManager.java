@@ -30,19 +30,23 @@ public class StorageManager extends Repository {
      * @param callback Callback to handle success or failure
      */
     public void uploadImage(Uri uri, String userId, Callback callback, Constants.ImageType type) {
+        int quality;
         String title, folder;
+        Bitmap bitmap = uriToBitmap(uri);
         if (type == Constants.ImageType.PROFILE_IMAGE) {
+            quality = 80;
             title = Constants.FIREBASE_STORAGE_TITLE_PROFILE_IMAGES;
             folder = Constants.FIREBASE_STORAGE_FOLDER_PROFILE_IMAGES;
+            bitmap = resizeBitmap(bitmap, Constants.PROFILE_IMAGE_MAX_WIDTH);
         } else {
+            quality = 100;
             title = Constants.FIREBASE_STORAGE_TITLE_MEETUP_IMAGES;
             folder = Constants.FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES;
-        }
-        Bitmap originalImage = uriToBitmap(uri);
-        Bitmap resizedImage = resizeBitmap(originalImage, Constants.PROFILE_IMAGE_MAX_WIDTH);
-        Uri resizedImageUri = bitmapToUri(resizedImage, title);
 
-        StorageReference profileImageRef = storageReference.child(folder + userId + Constants.PROFILE_IMAGE_EXTENSION);
+        }
+        Uri resizedImageUri = bitmapToUri(bitmap, title, quality);
+
+        StorageReference profileImageRef = storageReference.child(folder + userId + Constants.IMAGE_EXTENSION);
         profileImageRef.putFile(resizedImageUri)
                 .addOnSuccessListener(task -> {
                     profileImageRef.getDownloadUrl().addOnSuccessListener(urlToImage -> {
@@ -80,9 +84,9 @@ public class StorageManager extends Repository {
      * @param bitmap Bitmap to convert
      * @return Uri of the bitmap
      */
-    private Uri bitmapToUri(Bitmap bitmap, String title) {
+    private Uri bitmapToUri(Bitmap bitmap, String title, int quality) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bytes);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bytes);
         String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, title, null);
         return Uri.parse(path);
     }
@@ -104,7 +108,6 @@ public class StorageManager extends Repository {
             int newHeight = (int) ((float) maxWidth / initialRatio);
             resizedBitmap = Bitmap.createScaledBitmap(bitmap, maxWidth, newHeight, false);
         }
-
         return resizedBitmap;
     }
 

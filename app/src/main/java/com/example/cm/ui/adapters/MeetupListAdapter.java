@@ -2,18 +2,25 @@ package com.example.cm.ui.adapters;
 
 import static com.example.cm.utils.Utils.convertToAddress;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
@@ -46,15 +53,37 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return;
         }
 
-        MaterialCardView meetupCard = holder.getMeetupCard();
+        initCardListener(holder.getMeetupCard(), meetup);
+        initLocationImg(holder, meetup);
+        initTextViews(holder, meetup);
+        initUserIcons(holder.getImagesLayout(), meetup);
+    }
 
+    private void initCardListener(MaterialCardView meetupCard, Meetup meetup) {
         meetupCard.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putString(Constants.KEY_MEETUP_ID, Objects.requireNonNull(meetup).getId());
             Navigation.findNavController(view).navigate(R.id.navigateToMeetupDetailed, bundle);
         });
+    }
 
-        String address = convertToAddress(meetupCard.getContext(), meetup.getLocation());
+    private void initLocationImg(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {
+        Glide.with(holder.getContext()).load(meetup.getLocationImageUrl()).placeholder(R.drawable.cafe)
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        holder.getIvLocation().setImageDrawable(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        holder.getIvLocation().setImageDrawable(placeholder);
+                    }
+                });
+    }
+
+    private void initTextViews(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {
+        String address = convertToAddress(holder.getContext(), meetup.getLocation());
 
         holder.getTvLocation().setText(address);
         switch (meetup.getPhase()) {
@@ -62,15 +91,17 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
                 holder.getTvTime().setText(meetup.getFormattedTime());
                 break;
             case MEETUP_ACTIVE:
-                holder.getTvTime().setText(meetupCard.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                holder.getTvTime().setText(holder.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
                 break;
         }
+    }
 
+    private void initUserIcons(LinearLayout imgLayout, Meetup meetup) {
         List<String> confirmedFriends = meetup.getConfirmedFriends();
         List<String> invitedFriends = meetup.getInvitedFriends();
         List<String> declinedFriends = meetup.getDeclinedFriends();
 
-        LinearLayout imagesLayout = holder.getImagesLayout();
+        LinearLayout imagesLayout = imgLayout;
         imagesLayout.setPadding(-3, 0, 0, 0);
 
         addUserImage(confirmedFriends, imagesLayout, R.color.green);
@@ -124,6 +155,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             this.binding = binding;
         }
 
+        public ImageView getIvLocation() {
+            return binding.ivLocation;
+        }
+
         public TextView getTvLocation() {
             return binding.locationText;
         }
@@ -138,6 +173,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
         public MaterialCardView getMeetupCard() {
             return binding.card;
+        }
+
+        public Context getContext() {
+            return binding.getRoot().getContext();
         }
     }
 }

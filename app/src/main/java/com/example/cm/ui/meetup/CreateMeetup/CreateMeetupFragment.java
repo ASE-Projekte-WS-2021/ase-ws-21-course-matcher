@@ -35,6 +35,7 @@ import com.example.cm.databinding.FragmentMeetupBinding;
 import com.example.cm.ui.settings.edit_profile.EditProfileViewModel;
 import com.example.cm.ui.settings.edit_profile.EditProfileViewModelFactory;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -185,9 +186,11 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void onMeetupInfoBtnClicked() {
+        // todo: auslagern
         binding.meetupInfoBtn.setText("Lädt...");
         binding.meetupInfoBtn.setEnabled(true);
 
+        Utils.setMapViewSize(binding.mapView.getWidth(), binding.mapView.getHeight());
         map.snapshot(bitmap -> createMeetupViewModel.setMeetupImg(bitmap, this));
     }
 

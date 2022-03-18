@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
 import static com.example.cm.data.repositories.Repository.executorService;
 import static com.example.cm.utils.Utils.getCurrentDay;
@@ -184,7 +186,6 @@ public class MeetupRepository {
         MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
         assert meetupPOJO != null;
         meetupPOJO.setId(document.getId());
-
         return meetupPOJO.toObject();
     }
 }

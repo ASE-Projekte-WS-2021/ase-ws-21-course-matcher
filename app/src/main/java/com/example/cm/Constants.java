@@ -15,7 +15,7 @@ public class Constants {
     public static final String FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES = "meetup_images/";
     public static final String FIREBASE_STORAGE_TITLE_PROFILE_IMAGES = "Profile Image";
     public static final String FIREBASE_STORAGE_TITLE_MEETUP_IMAGES = "Meetup Image";
-    public static final String PROFILE_IMAGE_EXTENSION = ".jpg";
+    public static final String IMAGE_EXTENSION = ".jpg";
     public static final int PROFILE_IMAGE_MAX_WIDTH = 800;
     public static final String KEY_IS_OWN_USER = "keyIsOwnUser";
     public static final int MIN_PASSWORD_LENGTH = 6;
@@ -41,7 +41,6 @@ public class Constants {
     //Tabbar
     public static final float PENDING_HEADER_WEIGHT = 0.7f;
     public static final float ADD_HEADER_WEIGHT = 0.5f;
-
 
     public enum ImageType {
         PROFILE_IMAGE,

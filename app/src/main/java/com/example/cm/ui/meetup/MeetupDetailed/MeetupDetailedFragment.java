@@ -3,7 +3,9 @@ package com.example.cm.ui.meetup.MeetupDetailed;
 import static com.example.cm.utils.Utils.convertToAddress;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -12,17 +14,25 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.MarkerClusterItem;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.example.cm.utils.DeleteDialog;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -64,11 +74,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         binding = FragmentMeetupDetailedBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
         initUIAndViewModel();
-
-        /*binding.mapView.onCreate(savedInstanceState);
-        binding.mapView.getMapAsync(this);
-        binding.mapView.onResume();*/
-
         initListeners();
         return binding.getRoot();
     }
@@ -103,12 +108,18 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void initImg(Meetup meetup) {
-        if (meetup.getLocationImageUrl() != null && !meetup.getLocationImageUrl().isEmpty()) {
-            binding.ivLocation.setImageTintMode(null);
-            binding.ivLocation.setScaleX(1f);
-            binding.ivLocation.setScaleY(1f);
-            Picasso.get().load(meetup.getLocationImageUrl()).fit().centerCrop().into(binding.ivLocation);
-        }
+        Glide.with(requireActivity()).load(meetup.getLocationImageUrl()).placeholder(R.drawable.cafe)
+                .into(new CustomTarget<Drawable>() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                binding.ivLocation.setImageDrawable(resource);
+            }
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) {
+                binding.ivLocation.setImageDrawable(placeholder);
+            }
+        });
     }
 
     private void initTabbar() {
@@ -145,7 +156,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         setForceShowIcon(popup);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_context_meetup_detailed, popup.getMenu());
-
 
         String currentUserId = meetupDetailedViewModel.getCurrentUserId();
         if (meetup.getConfirmedFriends() != null && meetup.getConfirmedFriends().contains(currentUserId)) {
@@ -206,6 +216,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     private void initListeners() {
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.meetupContextMenuBtn.setOnClickListener(v -> onMenuClick());
+        binding.ivLocation.setOnClickListener(v -> onMap());
     }
 
     private void onMenuClick() {

@@ -26,6 +26,8 @@ import java.util.Objects;
 
 public class Utils {
 
+    private static int mapViewWidth, mapViewHeight;
+
     /**
      * Hides the keyboard
      *
@@ -140,5 +142,18 @@ public class Utils {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
+    }
+
+    public static int getMapViewWidth() {
+        return mapViewWidth;
+    }
+
+    public static int getMapViewHeight() {
+        return mapViewHeight;
+    }
+
+    public static void setMapViewSize(int width, int height) {
+        mapViewWidth = width;
+        mapViewHeight = height;
     }
 }
