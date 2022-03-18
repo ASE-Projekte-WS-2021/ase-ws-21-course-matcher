@@ -79,7 +79,8 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
                 holder.getTvTime().setText(meetup.getFormattedTime());
                 break;
             case MEETUP_ACTIVE:
-                holder.getTvTime().setText(meetupCard.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                holder.getTvTime().setText(
+                        meetupCard.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
                 break;
         }
 
@@ -90,6 +91,8 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         LinearLayout imagesLayout = holder.getImagesLayout();
         imagesLayout.setPadding(-3, 0, 0, 0);
 
+        String imageUrl = "https://firebasestorage.googleapis.com/v0/b/uni-course-matcher.appspot.com/o/profile_images%2F6zYOMBciqQUMl5lznNzailFmkPF3.jpg?alt=media&token=ce5e2666-fdd5-414e-88b6-7726a2d8510a";
+
         addUserImage(confirmedFriends, imagesLayout, R.color.green);
         addUserImage(invitedFriends, imagesLayout, R.color.orange);
         addUserImage(declinedFriends, imagesLayout, R.color.red);
@@ -99,7 +102,8 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     public void addUserImage(List<String> friendIds, LinearLayout layout, int color) {
         if (friendIds != null) {
             for (String id : friendIds) {
-                ShapeableImageView imageRounded = new ShapeableImageView(new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
+                ShapeableImageView imageRounded = new ShapeableImageView(
+                        new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
 
                 String imageUrl = getImageUrl(id);
                 if (imageUrl != null && !imageUrl.isEmpty()) {
@@ -109,10 +113,12 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
                     imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
                 }
 
-                imageRounded.setLayoutParams(new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE, MEETUP_DETAILED_USER_IMAGE_SIZE));
+                imageRounded.setLayoutParams(
+                        new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE, MEETUP_DETAILED_USER_IMAGE_SIZE));
                 imageRounded.setStrokeColorResource(color);
                 imageRounded.setStrokeWidth(MEETUP_DETAILED_USER_IMAGE_STROKE);
-                imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
+                imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING,
+                        MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
                 layout.addView(imageRounded);
             }
         }
@@ -120,7 +126,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private String getImageUrl(String id) {
-        MutableLiveData<User> user = users.stream().filter(userData -> Objects.requireNonNull(userData.getValue()).getId().equals(id)).findAny().orElse(null);
+        MutableLiveData<User> user = users.stream()
+                .filter(userData -> Objects.requireNonNull(userData.getValue()).getId().equals(id)).findAny()
+                .orElse(null);
         if (user != null && user.getValue() != null) {
             return user.getValue().getProfileImageUrl();
         } else {
@@ -137,8 +145,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     }
 
     /**
-     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
-     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data
+     * (e.g. image)
+     * Source:
+     * https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
      */
     @Override
     public long getItemId(int position) {
