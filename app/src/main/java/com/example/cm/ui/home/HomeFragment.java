@@ -96,7 +96,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         });
     }
 
-
     private void initGoogleMap(Bundle savedInstanceState) {
         mapView = binding.mapView;
         mapView.onCreate(savedInstanceState);

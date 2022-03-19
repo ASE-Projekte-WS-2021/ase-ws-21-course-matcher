@@ -1,9 +1,11 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
@@ -116,34 +118,28 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
 
     public void setMeetupImg(Bitmap bitmap, StorageManager.Callback callback) {
         meetupId = UUID.randomUUID().toString();
-
-        storageRepository.uploadImageMeetup(bitmap, meetupId, callback);
-
-        /*String filename = Constants.PATH_TO_MEETUP_IMG;
-        File file = new File(filename);
-        file.getParentFile().mkdirs();
-
-        try {
-            FileOutputStream out = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.PNG, Constants.QUALITY_MEETUP_IMG, out);
-            out.flush();
-            out.close();
-
-            Uri uri = Uri.fromFile(file);
-            if (uri == null) {
-                status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
-                return;
-            }
-            storageRepository.uploadImage(uri, meetupId, callback, Constants.ImageType.MEETUP_IMAGE);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        storageRepository.uploadImage(bitmap, meetupId, callback, Constants.ImageType.MEETUP_IMAGE);
     }
 
-    public void deleteLocalImg() {
-        String filename = Constants.PATH_TO_MEETUP_IMG;
-        File file = new File(filename);
-        file.delete();
+    public void deleteLocalImg(Uri localUri, Context context) {
+        String path = "";
+
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(localUri, projection, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(projection[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            path = picturePath;
+        }
+
+        if (!path.isEmpty()) {
+            File fileToDelete = new File(path);
+            if (fileToDelete.exists()) {
+                fileToDelete.delete();
+            }
+        }
     }
 
     public void createMeetup() {

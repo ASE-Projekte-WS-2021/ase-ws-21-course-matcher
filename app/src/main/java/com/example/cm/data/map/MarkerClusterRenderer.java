@@ -53,7 +53,6 @@ public class MarkerClusterRenderer<T extends MarkerClusterItem> extends DefaultC
         canvas.setBitmap(bitmap);
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         drawable.draw(canvas);
-        Log.e("DRAW", "drawn");
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 

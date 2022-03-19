@@ -13,7 +13,6 @@ public class Constants {
     public static final int MAX_CHAR_COUNT = 125;
     public static final int SPLASH_TIMER = 000;
 
-    public static final String PATH_TO_MEETUP_IMG = Environment.getExternalStorageDirectory() + "/CourseMatcher/meetup_location.png";
     public static final String FIREBASE_STORAGE_FOLDER_PROFILE_IMAGES = "profile_images/";
     public static final String FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES = "meetup_images/";
     public static final String FIREBASE_STORAGE_TITLE_PROFILE_IMAGES = "Profile Image";

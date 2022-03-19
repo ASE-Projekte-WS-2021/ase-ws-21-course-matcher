@@ -266,9 +266,9 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     }
 
     @Override
-    public void onSuccess(String url) {
-        setMeetupInfo(url);
-        deleteLocalImg();
+    public void onSuccess(String urlOnline, Uri uriLocal) {
+        setMeetupInfo(urlOnline);
+        deleteLocalImg(uriLocal);
         navigateToInviteFriends();
     }
 
@@ -283,8 +283,8 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         createMeetupViewModel.setUrl(url);
     }
 
-    private void deleteLocalImg() {
-        createMeetupViewModel.deleteLocalImg();
+    private void deleteLocalImg(Uri localUri) {
+        createMeetupViewModel.deleteLocalImg(localUri, getContext());
     }
 
     private void navigateToInviteFriends() {

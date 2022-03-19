@@ -35,13 +35,12 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
         return user;
     }
 
-
     public void updateImage(Uri uri) {
         if (uri == null || user.getValue() == null) {
             status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
             return;
         }
-        storageRepository.uploadImage(uri, user.getValue().getId(), this, Constants.ImageType.PROFILE_IMAGE);
+        storageRepository.uploadProfileImage(uri, user.getValue().getId(), this);
     }
 
     public void updateField(String field, String value) {
@@ -95,8 +94,8 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
     }
 
     @Override
-    public void onSuccess(String url) {
-        userRepository.updateField("profileImageUrl", url, this);
+    public void onSuccess(String urlOnline, Uri uriLocal) {
+        userRepository.updateField("profileImageUrl", urlOnline, this);
     }
 
     @Override
