@@ -14,8 +14,8 @@ import java.util.List;
 
 public class MeetupListViewModel extends ViewModel {
 
-    private final MeetupRepository meetupRepository = new MeetupRepository();
-    private final UserRepository userRepository = new UserRepository();
+    private final MeetupRepository meetupRepository = MeetupRepository.getInstance();
+    private final UserRepository userRepository = UserRepository.getInstance();
 
     private final MutableLiveData<List<MutableLiveData<Meetup>>> meetupList;
     private final MutableLiveData<List<String>> userIds = new MutableLiveData<>();

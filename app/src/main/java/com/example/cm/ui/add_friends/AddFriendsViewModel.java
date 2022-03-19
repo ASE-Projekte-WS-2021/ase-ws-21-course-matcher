@@ -27,11 +27,11 @@ public class AddFriendsViewModel extends ViewModel {
     public OnRequestSentListener listener;
 
     public AddFriendsViewModel() {
-        userRepository = new UserRepository();
+        userRepository = UserRepository.getInstance();
         users = userRepository.getUsersNotFriends();
         currentUser = userRepository.getCurrentUser();
 
-        requestRepository = new FriendRequestRepository();
+        requestRepository = FriendRequestRepository.getInstance();
         receivedFriendRequests = requestRepository.getFriendRequestsForUser();
 
         sentFriendRequestsPending = requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
@@ -115,7 +115,7 @@ public class AddFriendsViewModel extends ViewModel {
     /**
      * checks whether current user sent an friend request to user with given id
      *
-     * @param requests list of friend requests
+     * @param requests   list of friend requests
      * @param receiverId id of the friend to check if has received friend request of current
      * @return has current user sent an friend request to user with given id
      */
@@ -132,6 +132,7 @@ public class AddFriendsViewModel extends ViewModel {
 
     public interface OnRequestSentListener {
         void onRequestAdded();
+
         void onRequestDeleted();
     }
 }

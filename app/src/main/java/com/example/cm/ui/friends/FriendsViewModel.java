@@ -14,7 +14,7 @@ public class FriendsViewModel extends ViewModel {
     private MutableLiveData<List<MutableLiveData<User>>> friends;
 
     public FriendsViewModel() {
-        userRepository = new UserRepository();
+        userRepository = UserRepository.getInstance();
         friends = userRepository.getFriends();
     }
 

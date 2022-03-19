@@ -9,10 +9,11 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class AuthRepository extends Repository {
+    private static AuthRepository INSTANCE = null;
+
     private final FirebaseAuth firebaseAuth;
     private final MutableLiveData<FirebaseUser> userLiveData;
     private final MutableLiveData<String> error;
@@ -25,6 +26,13 @@ public class AuthRepository extends Repository {
         if (firebaseAuth.getCurrentUser() != null) {
             userLiveData.postValue(firebaseAuth.getCurrentUser());
         }
+    }
+
+    public static AuthRepository getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new AuthRepository();
+        }
+        return INSTANCE;
     }
 
     public void updatePassword(String currentPassword, String newPassword, Callback callback) {

@@ -15,7 +15,7 @@ public class SettingsViewModel extends ViewModel {
     private final UserRepository userRepository;
 
     public SettingsViewModel() {
-        authRepository = new AuthRepository();
+        authRepository = AuthRepository.getInstance();
         userRepository = UserRepository.getInstance();
     }
 

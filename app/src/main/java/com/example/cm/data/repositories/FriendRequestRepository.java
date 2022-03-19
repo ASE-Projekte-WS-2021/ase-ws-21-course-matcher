@@ -22,6 +22,7 @@ import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 public class FriendRequestRepository extends Repository {
 
+    private static FriendRequestRepository INSTANCE = null;
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference friendRequestCollection = firestore.collection(CollectionConfig.FRIEND_REQUESTS.toString());
@@ -29,6 +30,13 @@ public class FriendRequestRepository extends Repository {
     private final MutableLiveData<Boolean> isPending = new MutableLiveData<>();
 
     public FriendRequestRepository() {
+    }
+
+    public static FriendRequestRepository getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new FriendRequestRepository();
+        }
+        return INSTANCE;
     }
 
     /**

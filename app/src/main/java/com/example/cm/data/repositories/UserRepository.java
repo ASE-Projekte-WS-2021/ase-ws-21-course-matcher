@@ -23,7 +23,7 @@ import java.util.Objects;
 
 public class UserRepository extends Repository {
 
-    private static UserRepository instance;
+    private static UserRepository INSTANCE = null;
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
@@ -34,10 +34,10 @@ public class UserRepository extends Repository {
     }
 
     public static UserRepository getInstance() {
-        if (instance == null) {
-            instance = new UserRepository();
+        if (INSTANCE == null) {
+            INSTANCE = new UserRepository();
         }
-        return instance;
+        return INSTANCE;
     }
 
     /**

@@ -26,10 +26,10 @@ public class MeetupRequestsViewModel extends ViewModel {
     private final MutableLiveData<List<MutableLiveData<MeetupRequest>>> requestList;
 
     public MeetupRequestsViewModel() {
-        userRepository = new UserRepository();
+        userRepository = UserRepository.getInstance();
         currentUser = userRepository.getCurrentUser();
 
-        meetupRepository = new MeetupRepository();
+        meetupRepository = MeetupRepository.getInstance();
         meetupRequestRepository = new MeetupRequestRepository();
         requestList = meetupRequestRepository.getMeetupRequestsForUser();
     }

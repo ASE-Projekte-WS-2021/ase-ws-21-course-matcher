@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MeetupRepository {
+    private static MeetupRepository INSTANCE = null;
 
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
@@ -33,6 +34,13 @@ public class MeetupRepository {
 
     public MeetupRepository() {
         listenToMeetupListChanges();
+    }
+
+    public static MeetupRepository getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new MeetupRepository();
+        }
+        return INSTANCE;
     }
 
     private void listenToMeetupListChanges() {

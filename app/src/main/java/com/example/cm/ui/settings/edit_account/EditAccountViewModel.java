@@ -18,13 +18,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 public class EditAccountViewModel extends ViewModel implements Callback {
     public MutableLiveData<Status> status = new MutableLiveData<>();
-    private UserRepository userRepository;
-    private AuthRepository authRepository;
+    private final UserRepository userRepository;
+    private final AuthRepository authRepository;
     private MutableLiveData<User> user;
 
     public EditAccountViewModel() {
-        userRepository = new UserRepository();
-        authRepository = new AuthRepository();
+        userRepository = UserRepository.getInstance();
+        authRepository = AuthRepository.getInstance();
         user = userRepository.getCurrentUser();
     }
 

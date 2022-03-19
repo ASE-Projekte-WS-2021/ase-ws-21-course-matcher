@@ -59,7 +59,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return;
         }
 
-        if (meetup.getRequestingUser().equals(new AuthRepository().getCurrentUser().getUid())) {
+        if (meetup.getRequestingUser().equals(AuthRepository.getInstance().getCurrentUser().getUid())) {
             holder.getOwnMeetupMarker().setVisibility(View.VISIBLE);
         }
 

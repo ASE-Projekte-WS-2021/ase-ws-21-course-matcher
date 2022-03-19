@@ -18,8 +18,8 @@ public class OtherProfileViewModel extends ViewModel {
     public MutableLiveData<User> currentUser;
 
     public OtherProfileViewModel() {
-        userRepository = new UserRepository();
-        friendRequestRepository = new FriendRequestRepository();
+        userRepository = UserRepository.getInstance();
+        friendRequestRepository = FriendRequestRepository.getInstance();
     }
 
     public MutableLiveData<User> getCurrentUser() {

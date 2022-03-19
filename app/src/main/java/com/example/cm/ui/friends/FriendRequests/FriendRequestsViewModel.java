@@ -18,8 +18,8 @@ public class FriendRequestsViewModel extends ViewModel {
     private final FriendRequestRepository friendRequestRepository;
 
     public FriendRequestsViewModel() {
-        userRepository = new UserRepository();
-        friendRequestRepository = new FriendRequestRepository();
+        userRepository = UserRepository.getInstance();
+        friendRequestRepository = FriendRequestRepository.getInstance();
         receivedRequests = friendRequestRepository.getFriendRequestsForUser();
     }
 

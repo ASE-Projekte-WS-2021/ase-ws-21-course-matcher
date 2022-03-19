@@ -25,7 +25,7 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
     private MutableLiveData<User> user;
 
     public EditProfileViewModel(Context context) {
-        userRepository = new UserRepository();
+        userRepository = UserRepository.getInstance();
         storageRepository = new StorageManager(context);
         user = userRepository.getCurrentUser();
     }

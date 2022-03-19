@@ -12,7 +12,7 @@ public class OwnProfileViewModel extends ViewModel {
     public MutableLiveData<User> currentUser;
 
     public OwnProfileViewModel() {
-        userRepository = new UserRepository();
+        userRepository = UserRepository.getInstance();
         currentUser = userRepository.getCurrentUser();
     }
 

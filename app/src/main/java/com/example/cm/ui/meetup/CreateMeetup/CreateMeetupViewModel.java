@@ -1,8 +1,8 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
-import android.os.Bundle;
-
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
+
+import android.os.Bundle;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -37,11 +37,11 @@ public class CreateMeetupViewModel extends ViewModel {
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
 
     public CreateMeetupViewModel() {
-        userRepository = new UserRepository();
+        userRepository = UserRepository.getInstance();
         currentUser = userRepository.getCurrentUser();
         users = userRepository.getFriends();
 
-        meetupRepository = new MeetupRepository();
+        meetupRepository = MeetupRepository.getInstance();
         meetupRequestRepository = new MeetupRequestRepository();
     }
 

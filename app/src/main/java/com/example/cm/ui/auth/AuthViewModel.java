@@ -16,8 +16,8 @@ public class AuthViewModel extends ViewModel implements AuthRepository.RegisterC
     private final MutableLiveData<String> error;
 
     public AuthViewModel() {
-        authRepository = new AuthRepository();
-        userRepository = new UserRepository();
+        authRepository = AuthRepository.getInstance();
+        userRepository = UserRepository.getInstance();
         userLiveData = authRepository.getUserLiveData();
         error = authRepository.getErrorLiveData();
     }

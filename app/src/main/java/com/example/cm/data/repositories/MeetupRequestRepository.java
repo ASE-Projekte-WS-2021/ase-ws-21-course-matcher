@@ -24,12 +24,20 @@ import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 public class MeetupRequestRepository extends Repository {
 
+    private static MeetupRequestRepository INSTANCE = null;
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());
     private final MutableLiveData<List<MutableLiveData<MeetupRequest>>> receivedRequests = new MutableLiveData<>();
 
     public MeetupRequestRepository() {
+    }
+
+    public static MeetupRequestRepository getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new MeetupRequestRepository();
+        }
+        return INSTANCE;
     }
 
     /**
