@@ -3,9 +3,12 @@ package com.example.cm.ui.home;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.data.listener.MeetupListener;
 import com.example.cm.data.listener.UserListener;
+import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.Callback;
+import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -15,10 +18,12 @@ import java.util.List;
 
 public class HomeViewModel extends ViewModel implements Callback {
     private final UserRepository userRepository;
+    private final MeetupRepository meetupRepository;
     private final MutableLiveData<User> currentUser;
 
     public HomeViewModel() {
         userRepository = UserRepository.getInstance();
+        meetupRepository = MeetupRepository.getInstance();
         currentUser = userRepository.getStaticCurrentUser();
     }
 
@@ -32,6 +37,20 @@ public class HomeViewModel extends ViewModel implements Callback {
             @Override
             public void onUserError(Exception error) {
                 listener.onUserError(error);
+            }
+        });
+    }
+
+    public void getCurrentMeetups(MeetupListener<List<Meetup>> listener) {
+        meetupRepository.getCurrentMeetups(new MeetupListener<List<Meetup>>() {
+            @Override
+            public void onMeetupSuccess(List<Meetup> meetups) {
+                listener.onMeetupSuccess(meetups);
+            }
+
+            @Override
+            public void onMeetupError(Exception error) {
+                listener.onMeetupError(error);
             }
         });
     }

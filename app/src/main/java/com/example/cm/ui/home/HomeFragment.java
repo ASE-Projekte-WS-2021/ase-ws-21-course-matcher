@@ -37,10 +37,14 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.listener.MeetupListener;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.map.MarkerClusterRenderer;
+import com.example.cm.data.map.MeetupClusterRenderer;
 import com.example.cm.data.map.SnapPagerScrollListener;
 import com.example.cm.data.models.MarkerClusterItem;
+import com.example.cm.data.models.Meetup;
+import com.example.cm.data.models.MeetupClusterItem;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.PositionManager;
 import com.example.cm.databinding.FragmentHomeBinding;
@@ -65,7 +69,8 @@ import timber.log.Timber;
 public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener, MapUserAdapter.OnItemClickListener, SnapPagerScrollListener.OnChangeListener, ClusterManager.OnClusterItemClickListener<MarkerClusterItem>, ClusterManager.OnClusterClickListener<MarkerClusterItem>, GoogleMap.OnMapClickListener {
 
     private ActivityResultLauncher<String> locationPermissionLauncher;
-    private ClusterManager<MarkerClusterItem> clusterManager;
+    private ClusterManager<MarkerClusterItem> userClusterManager;
+    private ClusterManager<MeetupClusterItem> meetupClusterManager;
     private PositionManager positionManager;
     private FragmentHomeBinding binding;
     private MapUserAdapter mapUserAdapter;
@@ -168,35 +173,49 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         googleMap = map;
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM));
         googleMap.setOnMapClickListener(this);
-        setupClusterManager(googleMap);
+        setupUserClusterManager(googleMap);
+        setupMeetupClusterManager(googleMap);
         // Needed to animate zoom changes for markers and cluster items correctly
-        googleMap.setOnCameraIdleListener(clusterManager);
+        googleMap.setOnCameraIdleListener(userClusterManager);
+        googleMap.setOnCameraIdleListener(meetupClusterManager);
     }
 
-    private void setupClusterManager(GoogleMap googleMap) {
-        clusterManager = new ClusterManager<>(requireActivity(), googleMap);
-        clusterManager.setRenderer(new MarkerClusterRenderer<>(requireActivity(), googleMap, clusterManager));
-        clusterManager.setOnClusterClickListener(this);
-        clusterManager.setOnClusterItemClickListener(this);
+    private void setupUserClusterManager(GoogleMap googleMap) {
+        userClusterManager = new ClusterManager<>(requireActivity(), googleMap);
+        userClusterManager.setRenderer(new MarkerClusterRenderer(requireActivity(), googleMap, userClusterManager));
+        userClusterManager.setOnClusterClickListener(this);
+        userClusterManager.setOnClusterItemClickListener(this);
 
         NonHierarchicalDistanceBasedAlgorithm<MarkerClusterItem> clusterAlgorithm = new NonHierarchicalDistanceBasedAlgorithm<>();
         clusterAlgorithm.setMaxDistanceBetweenClusteredItems(MAX_CLUSTER_ITEM_DISTANCE);
-        clusterManager.setAlgorithm(clusterAlgorithm);
+        userClusterManager.setAlgorithm(clusterAlgorithm);
 
         observeCurrentUser();
+    }
+
+    private void setupMeetupClusterManager(GoogleMap googleMap) {
+        meetupClusterManager = new ClusterManager<>(requireActivity(), googleMap);
+        meetupClusterManager.setRenderer(new MeetupClusterRenderer(requireActivity(), googleMap, meetupClusterManager));
+        meetupClusterManager.setOnClusterClickListener(cluster -> {
+            Timber.d("Meetup cluster clicked");
+            return false;
+        });
+        meetupClusterManager.setOnClusterItemClickListener(item -> {
+            Timber.d("Meetup item clicked");
+            return false;
+        });
     }
 
     private void observeFriends() {
         homeViewModel.getFriends(new UserListener<List<User>>() {
             @Override
             public void onUserSuccess(List<User> users) {
-                if (clusterManager == null || mapUserAdapter == null) {
+                if (userClusterManager == null || mapUserAdapter == null) {
                     return;
                 }
 
                 requireActivity().runOnUiThread(() -> {
-                    googleMap.clear();
-                    clusterManager.clearItems();
+                    userClusterManager.clearItems();
                 });
 
                 for (User user : users) {
@@ -216,6 +235,30 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         });
     }
 
+
+    private void observeMeetups() {
+        homeViewModel.getCurrentMeetups(new MeetupListener<List<Meetup>>() {
+
+            @Override
+            public void onMeetupSuccess(List<Meetup> meetups) {
+                if (userClusterManager == null || meetups.isEmpty()) {
+                    return;
+                }
+
+                for (Meetup meetup : meetups) {
+                    addMeetupMarker(meetup);
+                    Timber.d("Added meetup %s", meetup.getLocation());
+                }
+            }
+
+            @Override
+            public void onMeetupError(Exception error) {
+                // Don't display any meetups
+            }
+        });
+    }
+
+
     @Override
     public void onPositionChanged(LatLng position) {
         if (googleMap == null || currentUser == null) {
@@ -225,15 +268,24 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_MAP_ZOOM));
         homeViewModel.updateLocation(position);
         addMarker(currentUser, true);
-        clusterManager.cluster();
+        userClusterManager.cluster();
+    }
+
+    private void addMeetupMarker(Meetup meetup) {
+        MeetupClusterItem meetupMarker = getMeetupMarker(meetup);
+        requireActivity().runOnUiThread(() -> {
+            meetupClusterManager.addItem(meetupMarker);
+            meetupClusterManager.cluster();
+        });
     }
 
     private void addMarker(User user, boolean isCurrentUser) {
+        Timber.d("Adding marker for user %s: %s", isCurrentUser, user.getUsername());
         if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
             MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
             requireActivity().runOnUiThread(() -> {
-                clusterManager.addItem(markerClusterItem);
-                clusterManager.cluster();
+                userClusterManager.addItem(markerClusterItem);
+                userClusterManager.cluster();
             });
             return;
         }
@@ -242,8 +294,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
-                    clusterManager.addItem(markerClusterItem);
-                    clusterManager.cluster();
+                    userClusterManager.addItem(markerClusterItem);
+                    userClusterManager.cluster();
                 });
             }
 
@@ -251,11 +303,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             public void onLoadCleared(@Nullable Drawable placeholder) {
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, placeholder, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
-                    clusterManager.addItem(markerClusterItem);
-                    clusterManager.cluster();
+                    userClusterManager.addItem(markerClusterItem);
+                    userClusterManager.cluster();
                 });
             }
         });
+    }
+
+    private MeetupClusterItem getMeetupMarker(Meetup meetup) {
+        //Drawable drawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_meetup_marker);
+        return new MeetupClusterItem(meetup);
     }
 
     private MarkerClusterItem getDefaultMarker(User user, boolean isCurrentUser) {
@@ -356,6 +413,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         if (mapView != null) {
             mapView.onResume();
             observeFriends();
+            observeMeetups();
         }
     }
 
