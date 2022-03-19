@@ -1,8 +1,8 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
-import android.os.Bundle;
-
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
+
+import android.os.Bundle;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -33,7 +33,7 @@ public class CreateMeetupViewModel extends ViewModel {
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
-    public MutableLiveData<List<MutableLiveData<User>>> users;
+    public MutableLiveData<List<User>> users;
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
 
     public CreateMeetupViewModel() {
@@ -45,8 +45,7 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupRequestRepository = new MeetupRequestRepository();
     }
 
-
-    public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
+    public MutableLiveData<List<User>> getUsers() {
         return users;
     }
 
@@ -151,15 +150,17 @@ public class CreateMeetupViewModel extends ViewModel {
         Meetup meetup = meetupMutableLiveData.getValue(); // todo: meetup is null
         if (selectedUsers.getValue() != null && currentUser.getValue() != null) {
             for (String invitedFriendId : selectedUsers.getValue()) {
-                /*MeetupRequest request = new MeetupRequest(
-                        meetup.getId(),
-                        userRepository.getFirebaseUser().getUid(),
-                        currentUser.getValue().getFullName(),
-                        invitedFriendId,
-                        meetup.getLocation(),
-                        meetupTimestamp.getValue(),
-                        MEETUP_REQUEST);
-                meetupRequestRepository.addMeetupRequest(request);*/
+                /*
+                 * MeetupRequest request = new MeetupRequest(
+                 * meetup.getId(),
+                 * userRepository.getFirebaseUser().getUid(),
+                 * currentUser.getValue().getFullName(),
+                 * invitedFriendId,
+                 * meetup.getLocation(),
+                 * meetupTimestamp.getValue(),
+                 * MEETUP_REQUEST);
+                 * meetupRequestRepository.addMeetupRequest(request);
+                 */
             }
             selectedUsers.getValue().clear();
         }

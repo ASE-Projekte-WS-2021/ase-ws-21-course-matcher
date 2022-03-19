@@ -79,7 +79,7 @@ public class Utils {
      * @param newUsers The new list of mutable users
      * @return The result of the calculation
      */
-    public static DiffUtil.DiffResult calculateDiff(List<MutableLiveData<User>> oldUsers, List<MutableLiveData<User>> newUsers) {
+    public static DiffUtil.DiffResult calculateDiff(List<User> oldUsers, List<User> newUsers) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -93,14 +93,14 @@ public class Utils {
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(Objects.requireNonNull(oldUsers.get(oldItemPosition).getValue()).getId(),
-                        Objects.requireNonNull(newUsers.get(newItemPosition).getValue()).getId());
+                return Objects.equals(Objects.requireNonNull(oldUsers.get(oldItemPosition)).getId(),
+                        Objects.requireNonNull(newUsers.get(newItemPosition)).getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                User newUser = newUsers.get(newItemPosition).getValue();
-                User oldUser = oldUsers.get(oldItemPosition).getValue();
+                User newUser = newUsers.get(newItemPosition);
+                User oldUser = oldUsers.get(oldItemPosition);
 
                 return Objects.equals(Objects.requireNonNull(newUser).getId(), Objects.requireNonNull(oldUser).getId())
                         && Objects.equals(newUser.getFirstName(), oldUser.getFirstName())
