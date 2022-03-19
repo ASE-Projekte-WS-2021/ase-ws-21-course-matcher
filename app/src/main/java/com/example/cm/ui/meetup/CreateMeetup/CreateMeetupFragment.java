@@ -32,6 +32,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import timber.log.Timber;
+
 
 public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback {
 
@@ -80,15 +82,22 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
     private void initUI() {
         showCurrentTime();
-        adapter = ArrayAdapter.createFromResource(getActivity(), R.array.meetup_locations, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding.actionBar.tvTitle.setText(R.string.meetup_header);
         binding.actionBar.btnBack.bringToFront();
     }
 
     private void initListener() {
         binding.meetupTimeText.setOnClickListener(v -> onTimePickerDialogClicked());
-        binding.meetupInfoBtn.setOnClickListener(v -> checkTime());
+        binding.meetupInfoBtn.setOnClickListener(v -> {
+            checkTime();
+            String inputAddress = binding.locationMeetup.getText().toString();
+            if (!inputAddress.isEmpty()) {
+                createMeetupViewModel.setMeetupLocation(inputAddress);
+                createMeetupViewModel.setMeetupLocationName(inputAddress);
+            } else {
+                createMeetupViewModel.setMeetupLocation(getString(R.string.meetup_location_not_found));
+            }
+        });
         binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 
@@ -225,12 +234,9 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         geocodeLatLng(latLng);
     }
 
+
     private void geocodeLatLng(LatLng latLng) {
         String address = convertToAddress(requireActivity(), latLng);
-        if (!address.isEmpty()) {
-            createMeetupViewModel.setMeetupLocation(address);
-        } else {
-            createMeetupViewModel.setMeetupLocation(getString(R.string.meetup_location_not_found));
-        }
+        binding.locationMeetup.setText(address);
     }
 }
