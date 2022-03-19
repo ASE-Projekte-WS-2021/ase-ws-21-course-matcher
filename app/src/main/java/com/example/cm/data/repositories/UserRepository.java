@@ -371,15 +371,32 @@ public class UserRepository extends Repository {
             return mutableUsers;
         }
 
-        userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener(executorService, (value, error) -> {
-            if (error != null) {
-                return;
+        if (userIds.size() > 10) {
+            List<MutableLiveData<User>> users = new ArrayList<>();
+            for (String userId : userIds) {
+                userCollection.document(userId).addSnapshotListener(executorService, (value, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+                    if (value != null && value.exists()) {
+                        users.add(new MutableLiveData<>(snapshotToUser(value)));
+                    }
+                });
             }
-            if (value != null && !value.isEmpty()) {
-                List<MutableLiveData<User>> users = snapshotToMutableUserList(value);
-                mutableUsers.postValue(users);
-            }
-        });
+            mutableUsers.postValue(users);
+        }
+        else {
+            userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener(executorService, (value, error) -> {
+                if (error != null) {
+                    return;
+                }
+                if (value != null && !value.isEmpty()) {
+                    List<MutableLiveData<User>> users = snapshotToMutableUserList(value);
+                    mutableUsers.postValue(users);
+                }
+            });
+        }
+
         return mutableUsers;
     }
 
