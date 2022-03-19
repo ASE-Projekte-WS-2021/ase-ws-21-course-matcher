@@ -1,10 +1,7 @@
 package com.example.cm.data.models;
 
-import android.graphics.drawable.Drawable;
-
 import androidx.annotation.NonNull;
 
-import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
@@ -28,7 +25,7 @@ public class MeetupClusterItem implements ClusterItem {
 
     @Override
     public String getTitle() {
-        return "Meetup Standort";
+        return "";
     }
 
     @Override
