@@ -1,16 +1,18 @@
 package com.example.cm.data.map;
 
 import static com.example.cm.Constants.MARKER_SIZE;
+import static com.example.cm.Constants.MAX_PARTICIPANT_COUNT_TO_SHOW;
+import static com.example.cm.Constants.MEETUP_COUNT_RADIUS;
+import static com.example.cm.Constants.MEETUP_COUNT_TEXT_SIZE;
+import static com.example.cm.Constants.MEETUP_Z_INDEX;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.fonts.Font;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -24,8 +26,6 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-
-import timber.log.Timber;
 
 public class MeetupClusterRenderer extends DefaultClusterRenderer<MeetupClusterItem> {
     private final IconGenerator iconGenerator;
@@ -69,29 +69,28 @@ public class MeetupClusterRenderer extends DefaultClusterRenderer<MeetupClusterI
 
         // Draw background circle for participant count
         backgroundPaint.setColor(ContextCompat.getColor(context, R.color.orange500));
-        canvas.drawCircle(canvas.getWidth() - 30,  30, 30, backgroundPaint);
+        canvas.drawCircle(canvas.getWidth() - MEETUP_COUNT_RADIUS, MEETUP_COUNT_RADIUS, MEETUP_COUNT_RADIUS, backgroundPaint);
 
         // Draw text for participant count
-        textPaint.setTextSize(30);
+        textPaint.setTextSize(MEETUP_COUNT_TEXT_SIZE);
         textPaint.setTextAlign(Paint.Align.CENTER);
         textPaint.setColor(ContextCompat.getColor(context, R.color.white));
 
         String numberOfParticipants = String.valueOf(participantCount);
-        if(participantCount > 9) {
-            numberOfParticipants = "9+";
+        if (participantCount > MAX_PARTICIPANT_COUNT_TO_SHOW) {
+            numberOfParticipants = context.getString(R.string.moreThanNineParticipants);
         }
 
         // Get the position of the text, to center it in the circle
         Rect bounds = new Rect();
         backgroundPaint.getTextBounds(numberOfParticipants, 0, numberOfParticipants.length(), bounds);
-        int textXPos = canvas.getWidth() - 30;
-        int textYPos = bounds.height() + 30;
+        int textXPos = canvas.getWidth() - MEETUP_COUNT_RADIUS;
+        int textYPos = bounds.height() + MEETUP_COUNT_RADIUS;
         canvas.drawText(numberOfParticipants, textXPos, textYPos, textPaint);
     }
 
-    // Only show clusters when 2 or more items are close together
     @Override
     protected boolean shouldRenderAsCluster(Cluster cluster) {
-        return cluster.getSize() > 999999;
+        return cluster.getSize() > MEETUP_Z_INDEX;
     }
 }

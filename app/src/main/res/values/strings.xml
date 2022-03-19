@@ -32,10 +32,9 @@
     <string name="back_to_home_btn">zurück zum Homescreen</string>
     <string name="invitation_success_dialog">Dein Meetup wurde erfolgreich versendet. Warte auf die Reaktion deiner Freunde und viel Spaß bei eurem Treffen!</string>
     <string name="invitation_success_title">"Meetup versendet!"</string>
-    <string name="invitation_success_close_dialog">"ok"</string>
+    <string name="invitation_success_close_dialog">"OK"</string>
     <string name="content_description_edit_button">meetup edit button</string>
 
-    <string name="mapbox_access_token">pk.eyJ1IjoiZXJpa2JsYW5rIiwiYSI6ImNreTJ5ZTVoaTBkeDgybm4xam41cXlpZDEifQ._HUMT1WQzsnyU1TmkvSFQw</string>
     <string name="title_notifications">Benachrichtigungen</string>
     <string name="title_profile">Profil</string>
     <string name="title_friends">Freunde</string>
@@ -78,7 +77,7 @@
     <string name="snackbar_sent_request">Anfragen wurden verschickt.</string>
     <string name="snackbar_remove_request">Anfragen wurden verschickt.</string>
 
-    <string name="searchbar_text_find_friends">Freunde finden...</string>
+    <string name="searchbar_text_find_friends">Freunde finden…</string>
     <string name="search_button_decription">Suchbutton</string>
 
     <string name="add_friends">add friends</string>
@@ -99,7 +98,7 @@
     <string name="meetup_tabs_list">Anstehend</string>
     <string name="meetup_tabs_requests">Anfragen</string>
 
-    <string name="searchbar_text_search_through_friends">Freundesliste durchsuchen...</string>
+    <string name="searchbar_text_search_through_friends">Freundesliste durchsuchen…</string>
     <string name="user_image">user image</string>
     <string name="MeetupDetailedTitle">Meetupinfo</string>
     <string name="meetup_create_error">Etwas ist schiefgelaufen, versuche es erneut.</string>
@@ -221,6 +220,7 @@
     <string name="registerFirstnameEmpty">Bitte gib deinen Vornamen ein.</string>
     <string name="registerLastnameEmpty">Bitte gib deinen Nachnamen ein.</string>
     <string name="searchBarDesc">Searchbar for searching in your friendslist</string>
+    <string name="moreThanNineParticipants">9+</string>
 
     <!-- Settings -->
     <string name="location_permission_denied">Der Standort-Zugriff muss in deinen App-Einstellungen erlaubt sein.</string>
