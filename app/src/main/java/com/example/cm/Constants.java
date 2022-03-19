@@ -51,6 +51,7 @@ public class Constants {
     //Tabbar
     public static final float PENDING_HEADER_WEIGHT = 0.7f;
     public static final float ADD_HEADER_WEIGHT = 0.5f;
+    public static final float CREATE_MEETUP_ZOOM_LEVEL = 15f;
 
     public enum ImageType {
         PROFILE_IMAGE,

@@ -116,7 +116,10 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
 
     public void setMeetupImg(Bitmap bitmap, StorageManager.Callback callback) {
         meetupId = UUID.randomUUID().toString();
-        String filename = Constants.PATH_TO_MEETUP_IMG;
+
+        storageRepository.uploadImageMeetup(bitmap, meetupId, callback);
+
+        /*String filename = Constants.PATH_TO_MEETUP_IMG;
         File file = new File(filename);
         file.getParentFile().mkdirs();
 
@@ -134,7 +137,7 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
             storageRepository.uploadImage(uri, meetupId, callback, Constants.ImageType.MEETUP_IMAGE);
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void deleteLocalImg() {

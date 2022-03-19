@@ -2,10 +2,12 @@ package com.example.cm.ui.meetup.CreateMeetup;
 
 import static com.example.cm.utils.Utils.convertToAddress;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -22,8 +24,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -69,7 +75,6 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     private FragmentMeetupBinding binding;
     private Navigator navigator;
     private GoogleMap map;
-    private LatLng latLng;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle bundle = this.getArguments();
@@ -161,7 +166,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
                 return;
             }
             marker.setDraggable(true);
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constants.CREATE_MEETUP_ZOOM_LEVEL));
         });
     }
 
@@ -187,20 +192,22 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void onMeetupInfoBtnClicked() {
+        boolean hasWriteExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        if (!hasWriteExternalStoragePermission) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            binding.meetupInfoBtn.performClick();
+        } else {
+            diableButtonWhileLoading();
+            map.snapshot(bitmap -> createMeetupViewModel.setMeetupImg(bitmap, this));
+        }
+    }
+
+    private void diableButtonWhileLoading() {
         binding.meetupInfoBtn.setEnabled(false);
         binding.meetupInfoBtn.setText(R.string.meetup_info_submit_btn_loading);
         Drawable buttonDrawable = DrawableCompat.wrap(binding.meetupInfoBtn.getBackground());
         DrawableCompat.setTint(buttonDrawable, getResources().getColor(R.color.outgreyed));
         binding.meetupInfoBtn.setBackground(buttonDrawable);
-
-        Utils.setMapViewSize(binding.mapView.getWidth(), binding.mapView.getHeight());
-        map.snapshot(bitmap -> createMeetupViewModel.setMeetupImg(bitmap, this));
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //createMeetupViewModel = new ViewModelProvider(this, new CreateMeetupFactory(requireContext())).get(CreateMeetupViewModel.class);
     }
 
     @Override
@@ -212,7 +219,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
-        setMarker(Constants.DEFAULT_LOCATION, Constants.DEFAULT_MAP_ZOOM);
+        setMarker(Constants.DEFAULT_LOCATION, Constants.CREATE_MEETUP_ZOOM_LEVEL);
 
         map.setOnMapClickListener(latLng -> {
             float zoomLevel = map.getCameraPosition().zoom;

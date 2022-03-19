@@ -58,6 +58,28 @@ public class StorageManager extends Repository {
                 });
     }
 
+    public void uploadImageMeetup(Bitmap bitmap, String meetupId, Callback callback) {
+        int quality;
+        String title, folder, extension;
+
+        quality = Constants.QUALITY_MEETUP_IMG;
+        title = Constants.FIREBASE_STORAGE_TITLE_MEETUP_IMAGES;
+        folder = Constants.FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES;
+        extension = Constants.IMAGE_EXTENSION_PNG;
+
+        Uri imageUri = bitmapToUriMeetup(bitmap, title, quality);
+
+        StorageReference imageRef = storageReference.child(folder + meetupId + extension);
+        imageRef.putFile(imageUri)
+                .addOnSuccessListener(task -> {
+                    imageRef.getDownloadUrl().addOnSuccessListener(urlToImage -> {
+                        callback.onSuccess(urlToImage.toString());
+                    });
+                }).addOnFailureListener(e -> {
+            callback.onError(e);
+        });
+    }
+
     /**
      * Converts a given uri to a bitmap
      *
@@ -88,6 +110,13 @@ public class StorageManager extends Repository {
     private Uri bitmapToUri(Bitmap bitmap, String title, int quality) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, title, null);
+        return Uri.parse(path);
+    }
+
+    private Uri bitmapToUriMeetup(Bitmap bitmap, String title, int quality) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality, bytes);
         String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, title, null);
         return Uri.parse(path);
     }

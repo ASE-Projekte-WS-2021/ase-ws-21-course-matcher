@@ -143,17 +143,4 @@ public class Utils {
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
     }
-
-    public static int getMapViewWidth() {
-        return mapViewWidth;
-    }
-
-    public static int getMapViewHeight() {
-        return mapViewHeight;
-    }
-
-    public static void setMapViewSize(int width, int height) {
-        mapViewWidth = width;
-        mapViewHeight = height;
-    }
 }
