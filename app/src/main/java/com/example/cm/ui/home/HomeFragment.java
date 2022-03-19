@@ -56,9 +56,9 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
+import com.google.maps.android.collections.MarkerManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,7 +66,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener, MapUserAdapter.OnItemClickListener, SnapPagerScrollListener.OnChangeListener, ClusterManager.OnClusterItemClickListener<MarkerClusterItem>, ClusterManager.OnClusterClickListener<MarkerClusterItem>, GoogleMap.OnMapClickListener {
+public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener, MapUserAdapter.OnItemClickListener, SnapPagerScrollListener.OnChangeListener, GoogleMap.OnMapClickListener {
 
     private ActivityResultLauncher<String> locationPermissionLauncher;
     private ClusterManager<MarkerClusterItem> userClusterManager;
@@ -173,18 +173,38 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         googleMap = map;
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM));
         googleMap.setOnMapClickListener(this);
-        setupUserClusterManager(googleMap);
-        setupMeetupClusterManager(googleMap);
+
+        MarkerManager markerManager = new MarkerManager(googleMap);
+
+        setupUserClusterManager(googleMap, markerManager);
+        setupMeetupClusterManager(googleMap, markerManager);
         // Needed to animate zoom changes for markers and cluster items correctly
         googleMap.setOnCameraIdleListener(userClusterManager);
         googleMap.setOnCameraIdleListener(meetupClusterManager);
     }
 
-    private void setupUserClusterManager(GoogleMap googleMap) {
-        userClusterManager = new ClusterManager<>(requireActivity(), googleMap);
+    private void setupUserClusterManager(GoogleMap googleMap, MarkerManager markerManager) {
+        userClusterManager = new ClusterManager<>(requireActivity(), googleMap, markerManager);
         userClusterManager.setRenderer(new MarkerClusterRenderer(requireActivity(), googleMap, userClusterManager));
-        userClusterManager.setOnClusterClickListener(this);
-        userClusterManager.setOnClusterItemClickListener(this);
+        userClusterManager.setOnClusterClickListener(cluster -> {
+            Collection<MarkerClusterItem> clusterItems = cluster.getItems();
+            List<MarkerClusterItem> users = new ArrayList<>(clusterItems);
+            User user = users.get(0).getUser();
+            showUserCards(user);
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(cluster.getPosition()));
+
+            return false;
+        });
+        userClusterManager.setOnClusterItemClickListener(item -> {
+            boolean isCurrentUser = item.isCurrentUser();
+
+            if (!isCurrentUser) {
+                showUserCards(item.getUser());
+            }
+
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(item.getUser().getLocation()));
+            return false;
+        });
 
         NonHierarchicalDistanceBasedAlgorithm<MarkerClusterItem> clusterAlgorithm = new NonHierarchicalDistanceBasedAlgorithm<>();
         clusterAlgorithm.setMaxDistanceBetweenClusteredItems(MAX_CLUSTER_ITEM_DISTANCE);
@@ -193,15 +213,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         observeCurrentUser();
     }
 
-    private void setupMeetupClusterManager(GoogleMap googleMap) {
-        meetupClusterManager = new ClusterManager<>(requireActivity(), googleMap);
+    private void setupMeetupClusterManager(GoogleMap googleMap, MarkerManager markerManager) {
+        meetupClusterManager = new ClusterManager<>(requireActivity(), googleMap, markerManager);
         meetupClusterManager.setRenderer(new MeetupClusterRenderer(requireActivity(), googleMap, meetupClusterManager));
-        meetupClusterManager.setOnClusterClickListener(cluster -> {
-            Timber.d("Meetup cluster clicked");
-            return false;
-        });
         meetupClusterManager.setOnClusterItemClickListener(item -> {
-            Timber.d("Meetup item clicked");
+            Bundle bundle = new Bundle();
+            bundle.putString(Constants.KEY_MEETUP_ID, item.getMeetup().getId());
+            Utils.findNavController(requireActivity()).navigate(R.id.action_navigation_home_to_navigation_meetup_detailed, bundle);
             return false;
         });
     }
@@ -225,7 +243,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                     }
                 }
                 // Set initial position of user cards offset of screen
-                binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
+                if (binding != null) {
+                    binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
+                }
             }
 
             @Override
@@ -247,7 +267,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
                 for (Meetup meetup : meetups) {
                     addMeetupMarker(meetup);
-                    Timber.d("Added meetup %s", meetup.getLocation());
                 }
             }
 
@@ -280,7 +299,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void addMarker(User user, boolean isCurrentUser) {
-        Timber.d("Adding marker for user %s: %s", isCurrentUser, user.getUsername());
         if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
             MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
             requireActivity().runOnUiThread(() -> {
@@ -358,29 +376,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public boolean onClusterItemClick(MarkerClusterItem item) {
-        boolean isCurrentUser = item.isCurrentUser();
-
-        if (!isCurrentUser) {
-            showUserCards(item.getUser());
-        }
-
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(item.getUser().getLocation()));
-        return false;
-    }
-
-    @Override
-    public boolean onClusterClick(Cluster<MarkerClusterItem> cluster) {
-        Collection<MarkerClusterItem> clusterItems = cluster.getItems();
-        List<MarkerClusterItem> users = new ArrayList<>(clusterItems);
-        User user = users.get(0).getUser();
-        showUserCards(user);
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(cluster.getPosition()));
-
-        return false;
     }
 
     private void showUserCards(User user) {

@@ -35,7 +35,7 @@ public class MeetupClusterRenderer extends DefaultClusterRenderer<MeetupClusterI
         super(context, googleMap, clusterManager);
         this.context = context;
         iconGenerator = new IconGenerator(context);
-        
+
         Drawable meetupIcon = ContextCompat.getDrawable(context, R.drawable.ic_meetup_marker);
         if (meetupIcon != null) {
             Bitmap marker = getMarkerIconFromDrawable(meetupIcon);

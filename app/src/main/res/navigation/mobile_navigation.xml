@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_meetup"
             app:destination="@id/navigation_meetup" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_meetup_detailed"
+            app:destination="@id/navigation_meetup_detailed" />
     </fragment>
 
     <fragment

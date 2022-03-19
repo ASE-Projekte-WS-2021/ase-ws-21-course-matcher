@@ -11,14 +11,9 @@ import com.google.maps.android.clustering.ClusterItem;
 public class MeetupClusterItem implements ClusterItem {
 
     private final Meetup meetup;
-    private Drawable image;
 
     public MeetupClusterItem(@NonNull Meetup meetup) {
         this.meetup = meetup;
-    }
-
-    public Drawable getImage() {
-        return image;
     }
 
     public Meetup getMeetup() {
