@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,10 +34,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
-    List<MutableLiveData<Meetup>> meetups;
+    List<Meetup> meetups;
     List<User> users;
 
-    public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups, List<User> users) {
+    public MeetupListAdapter(List<Meetup> meetups, List<User> users) {
         this.meetups = meetups;
         this.users = users;
     }
@@ -53,7 +52,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
-        Meetup meetup = meetups.get(position).getValue();
+        Meetup meetup = meetups.get(position);
 
         if (meetup == null) {
             return;

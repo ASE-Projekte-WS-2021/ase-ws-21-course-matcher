@@ -412,7 +412,7 @@ public class UserRepository extends Repository {
      * @param userIds list of users to search in
      * @param query   String to search for
      * @return MutableLiveData-List of mutable users within given list with query
-     *         matching name
+     * matching name
      */
     public MutableLiveData<List<User>> getUsersByIdsAndName(List<String> userIds, String query) {
         userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener((value, error) -> {

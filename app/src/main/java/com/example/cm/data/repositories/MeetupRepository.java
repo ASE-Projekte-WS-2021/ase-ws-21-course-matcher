@@ -6,7 +6,6 @@ import static com.example.cm.utils.Utils.getCurrentDay;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.cm.Constants;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPOJO;
@@ -27,9 +26,9 @@ public class MeetupRepository {
 
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
-    private MutableLiveData<List<MutableLiveData<Meetup>>> meetupListMLD = new MutableLiveData<>();
-    private MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
-    private MutableLiveData<List<String>> lateUsersMLD = new MutableLiveData<>();
+    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
+    private final MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> lateUsersMLD = new MutableLiveData<>();
 
     public MeetupRepository() {
         listenToMeetupListChanges();
@@ -52,12 +51,12 @@ public class MeetupRepository {
                             }
                         }
                     }
-                    List<MutableLiveData<Meetup>> meetups = snapshotToMeetupList(value);
+                    List<Meetup> meetups = snapshotToMeetupList(value);
                     meetupListMLD.postValue(meetups);
                 });
     }
 
-    public MutableLiveData<List<MutableLiveData<Meetup>>> getMeetups() {
+    public MutableLiveData<List<Meetup>> getMeetups() {
         return meetupListMLD;
     }
 
@@ -139,12 +138,10 @@ public class MeetupRepository {
      * @param documents List of meetups returned from Firestore
      * @return Returns a list of meetups
      */
-    private List<MutableLiveData<Meetup>> snapshotToMeetupList(QuerySnapshot documents) {
-        List<MutableLiveData<Meetup>> meetups = new ArrayList<>();
+    private List<Meetup> snapshotToMeetupList(QuerySnapshot documents) {
+        List<Meetup> meetups = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
-            meetupMLD.postValue(snapshotToMeetup(document));
-            meetups.add(meetupMLD);
+            meetups.add(snapshotToMeetup(document));
         }
         return meetups;
     }
