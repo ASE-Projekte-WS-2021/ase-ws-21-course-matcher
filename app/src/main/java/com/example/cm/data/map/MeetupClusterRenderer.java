@@ -58,7 +58,7 @@ public class MeetupClusterRenderer extends DefaultClusterRenderer<MeetupClusterI
         Bitmap icon = iconGenerator.makeIcon();
         addParticipantCount(item, icon);
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-        markerOptions.zIndex(99999);
+        markerOptions.zIndex(MEETUP_Z_INDEX);
     }
 
     private void addParticipantCount(MeetupClusterItem item, Bitmap icon) {

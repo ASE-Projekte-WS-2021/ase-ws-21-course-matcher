@@ -329,7 +329,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private MeetupClusterItem getMeetupMarker(Meetup meetup) {
-        //Drawable drawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_meetup_marker);
         return new MeetupClusterItem(meetup);
     }
 
