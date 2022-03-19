@@ -71,7 +71,8 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             Navigation.findNavController(view).navigate(R.id.navigateToMeetupDetailed, bundle);
         });
 
-        String address = convertToAddress(meetupCard.getContext(), meetup.getLocation());
+        //String address = convertToAddress(meetupCard.getContext(), meetup.getLocation());
+        String address = meetup.getLocationName();
 
         holder.getTvLocation().setText(address);
         switch (meetup.getPhase()) {
