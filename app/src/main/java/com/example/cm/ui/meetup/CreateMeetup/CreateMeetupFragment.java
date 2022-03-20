@@ -32,15 +32,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import timber.log.Timber;
-
 
 public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback {
 
     private final Calendar calendarMeetup = Calendar.getInstance();
     private final Calendar calendarNow = Calendar.getInstance();
     int sMin, sHour;
-    private ArrayAdapter<CharSequence> adapter;
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentMeetupBinding binding;
     private Navigator navigator;
@@ -129,7 +126,6 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         timePickerDialog.show();
     }
 
-
     private void onMeetupInfoBtnClicked() {
         //TODO den boolean wieder benutzen wenn gefiltert werden kann
         //Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
@@ -141,7 +137,6 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
         Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
     }
-
 
     @SuppressLint("SimpleDateFormat")
     private void initViewModel() {
@@ -233,7 +228,6 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         createMeetupViewModel.setMeetupLatLng(latLng);
         geocodeLatLng(latLng);
     }
-
 
     private void geocodeLatLng(LatLng latLng) {
         String address = convertToAddress(requireActivity(), latLng);
