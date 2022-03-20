@@ -20,14 +20,6 @@
             android:orientation="vertical">
 
             <!-- Allgemeines
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switchShareLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:padding="@dimen/padding_big"
-                android:text="@string/shareLocation" />
-
             <include
                 android:visibility="visible"
                 android:id="@+id/link_edit_notifications"
@@ -39,7 +31,6 @@
                 android:contentDescription="@string/content_description_divider"
                 android:src="@drawable/divider_horizontal" />
             -->
-
 
             <!-- Datenschutz -->
             <include
