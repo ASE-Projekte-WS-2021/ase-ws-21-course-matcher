@@ -12,7 +12,11 @@ import static com.example.cm.Constants.MAP_CARD_ANIMATION_DURATION;
 import static com.example.cm.Constants.MARKER_SIZE;
 import static com.example.cm.Constants.MAX_CLUSTER_ITEM_DISTANCE;
 import static com.example.cm.Constants.ON_SNAPPED_MAP_ZOOM;
+import static com.example.cm.Constants.PREFS_SETTINGS_KEY;
+import static com.example.cm.Constants.PREFS_SHARE_LOCATION_KEY;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -56,6 +60,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
 import com.google.maps.android.collections.MarkerManager;
@@ -97,6 +102,47 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             if (currentUser != null) {
                 LatLng currentPosition = currentUser.getLocation();
                 googleMap.animateCamera(CameraUpdateFactory.newLatLng(currentPosition));
+            }
+        });
+        binding.btnShowLocation.setOnClickListener(v -> {
+            binding.btnShowLocation.setVisibility(View.GONE);
+            binding.btnHideLocation.setVisibility(View.VISIBLE);
+            onShareLocationClicked(false);
+        });
+        binding.btnHideLocation.setOnClickListener(v -> {
+            binding.btnHideLocation.setVisibility(View.GONE);
+            binding.btnShowLocation.setVisibility(View.VISIBLE);
+            onShareLocationClicked(true);
+        });
+    }
+
+    private void onShareLocationClicked(boolean isChecked) {
+        currentUser.setIsSharingLocation(isChecked);
+
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_SETTINGS_KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
+        boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED;
+
+        if (!hasCoarseLocationPermission || !hasFineLocationPermission) {
+            locationPermissionLauncher.launch(ACCESS_FINE_LOCATION);
+            return;
+        }
+
+        homeViewModel.updateLocationSharing(isChecked, new UserListener<Boolean>() {
+            @Override
+            public void onUserSuccess(Boolean isChecked) {
+                editor.putBoolean(PREFS_SHARE_LOCATION_KEY, isChecked);
+                editor.apply();
+            }
+
+            @Override
+            public void onUserError(Exception error) {
+                if (error.getMessage() != null) {
+                    Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_LONG).show();
+                }
+                error.printStackTrace();
             }
         });
     }
@@ -156,6 +202,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     private void initViewModel() {
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        observeCurrentUser();
     }
 
     private void observeCurrentUser() {
@@ -165,6 +212,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             }
 
             this.currentUser = currentUser;
+            if (currentUser.getIsSharingLocation()) {
+                binding.btnShowLocation.setVisibility(View.VISIBLE);
+            } else {
+                binding.btnHideLocation.setVisibility(View.VISIBLE);
+            }
         });
     }
 
@@ -209,8 +261,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         NonHierarchicalDistanceBasedAlgorithm<MarkerClusterItem> clusterAlgorithm = new NonHierarchicalDistanceBasedAlgorithm<>();
         clusterAlgorithm.setMaxDistanceBetweenClusteredItems(MAX_CLUSTER_ITEM_DISTANCE);
         userClusterManager.setAlgorithm(clusterAlgorithm);
-
-        observeCurrentUser();
     }
 
     private void setupMeetupClusterManager(GoogleMap googleMap, MarkerManager markerManager) {
@@ -264,7 +314,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 if (userClusterManager == null || meetups.isEmpty()) {
                     return;
                 }
-
                 for (Meetup meetup : meetups) {
                     addMeetupMarker(meetup);
                 }

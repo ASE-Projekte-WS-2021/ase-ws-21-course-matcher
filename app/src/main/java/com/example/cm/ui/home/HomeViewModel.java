@@ -71,6 +71,21 @@ public class HomeViewModel extends ViewModel implements Callback {
         userRepository.updateField("isSharingLocation", enabled, this);
     }
 
+    public void updateLocationSharing(boolean enabled, UserListener<Boolean> listener) {
+        userRepository.updateField("isSharingLocation", enabled, new Callback() {
+            @Override
+            public OnSuccessListener<? super Void> onSuccess(Object object) {
+                listener.onUserSuccess(enabled);
+                return null;
+            }
+
+            @Override
+            public void onError(Object object) {
+                listener.onUserError((Exception) object);
+            }
+        });
+    }
+
     @Override
     public OnSuccessListener<? super Void> onSuccess(Object object) {
         return null;

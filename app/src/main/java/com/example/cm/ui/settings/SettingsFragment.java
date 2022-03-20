@@ -62,7 +62,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                 request -> {
                     if (!request) {
                         Snackbar.make(binding.getRoot(), R.string.location_permission_denied, Snackbar.LENGTH_LONG).show();
-                        binding.switchShareLocation.setChecked(false);
+                        //binding.switchShareLocation.setChecked(false);
                     }
                     SharedPreferences.Editor editor = requireActivity().getSharedPreferences(PREFS_SETTINGS_KEY, Context.MODE_PRIVATE).edit();
                     editor.putBoolean(PREFS_SHARE_LOCATION_KEY, request);
@@ -76,17 +76,15 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         binding.actionBar.tvTitle.setText(R.string.title_settings);
 
         // Set labels of links
-        binding.linkEditProfile.linkText.setText(getString(R.string.link_label_edit_profile));
         binding.linkEditAccount.linkText.setText(getString(R.string.link_label_edit_account));
-        binding.linkEditNotifications.linkText.setText(getString(R.string.link_label_edit_notifications));
+        //binding.linkEditNotifications.linkText.setText(getString(R.string.link_label_edit_notifications));
         binding.linkPrivacyPolicy.linkText.setText(getString(R.string.link_label_privacy_policy));
         binding.linkImprint.linkText.setText(getString(R.string.link_label_imprint));
         binding.linkLogout.linkText.setText(getString(R.string.link_label_logout));
 
         // Set icons of links
-        binding.linkEditProfile.linkIcon.setImageResource(R.drawable.ic_edit_profile);
         binding.linkEditAccount.linkIcon.setImageResource(R.drawable.ic_edit_account);
-        binding.linkEditNotifications.linkIcon.setImageResource(R.drawable.ic_edit_notifications);
+        //binding.linkEditNotifications.linkIcon.setImageResource(R.drawable.ic_edit_notifications);
         binding.linkPrivacyPolicy.linkIcon.setImageResource(R.drawable.ic_privacy_policy);
         binding.linkImprint.linkIcon.setImageResource(R.drawable.ic_imprint);
         binding.linkLogout.linkIcon.setImageResource(R.drawable.ic_logout);
@@ -105,7 +103,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         settingsViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 boolean isSharingLocation = user.getIsSharingLocation();
-                binding.switchShareLocation.setChecked(isSharingLocation);
+                //binding.switchShareLocation.setChecked(isSharingLocation);
             }
         });
     }
@@ -113,17 +111,12 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private void initListeners() {
         navigator = new Navigator(requireActivity());
         binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
-        binding.linkEditProfile.linkWrapper.setOnClickListener(v -> onEditProfileClicked());
         binding.linkEditAccount.linkWrapper.setOnClickListener(v -> onEditAccountClicked());
-        binding.linkEditNotifications.linkWrapper.setOnClickListener(v -> onEditNotificationsClicked());
+        //binding.linkEditNotifications.linkWrapper.setOnClickListener(v -> onEditNotificationsClicked());
         binding.linkPrivacyPolicy.linkWrapper.setOnClickListener(v -> onPrivacyPolicyClicked());
         binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
         binding.linkLogout.linkWrapper.setOnClickListener(v -> onLogoutClicked());
-        binding.switchShareLocation.setOnCheckedChangeListener((v, isChecked) -> onShareLocationClicked(isChecked));
-    }
-
-    private void onEditProfileClicked() {
-        navigator.getNavController().navigate(R.id.action_settingsFragment_to_editProfileFragment);
+        //binding.switchShareLocation.setOnCheckedChangeListener((v, isChecked) -> onShareLocationClicked(isChecked));
     }
 
     private void onEditAccountClicked() {
@@ -147,35 +140,6 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private void onLogoutClicked() {
         logoutDialog = new LogoutDialog(requireActivity(), this);
         logoutDialog.show();
-    }
-
-    private void onShareLocationClicked(boolean isChecked) {
-        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_SETTINGS_KEY, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-
-        boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
-        boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED;
-
-        if (!hasCoarseLocationPermission || !hasFineLocationPermission) {
-            locationPermissionLauncher.launch(ACCESS_FINE_LOCATION);
-            return;
-        }
-
-        settingsViewModel.updateLocationSharing(isChecked, new UserListener<Boolean>() {
-            @Override
-            public void onUserSuccess(Boolean isChecked) {
-                editor.putBoolean(PREFS_SHARE_LOCATION_KEY, isChecked);
-                editor.apply();
-            }
-
-            @Override
-            public void onUserError(Exception error) {
-                if (error.getMessage() != null) {
-                    Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_LONG).show();
-                }
-                error.printStackTrace();
-            }
-        });
     }
 
     private void openLink(String url) {

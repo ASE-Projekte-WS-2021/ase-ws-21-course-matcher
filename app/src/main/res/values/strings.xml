@@ -232,4 +232,5 @@
     <string name="app_name2">Sponti</string>
     <string name="friends_title">Füge deine Freunde hinzu</string>
     <string name="profile_btn_edit">Profil bearbeiten</string>
+    <string name="title_profile_other">other profile navigation</string>
 </resources>

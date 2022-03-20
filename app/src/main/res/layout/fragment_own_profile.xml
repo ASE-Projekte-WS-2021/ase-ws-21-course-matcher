@@ -58,8 +58,8 @@
                 style="@style/BtnOrangeSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_big"
                 android:backgroundTint="@color/outgreyed"
+                android:background="@drawable/btn_rounded"
                 tools:text="@string/profile_btn_edit" />
         </LinearLayout>
 

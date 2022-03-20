@@ -17,6 +17,10 @@
         android:id="@+id/action_global_navigate_to_invite_friends"
         app:destination="@+id/navigation_invite_friends" />
 
+    <action
+        android:id="@+id/action_global_to_edit_profile"
+        app:destination="@id/editProfileFragment" />
+
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.cm.ui.home.HomeFragment"
@@ -100,6 +104,9 @@
         <action
             android:id="@+id/action_navigation_profile_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_ownProfileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
 
     <fragment
@@ -162,6 +169,7 @@
             android:id="@+id/action_settingsFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.cm.ui.settings.edit_profile.EditProfileFragment"
