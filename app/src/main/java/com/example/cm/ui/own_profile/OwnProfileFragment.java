@@ -20,7 +20,6 @@ public class OwnProfileFragment extends Fragment {
     private OwnProfileViewModel ownProfileViewModel;
     private FragmentOwnProfileBinding binding;
     private Navigator navigator;
-    private GoogleMap map;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOwnProfileBinding.inflate(inflater, container, false);
