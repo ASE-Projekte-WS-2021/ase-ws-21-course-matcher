@@ -31,6 +31,9 @@ public class Constants {
     public static final int MARKER_PADDING = 25;
     public static final float DEFAULT_MAP_ZOOM = 12.5f;
     public static final int MARKER_SIZE = 150;
+    public static final int MEETUP_COUNT_RADIUS = 30;
+    public static final int MEETUP_COUNT_TEXT_SIZE = 30;
+    public static final int MAX_PARTICIPANT_COUNT_TO_SHOW = 9;
     public static final int MAP_CARD_ANIMATION_DURATION = 250;
     public static final float INITIAL_CARD_ALPHA = 0f;
     public static final float FINAL_CARD_ALPHA = 1f;
@@ -38,6 +41,7 @@ public class Constants {
     public static final int DEFAULT_CARD_OFFSET = 0;
     public static final int MAX_CLUSTER_ITEM_DISTANCE = 15;
     public static final int CURRENT_USER_Z_INDEX = 999;
+    public static final int MEETUP_Z_INDEX = 9999;
 
     public static final int MEETUP_DETAILED_USER_IMAGE_SIZE = 80;
     public static final int MEETUP_DETAILED_USER_IMAGE_PADDING = 5;

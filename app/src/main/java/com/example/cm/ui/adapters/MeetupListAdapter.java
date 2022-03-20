@@ -96,8 +96,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     }
 
     private void initTextViews(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {
-        String address = convertToAddress(holder.getContext(), meetup.getLocation());
-
+        String address = meetup.getLocationName();
         holder.getTvLocation().setText(address);
         switch (meetup.getPhase()) {
             case MEETUP_UPCOMING:
