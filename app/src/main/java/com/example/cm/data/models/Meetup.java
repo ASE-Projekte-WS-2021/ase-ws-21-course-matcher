@@ -27,6 +27,7 @@ public class Meetup {
     private List<String> declinedFriends;
     private List<String> lateFriends;
     private MeetupPhase phase;
+    private String locationName;
 
     private final Calendar calendarNow = GregorianCalendar.getInstance();
     private final Calendar calendarMeetup = GregorianCalendar.getInstance();
@@ -34,10 +35,11 @@ public class Meetup {
     public Meetup() {
     }
 
-    public Meetup(String id, String requestingUser, LatLng location, Date timestamp, boolean isPrivate, List<String> invitedFriends) {
+    public Meetup(String id, String requestingUser, LatLng location,String locationName, Date timestamp, boolean isPrivate, List<String> invitedFriends) {
         this.id = id;
         this.requestingUser = requestingUser;
         this.location = location;
+        this.locationName = locationName;
         this.timestamp = timestamp;
         calendarMeetup.setTime(timestamp);
         this.isPrivate = isPrivate;
@@ -110,6 +112,14 @@ public class Meetup {
 
     public LatLng getLocation() {
         return location;
+    }
+
+    public void setLocationName(String locationName){
+        this.locationName = locationName;
+    }
+
+    public String getLocationName(){
+        return locationName;
     }
 
     public void setLocation(LatLng location) {
