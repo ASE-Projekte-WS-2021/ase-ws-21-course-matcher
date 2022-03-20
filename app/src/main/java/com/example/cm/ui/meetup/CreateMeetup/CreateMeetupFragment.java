@@ -38,7 +38,6 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     private final Calendar calendarMeetup = Calendar.getInstance();
     private final Calendar calendarNow = Calendar.getInstance();
     int sMin, sHour;
-    private ArrayAdapter<CharSequence> adapter;
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentMeetupBinding binding;
     private Navigator navigator;
@@ -80,15 +79,22 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
     private void initUI() {
         showCurrentTime();
-        adapter = ArrayAdapter.createFromResource(getActivity(), R.array.meetup_locations, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         binding.actionBar.tvTitle.setText(R.string.meetup_header);
         binding.actionBar.btnBack.bringToFront();
     }
 
     private void initListener() {
         binding.meetupTimeText.setOnClickListener(v -> onTimePickerDialogClicked());
-        binding.meetupInfoBtn.setOnClickListener(v -> checkTime());
+        binding.meetupInfoBtn.setOnClickListener(v -> {
+            checkTime();
+            String inputAddress = binding.locationMeetup.getText().toString();
+            if (!inputAddress.isEmpty()) {
+                createMeetupViewModel.setMeetupLocation(inputAddress);
+                createMeetupViewModel.setMeetupLocationName(inputAddress);
+            } else {
+                createMeetupViewModel.setMeetupLocation(getString(R.string.meetup_location_not_found));
+            }
+        });
         binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
     }
 
@@ -120,7 +126,6 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         timePickerDialog.show();
     }
 
-
     private void onMeetupInfoBtnClicked() {
         //TODO den boolean wieder benutzen wenn gefiltert werden kann
         //Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
@@ -132,7 +137,6 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
         Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends);
     }
-
 
     @SuppressLint("SimpleDateFormat")
     private void initViewModel() {
@@ -227,10 +231,6 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
     private void geocodeLatLng(LatLng latLng) {
         String address = convertToAddress(requireActivity(), latLng);
-        if (!address.isEmpty()) {
-            createMeetupViewModel.setMeetupLocation(address);
-        } else {
-            createMeetupViewModel.setMeetupLocation(getString(R.string.meetup_location_not_found));
-        }
+        binding.locationMeetup.setText(address);
     }
 }

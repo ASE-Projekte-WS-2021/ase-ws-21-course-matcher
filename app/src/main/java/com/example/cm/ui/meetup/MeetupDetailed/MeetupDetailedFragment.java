@@ -92,7 +92,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
 
             tabLayoutMediator.attach();
 
-            String address = convertToAddress(requireActivity(), meetup.getLocation());
+            String address = meetup.getLocationName();
             binding.meetupDetailedLocation.setText(address);
 
             switch (meetup.getPhase()) {

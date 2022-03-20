@@ -16,17 +16,6 @@
     <string name="invite_friends_submit_btn">abschicken</string>
     <string name="meetup_time_in_past">Die gewählte Uhrzeit liegt in der Vergangenheit. Bitte wähle eine neue Uhrzeit.</string>
     <string name="invite_friends">Freunde auswählen</string>
-    <string-array name="meetup_locations">
-        <item>ALEA Kaffeebar</item>
-        <item>Cafe Zentral</item>
-        <item>Chemie Cafete</item>
-        <item>Das Unikat</item>
-        <item>Mensa Cafete</item>
-        <item>Primo Cafebar</item>
-        <item>PT Cafete</item>
-        <item>Sport Cafete</item>
-        <item>Wiwi Cafete</item>
-    </string-array>
     <string name="invitation_success_header">Geschafft!</string>
     <string name="invitation_success_header_desc">Deine Anfrage für euer Meetup wurde erfolgreich an deine Freunde versandt! Warte auf eine Reaktion und genießt die Zeit zusammen.</string>
     <string name="back_to_home_btn">zurück zum Homescreen</string>
@@ -231,10 +220,14 @@
     <string name="title_meetup_location">Meetup Treffpunkt</string>
     <string name="app_name2">Sponti</string>
     <string name="friends_title">Füge deine Freunde hinzu</string>
+
     <string name="profile_btn_edit">Profil bearbeiten</string>
     <string name="title_profile_other">other profile navigation</string>
 
     <string name="content_description_center_btn">Eigenen Standort auf der Karte zentrieren</string>
     <string name="content_description_hide_location_btn">Eigener Standort ist aktuell für Freunde nicht sichtbar</string>
     <string name="content_description_show_location_btn">Eigener Standort ist aktuell für Freunde sichtbar</string>
+
+    <string name="location_hint">Treffpunkt</string>
+
 </resources>
