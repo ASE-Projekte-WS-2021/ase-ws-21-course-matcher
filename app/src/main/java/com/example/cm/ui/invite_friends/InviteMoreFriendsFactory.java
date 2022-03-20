@@ -6,15 +6,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class InviteMoreFriendsFactory implements ViewModelProvider.Factory {
 
-    private final String mParam;
+    private final String meetupId;
 
-    public InviteMoreFriendsFactory(String param) {
-        mParam = param;
+    public InviteMoreFriendsFactory(String meetupId) {
+        this.meetupId = meetupId;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new InviteMoreFriendsViewModel(mParam);
+        return (T) new InviteMoreFriendsViewModel(meetupId);
     }
 }

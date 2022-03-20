@@ -51,6 +51,10 @@ public class Constants {
     public static final float PENDING_HEADER_WEIGHT = 0.7f;
     public static final float ADD_HEADER_WEIGHT = 0.5f;
     public static final float CREATE_MEETUP_ZOOM_LEVEL = 15f;
+    public static final int PENDING_TAB_INDEX = 2;
+    public static final int ADD_MORE_TAB_INDEX = 3;
+
+    public static final int MAX_QUERY_LENGTH = 10;
 
     public enum ImageType {
         PROFILE_IMAGE,

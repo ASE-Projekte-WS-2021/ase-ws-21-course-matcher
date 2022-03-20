@@ -34,6 +34,7 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
     private String meetupId;
     private List<String> userIdsAlreadyInMeetup;
     private Navigator navigator;
+    private boolean filtered = false;
 
     public InviteMoreFriendsFragment(String meetupId, List<String> userIdsAlreadyInMeetup) {
         this.meetupId = meetupId;
@@ -87,6 +88,8 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
             binding.loadingCircle.setVisibility(View.GONE);
 
             if (users.isEmpty()) {
+                int text = filtered ? R.string.find_friends_no_friends_found : R.string.friendslist_tv_no_friends_not_in_meetup;
+                binding.tvNoFriendsFound.setText(text);
                 binding.noFriendsWrapper.setVisibility(View.VISIBLE);
                 binding.rvUserList.setVisibility(View.GONE);
                 return;
@@ -122,8 +125,10 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
         String query = charSequence.toString();
         if (query.length() > 0) {
             binding.ivClearInput.setVisibility(View.VISIBLE);
+            filtered = true;
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
+            filtered = false;
         }
         inviteMoreFriendsViewModel.searchUsers(query, userIdsAlreadyInMeetup);
     }

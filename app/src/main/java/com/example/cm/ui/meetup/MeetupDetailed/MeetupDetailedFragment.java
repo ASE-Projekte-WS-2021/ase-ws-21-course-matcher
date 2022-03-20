@@ -133,12 +133,12 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
 
         ViewGroup slidingTabStrip = (ViewGroup)tabLayout.getChildAt(0);
 
-        View tab2 = slidingTabStrip.getChildAt(2);
+        View tab2 = slidingTabStrip.getChildAt(Constants.PENDING_TAB_INDEX);
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) tab2.getLayoutParams();
         layoutParams2.weight = Constants.PENDING_HEADER_WEIGHT;
         tab2.setLayoutParams(layoutParams2);
 
-        View tab3 = slidingTabStrip.getChildAt(3);
+        View tab3 = slidingTabStrip.getChildAt(Constants.ADD_MORE_TAB_INDEX);
         LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) tab3.getLayoutParams();
         layoutParams3.weight = Constants.ADD_HEADER_WEIGHT;
         tab3.setLayoutParams(layoutParams3);

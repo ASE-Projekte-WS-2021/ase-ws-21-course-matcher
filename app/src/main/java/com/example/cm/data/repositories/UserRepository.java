@@ -2,11 +2,13 @@ package com.example.cm.data.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.cm.Constants;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.data.models.UserPOJO;
 import com.example.cm.utils.Utils;
+import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -366,27 +368,12 @@ public class UserRepository extends Repository {
      * @return MutableLiveData-List of mutable users with ids
      */
     public MutableLiveData<List<MutableLiveData<User>>> getUsersByIds(List<String> userIds) {
-        if (userIds == null || userIds.isEmpty()) {
-            mutableUsers.postValue(new ArrayList<>());
+        if (userIds == null) {
             return mutableUsers;
         }
-
-        if (userIds.size() > 10) {
-            List<MutableLiveData<User>> users = new ArrayList<>();
-            for (String userId : userIds) {
-                userCollection.document(userId).addSnapshotListener(executorService, (value, error) -> {
-                    if (error != null) {
-                        return;
-                    }
-                    if (value != null && value.exists()) {
-                        users.add(new MutableLiveData<>(snapshotToUser(value)));
-                    }
-                });
-            }
-            mutableUsers.postValue(users);
-        }
-        else {
-            userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener(executorService, (value, error) -> {
+        List<List<String>> subLists = Lists.partition(userIds, Constants.MAX_QUERY_LENGTH);
+        for (List<String> subList : subLists) {
+            userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService, (value, error) -> {
                 if (error != null) {
                     return;
                 }
@@ -396,7 +383,6 @@ public class UserRepository extends Repository {
                 }
             });
         }
-
         return mutableUsers;
     }
 

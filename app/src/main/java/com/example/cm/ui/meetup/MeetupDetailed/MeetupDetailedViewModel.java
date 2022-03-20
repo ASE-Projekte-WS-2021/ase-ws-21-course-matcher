@@ -49,8 +49,8 @@ public class MeetupDetailedViewModel extends ViewModel {
         meetupRepository.addConfirmed(meetupId, currentUserId);
     }
 
-    public void onLate(boolean comesLate) {
-        meetupRepository.addLate(meetupId, currentUserId, comesLate);
+    public void onLate(boolean isComingLate) {
+        meetupRepository.addLate(meetupId, currentUserId, isComingLate);
     }
 
     public void onDelete() {

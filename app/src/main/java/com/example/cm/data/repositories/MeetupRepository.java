@@ -174,8 +174,8 @@ public class MeetupRepository {
         meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayUnion(participantId));
     }
 
-    public void addLate(String meetupId, String participantId, boolean comesLate) {
-        if (comesLate) {
+    public void addLate(String meetupId, String participantId, boolean isComingLate) {
+        if (isComingLate) {
             meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayUnion(participantId));
         } else {
             meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayRemove(participantId));
