@@ -1,7 +1,5 @@
 package com.example.cm.ui.meetup;
 
-import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,22 +8,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.cm.R;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.databinding.FragmentMeetupTabsBinding;
 import com.example.cm.ui.adapters.MeetupTabAdapter;
 import com.example.cm.ui.meetup.MeetupRequests.MeetupRequestsViewModel;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.Utils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.util.List;
-
-import timber.log.Timber;
 
 public class MeetupTabsFragment extends Fragment {
     private MeetupTabAdapter meetupTabAdapter;
@@ -33,7 +26,6 @@ public class MeetupTabsFragment extends Fragment {
     private ViewPager2 viewPager;
     private FragmentMeetupTabsBinding binding;
     private Navigator navigator;
-    private int openRequests = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,39 +49,10 @@ public class MeetupTabsFragment extends Fragment {
             if (meetupRequests == null) {
                 return;
             }
-            countOpenRequests(meetupRequests);
-            hideShowBadge();
+            int openRequests = Utils.getOpenRequestCount(meetupRequests);
+            TabLayout.Tab tab = binding.tabLayout.getTabAt(1);
+            Utils.hideShowBadge(tab, openRequests, getResources());
         });
-    }
-
-    private void countOpenRequests(List<MutableLiveData<MeetupRequest>> meetupRequests) {
-        // Reset the open requests counter
-        openRequests = 0;
-
-        for (int i = 0; i < meetupRequests.size(); i++) {
-            MeetupRequest meetupRequest = meetupRequests.get(i).getValue();
-            if (meetupRequest == null) {
-                continue;
-            }
-            if (meetupRequest.getState() == REQUEST_PENDING) {
-                openRequests++;
-            }
-        }
-    }
-
-    private void hideShowBadge() {
-        TabLayout.Tab tab = binding.tabLayout.getTabAt(1);
-        if (tab == null) {
-            return;
-        }
-        if (openRequests > 0) {
-            tab.getOrCreateBadge().setNumber(openRequests);
-            tab.getOrCreateBadge().setBackgroundColor(getResources().getColor(R.color.orange500));
-            tab.getOrCreateBadge().setBadgeTextColor(getResources().getColor(R.color.white));
-            tab.getOrCreateBadge().setVisible(true);
-        } else {
-            tab.getOrCreateBadge().setVisible(false);
-        }
     }
 
     private void initListeners() {
