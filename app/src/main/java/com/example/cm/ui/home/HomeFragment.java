@@ -334,6 +334,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             return;
         }
 
+        currentUser.setLocation(position);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_MAP_ZOOM));
         homeViewModel.updateLocation(position);
         addMarker(currentUser, true);
