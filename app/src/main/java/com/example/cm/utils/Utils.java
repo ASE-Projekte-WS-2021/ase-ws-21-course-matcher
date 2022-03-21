@@ -1,6 +1,9 @@
 package com.example.cm.utils;
 
+import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
+
 import android.content.Context;
+import android.content.res.Resources;
 import android.location.Geocoder;
 import android.os.Build;
 import android.view.View;
@@ -13,8 +16,10 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.example.cm.R;
+import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -142,5 +147,49 @@ public class Utils {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
+    }
+
+
+    /**
+     * Displays a badge in the Requests tab when open requests are available
+     *
+     * @param tab          The tab to display the badge in
+     * @param openRequests The number of open requests
+     * @param resources    The resources to get the badge color from
+     */
+    public static void hideShowBadge(TabLayout.Tab tab, int openRequests, Resources resources) {
+        if (tab == null) {
+            return;
+        }
+        if (openRequests > 0) {
+            tab.getOrCreateBadge().setNumber(openRequests);
+            tab.getOrCreateBadge().setBackgroundColor(resources.getColor(R.color.orange500));
+            tab.getOrCreateBadge().setBadgeTextColor(resources.getColor(R.color.white));
+            tab.getOrCreateBadge().setVisible(true);
+        } else {
+            tab.getOrCreateBadge().setVisible(false);
+        }
+    }
+
+    /**
+     * Returns the amount of open requests
+     *
+     * @param requests The list of requests
+     * @param <T>      The type of the requests
+     * @return The amount of open requests
+     */
+    public static <T extends Request> int getOpenRequestCount(List<MutableLiveData<T>> requests) {
+        int openRequests = 0;
+
+        for (int i = 0; i < requests.size(); i++) {
+            Request request = requests.get(i).getValue();
+            if (request == null) {
+                continue;
+            }
+            if (request.getState() == REQUEST_PENDING) {
+                openRequests++;
+            }
+        }
+        return openRequests;
     }
 }
