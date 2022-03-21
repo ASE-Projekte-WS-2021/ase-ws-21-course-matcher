@@ -20,7 +20,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 import java.util.Objects;
 
-
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
     private ViewGroup parent;
@@ -43,7 +42,8 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         result.dispatchUpdatesTo(this);
     }
 
-    public static DiffUtil.DiffResult calculateDiffMeetupRequests(List<MeetupRequest> oldRequests, List<MeetupRequest> newRequests) {
+    public static DiffUtil.DiffResult calculateDiffMeetupRequests(List<MeetupRequest> oldRequests,
+            List<MeetupRequest> newRequests) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -66,7 +66,8 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
                 MeetupRequest newRequest = newRequests.get(newItemPosition);
                 MeetupRequest oldRequest = oldRequests.get(oldItemPosition);
 
-                return Objects.equals(Objects.requireNonNull(newRequest).getId(), Objects.requireNonNull(oldRequest).getId());
+                return Objects.equals(Objects.requireNonNull(newRequest).getId(),
+                        Objects.requireNonNull(oldRequest).getId());
             }
         });
     }
@@ -90,9 +91,11 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     @NonNull
     @Override
-    public MeetupRequestListAdapter.MeetupRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MeetupRequestListAdapter.MeetupRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+            int viewType) {
         this.parent = parent;
-        ItemMeetupRequestBinding binding = ItemMeetupRequestBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemMeetupRequestBinding binding = ItemMeetupRequestBinding.inflate(LayoutInflater.from(parent.getContext()),
+                parent, false);
         return new MeetupRequestListAdapter.MeetupRequestViewHolder(binding);
     }
 
@@ -106,28 +109,6 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         String location = request.getLocation();
 
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
-
-        switch (request.getPhase()) {
-            case MEETUP_UPCOMING:
-                holder.getTvMeetupTime().setText(request.getFormattedTime());
-                break;
-            case MEETUP_ACTIVE:
-                holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getFormattedTime()));
-                break;
-            case MEETUP_ENDED:
-                int color = context.getResources().getColor(R.color.outgreyed);
-                holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
-
-                holder.getTvMeetupTime().setTextColor(color);
-                holder.getTvLocation().setTextColor(color);
-                holder.getTvSender().setTextColor(color);
-                holder.getTvDescription().setTextColor(color);
-                holder.getBtnAccept().setImageResource(R.drawable.ic_button_accept_disabled);
-                holder.getBtnDecline().setImageResource(R.drawable.ic_button_decline_disabled);
-                holder.getBtnAccept().setOnClickListener(null);
-                holder.getBtnDecline().setOnClickListener(null);
-                break;
-        }
 
         int content = 0;
         switch (request.getType()) {
@@ -150,6 +131,27 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         holder.getTvDescription().setText(content);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
         holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
+
+        switch (request.getPhase()) {
+            case MEETUP_UPCOMING:
+                holder.getTvMeetupTime().setText(request.getFormattedTime());
+                break;
+            case MEETUP_ACTIVE:
+                holder.getTvMeetupTime()
+                        .setText(context.getString(R.string.meetup_active_text, request.getFormattedTime()));
+                break;
+            case MEETUP_ENDED:
+                int color = context.getResources().getColor(R.color.outgreyed);
+                holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
+
+                holder.getTvMeetupTime().setTextColor(color);
+                holder.getTvLocation().setTextColor(color);
+                holder.getTvSender().setTextColor(color);
+                holder.getTvDescription().setTextColor(color);
+                holder.getBtnAccept().setVisibility(View.GONE);
+                holder.getBtnDecline().setVisibility(View.GONE);
+                break;
+        }
     }
 
     @Override
@@ -175,8 +177,10 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     }
 
     /**
-     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
-     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data
+     * (e.g. image)
+     * Source:
+     * https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
      */
     @Override
     public long getItemId(int position) {
@@ -206,7 +210,8 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
         private void onItemClicked() {
             int position = getAdapterPosition();
-            if (position == RecyclerView.NO_POSITION || listener == null) return;
+            if (position == RecyclerView.NO_POSITION || listener == null)
+                return;
             listener.onItemClicked(mRequests.get(position).getMeetupId());
         }
 
@@ -265,5 +270,3 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
     }
 }
-
-

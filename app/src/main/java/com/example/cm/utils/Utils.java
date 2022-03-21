@@ -31,6 +31,8 @@ import java.util.Objects;
 
 public class Utils {
 
+    private static int mapViewWidth, mapViewHeight;
+
     /**
      * Hides the keyboard
      *

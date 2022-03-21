@@ -16,6 +16,7 @@ public class MeetupRequest extends Request {
 
     private String meetupId;
     private String location;
+    private String imageUrl;
     private Date meetupAt;
     private MeetupRequestType type;
     private MeetupPhase phase;
@@ -32,12 +33,13 @@ public class MeetupRequest extends Request {
     }
 
     public MeetupRequest(String meetupId, String senderId, String senderName,
-                         String receiverId, String location, Date meetupAt, MeetupRequestType type) {
+                         String receiverId, String location, Date meetupAt, String imageUrl, MeetupRequestType type) {
         super(senderId, senderName, receiverId);
         this.meetupId = meetupId;
         this.location = location;
         this.meetupAt = meetupAt;
         calendarMeetup.setTime(meetupAt);
+        this.imageUrl = imageUrl;
         this.type = type;
         if(type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED){
             state = RequestState.REQUEST_ANSWERED;
@@ -121,6 +123,14 @@ public class MeetupRequest extends Request {
             default:
                 return meetupString;
         }
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public enum MeetupRequestType {

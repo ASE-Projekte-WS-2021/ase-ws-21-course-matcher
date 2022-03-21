@@ -4,11 +4,6 @@
     tools:context=".activities.PatientSelectionActivity">
 
     <item
-        android:id="@+id/menuMap"
-        android:icon="@drawable/ic_map_small"
-        android:title="@string/map" />
-
-    <item
         android:id="@+id/menuAccept"
         android:icon="@drawable/ic_accept"
         android:title="@string/accept" />
@@ -24,15 +19,19 @@
         android:title="@string/decline" />
 
     <item
+        android:id="@+id/menuLeave"
+        android:icon="@drawable/ic_logout"
+        android:title="@string/leave"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/menuMap"
+        android:icon="@drawable/ic_map_small"
+        android:title="@string/map" />
+
+    <item
         android:id="@+id/menuDelete"
         android:icon="@drawable/ic_trash_menu"
         android:title="@string/delete" />
-
-    <!--
-    <item
-        android:id="@+id/menuAddMore"
-        android:icon="@drawable/ic_add_more_btn"
-        android:title="@string/add_more" />
-        -->
 
 </menu>

@@ -10,7 +10,8 @@
     <string name="meetup_private">lieber privat treffen</string>
     <string name="meetup_place">Wo wollt ihr euch treffen?</string>
     <string name="meetup_submit_btn">weiter und Freunde auswählen</string>
-    <string name="meetup_info_submit_btn">weiter</string>
+    <string name="meetup_info_submit_btn">Weiter</string>
+    <string name="meetup_info_submit_btn_loading">Speichern…</string>
     <string name="invite_friends_header_desc">Wähle aus, mit wem du dich treffen möchtest:</string>
     <string name="invite_friends_back_btn">zurück</string>
     <string name="invite_friends_submit_btn">abschicken</string>
@@ -186,6 +187,7 @@
     <string name="accept">Zusagen</string>
     <string name="decline">Absagen</string>
     <string name="late">Komme etwas später</string>
+    <string name="not_late">Schaffe es pünktlich</string>
     <string name="delete">Meetup löschen</string>
     <string name="add_more">Weitere Freunde hinzufügen</string>
     <string name="map">Auf Karte anzeigen</string>
@@ -218,7 +220,23 @@
 
     <!-- Meetup Location Fragment -->
     <string name="title_meetup_location">Meetup Treffpunkt</string>
+    <string name="meetup_tabs_label_add">+</string>
+    <string name="friendslist_tv_no_friends_not_in_meetup">Alle deine Freunde wurden bereits eingeladen.</string>
+    <string name="invite_more_friends">invite more friends</string>
+    <string name="leave">Verlassen</string>
+
     <string name="app_name2">Sponti</string>
     <string name="friends_title">Füge deine Freunde hinzu</string>
+
+    <string name="profile_btn_edit">Profil bearbeiten</string>
+    <string name="title_profile_other">other profile navigation</string>
+
+    <string name="content_description_center_btn">Eigenen Standort auf der Karte zentrieren</string>
+    <string name="content_description_hide_location_btn">Eigener Standort ist aktuell für Freunde nicht sichtbar</string>
+    <string name="content_description_show_location_btn">Eigener Standort ist aktuell für Freunde sichtbar</string>
+
     <string name="location_hint">Treffpunkt</string>
+    <string name="snackbar_share_location">Dein Standort ist jetzt für deine Freunde sichtbar!</string>
+    <string name="snackbar_hide_location">Dein Standort ist nicht länger für deine Freunde sichtbar!</string>
+
 </resources>
