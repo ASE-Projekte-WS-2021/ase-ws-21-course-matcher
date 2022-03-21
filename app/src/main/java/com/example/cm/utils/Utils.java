@@ -176,11 +176,11 @@ public class Utils {
      * @param <T>      The type of the requests
      * @return The amount of open requests
      */
-    public static <T extends Request> int getOpenRequestCount(List<MutableLiveData<T>> requests) {
+    public static <T extends Request> int getOpenRequestCount(List<T> requests) {
         int openRequests = 0;
 
         for (int i = 0; i < requests.size(); i++) {
-            Request request = requests.get(i).getValue();
+            Request request = requests.get(i);
             if (request == null) {
                 continue;
             }

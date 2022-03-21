@@ -351,7 +351,7 @@ public class UserRepository extends Repository {
                     return;
                 }
                 if (value != null && !value.isEmpty()) {
-                    List<MutableLiveData<User>> users = snapshotToMutableUserList(value);
+                    List<User> users = snapshotToMutableUserList(value);
                     mutableUsers.postValue(users);
                 }
             });
