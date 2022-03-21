@@ -220,5 +220,16 @@
     <string name="title_meetup_location">Meetup Treffpunkt</string>
     <string name="app_name2">Sponti</string>
     <string name="friends_title">Füge deine Freunde hinzu</string>
+
+    <string name="profile_btn_edit">Profil bearbeiten</string>
+    <string name="title_profile_other">other profile navigation</string>
+
+    <string name="content_description_center_btn">Eigenen Standort auf der Karte zentrieren</string>
+    <string name="content_description_hide_location_btn">Eigener Standort ist aktuell für Freunde nicht sichtbar</string>
+    <string name="content_description_show_location_btn">Eigener Standort ist aktuell für Freunde sichtbar</string>
+
     <string name="location_hint">Treffpunkt</string>
+    <string name="snackbar_share_location">Dein Standort ist jetzt für deine Freunde sichtbar!</string>
+    <string name="snackbar_hide_location">Dein Standort ist nicht länger für deine Freunde sichtbar!</string>
+
 </resources>
