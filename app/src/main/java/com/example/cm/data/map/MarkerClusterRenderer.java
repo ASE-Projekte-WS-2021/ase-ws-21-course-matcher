@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -21,7 +22,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
-public class MarkerClusterRenderer<T extends MarkerClusterItem> extends DefaultClusterRenderer<MarkerClusterItem> {
+public class MarkerClusterRenderer extends DefaultClusterRenderer<MarkerClusterItem> {
     private final ImageView imageView;
     private final IconGenerator iconGenerator;
 

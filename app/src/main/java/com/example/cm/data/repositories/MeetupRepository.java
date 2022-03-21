@@ -1,13 +1,14 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.data.models.MeetupPhase.MEETUP_ACTIVE;
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
 import static com.example.cm.data.repositories.Repository.executorService;
 import static com.example.cm.utils.Utils.getCurrentDay;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.cm.Constants;
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.listener.MeetupListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPOJO;
 import com.example.cm.data.models.MeetupPhase;
@@ -26,11 +27,12 @@ import java.util.List;
 public class MeetupRepository {
     private static MeetupRepository INSTANCE = null;
 
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
     private MutableLiveData<List<MutableLiveData<Meetup>>> meetupListMLD = new MutableLiveData<>();
     private MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
-    private MutableLiveData<List<String>> lateUsersMLD = new MutableLiveData<>();
+    private MutableLiveData<List<String>> usersMLD = new MutableLiveData<>();
 
     public MeetupRepository() {
         listenToMeetupListChanges();
@@ -69,6 +71,33 @@ public class MeetupRepository {
         return meetupListMLD;
     }
 
+    public void getCurrentMeetups(MeetupListener<List<Meetup>> listener) {
+        if (auth.getCurrentUser() == null) {
+            return;
+        }
+
+        String currentUserId = auth.getCurrentUser().getUid();
+
+        meetupCollection.whereArrayContains("confirmedFriends", currentUserId).get()
+                .addOnFailureListener(executorService, (e) -> {
+                    listener.onMeetupError(e);
+                }).addOnSuccessListener(executorService, (value) -> {
+                    List<Meetup> meetups = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : value) {
+                        MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
+                        meetupPOJO.setId(document.getId());
+
+                        boolean isMeetupActive = meetupPOJO.getPhase() == MEETUP_ACTIVE;
+                        boolean isUserInMeetup = meetupPOJO.getConfirmedFriends().contains(currentUserId);
+
+                        if (isMeetupActive && isUserInMeetup) {
+                            meetups.add(meetupPOJO.toObject());
+                        }
+                    }
+                    listener.onMeetupSuccess(meetups);
+                });
+    }
+
     public MutableLiveData<Meetup> getMeetup(String id) {
         meetupCollection.document(id).addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
@@ -82,6 +111,28 @@ public class MeetupRepository {
         return meetupMLD;
     }
 
+    public MutableLiveData<List<String>> getAllUsersForMeetup(String meetupId) {
+        meetupCollection.document(meetupId).addSnapshotListener(executorService, (value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null && value.exists()) {
+                List<String> users = new ArrayList<>();
+                if (value.get("invitedFriends") != null) {
+                    users.addAll((List<String>) value.get("invitedFriends"));
+                }
+                if (value.get("confirmedFriends") != null) {
+                    users.addAll((List<String>) value.get("confirmedFriends"));
+                }
+                if (value.get("declinedFriends") != null) {
+                    users.addAll((List<String>) value.get("declinedFriends"));
+                }
+                usersMLD.postValue(users);
+            }
+        });
+        return usersMLD;
+    }
+
     public MutableLiveData<List<String>> getLateUsers(String meetupId) {
         meetupCollection.document(meetupId).addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
@@ -89,10 +140,10 @@ public class MeetupRepository {
             }
             if (value != null && value.exists()) {
                 List<String> lateUsers = (List<String>) value.get("lateFriends");
-                lateUsersMLD.postValue(lateUsers);
+                usersMLD.postValue(lateUsers);
             }
         });
-        return lateUsersMLD;
+        return usersMLD;
     }
 
     public boolean addMeetup(Meetup meetup) {
@@ -118,6 +169,10 @@ public class MeetupRepository {
         });
     }
 
+    public void addInvited(String meetupId, String participantId) {
+        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayUnion(participantId));
+    }
+
     public void addConfirmed(String meetupId, String participantId) {
         meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayRemove(participantId));
@@ -131,14 +186,36 @@ public class MeetupRepository {
         meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayUnion(participantId));
     }
 
+    public void addLeft(String meetupId, String participantId) {
+        meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayRemove(participantId));
+        meetupCollection.document(meetupId).addSnapshotListener(executorService, (value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null && value.exists()) {
+                Meetup meetup = snapshotToMeetup(value);
+                if (meetup.getInvitedFriends().isEmpty() && meetup.getConfirmedFriends().isEmpty()) {
+                    meetupCollection.document(meetupId).update("phase", MEETUP_ENDED);
+                }
+            }
+        });
+    }
+
     public void addPending(String meetupId, String participantId) {
         meetupCollection.document(meetupId).update("declinedFriends", FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update("confirmedFriends", FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update("invitedFriends", FieldValue.arrayUnion(participantId));
     }
 
-    public void addLate(String meetupId, String participantId) {
-        meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayUnion(participantId));
+    public void addLate(String meetupId, String participantId, boolean isComingLate) {
+        if (isComingLate) {
+            meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayUnion(participantId));
+        } else {
+            meetupCollection.document(meetupId).update("lateFriends", FieldValue.arrayRemove(participantId));
+        }
     }
 
     /**
@@ -167,7 +244,6 @@ public class MeetupRepository {
         MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
         assert meetupPOJO != null;
         meetupPOJO.setId(document.getId());
-
         return meetupPOJO.toObject();
     }
 }

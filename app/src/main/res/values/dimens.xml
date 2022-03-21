@@ -34,4 +34,5 @@
 
     <dimen name="stroke_width">2dp</dimen>
     <dimen name="padding_ultra">80dp</dimen>
+    <dimen name="stroke_width_half">1dp</dimen>
 </resources>
