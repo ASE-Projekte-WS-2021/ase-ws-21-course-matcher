@@ -1,6 +1,7 @@
 package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -131,15 +132,18 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         String requestDescription = "";
 
         Request.RequestState requestState = request.getState();
+        
+        Resources resources = parent.getResources();
 
         if (requestState == Request.RequestState.REQUEST_PENDING) {
-            requestDescription = "Du wartest auf eine Antwort.";
+            
+            requestDescription = resources.getString(R.string.friend_request_own_pending);
         } else if (requestState == Request.RequestState.REQUEST_ACCEPTED) {
-            requestDescription = "Deine Freundschaftsanfrage wurde bestätigt.";
+            requestDescription = resources.getString(R.string.friend_request_own_accepted);
         } else if (requestState == Request.RequestState.REQUEST_ANSWERED) {
-            requestDescription = "Deine Freundschaftsanfrage wurde beantwortet.";
+            requestDescription = resources.getString(R.string.friend_request_own_answered);
         } else if (requestState == Request.RequestState.REQUEST_DECLINED) {
-            requestDescription = "Deine Freundschaftsanfrage wurde abgelehnt.";
+            requestDescription = resources.getString(R.string.friend_request_own_declined);
         }
 
         if (fullName != null) {

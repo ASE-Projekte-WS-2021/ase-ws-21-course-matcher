@@ -231,4 +231,8 @@
     <string name="title_meetup_location">Meetup Treffpunkt</string>
     <string name="app_name2">Sponti</string>
     <string name="friends_title">Füge deine Freunde hinzu</string>
+    <string name="friend_request_own_pending">hat noch nicht geantwortet.</string>
+    <string name="friend_request_own_accepted">hat angenommen.</string>
+    <string name="friend_request_own_answered">hat akzeptiert.</string>
+    <string name="friend_request_own_declined">hat abgelehnt.</string>
 </resources>

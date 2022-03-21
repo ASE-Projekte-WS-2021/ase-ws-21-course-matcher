@@ -98,7 +98,7 @@ public class FriendRequestRepository extends Repository {
                     if (error != null) {
                         return;
                     }
-                    if (value != null && !value.isEmpty()) {
+                    if (value != null) {
                         List<MutableLiveData<FriendRequest>> requests = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);

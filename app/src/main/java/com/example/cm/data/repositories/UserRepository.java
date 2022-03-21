@@ -18,6 +18,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -344,7 +345,9 @@ public class UserRepository extends Repository {
             return mutableUsers;
         }
 
-        userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener(executorService, (value, error) -> {
+        List<String> userIdsNoDuplicates = new ArrayList<>(new HashSet<>(userIds));
+
+        userCollection.whereIn(FieldPath.documentId(), userIdsNoDuplicates).addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
                 return;
             }
