@@ -1,5 +1,6 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.data.models.MeetupPhase.MEETUP_ACTIVE;
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
 import static com.example.cm.data.repositories.Repository.executorService;
 import static com.example.cm.utils.Utils.getCurrentDay;
@@ -7,6 +8,7 @@ import static com.example.cm.utils.Utils.getCurrentDay;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.listener.MeetupListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPOJO;
 import com.example.cm.data.models.MeetupPhase;
@@ -24,6 +26,8 @@ import java.util.List;
 
 public class MeetupRepository {
 
+    private static MeetupRepository instance;
+    private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
     private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
@@ -32,6 +36,13 @@ public class MeetupRepository {
 
     public MeetupRepository() {
         listenToMeetupListChanges();
+    }
+
+    public static MeetupRepository getInstance() {
+        if (instance == null) {
+            instance = new MeetupRepository();
+        }
+        return instance;
     }
 
     private void listenToMeetupListChanges() {
@@ -58,6 +69,33 @@ public class MeetupRepository {
 
     public MutableLiveData<List<Meetup>> getMeetups() {
         return meetupListMLD;
+    }
+
+    public void getCurrentMeetups(MeetupListener<List<Meetup>> listener) {
+        if (auth.getCurrentUser() == null) {
+            return;
+        }
+
+        String currentUserId = auth.getCurrentUser().getUid();
+
+        meetupCollection.whereArrayContains("confirmedFriends", currentUserId).get()
+                .addOnFailureListener(executorService, (e) -> {
+                    listener.onMeetupError(e);
+                }).addOnSuccessListener(executorService, (value) -> {
+                    List<Meetup> meetups = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : value) {
+                        MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
+                        meetupPOJO.setId(document.getId());
+
+                        boolean isMeetupActive = meetupPOJO.getPhase() == MEETUP_ACTIVE;
+                        boolean isUserInMeetup = meetupPOJO.getConfirmedFriends().contains(currentUserId);
+
+                        if(isMeetupActive && isUserInMeetup) {
+                            meetups.add(meetupPOJO.toObject());
+                        }
+                    }
+                    listener.onMeetupSuccess(meetups);
+                });
     }
 
     public MutableLiveData<Meetup> getMeetup(String id) {

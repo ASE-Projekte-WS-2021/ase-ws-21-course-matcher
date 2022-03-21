@@ -7,6 +7,7 @@ import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.data.models.UserPOJO;
 import com.example.cm.utils.Utils;
+import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -342,16 +343,19 @@ public class UserRepository extends Repository {
             mutableUsers.postValue(new ArrayList<>());
             return mutableUsers;
         }
-
-        userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener(executorService, (value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null && !value.isEmpty()) {
-                List<User> users = snapshotToMutableUserList(value);
-                mutableUsers.postValue(users);
-            }
-        });
+      
+        List<List<String>> subLists = Lists.partition(userIds, 10);
+        for (List<String> subList : subLists) {
+            userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService, (value, error) -> {
+                if (error != null) {
+                    return;
+                }
+                if (value != null && !value.isEmpty()) {
+                    List<MutableLiveData<User>> users = snapshotToMutableUserList(value);
+                    mutableUsers.postValue(users);
+                }
+            });
+        }
         return mutableUsers;
     }
 

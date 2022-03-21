@@ -32,6 +32,7 @@ public class CreateMeetupViewModel extends ViewModel {
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
+    private final MutableLiveData<String> meetupLocationName = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
     public MutableLiveData<List<User>> users;
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
@@ -80,6 +81,12 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupLocation.postValue(location);
     }
 
+    public void setMeetupLocationName(String locationName){
+        meetupLocationName.postValue((locationName));
+    }
+
+    public LiveData<String> getMeetupLocationName(){ return meetupLocationName;}
+
     public LiveData<Boolean> getMeetupIsPrivate() {
         return meetupIsPrivate;
     }
@@ -106,6 +113,7 @@ public class CreateMeetupViewModel extends ViewModel {
                     meetupId,
                     userRepository.getFirebaseUser().getUid(),
                     meetupLatLng.getValue(),
+                    meetupLocationName.getValue(),
                     meetupTimestamp.getValue(),
                     Boolean.TRUE.equals(meetupIsPrivate.getValue()),
                     selectedUsers.getValue());
