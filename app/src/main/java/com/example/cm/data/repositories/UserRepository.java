@@ -358,7 +358,6 @@ public class UserRepository extends Repository {
             });
         }
 
-
         return mutableUsers;
     }
 

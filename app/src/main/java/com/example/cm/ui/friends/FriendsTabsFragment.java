@@ -56,7 +56,6 @@ public class FriendsTabsFragment extends Fragment {
         });
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         friendsTabAdapter = new FriendsTapAdapter(this);
@@ -72,5 +71,4 @@ public class FriendsTabsFragment extends Fragment {
             }
         }).attach();
     }
-
 }
