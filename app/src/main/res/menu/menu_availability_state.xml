@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menuAvailable"
         android:icon="@drawable/ic_dot_available"
-        android:title="@string/menu_available" />
+        android:title="@string/available" />
 
     <item
         android:id="@+id/menuAlmostAvailable"
@@ -14,6 +14,6 @@
     <item
         android:id="@+id/menuUnavailable"
         android:icon="@drawable/ic_dot_unavailable"
-        android:title="@string/menu_unavailable" />
+        android:title="@string/unavailable" />
 
 </menu>

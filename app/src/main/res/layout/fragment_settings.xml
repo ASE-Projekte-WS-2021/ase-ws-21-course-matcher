@@ -33,6 +33,10 @@
                     android:text="@string/shareLocation" />
 
                 <include
+                    android:id="@+id/availabilityStateSetter"
+                    layout="@layout/item_availability"/>
+
+                <include
                     android:id="@+id/link_edit_profile"
                     layout="@layout/item_settings_link" />
 
