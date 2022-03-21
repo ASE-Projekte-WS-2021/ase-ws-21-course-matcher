@@ -22,13 +22,13 @@ import java.util.Objects;
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.UserViewHolder> {
 
     private final OnItemClickListener listener;
-    private List<MutableLiveData<User>> mUsers;
+    private List<User> mUsers;
 
     public FriendsListAdapter(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void setFriends(List<MutableLiveData<User>> newUsers) {
+    public void setFriends(List<User> newUsers) {
         if (mUsers == null) {
             mUsers = newUsers;
             notifyItemRangeInserted(0, newUsers.size());
@@ -52,7 +52,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
-        User user = mUsers.get(position).getValue();
+        User user = mUsers.get(position);
 
         String profileImageUrl = Objects.requireNonNull(user).getProfileImageUrl();
         String name = user.getFullName();
@@ -116,7 +116,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
+            listener.onItemClicked(mUsers.get(position).getId());
         }
 
 

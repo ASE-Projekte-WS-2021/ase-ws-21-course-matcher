@@ -69,10 +69,9 @@ public class FriendRequestsFragment extends Fragment implements
         });
     }
 
-    private List<String> getUserIds(List<MutableLiveData<FriendRequest>> requests) {
+    private List<String> getUserIds(List<FriendRequest> requests) {
         List<String> ids = new ArrayList<>();
-        for (MutableLiveData<FriendRequest> requestLiveData : requests) {
-            FriendRequest request = requestLiveData.getValue();
+        for (FriendRequest request : requests) {
             if (request != null) {
                 ids.add(request.getSenderId());
                 ids.add(request.getReceiverId());

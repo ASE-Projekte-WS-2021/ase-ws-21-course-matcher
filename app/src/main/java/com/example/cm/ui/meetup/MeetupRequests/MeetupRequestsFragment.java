@@ -62,10 +62,9 @@ public class MeetupRequestsFragment extends Fragment implements
         });
     }
 
-    private List<String> getUserIds(List<MutableLiveData<MeetupRequest>> requests) {
+    private List<String> getUserIds(List<MeetupRequest> requests) {
         List<String> ids = new ArrayList<>();
-        for (MutableLiveData<MeetupRequest> requestLiveData : requests) {
-            MeetupRequest request = requestLiveData.getValue();
+        for (MeetupRequest request : requests) {
             if (request != null) {
                 ids.add(request.getSenderId());
             }

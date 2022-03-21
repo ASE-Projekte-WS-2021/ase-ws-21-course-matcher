@@ -25,9 +25,10 @@ public class MeetupRequestsViewModel extends ViewModel {
 
     private final MeetupRepository meetupRepository;
     private final MeetupRequestRepository meetupRequestRepository;
-    private final MutableLiveData<List<MutableLiveData<MeetupRequest>>> requestList;
+    private final MutableLiveData<List<MeetupRequest>> requestList;
     private final MutableLiveData<List<String>> userIds = new MutableLiveData<>();
-    private final LiveData<List<MutableLiveData<User>>> userLiveData = Transformations.switchMap(userIds, userRepository::getUsersByIds);
+    private final LiveData<List<User>> userLiveData = Transformations.switchMap(userIds,
+            userRepository::getUsersByIds);
 
     public MeetupRequestsViewModel() {
         currentUser = userRepository.getCurrentUser();
@@ -37,11 +38,11 @@ public class MeetupRequestsViewModel extends ViewModel {
         requestList = meetupRequestRepository.getMeetupRequestsForUser();
     }
 
-    public MutableLiveData<List<MutableLiveData<MeetupRequest>>> getMeetupRequests() {
+    public MutableLiveData<List<MeetupRequest>> getMeetupRequests() {
         return requestList;
     }
 
-    public LiveData<List<MutableLiveData<User>>> getUsers() {
+    public LiveData<List<User>> getUsers() {
         return userLiveData;
     }
 
@@ -69,8 +70,8 @@ public class MeetupRequestsViewModel extends ViewModel {
                 request.getSenderId(),
                 request.getLocation(),
                 request.getMeetupAt(),
-                MEETUP_INFO_ACCEPTED
-        ));
+                request.getImageUrl(),
+                MEETUP_INFO_ACCEPTED));
     }
 
     public void declineMeetupRequest(MeetupRequest request) {
@@ -85,8 +86,8 @@ public class MeetupRequestsViewModel extends ViewModel {
                 request.getSenderId(),
                 request.getLocation(),
                 request.getMeetupAt(),
-                MEETUP_INFO_DECLINED
-        ));
+                request.getImageUrl(),
+                MEETUP_INFO_DECLINED));
 
         request.setState(Request.RequestState.REQUEST_DECLINED);
         meetupRequestRepository.decline(request);
@@ -94,19 +95,15 @@ public class MeetupRequestsViewModel extends ViewModel {
     }
 
     public void undoDeclineMeetupRequest(MeetupRequest request, int position) {
-        MutableLiveData<MeetupRequest> requestMDL = new MutableLiveData<>();
         request.setState(Request.RequestState.REQUEST_PENDING);
         meetupRepository.addPending(request.getMeetupId(), request.getReceiverId());
         meetupRequestRepository.undoDecline(request);
-        requestMDL.postValue(request);
-        Objects.requireNonNull(requestList.getValue()).add(position, requestMDL);
+        Objects.requireNonNull(requestList.getValue()).add(position, request);
     }
 
     public void undoDeleteMeetupRequest(MeetupRequest request, int position, Request.RequestState previousState) {
-        MutableLiveData<MeetupRequest> requestMDL = new MutableLiveData<>();
         request.setState(previousState);
         meetupRequestRepository.addMeetupRequest(request);
-        requestMDL.postValue(request);
-        Objects.requireNonNull(requestList.getValue()).add(position, requestMDL);
+        Objects.requireNonNull(requestList.getValue()).add(position, request);
     }
 }

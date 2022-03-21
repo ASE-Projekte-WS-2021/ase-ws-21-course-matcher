@@ -16,19 +16,21 @@ import java.util.Objects;
 
 public class FriendRequestsViewModel extends ViewModel {
 
+
     private final UserRepository userRepository = new UserRepository();
-    private final MutableLiveData<List<MutableLiveData<FriendRequest>>> receivedRequests;
+    private final MutableLiveData<List<FriendRequest>> receivedRequests;
+
     private final FriendRequestRepository friendRequestRepository;
 
     private final MutableLiveData<List<String>> userIds = new MutableLiveData<>();
-    private final LiveData<List<MutableLiveData<User>>> userLiveData = Transformations.switchMap(userIds, userRepository::getUsersByIds);
+    private final LiveData<List<User>> userLiveData = Transformations.switchMap(userIds, userRepository::getUsersByIds);
 
     public FriendRequestsViewModel() {
         friendRequestRepository = new FriendRequestRepository();
         receivedRequests = friendRequestRepository.getReceivedAndSentRequestsForUser();
     }
 
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequests() {
+    public MutableLiveData<List<FriendRequest>> getFriendRequests() {
         return receivedRequests;
     }
 
@@ -44,14 +46,12 @@ public class FriendRequestsViewModel extends ViewModel {
     }
 
     public void undoFriendRequest(FriendRequest request, int position, Request.RequestState previousState) {
-        MutableLiveData<FriendRequest> requestMDL = new MutableLiveData<>();
         request.setState(previousState);
         friendRequestRepository.addFriendRequest(request);
-        requestMDL.postValue(request);
-        Objects.requireNonNull(receivedRequests.getValue()).add(position, requestMDL);
+        Objects.requireNonNull(receivedRequests.getValue()).add(position, request);
     }
 
-    public LiveData<List<MutableLiveData<User>>> getUsers() {
+    public LiveData<List<User>> getUsers() {
         return userLiveData;
     }
 

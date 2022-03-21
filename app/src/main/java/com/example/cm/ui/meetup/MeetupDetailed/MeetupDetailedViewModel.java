@@ -37,16 +37,20 @@ public class MeetupDetailedViewModel extends ViewModel {
         return currentUserId;
     }
 
-    public void onLeave() {
+    public void onDecline() {
         meetupRepository.addDeclined(meetupId, currentUserId);
+    }
+
+    public void onLeave() {
+        meetupRepository.addLeft(meetupId, currentUserId);
     }
 
     public void onJoin() {
         meetupRepository.addConfirmed(meetupId, currentUserId);
     }
 
-    public void onLate() {
-        meetupRepository.addLate(meetupId, currentUserId);
+    public void onLate(boolean isComingLate) {
+        meetupRepository.addLate(meetupId, currentUserId, isComingLate);
     }
 
     public void onDelete() {

@@ -8,38 +8,52 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentFriendsTabsBinding;
 import com.example.cm.ui.adapters.FriendsTapAdapter;
+import com.example.cm.ui.friends.FriendRequests.FriendRequestsViewModel;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.Utils;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class FriendsTabsFragment extends Fragment {
-
     private FriendsTapAdapter friendsTabAdapter;
+    private FriendRequestsViewModel friendRequestsViewModel;
     private ViewPager2 viewPager;
     private FragmentFriendsTabsBinding binding;
     private Navigator navigator;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFriendsTabsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
 
-        binding.addFriendsFab.setOnClickListener(view -> {
-            navigator.navigateToSelectFriends(); //todo: navigate to add friends ???
-        });
+        initViewModel();
+        initListeners();
+
         return binding.getRoot();
+    }
+
+    private void initListeners() {
+        binding.addFriendsFab.setOnClickListener(view -> {
+            navigator.navigateToSelectFriends();
+        });
+    }
+
+    private void initViewModel() {
+        friendRequestsViewModel = new ViewModelProvider(requireActivity()).get(FriendRequestsViewModel.class);
+        friendRequestsViewModel.getFriendRequests().observe(getViewLifecycleOwner(), friendRequests -> {
+            if (friendRequests == null) {
+                return;
+            }
+            int openRequests = Utils.getOpenRequestCount(friendRequests);
+            TabLayout.Tab tab = binding.tabLayout.getTabAt(1);
+            Utils.hideShowBadge(tab, openRequests, getResources());
+        });
     }
 
     @Override
@@ -57,5 +71,4 @@ public class FriendsTabsFragment extends Fragment {
             }
         }).attach();
     }
-
 }
