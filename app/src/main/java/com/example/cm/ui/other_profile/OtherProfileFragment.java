@@ -41,7 +41,7 @@ public class OtherProfileFragment extends Fragment {
 
     private void onBtnClick() {
         if (bundle.containsKey(Constants.KEY_USER_ID)) {
-            String profileId = bundle.getString(Constants.KEY_USER_ID);
+            profileId = bundle.getString(Constants.KEY_USER_ID);
             otherProfileViewModel.getUserById(profileId);
             observeFriendship(profileId);
         }
