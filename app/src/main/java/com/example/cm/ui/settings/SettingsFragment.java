@@ -1,15 +1,7 @@
 package com.example.cm.ui.settings;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.example.cm.Constants.PREFS_SETTINGS_KEY;
-import static com.example.cm.Constants.PREFS_SHARE_LOCATION_KEY;
-
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -18,23 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.R;
-import com.example.cm.data.listener.UserListener;
 import com.example.cm.databinding.FragmentSettingsBinding;
 import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
-import com.google.android.material.snackbar.Snackbar;
 
 public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutListener {
 
-    private ActivityResultLauncher<String> locationPermissionLauncher;
     private FragmentSettingsBinding binding;
     private Navigator navigator;
     private SettingsViewModel settingsViewModel;
@@ -48,27 +34,11 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
 
-        initLocationPermissionLauncher();
         initUI();
         initViewModel();
         initListeners();
 
         return binding.getRoot();
-    }
-
-    private void initLocationPermissionLauncher() {
-        locationPermissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                request -> {
-                    if (!request) {
-                        Snackbar.make(binding.getRoot(), R.string.location_permission_denied, Snackbar.LENGTH_LONG).show();
-                        //binding.switchShareLocation.setChecked(false);
-                    }
-                    SharedPreferences.Editor editor = requireActivity().getSharedPreferences(PREFS_SETTINGS_KEY, Context.MODE_PRIVATE).edit();
-                    editor.putBoolean(PREFS_SHARE_LOCATION_KEY, request);
-                    editor.apply();
-                }
-        );
     }
 
     @SuppressLint("SetTextI18n")
@@ -100,12 +70,6 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
 
     private void initViewModel() {
         settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
-        settingsViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
-                boolean isSharingLocation = user.getIsSharingLocation();
-                //binding.switchShareLocation.setChecked(isSharingLocation);
-            }
-        });
     }
 
     private void initListeners() {
@@ -116,7 +80,6 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         binding.linkPrivacyPolicy.linkWrapper.setOnClickListener(v -> onPrivacyPolicyClicked());
         binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
         binding.linkLogout.linkWrapper.setOnClickListener(v -> onLogoutClicked());
-        //binding.switchShareLocation.setOnCheckedChangeListener((v, isChecked) -> onShareLocationClicked(isChecked));
     }
 
     private void onEditAccountClicked() {

@@ -118,6 +118,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     private void onShareLocationClicked(boolean isChecked) {
         currentUser.setIsSharingLocation(isChecked);
+        int snackbarText = isChecked ? R.string.snackbar_share_location : R.string.snackbar_hide_location;
+        Snackbar.make(binding.getRoot(), snackbarText, Snackbar.LENGTH_LONG).show();
 
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_SETTINGS_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
