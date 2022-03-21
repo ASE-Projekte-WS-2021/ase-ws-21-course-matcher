@@ -221,4 +221,9 @@
     <string name="app_name2">Sponti</string>
     <string name="friends_title">Füge deine Freunde hinzu</string>
     <string name="location_hint">Treffpunkt</string>
+    <string name="availability">Deine Verfügbarkeit:</string>
+    <string name="unavailable">beschäftigt</string>
+    <string name="menu_almostAvailable">demnächst verfügbar</string>
+    <string name="available">verfügbar</string>
+    <string name="availavilityError">Verfügbarkeit konnte nicht upgedatet werden.</string>
 </resources>
