@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
-import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
@@ -21,17 +20,17 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 import java.util.Objects;
 
-public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder>{
+public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder> {
 
     private ViewGroup parent;
-    private List<MutableLiveData<FriendRequest>> mRequests;
+    private List<FriendRequest> mRequests;
     private final OnFriendRequestListener listener;
 
     public FriendRequestListAdapter(OnFriendRequestListener listener) {
         this.listener = listener;
     }
 
-    public void setRequests(List<MutableLiveData<FriendRequest>> newRequests) {
+    public void setRequests(List<FriendRequest> newRequests) {
         if (mRequests == null) {
             mRequests = newRequests;
             notifyItemRangeInserted(0, newRequests.size());
@@ -43,7 +42,8 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         result.dispatchUpdatesTo(this);
     }
 
-    public static DiffUtil.DiffResult calculateDiffFriendRequests(List<MutableLiveData<FriendRequest>> oldRequests, List<MutableLiveData<FriendRequest>> newRequests) {
+    public static DiffUtil.DiffResult calculateDiffFriendRequests(List<FriendRequest> oldRequests,
+                                                                  List<FriendRequest> newRequests) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -57,22 +57,23 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(Objects.requireNonNull(oldRequests.get(oldItemPosition).getValue()).getId(),
-                        Objects.requireNonNull(newRequests.get(newItemPosition).getValue()).getId());
+                return Objects.equals(Objects.requireNonNull(oldRequests.get(oldItemPosition)).getId(),
+                        Objects.requireNonNull(newRequests.get(newItemPosition)).getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                FriendRequest newRequest = newRequests.get(newItemPosition).getValue();
-                FriendRequest oldRequest = oldRequests.get(oldItemPosition).getValue();
+                FriendRequest newRequest = newRequests.get(newItemPosition);
+                FriendRequest oldRequest = oldRequests.get(oldItemPosition);
 
-                return Objects.equals(Objects.requireNonNull(newRequest).getId(), Objects.requireNonNull(oldRequest).getId());
+                return Objects.equals(Objects.requireNonNull(newRequest).getId(),
+                        Objects.requireNonNull(oldRequest).getId());
             }
         });
     }
 
     public void deleteItem(int position) {
-        FriendRequest request = mRequests.get(position).getValue();
+        FriendRequest request = mRequests.get(position);
         Request.RequestState previousState = Objects.requireNonNull(request).getState();
         mRequests.remove(position);
         notifyItemRemoved(position);
@@ -82,23 +83,25 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         snackbar.show();
     }
 
-    private void onUndoDelete(FriendRequest request, int position, Request.RequestState previousState){
+    private void onUndoDelete(FriendRequest request, int position, Request.RequestState previousState) {
         listener.onUndo(request, position, previousState);
-        mRequests.add(position, new MutableLiveData<>(request));
+        mRequests.add(position, request);
         notifyItemInserted(position);
     }
 
     @NonNull
     @Override
-    public FriendRequestListAdapter.FriendRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FriendRequestListAdapter.FriendRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
+                                                                               int viewType) {
         this.parent = parent;
-        ItemFriendRequestBinding binding = ItemFriendRequestBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        ItemFriendRequestBinding binding = ItemFriendRequestBinding.inflate(LayoutInflater.from(parent.getContext()),
+                parent, false);
         return new FriendRequestListAdapter.FriendRequestViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
-        FriendRequest request = mRequests.get(position).getValue();
+        FriendRequest request = mRequests.get(position);
 
         String user = Objects.requireNonNull(request).getSenderName();
         String date = request.getCreationTimeAgo();
@@ -117,7 +120,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     @Override
     public int getItemCount() {
-        if(mRequests == null){
+        if (mRequests == null) {
             return 0;
         }
         return mRequests.size();
@@ -125,15 +128,21 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     public interface OnFriendRequestListener {
         void onItemClicked(String id);
+
         void onItemDeleted(FriendRequest request);
+
         void onAccept(FriendRequest request);
+
         void onDecline(FriendRequest request);
+
         void onUndo(FriendRequest request, int position, Request.RequestState previousState);
     }
 
     /**
-     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
-     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data
+     * (e.g. image)
+     * Source:
+     * https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
      */
     @Override
     public long getItemId(int position) {
@@ -163,24 +172,25 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
         private void onItemClicked() {
             int position = getAdapterPosition();
-            if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(Objects.requireNonNull(mRequests.get(position).getValue()).getSenderId());
+            if (position == RecyclerView.NO_POSITION || listener == null)
+                return;
+            listener.onItemClicked(Objects.requireNonNull(mRequests.get(position)).getSenderId());
         }
 
         private void onAccept() {
-            FriendRequest request = mRequests.get(getAdapterPosition()).getValue();
+            FriendRequest request = mRequests.get(getAdapterPosition());
             listener.onAccept(request);
             notifyItemChanged(getAdapterPosition());
         }
 
-        private void onUndo(FriendRequest request, int position, Request.RequestState previousState){
+        private void onUndo(FriendRequest request, int position, Request.RequestState previousState) {
             listener.onUndo(request, position, previousState);
             notifyItemInserted(position);
         }
 
-        private void onDecline(){
+        private void onDecline() {
             int position = getAdapterPosition();
-            FriendRequest request = mRequests.get(position).getValue();
+            FriendRequest request = mRequests.get(position);
             Request.RequestState previousState = Objects.requireNonNull(request).getState();
             listener.onDecline(request);
             notifyItemRemoved(position);
@@ -193,7 +203,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
          * Getters for the views in the list item
          */
 
-        public ImageView getIvProfilePicture(){
+        public ImageView getIvProfilePicture() {
             return binding.senderProfileImageView;
         }
 
@@ -213,11 +223,11 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             return binding.sentDateTextView;
         }
 
-        public ImageView getBtnAccept(){
+        public ImageView getBtnAccept() {
             return binding.acceptButton;
         }
 
-        public ImageView getBtnDecline(){
+        public ImageView getBtnDecline() {
             return binding.declineButton;
         }
     }

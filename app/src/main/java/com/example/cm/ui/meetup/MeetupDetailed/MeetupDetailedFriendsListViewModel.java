@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MeetupDetailedFriendsListViewModel extends ViewModel {
 
-    private final MutableLiveData<List<MutableLiveData<User>>> users;
+    private final MutableLiveData<List<User>> users;
     private final MutableLiveData<List<String>> lateUsers;
 
     private UserRepository userRepository;
@@ -25,7 +25,7 @@ public class MeetupDetailedFriendsListViewModel extends ViewModel {
         lateUsers = meetupRepository.getLateUsers(meetupId);
     }
 
-    public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
+    public MutableLiveData<List<User>> getUsers() {
         return users;
     }
 

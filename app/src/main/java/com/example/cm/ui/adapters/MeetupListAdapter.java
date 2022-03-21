@@ -21,7 +21,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,10 +41,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
-    List<MutableLiveData<Meetup>> meetups;
-    List<MutableLiveData<User>> users;
+    List<Meetup> meetups;
+    List<User> users;
 
-    public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups, List<MutableLiveData<User>> users) {
+    public MeetupListAdapter(List<Meetup> meetups, List<User> users) {
         this.meetups = meetups;
         this.users = users;
     }
@@ -60,7 +59,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
-        Meetup meetup = meetups.get(position).getValue();
+        Meetup meetup = meetups.get(position);
 
         if (meetup == null) {
             return;
@@ -146,14 +145,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private String getImageUrl(String id) {
-        MutableLiveData<User> user = users.stream().filter(userData -> {
-            if (userData.getValue() != null) {
-                return userData.getValue().getId().equals(id);
-            }
-            return false;
-        }).findAny().orElse(null);
-        if (user != null && user.getValue() != null) {
-            return user.getValue().getProfileImageUrl();
+        User user = users.stream().filter(userData -> userData.getId().equals(id)).findAny().orElse(null);
+        if (user != null) {
+            return user.getProfileImageUrl();
         } else {
             return null;
         }

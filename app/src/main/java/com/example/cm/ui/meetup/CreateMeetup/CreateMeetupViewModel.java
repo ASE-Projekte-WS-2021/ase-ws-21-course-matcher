@@ -1,25 +1,21 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
+import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
-
-import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.Constants;
-import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Status;
-import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
@@ -28,8 +24,6 @@ import com.example.cm.data.repositories.UserRepository;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,7 +44,7 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
     private final MutableLiveData<String> meetupLocationName = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
-    private MutableLiveData<List<MutableLiveData<User>>> users;
+    public MutableLiveData<List<User>> users;
     private final MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
     private String url;
     private String meetupId;
@@ -59,14 +53,13 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
         userRepository = new UserRepository();
         currentUser = userRepository.getCurrentUser();
         users = userRepository.getFriends();
+        storageRepository = new StorageManager(context);
 
         meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
-
-        storageRepository = new StorageManager(context);
     }
 
-    public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
+    public MutableLiveData<List<User>> getUsers() {
         return users;
     }
 
@@ -101,11 +94,13 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
         meetupLocation.postValue(location);
     }
 
-    public void setMeetupLocationName(String locationName){
+    public void setMeetupLocationName(String locationName) {
         meetupLocationName.postValue((locationName));
     }
 
-    public LiveData<String> getMeetupLocationName(){ return meetupLocationName;}
+    public LiveData<String> getMeetupLocationName() {
+        return meetupLocationName;
+    }
 
     public LiveData<Boolean> getMeetupIsPrivate() {
         return meetupIsPrivate;

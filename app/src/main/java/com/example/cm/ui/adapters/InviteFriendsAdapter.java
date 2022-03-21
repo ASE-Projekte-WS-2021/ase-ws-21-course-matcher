@@ -35,11 +35,8 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
         this.selectedUsers = selectedUsers;
     }
 
-    public void setUsers(List<MutableLiveData<User>> newUsersMDL) {
-        List<User> newUsers = new ArrayList<>();
-        for (MutableLiveData<User> userMDL : newUsersMDL) {
-            newUsers.add(userMDL.getValue());
-        }
+    public void setUsers(List<User> users) {
+        List<User> newUsers = new ArrayList<>(users);
 
         if (mUsers == null) {
             mUsers = newUsers;
