@@ -1,12 +1,14 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
+import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -19,16 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
-import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
-
 public class MeetupRequestRepository extends Repository {
 
     private static MeetupRequestRepository INSTANCE = null;
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());
-    private final MutableLiveData<List<MutableLiveData<MeetupRequest>>> receivedRequests = new MutableLiveData<>();
+    private final MutableLiveData<List<MeetupRequest>> receivedRequests = new MutableLiveData<>();
 
     public MeetupRequestRepository() {
     }
@@ -43,7 +42,7 @@ public class MeetupRequestRepository extends Repository {
     /**
      * Get all meetup requests for currently signed in user
      */
-    public MutableLiveData<List<MutableLiveData<MeetupRequest>>> getMeetupRequestsForUser() {
+    public MutableLiveData<List<MeetupRequest>> getMeetupRequestsForUser() {
         if (auth.getCurrentUser() == null) {
             return receivedRequests;
         }
@@ -56,11 +55,11 @@ public class MeetupRequestRepository extends Repository {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<MeetupRequest>> requestsToReturn = new ArrayList<>();
+                        List<MeetupRequest> requestsToReturn = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
                             if (currentState != REQUEST_DECLINED) {
-                                requestsToReturn.add(new MutableLiveData<>(snapshotToMeetupRequest(snapshot)));
+                                requestsToReturn.add(snapshotToMeetupRequest(snapshot));
                             }
                         }
                         receivedRequests.postValue(requestsToReturn);

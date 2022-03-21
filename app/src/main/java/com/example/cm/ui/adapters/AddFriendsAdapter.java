@@ -33,16 +33,16 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
 
     private final OnItemClickListener listener;
     private final Context context;
-    private List<MutableLiveData<User>> mUsers;
-    private List<MutableLiveData<FriendRequest>> pendingFriendRequestsSent;
-    private final List<MutableLiveData<FriendRequest>> pendingFriendRequests = new ArrayList<>();
+    private List<User> mUsers;
+    private List<FriendRequest> pendingFriendRequestsSent;
+    private final List<FriendRequest> pendingFriendRequests = new ArrayList<>();
 
     public AddFriendsAdapter(AddFriendsAdapter.OnItemClickListener listener, Context context) {
         this.listener = listener;
         this.context = context;
     }
 
-    public void setFriendRequests(List<MutableLiveData<FriendRequest>> sentFriendRequests, List<MutableLiveData<FriendRequest>> receivedFriendRequests) {
+    public void setFriendRequests(List<FriendRequest> sentFriendRequests, List<FriendRequest> receivedFriendRequests) {
         this.pendingFriendRequestsSent = sentFriendRequests;
 
         pendingFriendRequests.addAll(pendingFriendRequestsSent);
@@ -50,7 +50,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         listener.onFriendRequestsSet();
     }
 
-    public void setUsers(List<MutableLiveData<User>> newUsers) {
+    public void setUsers(List<User> newUsers) {
         if (mUsers == null) {
             mUsers = newUsers;
             notifyItemRangeInserted(0, newUsers.size());
@@ -76,7 +76,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
-        User user = mUsers.get(position).getValue();
+        User user = mUsers.get(position);
 
         String profileImageUrl = Objects.requireNonNull(user).getProfileImageUrl();
         String name = user.getFullName();
@@ -110,7 +110,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
 
     private boolean isNotificationExisting(String userId) {
         for (int i = 0; i < pendingFriendRequests.size(); i++) {
-            FriendRequest request = Objects.requireNonNull(pendingFriendRequests.get(i).getValue());
+            FriendRequest request = pendingFriendRequests.get(i);
             if ((i < pendingFriendRequestsSent.size() && request.getReceiverId().equals(userId)) ||
                     (i >= pendingFriendRequestsSent.size() && request.getSenderId().equals(userId))) {
                 return true;
@@ -137,8 +137,10 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     }
 
     /**
-     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
-     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data
+     * (e.g. image)
+     * Source:
+     * https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
      */
     @Override
     public long getItemId(int position) {
@@ -176,7 +178,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
-            listener.onItemClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
+            listener.onItemClicked(mUsers.get(position).getId());
         }
 
         @SuppressLint("ResourceAsColor")
@@ -186,7 +188,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
-            listener.onFriendRequestButtonClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
+            listener.onFriendRequestButtonClicked(mUsers.get(position).getId());
 
             int btnContent, btnTextColor;
             ColorStateList btnBackground;
@@ -194,11 +196,13 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
             if (binding.btnSendFriendRequest.getText().toString()
                     .equals(context.getString(R.string.btn_send_friend_request_default))) {
                 btnContent = R.string.btn_send_friend_request_pending;
-                btnBackground = ContextCompat.getColorStateList(binding.btnSendFriendRequest.getContext(), R.color.gray400);
+                btnBackground = ContextCompat.getColorStateList(binding.btnSendFriendRequest.getContext(),
+                        R.color.gray400);
                 btnTextColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.gray700);
             } else {
                 btnContent = R.string.btn_send_friend_request_default;
-                btnBackground = ContextCompat.getColorStateList(binding.btnSendFriendRequest.getContext(), R.color.orange500);
+                btnBackground = ContextCompat.getColorStateList(binding.btnSendFriendRequest.getContext(),
+                        R.color.orange500);
                 btnTextColor = binding.btnSendFriendRequest.getContext().getResources().getColor(R.color.white);
             }
             binding.btnSendFriendRequest.setText(btnContent);

@@ -44,7 +44,7 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
     private final MutableLiveData<String> meetupLocationName = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
-    private MutableLiveData<List<MutableLiveData<User>>> users;
+    public MutableLiveData<List<User>> users;
     private final MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
     private String url;
     private String meetupId;
@@ -53,14 +53,13 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
         userRepository = UserRepository.getInstance();
         currentUser = userRepository.getCurrentUser();
         users = userRepository.getFriends();
+        storageRepository = new StorageManager(context);
 
         meetupRepository = MeetupRepository.getInstance();
         meetupRequestRepository = MeetupRequestRepository.getInstance();
-
-        storageRepository = new StorageManager(context);
     }
 
-    public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
+    public MutableLiveData<List<User>> getUsers() {
         return users;
     }
 

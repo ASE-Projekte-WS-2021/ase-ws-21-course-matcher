@@ -25,8 +25,9 @@ public class FriendRequestRepository extends Repository {
     private static FriendRequestRepository INSTANCE = null;
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-    private final CollectionReference friendRequestCollection = firestore.collection(CollectionConfig.FRIEND_REQUESTS.toString());
-    private final MutableLiveData<List<MutableLiveData<FriendRequest>>> mutableRequestList = new MutableLiveData<>();
+    private final CollectionReference friendRequestCollection = firestore
+            .collection(CollectionConfig.FRIEND_REQUESTS.toString());
+    private final MutableLiveData<List<FriendRequest>> mutableRequestList = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isPending = new MutableLiveData<>();
 
     public FriendRequestRepository() {
@@ -42,7 +43,7 @@ public class FriendRequestRepository extends Repository {
     /**
      * Get all friend requests
      */
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequests() {
+    public MutableLiveData<List<FriendRequest>> getFriendRequests() {
         if (auth.getCurrentUser() == null) {
             return null;
         }
@@ -55,7 +56,8 @@ public class FriendRequestRepository extends Repository {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<FriendRequest>> requests = snapshotToMutableFriendRequestList(Objects.requireNonNull(value));
+                        List<FriendRequest> requests = snapshotToMutableFriendRequestList(
+                                Objects.requireNonNull(value));
                         mutableRequestList.postValue(requests);
                     }
                 });
@@ -65,7 +67,7 @@ public class FriendRequestRepository extends Repository {
     /**
      * Get all friend requests for currently signed in user
      */
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequestsForUser() {
+    public MutableLiveData<List<FriendRequest>> getFriendRequestsForUser() {
         if (auth.getCurrentUser() == null) {
             return mutableRequestList;
         }
@@ -78,11 +80,11 @@ public class FriendRequestRepository extends Repository {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<FriendRequest>> requests = new ArrayList<>();
+                        List<FriendRequest> requests = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
                             if (currentState != REQUEST_DECLINED) {
-                                requests.add(new MutableLiveData<>(snapshotToFriendRequest(snapshot)));
+                                requests.add(snapshotToFriendRequest(snapshot));
                             }
                         }
                         mutableRequestList.postValue(requests);
@@ -97,21 +99,21 @@ public class FriendRequestRepository extends Repository {
      * @param senderId Id of the sender
      * @return mutable list of sent friend requests
      */
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequestsSentBy(String senderId) {
+    public MutableLiveData<List<FriendRequest>> getFriendRequestsSentBy(String senderId) {
         friendRequestCollection.whereEqualTo("senderId", senderId)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
                         return;
                     }
-                    if(value != null && value.isEmpty()) {
+                    if (value != null && value.isEmpty()) {
                         mutableRequestList.postValue(new ArrayList<>());
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<FriendRequest>> requests = new ArrayList<>();
+                        List<FriendRequest> requests = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
                             if (currentState == REQUEST_PENDING) {
-                                requests.add(new MutableLiveData<>(snapshotToFriendRequest(snapshot)));
+                                requests.add(snapshotToFriendRequest(snapshot));
                             }
                         }
                         mutableRequestList.postValue(requests);
@@ -126,18 +128,18 @@ public class FriendRequestRepository extends Repository {
      * @param receiverId Id of the receiver
      * @return mutable list of received friend requests
      */
-    public MutableLiveData<List<MutableLiveData<FriendRequest>>> getFriendRequestsReceived(String receiverId) {
+    public MutableLiveData<List<FriendRequest>> getFriendRequestsReceived(String receiverId) {
         friendRequestCollection.whereEqualTo("receiverId", receiverId)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
-                        List<MutableLiveData<FriendRequest>> requests = new ArrayList<>();
+                        List<FriendRequest> requests = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
                             if (currentState == REQUEST_PENDING) {
-                                requests.add(new MutableLiveData<>(snapshotToFriendRequest(snapshot)));
+                                requests.add(snapshotToFriendRequest(snapshot));
                             }
                         }
                         mutableRequestList.postValue(requests);
@@ -158,29 +160,29 @@ public class FriendRequestRepository extends Repository {
         }
         String ownUserId = auth.getCurrentUser().getUid();
 
-        friendRequestCollection.whereEqualTo("state", REQUEST_PENDING).addSnapshotListener(executorService, (value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null && !value.isEmpty()) {
-                boolean isReqPending = false;
-                for (DocumentSnapshot snapshot : value.getDocuments()) {
-                    String receiverId = snapshot.getString("receiverId");
-                    String senderId = snapshot.getString("senderId");
-                    if (receiverId != null && senderId != null) {
-                        if (((receiverId.equals(ownUserId) && senderId.equals(userId)) ||
-                                (senderId.equals(ownUserId) && receiverId.equals(userId)))) {
-                            isReqPending = true;
-                            break;
-                        }
+        friendRequestCollection.whereEqualTo("state", REQUEST_PENDING).addSnapshotListener(executorService,
+                (value, error) -> {
+                    if (error != null) {
+                        return;
                     }
-                }
-                isPending.postValue(isReqPending);
-            }
-        });
+                    if (value != null && !value.isEmpty()) {
+                        boolean isReqPending = false;
+                        for (DocumentSnapshot snapshot : value.getDocuments()) {
+                            String receiverId = snapshot.getString("receiverId");
+                            String senderId = snapshot.getString("senderId");
+                            if (receiverId != null && senderId != null) {
+                                if (((receiverId.equals(ownUserId) && senderId.equals(userId)) ||
+                                        (senderId.equals(ownUserId) && receiverId.equals(userId)))) {
+                                    isReqPending = true;
+                                    break;
+                                }
+                            }
+                        }
+                        isPending.postValue(isReqPending);
+                    }
+                });
         return isPending;
     }
-
 
     /**
      * Convert a list of snapshots to a list of mutable friend requests
@@ -188,10 +190,10 @@ public class FriendRequestRepository extends Repository {
      * @param documents List of snapshots returned from Firestore
      * @return List of mutable friend requests
      */
-    private List<MutableLiveData<FriendRequest>> snapshotToMutableFriendRequestList(QuerySnapshot documents) {
-        List<MutableLiveData<FriendRequest>> requests = new ArrayList<>();
+    private List<FriendRequest> snapshotToMutableFriendRequestList(QuerySnapshot documents) {
+        List<FriendRequest> requests = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            requests.add(new MutableLiveData<>(snapshotToFriendRequest(document)));
+            requests.add(snapshotToFriendRequest(document));
         }
         return requests;
     }
@@ -214,6 +216,7 @@ public class FriendRequestRepository extends Repository {
 
         return request;
     }
+
     /**
      * Add a new Friend Request to collection
      *
@@ -241,15 +244,15 @@ public class FriendRequestRepository extends Repository {
         friendRequestCollection
                 .whereEqualTo("receiverId", receiverId).whereEqualTo("senderId", senderId)
                 .get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult() == null) {
-                    return;
-                }
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    document.getReference().delete();
-                }
-            }
-        });
+                    if (task.isSuccessful()) {
+                        if (task.getResult() == null) {
+                            return;
+                        }
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            document.getReference().delete();
+                        }
+                    }
+                });
     }
 
     /**
@@ -267,20 +270,16 @@ public class FriendRequestRepository extends Repository {
      * @param request to accept/decline/undo decline
      */
     public void accept(FriendRequest request) {
-        friendRequestCollection.document(request.getId()).
-                update("state", Request.RequestState.REQUEST_ACCEPTED);
-        friendRequestCollection.document(request.getId()).
-                update("createdAt", request.getCreatedAt());
+        friendRequestCollection.document(request.getId()).update("state", Request.RequestState.REQUEST_ACCEPTED);
+        friendRequestCollection.document(request.getId()).update("createdAt", request.getCreatedAt());
     }
 
     public void decline(FriendRequest request) {
-        friendRequestCollection.document(request.getId()).
-                update("state", REQUEST_DECLINED);
+        friendRequestCollection.document(request.getId()).update("state", REQUEST_DECLINED);
         deleteFriendRequest(request);
     }
 
     public void undo(FriendRequest request) {
-        friendRequestCollection.document(request.getId()).
-                update("state", request.getState());
+        friendRequestCollection.document(request.getId()).update("state", request.getState());
     }
 }

@@ -21,7 +21,7 @@ public class InviteMoreFriendsViewModel extends ViewModel {
     private final MutableLiveData<User> currentUser;
     private final MeetupRepository meetupRepository;
     private final MeetupRequestRepository meetupRequestRepository;
-    public MutableLiveData<List<MutableLiveData<User>>> users = new MutableLiveData<>();
+    public MutableLiveData<List<User>> users = new MutableLiveData<>();
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
     public MutableLiveData<Meetup> meetup = new MutableLiveData<>();
 
@@ -35,7 +35,7 @@ public class InviteMoreFriendsViewModel extends ViewModel {
         meetupRequestRepository = new MeetupRequestRepository();
     }
 
-    public MutableLiveData<List<MutableLiveData<User>>> getUsers(List<String> usersAlreadyInMeetup) {
+    public MutableLiveData<List<User>> getUsers(List<String> usersAlreadyInMeetup) {
         users = userRepository.getFriendsExcept(usersAlreadyInMeetup);
         return users;
     }

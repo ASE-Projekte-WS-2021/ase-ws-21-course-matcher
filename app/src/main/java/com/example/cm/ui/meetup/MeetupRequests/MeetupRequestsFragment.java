@@ -38,7 +38,7 @@ public class MeetupRequestsFragment extends Fragment implements
     }
 
     private void initUI() {
-        requestsListAdapter = new MeetupRequestListAdapter( this);
+        requestsListAdapter = new MeetupRequestListAdapter(this);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
         binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
