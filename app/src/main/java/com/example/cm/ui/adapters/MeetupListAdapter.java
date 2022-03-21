@@ -120,7 +120,12 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private String getImageUrl(String id) {
-        MutableLiveData<User> user = users.stream().filter(userData -> Objects.requireNonNull(userData.getValue()).getId().equals(id)).findAny().orElse(null);
+        MutableLiveData<User> user = users.stream().filter(userData -> {
+            if (userData.getValue() != null) {
+                return userData.getValue().getId().equals(id);
+            }
+            return false;
+        }).findAny().orElse(null);
         if (user != null && user.getValue() != null) {
             return user.getValue().getProfileImageUrl();
         } else {
