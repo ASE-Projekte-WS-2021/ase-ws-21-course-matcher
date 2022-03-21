@@ -22,6 +22,7 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;
@@ -130,6 +131,13 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     private void setSentRequests(FriendRequestViewHolder holder, FriendRequest request) {
         String fullName = getFullName(request.getReceiverId());
         String userName = getUserName(request.getReceiverId());
+
+        String profileImageUrl = getProfileImageUrl(request.getReceiverId());
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            holder.getIvProfilePicture().setImageTintMode(null);
+            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getIvProfilePicture());
+        }
+
         String date = request.getCreationTimeAgo();
 
         String requestDescription = "";
@@ -191,6 +199,13 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     private void setReceivedRequests(FriendRequestViewHolder holder, FriendRequest request) {
         String fullName = getFullName(request.getSenderId());
         String userName = getUserName(request.getSenderId());
+
+        String profileImageUrl = getProfileImageUrl(request.getSenderId());
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            holder.getIvProfilePicture().setImageTintMode(null);
+            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getIvProfilePicture());
+        }
+
         String date = request.getCreationTimeAgo();
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
@@ -205,6 +220,18 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         holder.getTvDescription().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
         holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String getProfileImageUrl(String senderId) {
+        User user = users.stream()
+                .filter(userData -> userData.getId().equals(senderId)).findAny()
+                .orElse(null);
+        if (user != null) {
+            return user.getProfileImageUrl();
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -263,7 +290,15 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
-            listener.onItemClicked(Objects.requireNonNull(mRequests.get(position)).getSenderId());
+
+            String currentUserId = new AuthRepository().getCurrentUser().getUid();
+            FriendRequest request = mRequests.get(position);
+            if (request.getReceiverId().equals(currentUserId)) {
+                listener.onItemClicked(mRequests.get(position).getSenderId());
+            }
+            if (request.getSenderId().equals(currentUserId)) {
+                listener.onItemClicked(mRequests.get(position).getReceiverId());
+            }
         }
 
         private void onAccept() {
