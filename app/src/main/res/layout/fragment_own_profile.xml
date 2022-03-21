@@ -66,8 +66,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/padding_small"
             android:background="@drawable/gradient_gray700_transparent_to_transparent_top_down"
+            android:paddingHorizontal="@dimen/padding_small"
             android:paddingTop="@dimen/padding_small">
 
             <ImageView

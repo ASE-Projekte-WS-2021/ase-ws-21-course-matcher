@@ -1,6 +1,12 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
@@ -9,43 +15,56 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.Constants;
+import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupRequest;
+import com.example.cm.data.models.Status;
+import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
+import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CreateMeetupViewModel extends ViewModel {
+public class CreateMeetupViewModel extends ViewModel implements Serializable {
 
     private final UserRepository userRepository;
     private final MutableLiveData<User> currentUser;
     private final MeetupRepository meetupRepository;
+    private final StorageManager storageRepository;
+    public MutableLiveData<Status> status = new MutableLiveData<>();
     private final MutableLiveData<LatLng> meetupLatLng = new MutableLiveData<>();
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
     private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
     private final MutableLiveData<String> meetupLocationName = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
-    public MutableLiveData<List<MutableLiveData<User>>> users;
-    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+    private MutableLiveData<List<MutableLiveData<User>>> users;
+    private final MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+    private String url;
+    private String meetupId;
 
-    public CreateMeetupViewModel() {
+    public CreateMeetupViewModel(Context context) {
         userRepository = new UserRepository();
         currentUser = userRepository.getCurrentUser();
         users = userRepository.getFriends();
 
         meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
-    }
 
+        storageRepository = new StorageManager(context);
+    }
 
     public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
         return users;
@@ -104,39 +123,49 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupIsPrivate.postValue(isPrivate);
     }
 
-    public boolean createMeetup(Bundle bundle) {
-        Objects.requireNonNull(selectedUsers.getValue());
+    public void setMeetupImg(Bitmap bitmap, StorageManager.Callback callback) {
+        meetupId = UUID.randomUUID().toString();
+        storageRepository.uploadImage(bitmap, meetupId, callback, Constants.ImageType.MEETUP_IMAGE);
+    }
 
-        if (bundle == null) {
-            String meetupId = UUID.randomUUID().toString();
+    public void deleteLocalImg(Uri localUri, Context context) {
+        String path = "";
 
-            Meetup meetupToAdd = new Meetup(
-                    meetupId,
-                    userRepository.getFirebaseUser().getUid(),
-                    meetupLatLng.getValue(),
-                    meetupLocationName.getValue(),
-                    meetupTimestamp.getValue(),
-                    Boolean.TRUE.equals(meetupIsPrivate.getValue()),
-                    selectedUsers.getValue());
-
-            boolean isSuccessful = meetupRepository.addMeetup(meetupToAdd);
-
-            if (isSuccessful) {
-                sendMeetupRequest(meetupToAdd.getId());
-                return true;
-            }
-            return false;
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = context.getContentResolver().query(localUri, projection, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(projection[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            path = picturePath;
         }
 
-        // add friends to existing meetup
-        else {
-            String meetupId = bundle.getString(Constants.KEY_MEETUP_ID);
-            sendMeetupRequestForExistingMeetup(meetupRepository.getMeetup(meetupId));
-            return true;
+        if (!path.isEmpty()) {
+            File fileToDelete = new File(path);
+            if (fileToDelete.exists()) {
+                fileToDelete.delete();
+            }
         }
     }
 
-    private void sendMeetupRequest(String meetupId) {
+    public void createMeetup() {
+        Objects.requireNonNull(selectedUsers.getValue());
+
+        Meetup meetupToAdd = new Meetup(
+                meetupId,
+                userRepository.getFirebaseUser().getUid(),
+                meetupLatLng.getValue(),
+                meetupLocationName.getValue(),
+                meetupTimestamp.getValue(),
+                Boolean.TRUE.equals(meetupIsPrivate.getValue()),
+                selectedUsers.getValue(), url);
+
+        meetupRepository.addMeetup(meetupToAdd);
+        sendMeetupRequests();
+    }
+
+    public void sendMeetupRequests() {
         // Create notifications for each invited user
         if (selectedUsers.getValue() != null && currentUser.getValue() != null) {
             for (String invitedFriendId : selectedUsers.getValue()) {
@@ -147,27 +176,9 @@ public class CreateMeetupViewModel extends ViewModel {
                         invitedFriendId,
                         meetupLocation.getValue(),
                         meetupTimestamp.getValue(),
+                        url,
                         MEETUP_REQUEST);
                 meetupRequestRepository.addMeetupRequest(request);
-            }
-            selectedUsers.getValue().clear();
-        }
-    }
-
-    private void sendMeetupRequestForExistingMeetup(MutableLiveData<Meetup> meetupMutableLiveData) {
-        // Create notifications for each invited user
-        Meetup meetup = meetupMutableLiveData.getValue(); // todo: meetup is null
-        if (selectedUsers.getValue() != null && currentUser.getValue() != null) {
-            for (String invitedFriendId : selectedUsers.getValue()) {
-                /*MeetupRequest request = new MeetupRequest(
-                        meetup.getId(),
-                        userRepository.getFirebaseUser().getUid(),
-                        currentUser.getValue().getFullName(),
-                        invitedFriendId,
-                        meetup.getLocation(),
-                        meetupTimestamp.getValue(),
-                        MEETUP_REQUEST);
-                meetupRequestRepository.addMeetupRequest(request);*/
             }
             selectedUsers.getValue().clear();
         }
@@ -178,5 +189,15 @@ public class CreateMeetupViewModel extends ViewModel {
             users.getValue().clear();
             users = userRepository.getFriendsByUsername(query);
         }
+    }
+
+    public void clearSelectedUsers() {
+        if (selectedUsers.getValue() != null) {
+            selectedUsers.getValue().clear();
+        }
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

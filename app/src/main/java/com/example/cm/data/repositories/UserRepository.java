@@ -2,6 +2,7 @@ package com.example.cm.data.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.cm.Constants;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
@@ -310,7 +311,34 @@ public class UserRepository extends Repository {
     }
 
     /**
-     * Get static friends list  of current authorized user
+     * Get friends of current authorized user except friends with given ids
+     * @param userIds IDs of users you dont want to return
+     * @return MutableLiveData-List of mutable friends
+     */
+    public MutableLiveData<List<MutableLiveData<User>>> getFriendsExcept(List<String> userIds) {
+        if (auth.getCurrentUser() == null) {
+            return mutableUsers;
+        }
+        String currentUserId = auth.getCurrentUser().getUid();
+
+        userCollection.document(currentUserId).addSnapshotListener(executorService, (value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null && value.exists()) {
+                User user = snapshotToUser(value);
+                List<String> friendsToReturn = user.getFriends();
+                if (userIds != null && !userIds.isEmpty()) {
+                    friendsToReturn.removeAll(userIds);
+                }
+                mutableUsers = getUsersByIds(friendsToReturn);
+            }
+        });
+        return mutableUsers;
+    }
+
+    /**
+     * Get static friends list of current authorized user
      *
      * @return MutableLiveData-List of mutable friends
      */
@@ -340,12 +368,10 @@ public class UserRepository extends Repository {
      * @return MutableLiveData-List of mutable users with ids
      */
     public MutableLiveData<List<MutableLiveData<User>>> getUsersByIds(List<String> userIds) {
-        if (userIds == null || userIds.isEmpty()) {
-            mutableUsers.postValue(new ArrayList<>());
+        if (userIds == null) {
             return mutableUsers;
         }
-
-        List<List<String>> subLists = Lists.partition(userIds, 10);
+        List<List<String>> subLists = Lists.partition(userIds, Constants.MAX_QUERY_LENGTH);
         for (List<String> subList : subLists) {
             userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService, (value, error) -> {
                 if (error != null) {
@@ -357,7 +383,6 @@ public class UserRepository extends Repository {
                 }
             });
         }
-
         return mutableUsers;
     }
 
@@ -414,6 +439,39 @@ public class UserRepository extends Repository {
     }
 
     /**
+     * Get list of friends of a user by their username except friends with given ids
+     * @param userIdsExcept IDs of users you dont want to return
+     * @param query String to search for
+     * @return MutableLiveData-List of mutable friends with query matching username
+     */
+    public MutableLiveData<List<MutableLiveData<User>>> getFriendsByUsernameExcept(String query, List<String> userIdsExcept) {
+        if (auth.getCurrentUser() == null) {
+            return mutableUsers;
+        }
+        String currentUserId = auth.getCurrentUser().getUid();
+
+        userCollection.document(currentUserId).addSnapshotListener((value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null && value.exists()) {
+                User user = snapshotToUser(value);
+
+                List<String> friends = user.getFriends();
+                if (friends == null || friends.isEmpty()) {
+                    return;
+                }
+                if (userIdsExcept != null && !userIdsExcept.isEmpty()) {
+                    friends.removeAll(userIdsExcept);
+                }
+
+                mutableUsers = getUsersByIdsAndName(friends, query);
+            }
+        });
+        return mutableUsers;
+    }
+
+    /**
      * Get users within given list with query matching name
      *
      * @param userIds list of users to search in
@@ -421,6 +479,10 @@ public class UserRepository extends Repository {
      * @return MutableLiveData-List of mutable users within given list with query matching name
      */
     public MutableLiveData<List<MutableLiveData<User>>> getUsersByIdsAndName(List<String> userIds, String query) {
+        if (userIds == null || userIds.isEmpty()) {
+            return mutableUsers;
+        }
+
         userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener((value, error) -> {
             if (error != null) {
                 return;

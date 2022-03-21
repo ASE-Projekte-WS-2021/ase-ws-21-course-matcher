@@ -13,37 +13,44 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="5">
+        android:layout_weight="4" >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent" >
 
             <ImageView
+                android:id="@+id/ivLocation"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:contentDescription="@string/location"
                 android:scaleType="centerCrop"
                 android:src="@drawable/cafe" />
 
-            <ImageView
-                android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/content_description_back_button"
-                android:paddingStart="@dimen/padding_small"
-                android:paddingTop="@dimen/padding_small"
-                android:src="@drawable/ic_back_button"
-                tools:ignore="RtlSymmetry" />
+                android:background="@drawable/gradient_gray700_transparent_to_transparent_top_down"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:paddingTop="@dimen/padding_small">
 
-            <ImageView
-                android:id="@+id/meetup_context_menu_btn"
-                android:layout_width="@dimen/btn_size"
-                android:layout_height="@dimen/btn_size"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/padding_small"
-                android:layout_marginTop="@dimen/padding_small"
-                android:src="@drawable/ic_more_options" />
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/content_description_back_button"
+                    android:src="@drawable/ic_back_button"
+                    tools:ignore="RtlSymmetry" />
+
+                <ImageView
+                    android:id="@+id/meetup_context_menu_btn"
+                    android:layout_width="@dimen/btn_size"
+                    android:layout_height="@dimen/btn_size"
+                    android:layout_alignParentEnd="true"
+                    android:src="@drawable/ic_more_options" />
+
+            </RelativeLayout>
+
 
             <!--
             <ImageView
@@ -98,41 +105,39 @@
                 tools:ignore="RtlSymmetry" />
                 -->
 
-            <TextView
-                android:id="@+id/meetupDetailedTime"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/meetupDetailedLocation"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="@dimen/padding_medium"
-                android:layout_marginBottom="0dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_small" />
-
-            <TextView
-                android:id="@+id/meetupDetailedLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
-                android:layout_marginStart="@dimen/padding_medium"
-                android:layout_marginBottom="@dimen/padding_medium"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_medium"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:background="@drawable/gradient_gray700_to_transparent_bottom_up"
+                android:paddingHorizontal="@dimen/activity_vertical_margin"
+                android:paddingTop="@dimen/padding_ultra"
+                android:paddingBottom="@dimen/padding_medium">
 
+                <TextView
+                    android:id="@+id/meetupDetailedTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray300"
+                    android:textSize="@dimen/text_size_small" />
 
-
-
+                <TextView
+                    android:id="@+id/meetupDetailedLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray300"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </RelativeLayout>
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:layout_weight="8">
+        android:layout_weight="9">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/meetup_detailed_tab_layout"
