@@ -1,6 +1,7 @@
 package com.example.cm.ui.adapters;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,12 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -24,15 +28,17 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     private ViewGroup parent;
     private List<MeetupRequest> mRequests;
+    private List<User> users;
     private final OnMeetupRequestListener listener;
 
     public MeetupRequestListAdapter(OnMeetupRequestListener listener) {
         this.listener = listener;
     }
 
-    public void setRequests(List<MeetupRequest> newRequests) {
+    public void setRequests(List<MeetupRequest> newRequests, List<User> users) {
         if (mRequests == null) {
             mRequests = newRequests;
+            this.users = users;
             notifyItemRangeInserted(0, newRequests.size());
             return;
         }
@@ -99,12 +105,13 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         return new MeetupRequestListAdapter.MeetupRequestViewHolder(binding);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
         Context context = holder.binding.getRoot().getContext();
         MeetupRequest request = mRequests.get(position);
 
-        String user = String.format("@%s ", Objects.requireNonNull(request).getSenderName());
+        String user = String.format("@%s ", getFullName(Objects.requireNonNull(request).getSenderId()));
         String date = request.getCreationTimeAgo();
         String location = request.getLocation();
 
@@ -151,6 +158,18 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
                 holder.getBtnAccept().setVisibility(View.GONE);
                 holder.getBtnDecline().setVisibility(View.GONE);
                 break;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String getFullName(String userId) {
+        User user = users.stream()
+                .filter(userData -> userData.getId().equals(userId)).findAny()
+                .orElse(null);
+        if (user != null) {
+            return user.getFirstName() + " " + user.getLastName();
+        } else {
+            return null;
         }
     }
 

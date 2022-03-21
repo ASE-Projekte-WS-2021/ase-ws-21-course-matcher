@@ -1,5 +1,8 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
+import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -16,9 +19,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
-import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 public class FriendRequestRepository extends Repository {
 
@@ -83,6 +83,50 @@ public class FriendRequestRepository extends Repository {
                     }
                 }));
         return mutableRequestList;
+    }
+
+    /**
+     * Get received and sent friend requests for currently signed in user
+     */
+    public MutableLiveData<List<FriendRequest>> getReceivedAndSentRequestsForUser() {
+        if (auth.getCurrentUser() == null) {
+            return mutableRequestList;
+        }
+
+        String userId = auth.getCurrentUser().getUid();
+        friendRequestCollection.whereEqualTo("receiverId", userId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .addSnapshotListener(executorService, ((value, error) -> {
+                    if (error != null) {
+                        return;
+                    }
+                    if (value != null) {
+                        List<FriendRequest> requests = new ArrayList<>();
+                        for (DocumentSnapshot snapshot : value.getDocuments()) {
+                            Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
+                            if (currentState != REQUEST_DECLINED) {
+                                requests.add(snapshotToFriendRequest(snapshot));
+                            }
+                        }
+                        addSentRequests(requests, userId);
+                    }
+                }));
+        return mutableRequestList;
+    }
+
+    private void addSentRequests(List<FriendRequest> requests, String userId) {
+        friendRequestCollection.whereEqualTo("senderId", userId)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .addSnapshotListener(executorService, (val, err) -> {
+                    if (err == null) {
+                        if (val != null && !val.isEmpty()) {
+                            for (DocumentSnapshot snapshot : val.getDocuments()) {
+                                requests.add(snapshotToFriendRequest(snapshot));
+                            }
+                        }
+                    }
+                    mutableRequestList.postValue(requests);
+                });
     }
 
     /**
@@ -201,7 +245,6 @@ public class FriendRequestRepository extends Repository {
 
         request.setId(document.getId());
         request.setSenderId(document.getString("senderId"));
-        request.setSenderName(document.getString("senderName"));
         request.setReceiverId(document.getString("receiverId"));
         request.setCreatedAt(document.getDate("createdAt"));
         request.setState(document.get("state", Request.RequestState.class));

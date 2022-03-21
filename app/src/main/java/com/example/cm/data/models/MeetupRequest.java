@@ -27,21 +27,21 @@ public class MeetupRequest extends Request {
     public MeetupRequest(MeetupRequestType type) {
         super();
         this.type = type;
-        if(type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED){
+        if (type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED) {
             state = RequestState.REQUEST_ANSWERED;
         }
     }
 
-    public MeetupRequest(String meetupId, String senderId, String senderName,
-                         String receiverId, String location, Date meetupAt, String imageUrl, MeetupRequestType type) {
-        super(senderId, senderName, receiverId);
+    public MeetupRequest(String meetupId, String senderId,
+            String receiverId, String location, Date meetupAt, String imageUrl, MeetupRequestType type) {
+        super(senderId, receiverId);
         this.meetupId = meetupId;
         this.location = location;
         this.meetupAt = meetupAt;
         calendarMeetup.setTime(meetupAt);
         this.imageUrl = imageUrl;
         this.type = type;
-        if(type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED){
+        if (type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED) {
             state = RequestState.REQUEST_ANSWERED;
         }
         phase = getPhase();
@@ -82,8 +82,9 @@ public class MeetupRequest extends Request {
 
     @SuppressLint("DefaultLocale")
     @Exclude
-    public String getFormattedTime(){
-        return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
+    public String getFormattedTime() {
+        return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY),
+                calendarMeetup.get(Calendar.MINUTE));
     }
 
     public MeetupPhase getPhase() {
@@ -113,7 +114,7 @@ public class MeetupRequest extends Request {
     @Override
     public String toString() {
         String meetupString = "Treffen " + meetupAt + " Uhr - " + location;
-        switch(type){
+        switch (type) {
             case MEETUP_REQUEST:
                 return meetupString + "?";
             case MEETUP_INFO_ACCEPTED:

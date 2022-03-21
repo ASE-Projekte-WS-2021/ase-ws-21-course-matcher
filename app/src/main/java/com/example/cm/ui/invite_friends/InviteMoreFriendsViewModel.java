@@ -67,7 +67,6 @@ public class InviteMoreFriendsViewModel extends ViewModel {
                 MeetupRequest request = new MeetupRequest(
                         mtp.getId(),
                         userRepository.getFirebaseUser().getUid(),
-                        currentUser.getValue().getFullName(),
                         invitedFriendId,
                         mtp.getLocation().toString(),
                         mtp.getTimestamp(),

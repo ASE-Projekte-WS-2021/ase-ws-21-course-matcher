@@ -3,7 +3,9 @@ package com.example.cm.ui.meetup.MeetupRequests;
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_ACCEPTED;
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_DECLINED;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.MeetupRequest;
@@ -18,15 +20,17 @@ import java.util.Objects;
 
 public class MeetupRequestsViewModel extends ViewModel {
 
-    private final UserRepository userRepository;
+    private final UserRepository userRepository = new UserRepository();
     private final MutableLiveData<User> currentUser;
 
     private final MeetupRepository meetupRepository;
     private final MeetupRequestRepository meetupRequestRepository;
     private final MutableLiveData<List<MeetupRequest>> requestList;
+    private final MutableLiveData<List<String>> userIds = new MutableLiveData<>();
+    private final LiveData<List<User>> userLiveData = Transformations.switchMap(userIds,
+            userRepository::getUsersByIds);
 
     public MeetupRequestsViewModel() {
-        userRepository = new UserRepository();
         currentUser = userRepository.getCurrentUser();
 
         meetupRepository = new MeetupRepository();
@@ -36,6 +40,14 @@ public class MeetupRequestsViewModel extends ViewModel {
 
     public MutableLiveData<List<MeetupRequest>> getMeetupRequests() {
         return requestList;
+    }
+
+    public LiveData<List<User>> getUsers() {
+        return userLiveData;
+    }
+
+    public void setUserIds(List<String> userIds) {
+        this.userIds.setValue(userIds);
     }
 
     public void deleteMeetupRequest(MeetupRequest request) {
@@ -55,13 +67,11 @@ public class MeetupRequestsViewModel extends ViewModel {
         meetupRequestRepository.addMeetupRequest(new MeetupRequest(
                 request.getMeetupId(),
                 currentUser.getValue().getId(),
-                currentUser.getValue().getFullName(),
                 request.getSenderId(),
                 request.getLocation(),
                 request.getMeetupAt(),
                 request.getImageUrl(),
-                MEETUP_INFO_ACCEPTED
-        ));
+                MEETUP_INFO_ACCEPTED));
     }
 
     public void declineMeetupRequest(MeetupRequest request) {
@@ -73,13 +83,11 @@ public class MeetupRequestsViewModel extends ViewModel {
         meetupRequestRepository.addMeetupRequest(new MeetupRequest(
                 request.getMeetupId(),
                 currentUser.getValue().getId(),
-                currentUser.getValue().getFullName(),
                 request.getSenderId(),
                 request.getLocation(),
                 request.getMeetupAt(),
                 request.getImageUrl(),
-                MEETUP_INFO_DECLINED
-        ));
+                MEETUP_INFO_DECLINED));
 
         request.setState(Request.RequestState.REQUEST_DECLINED);
         meetupRequestRepository.decline(request);

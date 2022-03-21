@@ -98,8 +98,7 @@ public class AddFriendsViewModel extends ViewModel {
             return;
         }
 
-        FriendRequest request = new FriendRequest(currentUser.getValue().getId(), currentUser.getValue().getFullName(),
-                receiverId);
+        FriendRequest request = new FriendRequest(currentUser.getValue().getId(), receiverId);
         requestRepository.addFriendRequest(request);
         listener.onRequestAdded();
     }

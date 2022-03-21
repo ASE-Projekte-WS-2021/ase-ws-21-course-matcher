@@ -1,5 +1,8 @@
 package com.example.cm.ui.adapters;
 
+import android.annotation.SuppressLint;
+import android.content.res.Resources;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,8 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cm.R;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.Request;
+import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.google.android.material.snackbar.Snackbar;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +30,7 @@ import java.util.Objects;
 public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder> {
 
     private ViewGroup parent;
+    private List<User> users;
     private List<FriendRequest> mRequests;
     private final OnFriendRequestListener listener;
 
@@ -30,9 +38,10 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         this.listener = listener;
     }
 
-    public void setRequests(List<FriendRequest> newRequests) {
+    public void setRequests(List<FriendRequest> newRequests, List<User> users) {
         if (mRequests == null) {
             mRequests = newRequests;
+            this.users = users;
             notifyItemRangeInserted(0, newRequests.size());
             return;
         }
@@ -43,7 +52,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     public static DiffUtil.DiffResult calculateDiffFriendRequests(List<FriendRequest> oldRequests,
-                                                                  List<FriendRequest> newRequests) {
+            List<FriendRequest> newRequests) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -92,30 +101,137 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     @NonNull
     @Override
     public FriendRequestListAdapter.FriendRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                                               int viewType) {
+            int viewType) {
         this.parent = parent;
         ItemFriendRequestBinding binding = ItemFriendRequestBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false);
         return new FriendRequestListAdapter.FriendRequestViewHolder(binding);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull FriendRequestViewHolder holder, int position) {
         FriendRequest request = mRequests.get(position);
 
-        String user = Objects.requireNonNull(request).getSenderName();
+        String currentUserId = new AuthRepository().getCurrentUser().getUid();
+
+        if (request != null) {
+            if (request.getReceiverId().equals(currentUserId)) {
+                setReceivedRequests(holder, request);
+            }
+            if (request.getSenderId().equals(currentUserId)) {
+                setSentRequests(holder, request);
+            }
+        }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setSentRequests(FriendRequestViewHolder holder, FriendRequest request) {
+        String fullName = getFullName(request.getReceiverId());
+        String userName = getUserName(request.getReceiverId());
+
+        String profileImageUrl = getProfileImageUrl(request.getReceiverId());
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            holder.getIvProfilePicture().setImageTintMode(null);
+            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getIvProfilePicture());
+        }
+
+        String date = request.getCreationTimeAgo();
+
+        String requestDescription = "";
+
+        Request.RequestState requestState = request.getState();
+
+        Resources resources = parent.getResources();
+
+        if (requestState == Request.RequestState.REQUEST_PENDING) {
+
+            requestDescription = resources.getString(R.string.friend_request_own_pending);
+        } else if (requestState == Request.RequestState.REQUEST_ACCEPTED) {
+            requestDescription = resources.getString(R.string.friend_request_own_accepted);
+        } else if (requestState == Request.RequestState.REQUEST_ANSWERED) {
+            requestDescription = resources.getString(R.string.friend_request_own_answered);
+        } else if (requestState == Request.RequestState.REQUEST_DECLINED) {
+            requestDescription = resources.getString(R.string.friend_request_own_declined);
+        }
+
+        if (fullName != null) {
+            holder.getTvSender().setText("An: " + fullName);
+        }
+
+        if (userName != null) {
+            holder.getTvSenderUsername().setText(userName);
+        }
+
+        holder.getTvDescription().setText(requestDescription);
+        holder.getTvSentDate().setText(date);
+        holder.getBtnAccept().setVisibility(View.GONE);
+        holder.getBtnDecline().setVisibility(View.GONE);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String getFullName(String userId) {
+        User user = users.stream()
+                .filter(userData -> userData.getId().equals(userId)).findAny()
+                .orElse(null);
+        if (user != null) {
+            return user.getFirstName() + " " + user.getLastName();
+        } else {
+            return null;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String getUserName(String userId) {
+        User user = users.stream()
+                .filter(userData -> userData.getId().equals(userId)).findAny()
+                .orElse(null);
+        if (user != null) {
+            return user.getUsername();
+        } else {
+            return null;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void setReceivedRequests(FriendRequestViewHolder holder, FriendRequest request) {
+        String fullName = getFullName(request.getSenderId());
+        String userName = getUserName(request.getSenderId());
+
+        String profileImageUrl = getProfileImageUrl(request.getSenderId());
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+            holder.getIvProfilePicture().setImageTintMode(null);
+            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getIvProfilePicture());
+        }
+
         String date = request.getCreationTimeAgo();
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
-        // todo: get username from user id, then setText to username
-        holder.getTvSenderUsername().setVisibility(View.GONE);
-        // todo end
+        if (userName != null) {
+            holder.getTvSenderUsername().setText(userName);
+        }
 
-        holder.getTvSender().setText(user);
+        if (fullName != null) {
+            holder.getTvSender().setText(fullName);
+        }
         holder.getTvSentDate().setText(date);
         holder.getTvDescription().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);
         holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
         holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private String getProfileImageUrl(String senderId) {
+        User user = users.stream()
+                .filter(userData -> userData.getId().equals(senderId)).findAny()
+                .orElse(null);
+        if (user != null) {
+            return user.getProfileImageUrl();
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -174,7 +290,15 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
-            listener.onItemClicked(Objects.requireNonNull(mRequests.get(position)).getSenderId());
+
+            String currentUserId = new AuthRepository().getCurrentUser().getUid();
+            FriendRequest request = mRequests.get(position);
+            if (request.getReceiverId().equals(currentUserId)) {
+                listener.onItemClicked(mRequests.get(position).getSenderId());
+            }
+            if (request.getSenderId().equals(currentUserId)) {
+                listener.onItemClicked(mRequests.get(position).getReceiverId());
+            }
         }
 
         private void onAccept() {
