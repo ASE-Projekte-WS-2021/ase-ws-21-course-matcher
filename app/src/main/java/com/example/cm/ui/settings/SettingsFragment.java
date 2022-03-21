@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,6 +33,7 @@ import com.example.cm.databinding.FragmentSettingsBinding;
 import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.TextWithButtonDialog;
 import com.google.android.material.snackbar.Snackbar;
 
 public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutListener {
@@ -39,6 +43,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private Navigator navigator;
     private SettingsViewModel settingsViewModel;
     private LogoutDialog logoutDialog;
+    private TextWithButtonDialog textWithButtonDialog;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -82,6 +87,8 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         binding.linkPrivacyPolicy.linkText.setText(getString(R.string.link_label_privacy_policy));
         binding.linkImprint.linkText.setText(getString(R.string.link_label_imprint));
         binding.linkLogout.linkText.setText(getString(R.string.link_label_logout));
+        binding.linkDeleteAccount.linkText.setText(getString(R.string.link_label_delete_account));
+        binding.linkDeleteAccount.linkText.setTextColor(getResources().getColor(R.color.red));
 
         // Set icons of links
         binding.linkEditProfile.linkIcon.setImageResource(R.drawable.ic_edit_profile);
@@ -90,6 +97,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         binding.linkPrivacyPolicy.linkIcon.setImageResource(R.drawable.ic_privacy_policy);
         binding.linkImprint.linkIcon.setImageResource(R.drawable.ic_imprint);
         binding.linkLogout.linkIcon.setImageResource(R.drawable.ic_logout);
+        binding.linkDeleteAccount.linkIcon.setImageResource(R.drawable.ic_delete);
 
         // Set version number
         try {
@@ -119,6 +127,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         binding.linkPrivacyPolicy.linkWrapper.setOnClickListener(v -> onPrivacyPolicyClicked());
         binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
         binding.linkLogout.linkWrapper.setOnClickListener(v -> onLogoutClicked());
+        binding.linkDeleteAccount.linkWrapper.setOnClickListener(v -> onDeleteAccountClicked());
         binding.switchShareLocation.setOnCheckedChangeListener((v, isChecked) -> onShareLocationClicked(isChecked));
     }
 
@@ -147,6 +156,33 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private void onLogoutClicked() {
         logoutDialog = new LogoutDialog(requireActivity(), this);
         logoutDialog.show();
+    }
+
+    private void onDeleteAccountClicked() {
+        textWithButtonDialog = new TextWithButtonDialog(requireActivity(), () -> {
+            settingsViewModel.deleteAccount(new UserListener<Boolean>() {
+                @Override
+                public void onUserSuccess(Boolean isDeleted) {
+                    if(isDeleted) {
+                        textWithButtonDialog.dismiss();
+                        // Navigate to Login Screen
+                        Intent intent = new Intent(requireActivity(), LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        requireActivity().finish();
+                    }
+                }
+
+                @Override
+                public void onUserError(Exception error) {
+                    textWithButtonDialog.dismiss();
+                    Snackbar.make(requireContext(), binding.getRoot(), getResources().getString(R.string.edit_profile_general_error), Snackbar.LENGTH_LONG).show();
+                }
+            });
+        });
+        textWithButtonDialog.setTitle(getResources().getString(R.string.delete_account_title));
+        textWithButtonDialog.setConfirmButtonText(getString(R.string.delete_account_confirm_button));
+        textWithButtonDialog.show();
     }
 
     private void onShareLocationClicked(boolean isChecked) {

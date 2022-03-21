@@ -69,6 +69,10 @@
                     android:id="@+id/link_logout"
                     layout="@layout/item_settings_link" />
 
+                <include
+                    android:id="@+id/link_delete_account"
+                    layout="@layout/item_settings_link" />
+
             </LinearLayout>
 
             <TextView

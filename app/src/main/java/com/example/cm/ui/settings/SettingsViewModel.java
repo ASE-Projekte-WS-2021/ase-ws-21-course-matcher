@@ -10,6 +10,8 @@ import com.example.cm.data.repositories.Callback;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import timber.log.Timber;
+
 public class SettingsViewModel extends ViewModel {
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
@@ -36,6 +38,23 @@ public class SettingsViewModel extends ViewModel {
                 listener.onUserError((Exception) object);
             }
         });
+    }
+
+    public void deleteAccount(UserListener<Boolean> listener) {
+        Timber.d("Delete account");
+        /*userRepository.deleteUser(new Callback() {
+            @Override
+            public OnSuccessListener<? super Void> onSuccess(Object object) {
+                listener.onUserSuccess(true);
+                return null;
+            }
+
+            @Override
+            public void onError(Object object) {
+                listener.onUserError((Exception) object);
+            }
+        });
+         */
     }
 
     public void logOut() {
