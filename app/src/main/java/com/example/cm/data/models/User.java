@@ -12,6 +12,7 @@ public class User {
     private List<String> friends;
     private LatLng location;
     private boolean isSharingLocation;
+    private Availability availability;
 
     public User() {
     }
@@ -24,7 +25,7 @@ public class User {
         this.email = email;
     }
 
-    public User(String id, String username, String firstName, String lastName, String email, List<String> friends, LatLng location, boolean isSharingLocation) {
+    public User(String id, String username, String firstName, String lastName, String email, List<String> friends, LatLng location, Availability availability, boolean isSharingLocation) {
         this.id = id;
         this.username = username;
         this.firstName = firstName;
@@ -32,6 +33,7 @@ public class User {
         this.email = email;
         this.friends = friends;
         this.location = location;
+        this.availability = availability;
         this.isSharingLocation = isSharingLocation;
     }
 
@@ -102,6 +104,14 @@ public class User {
 
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public Availability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
     }
 
     public LatLng getLocation() {

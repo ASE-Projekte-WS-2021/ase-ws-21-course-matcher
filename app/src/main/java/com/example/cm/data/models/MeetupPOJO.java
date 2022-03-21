@@ -16,6 +16,7 @@ public class MeetupPOJO {
     private List<String> confirmedFriends;
     private List<String> declinedFriends;
     private String locationName;
+    private Availability availability;
 
     private List<String> lateFriends;
     private MeetupPhase phase;

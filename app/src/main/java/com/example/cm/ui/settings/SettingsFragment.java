@@ -5,6 +5,9 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.example.cm.Constants.PREFS_SETTINGS_KEY;
 import static com.example.cm.Constants.PREFS_SHARE_LOCATION_KEY;
+import static com.example.cm.data.models.Availability.USER_ALMOST_AVAILABLE;
+import static com.example.cm.data.models.Availability.USER_AVAILABLE;
+import static com.example.cm.data.models.Availability.USER_UNAVAILABLE;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,8 +18,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -26,11 +31,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.R;
 import com.example.cm.data.listener.UserListener;
+import com.example.cm.data.models.Availability;
 import com.example.cm.databinding.FragmentSettingsBinding;
 import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
+import timber.log.Timber;
 
 public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutListener {
 
@@ -39,6 +50,8 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private Navigator navigator;
     private SettingsViewModel settingsViewModel;
     private LogoutDialog logoutDialog;
+    private PopupMenu popup;
+    private Availability availabilityState;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -52,6 +65,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         initUI();
         initViewModel();
         initListeners();
+        initAvailabilityMenu();
 
         return binding.getRoot();
     }
@@ -82,6 +96,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         binding.linkPrivacyPolicy.linkText.setText(getString(R.string.link_label_privacy_policy));
         binding.linkImprint.linkText.setText(getString(R.string.link_label_imprint));
         binding.linkLogout.linkText.setText(getString(R.string.link_label_logout));
+        binding.availabilityStateSetter.availabilityStateText.setText(R.string.availability);
 
         // Set icons of links
         binding.linkEditProfile.linkIcon.setImageResource(R.drawable.ic_edit_profile);
@@ -105,9 +120,25 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         settingsViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             if (user != null) {
                 boolean isSharingLocation = user.getIsSharingLocation();
+
                 binding.switchShareLocation.setChecked(isSharingLocation);
+
+                if(user.getAvailability() != null) {
+                    switch (user.getAvailability()) {
+                        case USER_AVAILABLE:
+                            setAvailableUI();
+                            break;
+                        case USER_ALMOST_AVAILABLE:
+                            setAlmostAvailableUI();
+                            break;
+                        case USER_UNAVAILABLE:
+                            setUnavailableUI();
+                            break;
+                    }
+                }
             }
         });
+
     }
 
     private void initListeners() {
@@ -120,7 +151,107 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
         binding.linkLogout.linkWrapper.setOnClickListener(v -> onLogoutClicked());
         binding.switchShareLocation.setOnCheckedChangeListener((v, isChecked) -> onShareLocationClicked(isChecked));
+        binding.availabilityStateSetter.availabilityState.setOnClickListener(v -> popup.show());
     }
+
+    private void initAvailabilityMenu() {
+        popup = new PopupMenu(requireContext(), binding.availabilityStateSetter.availabilityState);
+        setForceShowIcon(popup);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_availability_state, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menuAvailable:
+                    onAvailable();
+                    break;
+                case R.id.menuAlmostAvailable:
+                    onAlmostAvailable();
+                    break;
+                case R.id.menuUnavailable:
+                    onUnavailable();
+                    break;
+            }
+            return true;
+        });
+    }
+
+    // https://stackoverflow.com/questions/20836385/popup-menu-with-icon-on-android
+    private void setForceShowIcon(PopupMenu popupMenu) {
+        try {
+            Field[] mFields = popupMenu.getClass().getDeclaredFields();
+            for (Field field : mFields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popupMenu);
+                    Class<?> popupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Method mMethods = popupHelper.getMethod("setForceShowIcon", boolean.class);
+                    mMethods.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onAlmostAvailable() {
+        settingsViewModel.updateAvailablilty(USER_ALMOST_AVAILABLE, new UserListener<Availability>() {
+            @Override
+            public void onUserSuccess(Availability availability) {
+                setAlmostAvailableUI();
+            }
+
+            @Override
+            public void onUserError(Exception error) {
+                Snackbar.make(binding.getRoot(), R.string.availavilityError, Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void onUnavailable() {
+        settingsViewModel.updateAvailablilty(USER_UNAVAILABLE, new UserListener<Availability>() {
+            @Override
+            public void onUserSuccess(Availability availability) {
+                setUnavailableUI();
+            }
+
+            @Override
+            public void onUserError(Exception error) {
+                Snackbar.make(binding.getRoot(), R.string.availavilityError, Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void onAvailable() {
+        settingsViewModel.updateAvailablilty(USER_AVAILABLE, new UserListener<Availability>() {
+            @Override
+            public void onUserSuccess(Availability availability) {
+                setAvailableUI();
+            }
+
+            @Override
+            public void onUserError(Exception error) {
+                Snackbar.make(binding.getRoot(), R.string.availavilityError, Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void setAvailableUI(){
+        binding.availabilityStateSetter.availabilityText.setText(R.string.available);
+        binding.availabilityStateSetter.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
+    }
+
+    private void setAlmostAvailableUI(){
+        binding.availabilityStateSetter.availabilityText.setText(R.string.unavailable);
+        binding.availabilityStateSetter.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+    }
+
+    private void setUnavailableUI(){
+        binding.availabilityStateSetter.availabilityText.setText(R.string.menu_almostAvailable);
+        binding.availabilityStateSetter.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+    }
+
 
     private void onEditProfileClicked() {
         navigator.getNavController().navigate(R.id.action_settingsFragment_to_editProfileFragment);
