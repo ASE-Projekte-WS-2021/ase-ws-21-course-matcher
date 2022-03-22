@@ -1,8 +1,13 @@
 package com.example.cm.ui.settings;
 
+import android.content.Context;
+
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.Constants;
+import com.example.cm.R;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
@@ -50,10 +55,15 @@ public class SettingsViewModel extends ViewModel {
         });
     }
 
-    public void reauthenticate(String password, UserListener<Boolean> listener) {
+    public void reauthenticate(Context context, String password, UserListener<Boolean> listener) {
+        if(password.isEmpty() || password.length() < Constants.MIN_PASSWORD_LENGTH) {
+            listener.onUserError(new Exception(context.getString(R.string.edit_account_error_password_min_length)));
+            return;
+        }
+
         FirebaseUser user = authRepository.getCurrentUser();
         if (user == null) {
-            listener.onUserError(new Exception());
+            listener.onUserError(new Exception(context.getString(R.string.no_user_found)));
             return;
         }
 
@@ -66,7 +76,7 @@ public class SettingsViewModel extends ViewModel {
         AuthCredential credential = EmailAuthProvider.getCredential(emailAddress, password);
         user.reauthenticate(credential)
                 .addOnFailureListener(e -> {
-                    listener.onUserError(e);
+                    listener.onUserError(new Exception(context.getString(R.string.delete_account_wrong_password)));
                 })
                 .addOnSuccessListener(e -> {
                     listener.onUserSuccess(true);

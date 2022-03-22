@@ -33,6 +33,7 @@ import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.TextWithButtonDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutListener {
 
@@ -158,10 +159,8 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     }
 
     private void onDeleteAccountClicked() {
-        // 1. Show popup with input field where user has to enter password to re-validate account
         editTextDialog = new EditTextDialog(requireActivity(), (fieldToUpdate, updatedValue) -> {
-            settingsViewModel.reauthenticate(updatedValue, new UserListener<Boolean>() {
-                // 3. If credentials are correct, delete account and logout user
+            settingsViewModel.reauthenticate(requireContext(), updatedValue, new UserListener<Boolean>() {
                 @Override
                 public void onUserSuccess(Boolean aBoolean) {
                     settingsViewModel.deleteAccount(new UserListener<Boolean>() {
@@ -179,17 +178,21 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                     });
                 }
 
-                // 2. If credentials are incorrect, keep popup open and show error message
                 @Override
                 public void onUserError(Exception error) {
-                    Snackbar.make(binding.getRoot(), R.string.edit_profile_general_error, Snackbar.LENGTH_SHORT).show();
+                    if (error.getMessage() != null) {
+                        Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    }
                 }
             });
         });
-        editTextDialog.setFieldToUpdate("password");
-        editTextDialog.show();
 
-
+        editTextDialog
+                .setTitle(getString(R.string.delete_account_title))
+                .setDescription(getString(R.string.delete_account_description))
+                .setConfirmButtonText(getString(R.string.dialog_delete_btn))
+                .setIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE)
+                .show();
     }
 
     private void onShareLocationClicked(boolean isChecked) {

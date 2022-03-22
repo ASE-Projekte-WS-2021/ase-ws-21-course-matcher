@@ -225,4 +225,7 @@
     <string name="location_hint">Treffpunkt</string>
     <string name="delete_account_title">Account wirklich löschen?</string>
     <string name="delete_account_confirm_button">Löschen</string>
+    <string name="delete_account_wrong_password">Das eingegebene Passwort ist falsch.</string>
+    <string name="no_user_found">Kein Nutzer gefunden.</string>
+    <string name="delete_account_description">Um deinen Account löschen zu können, musst du dein Passwort eingeben.</string>
 </resources>
