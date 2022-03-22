@@ -7,12 +7,17 @@
     android:gravity="center_vertical"
     android:padding="@dimen/padding_medium">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/ivUserImage"
+    <RelativeLayout
         android:layout_width="@dimen/profile_img_size"
         android:layout_height="@dimen/profile_img_size"
+        android:id="@+id/image"
+        android:layout_marginEnd="@dimen/padding_big">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivUserImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_marginEnd="@dimen/padding_big"
         android:background="@color/gray500"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_profile"
@@ -20,11 +25,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView" />
 
+    <ImageView
+        android:id="@+id/dotAvailabilityIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_dot_available" />
+</RelativeLayout>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/ivUserImage"
+        android:layout_toEndOf="@+id/image"
         android:orientation="vertical"
         android:id="@+id/userInfo">
 
@@ -51,15 +66,6 @@
             android:textColor="@color/gray500"
             tools:text="Username" />
     </LinearLayout>
-
-        <ImageView
-            android:id="@+id/dotAvailabilityIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_dot_available" />
 
     <ImageView
         android:id="@+id/ivFriendLateInfo"
