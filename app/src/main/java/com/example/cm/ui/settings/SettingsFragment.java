@@ -123,7 +123,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
 
                 binding.switchShareLocation.setChecked(isSharingLocation);
 
-                if(user.getAvailability() != null) {
+                if (user.getAvailability() != null) {
                     switch (user.getAvailability()) {
                         case USER_AVAILABLE:
                             setAvailableUI();
@@ -237,19 +237,19 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         });
     }
 
-    private void setAvailableUI(){
+    private void setAvailableUI() {
         binding.availabilityStateSetter.availabilityText.setText(R.string.available);
         binding.availabilityStateSetter.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
     }
 
-    private void setAlmostAvailableUI(){
+    private void setUnavailableUI() {
         binding.availabilityStateSetter.availabilityText.setText(R.string.unavailable);
         binding.availabilityStateSetter.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
     }
 
-    private void setUnavailableUI(){
+    private void setAlmostAvailableUI() {
         binding.availabilityStateSetter.availabilityText.setText(R.string.menu_almostAvailable);
-        binding.availabilityStateSetter.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+        binding.availabilityStateSetter.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_almostavailable);
     }
 
 
