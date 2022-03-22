@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import com.example.cm.databinding.DialogDeleteMeetupBinding;
 import com.example.cm.databinding.DialogTextWithButtonBinding;
 
+import timber.log.Timber;
+
 public class TextWithButtonDialog extends Dialog {
 
     DialogTextWithButtonBinding binding;
@@ -47,10 +49,13 @@ public class TextWithButtonDialog extends Dialog {
 
     private void initListeners() {
         binding.btnCancel.setOnClickListener(v -> dismiss());
-        binding.btnConfirm.setOnClickListener(v -> onConfirmClicked());
+        binding.btnConfirm.setOnClickListener(v -> {
+            Timber.d("on confirm clicked");
+            onConfirmButtonClicked();
+        });
     }
 
-    private void onConfirmClicked() {
+    private void onConfirmButtonClicked() {
         listener.onConfirmClicked();
     }
 

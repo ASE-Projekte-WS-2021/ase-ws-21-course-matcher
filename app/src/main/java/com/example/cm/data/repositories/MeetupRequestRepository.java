@@ -1,12 +1,15 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
+import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -18,9 +21,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
-import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 public class MeetupRequestRepository extends Repository {
 
@@ -134,15 +134,15 @@ public class MeetupRequestRepository extends Repository {
     public void deleteRequestForMeetup(String meetupId) {
         meetupRequestCollection.whereEqualTo("meetupId", meetupId)
                 .get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult() == null) {
-                    return;
-                }
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    document.getReference().delete();
-                }
-            }
-        });
+                    if (task.isSuccessful()) {
+                        if (task.getResult() == null) {
+                            return;
+                        }
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            document.getReference().delete();
+                        }
+                    }
+                });
     }
 
     /**
@@ -171,14 +171,35 @@ public class MeetupRequestRepository extends Repository {
                 .whereEqualTo("senderId", request.getReceiverId())
                 .whereEqualTo("type", MeetupRequest.MeetupRequestType.MEETUP_INFO_DECLINED)
                 .get().addOnCompleteListener(executorService, task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult() == null) {
-                    return;
-                }
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    document.getReference().delete();
-                }
-            }
-        });
+                    if (task.isSuccessful()) {
+                        if (task.getResult() == null) {
+                            return;
+                        }
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            document.getReference().delete();
+                        }
+                    }
+                });
     }
+
+    public void deleteRequestsForUser(String userId, UserListener<Boolean> listener) {
+        meetupRequestCollection.get()
+                .addOnFailureListener(executorService, e -> {
+                    listener.onUserError(e);
+                })
+                .addOnSuccessListener(executorService, queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        MeetupRequest request = snapshotToMeetupRequest(document);
+                        boolean isUserSender = request.getSenderId().equals(userId);
+                        boolean isUserReceiver = request.getReceiverId().equals(userId);
+
+                        if (isUserSender || isUserReceiver) {
+                            document.getReference().delete();
+                        }
+                    }
+
+                    listener.onUserSuccess(true);
+                });
+    }
+
 }
