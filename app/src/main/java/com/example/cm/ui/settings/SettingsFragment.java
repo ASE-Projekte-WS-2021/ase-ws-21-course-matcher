@@ -167,14 +167,14 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                     settingsViewModel.deleteAccount(new UserListener<Boolean>() {
                         @Override
                         public void onUserSuccess(Boolean aBoolean) {
-                            Snackbar.make(binding.getRoot(), "Account deleted", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(binding.getRoot(), R.string.account_deleted_success, Snackbar.LENGTH_LONG).show();
                             editTextDialog.dismiss();
                             goToLoginScreen();
                         }
 
                         @Override
                         public void onUserError(Exception error) {
-                            Snackbar.make(binding.getRoot(), "Something went wrong. Try again.", Snackbar.LENGTH_LONG).show();
+                            Snackbar.make(binding.getRoot(), R.string.edit_profile_general_error, Snackbar.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -182,7 +182,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                 // 2. If credentials are incorrect, keep popup open and show error message
                 @Override
                 public void onUserError(Exception error) {
-                    Snackbar.make(binding.getRoot(), "Something went wrong. Try again.", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(binding.getRoot(), R.string.edit_profile_general_error, Snackbar.LENGTH_SHORT).show();
                 }
             });
         });

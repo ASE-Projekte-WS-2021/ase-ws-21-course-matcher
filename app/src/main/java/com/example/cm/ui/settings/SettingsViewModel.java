@@ -53,13 +53,13 @@ public class SettingsViewModel extends ViewModel {
     public void reauthenticate(String password, UserListener<Boolean> listener) {
         FirebaseUser user = authRepository.getCurrentUser();
         if (user == null) {
-            listener.onUserError(new Exception("User is null"));
+            listener.onUserError(new Exception());
             return;
         }
 
         String emailAddress = user.getEmail();
         if (emailAddress == null) {
-            listener.onUserError(new Exception("Email is null"));
+            listener.onUserError(new Exception());
             return;
         }
 
