@@ -43,7 +43,7 @@ public class OtherProfileFragment extends Fragment {
 
     private void onBtnClick() {
         if (bundle.containsKey(Constants.KEY_USER_ID)) {
-            String profileId = bundle.getString(Constants.KEY_USER_ID);
+            profileId = bundle.getString(Constants.KEY_USER_ID);
             otherProfileViewModel.getUserById(profileId);
             observeFriendship(profileId);
         }
@@ -54,6 +54,8 @@ public class OtherProfileFragment extends Fragment {
         } else if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_remove_friend)){
             otherProfileViewModel.unfriend(profileId);
             binding.btnAddRemoveFriend.setText(getResources().getString(R.string.profile_btn_add_friend));
+        } else if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_edit)) {
+            navigator.getNavController().navigate(R.id.action_global_to_edit_profile);
         }
     }
 
@@ -98,10 +100,12 @@ public class OtherProfileFragment extends Fragment {
         if (bundle.containsKey(Constants.KEY_USER_ID)) {
             profileId = bundle.getString(Constants.KEY_USER_ID);
             otherProfileViewModel.getUserById(profileId);
-            observeFriendship(profileId);
         }
+
         if (bundle.containsKey(Constants.KEY_IS_OWN_USER) && bundle.getBoolean(Constants.KEY_IS_OWN_USER)) {
-            binding.btnAddRemoveFriend.setVisibility(View.GONE);
+            isOwnProfile();
+        } else {
+            observeFriendship(profileId);
         }
     }
 
@@ -121,9 +125,17 @@ public class OtherProfileFragment extends Fragment {
                         onIsNotBefriended();
                     }
                 });
-
             }
         });
+    }
+
+    private void isOwnProfile() {
+        ColorStateList btnBackground = ContextCompat.getColorStateList(requireActivity(), R.color.outgreyed);
+        int btnTextColor = ContextCompat.getColor(requireActivity(), R.color.white);
+
+        binding.btnAddRemoveFriend.setBackgroundTintList(btnBackground);
+        binding.btnAddRemoveFriend.setTextColor(btnTextColor);
+        binding.btnAddRemoveFriend.setText(R.string.profile_btn_edit);
     }
 
     private void onFriendRequestPending() {

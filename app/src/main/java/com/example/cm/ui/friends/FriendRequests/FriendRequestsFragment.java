@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -22,6 +23,8 @@ import com.example.cm.ui.adapters.FriendRequestListAdapter;
 import com.example.cm.ui.adapters.SwipeToDelete;
 import com.example.cm.utils.Navigator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -55,10 +58,26 @@ public class FriendRequestsFragment extends Fragment implements
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(FriendRequestsViewModel.class);
         requestsViewModel.getFriendRequests().observe(getViewLifecycleOwner(), requests -> {
-            requestsListAdapter.setRequests(requests);
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
-            itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
+            List<String> userIds = getUserIds(requests);
+            requestsViewModel.setUserIds(userIds);
+
+            requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+                requestsListAdapter.setRequests(requests, users);
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
+                itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
+            });
         });
+    }
+
+    private List<String> getUserIds(List<FriendRequest> requests) {
+        List<String> ids = new ArrayList<>();
+        for (FriendRequest request : requests) {
+            if (request != null) {
+                ids.add(request.getSenderId());
+                ids.add(request.getReceiverId());
+            }
+        }
+        return ids;
     }
 
     @Override

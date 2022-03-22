@@ -3,29 +3,32 @@ package com.example.cm.ui.adapters;
 import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_PADDING;
 import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_SIZE;
 import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_STROKE;
-import static com.example.cm.utils.Utils.convertToAddress;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.User;
-import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ItemMeetupBinding;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -35,10 +38,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
-    List<MutableLiveData<Meetup>> meetups;
-    List<MutableLiveData<User>> users;
+    List<Meetup> meetups;
+    List<User> users;
 
-    public MeetupListAdapter(List<MutableLiveData<Meetup>> meetups, List<MutableLiveData<User>> users) {
+    public MeetupListAdapter(List<Meetup> meetups, List<User> users) {
         this.meetups = meetups;
         this.users = users;
     }
@@ -53,41 +56,63 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
-        Meetup meetup = meetups.get(position).getValue();
+        Meetup meetup = meetups.get(position);
 
         if (meetup == null) {
             return;
         }
 
-        if (meetup.getRequestingUser().equals(new AuthRepository().getCurrentUser().getUid())) {
-            holder.getOwnMeetupMarker().setVisibility(View.VISIBLE);
-        }
+        initCardListener(holder.getMeetupCard(), meetup);
+        initLocationImg(holder, meetup);
+        initTextViews(holder, meetup);
+        initUserIcons(holder.getImagesLayout(), meetup);
+    }
 
-        MaterialCardView meetupCard = holder.getMeetupCard();
-
+    private void initCardListener(MaterialCardView meetupCard, Meetup meetup) {
         meetupCard.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putString(Constants.KEY_MEETUP_ID, Objects.requireNonNull(meetup).getId());
             Navigation.findNavController(view).navigate(R.id.navigateToMeetupDetailed, bundle);
         });
+    }
 
+    private void initLocationImg(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {
+        Glide.with(holder.getContext()).load(meetup.getLocationImageUrl()).placeholder(R.drawable.cafe)
+                .into(new CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource,
+                                                @Nullable Transition<? super Drawable> transition) {
+                        holder.getIvLocation().setImageDrawable(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        holder.getIvLocation().setImageDrawable(placeholder);
+                    }
+                });
+    }
+
+    private void initTextViews(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {
         String address = meetup.getLocationName();
-
         holder.getTvLocation().setText(address);
         switch (meetup.getPhase()) {
             case MEETUP_UPCOMING:
                 holder.getTvTime().setText(meetup.getFormattedTime());
                 break;
             case MEETUP_ACTIVE:
-                holder.getTvTime().setText(meetupCard.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                holder.getTvTime()
+                        .setText(holder.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
                 break;
         }
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void initUserIcons(LinearLayout imgLayout, Meetup meetup) {
         List<String> confirmedFriends = meetup.getConfirmedFriends();
         List<String> invitedFriends = meetup.getInvitedFriends();
         List<String> declinedFriends = meetup.getDeclinedFriends();
 
-        LinearLayout imagesLayout = holder.getImagesLayout();
+        LinearLayout imagesLayout = imgLayout;
         imagesLayout.setPadding(-3, 0, 0, 0);
 
         addUserImage(confirmedFriends, imagesLayout, R.color.green);
@@ -99,7 +124,8 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     public void addUserImage(List<String> friendIds, LinearLayout layout, int color) {
         if (friendIds != null) {
             for (String id : friendIds) {
-                ShapeableImageView imageRounded = new ShapeableImageView(new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
+                ShapeableImageView imageRounded = new ShapeableImageView(
+                        new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
 
                 String imageUrl = getImageUrl(id);
                 if (imageUrl != null && !imageUrl.isEmpty()) {
@@ -109,10 +135,12 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
                     imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
                 }
 
-                imageRounded.setLayoutParams(new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE, MEETUP_DETAILED_USER_IMAGE_SIZE));
+                imageRounded.setLayoutParams(
+                        new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE, MEETUP_DETAILED_USER_IMAGE_SIZE));
                 imageRounded.setStrokeColorResource(color);
                 imageRounded.setStrokeWidth(MEETUP_DETAILED_USER_IMAGE_STROKE);
-                imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
+                imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING,
+                        MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
                 layout.addView(imageRounded);
             }
         }
@@ -120,9 +148,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private String getImageUrl(String id) {
-        MutableLiveData<User> user = users.stream().filter(userData -> Objects.requireNonNull(userData.getValue()).getId().equals(id)).findAny().orElse(null);
-        if (user != null && user.getValue() != null) {
-            return user.getValue().getProfileImageUrl();
+        User user = users.stream().filter(userData -> userData.getId().equals(id)).findAny().orElse(null);
+        if (user != null) {
+            return user.getProfileImageUrl();
         } else {
             return null;
         }
@@ -137,8 +165,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     }
 
     /**
-     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
-     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data
+     * (e.g. image)
+     * Source:
+     * https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
      */
     @Override
     public long getItemId(int position) {
@@ -159,6 +189,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             this.binding = binding;
         }
 
+        public ImageView getIvLocation() {
+            return binding.ivLocation;
+        }
+
         public TextView getTvLocation() {
             return binding.locationText;
         }
@@ -177,6 +211,10 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
 
         public FrameLayout getOwnMeetupMarker() {
             return binding.ownMeetupMarker;
+        }
+
+        public Context getContext() {
+            return binding.getRoot().getContext();
         }
     }
 }

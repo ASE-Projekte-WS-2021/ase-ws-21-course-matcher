@@ -1,6 +1,5 @@
 package com.example.cm.ui.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +7,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.data.models.User;
@@ -18,13 +16,14 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.Objects;
 
-public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
+public class MeetupDetailedFriendListAdapter
+        extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
 
-    private final List<MutableLiveData<User>> friends;
+    private final List<User> friends;
     private final List<String> lateFriends;
     private final OnItemClickListener listener;
 
-    public MeetupDetailedFriendListAdapter(List<MutableLiveData<User>> friends, List<String> lateFriends, OnItemClickListener listener) {
+    public MeetupDetailedFriendListAdapter(List<User> friends, List<String> lateFriends, OnItemClickListener listener) {
         this.friends = friends;
         this.lateFriends = lateFriends;
         this.listener = listener;
@@ -39,9 +38,14 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder,
+                                 int position) {
         if (friends != null) {
+
             User friend = friends.get(position).getValue();
+          
+            //User friend = friends.get(position);
+
 
             String fullName = Objects.requireNonNull(friend).getFullName();
             String username = friend.getUsername();
@@ -69,8 +73,10 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     }
 
     /**
-     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
-     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data
+     * (e.g. image)
+     * Source:
+     * https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
      */
     @Override
     public long getItemId(int position) {
@@ -105,8 +111,9 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
 
         private void onItemClicked() {
             int position = getAdapterPosition();
-            if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(friends.get(position).getValue().getId());
+            if (position == RecyclerView.NO_POSITION || listener == null)
+                return;
+            listener.onItemClicked(friends.get(position).getId());
         }
 
         public ImageView getProfileImage() {

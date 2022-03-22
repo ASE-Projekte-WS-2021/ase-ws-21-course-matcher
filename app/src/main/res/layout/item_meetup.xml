@@ -26,6 +26,7 @@
 
             <!-- Media -->
             <ImageView
+                android:id="@+id/ivLocation"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/meetup_location_image_height"
                 android:contentDescription="@string/location"

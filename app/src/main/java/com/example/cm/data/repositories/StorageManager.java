@@ -6,6 +6,7 @@ import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.example.cm.Constants;
 import com.google.firebase.storage.FirebaseStorage;
@@ -22,23 +23,40 @@ public class StorageManager extends Repository {
         this.context = context;
     }
 
+    public void uploadProfileImage(Uri uri, String userId, Callback callback) {
+        Bitmap bitmap = uriToBitmap(uri);
+        bitmap = resizeBitmap(bitmap, Constants.PROFILE_IMAGE_MAX_WIDTH);
+        uploadImage(bitmap, userId, callback, Constants.ImageType.PROFILE_IMAGE);
+    }
+
     /**
      * Uploads image in form of a uri to firebase storage
      *
-     * @param uri      Uri of image to upload
-     * @param userId   Id of current user
+     * @param bitmap  bitmap of image to upload
+     * @param id   Id of field
      * @param callback Callback to handle success or failure
      */
-    public void uploadProfileImage(Uri uri, String userId, Callback callback) {
-        Bitmap originalImage = uriToBitmap(uri);
-        Bitmap resizedImage = resizeBitmap(originalImage, Constants.PROFILE_IMAGE_MAX_WIDTH);
-        Uri resizedImageUri = bitmapToUri(resizedImage);
+    public void uploadImage(Bitmap bitmap, String id, Callback callback, Constants.ImageType type) {
+        int quality;
+        String title, folder, extension;
+        if (type == Constants.ImageType.PROFILE_IMAGE) {
+            quality = Constants.QUALITY_PROFILE_IMG;
+            title = Constants.FIREBASE_STORAGE_TITLE_PROFILE_IMAGES;
+            folder = Constants.FIREBASE_STORAGE_FOLDER_PROFILE_IMAGES;
+            extension = Constants.IMAGE_EXTENSION_JPG;
+        } else {
+            quality = Constants.QUALITY_MEETUP_IMG;
+            title = Constants.FIREBASE_STORAGE_TITLE_MEETUP_IMAGES;
+            folder = Constants.FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES;
+            extension = Constants.IMAGE_EXTENSION_PNG;
+        }
+        Uri imageUri = bitmapToUri(bitmap, title, quality, extension);
 
-        StorageReference profileImageRef = storageReference.child(Constants.FIREBASE_STORAGE_FOLDER + userId + Constants.PROFILE_IMAGE_EXTENSION);
-        profileImageRef.putFile(resizedImageUri)
+        StorageReference imageRef = storageReference.child(folder + id + extension);
+        imageRef.putFile(imageUri)
                 .addOnSuccessListener(task -> {
-                    profileImageRef.getDownloadUrl().addOnSuccessListener(urlToImage -> {
-                        callback.onSuccess(urlToImage.toString());
+                    imageRef.getDownloadUrl().addOnSuccessListener(urlToImage -> {
+                        callback.onSuccess(urlToImage.toString(), imageUri);
                     });
                 }).addOnFailureListener(e -> {
                     callback.onError(e);
@@ -72,10 +90,14 @@ public class StorageManager extends Repository {
      * @param bitmap Bitmap to convert
      * @return Uri of the bitmap
      */
-    private Uri bitmapToUri(Bitmap bitmap) {
+    private Uri bitmapToUri(Bitmap bitmap, String title, int quality, String extension) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bytes);
-        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Profile Image", null);
+        if (extension.equals(Constants.IMAGE_EXTENSION_JPG)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bytes);
+        } else {
+            bitmap.compress(Bitmap.CompressFormat.PNG, quality, bytes);
+        }
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, title, null);
         return Uri.parse(path);
     }
 
@@ -96,13 +118,11 @@ public class StorageManager extends Repository {
             int newHeight = (int) ((float) maxWidth / initialRatio);
             resizedBitmap = Bitmap.createScaledBitmap(bitmap, maxWidth, newHeight, false);
         }
-
         return resizedBitmap;
     }
 
     public interface Callback {
-        void onSuccess(String url);
-
+        void onSuccess(String urlOnline, Uri uriLocal);
         void onError(Exception e);
     }
 }

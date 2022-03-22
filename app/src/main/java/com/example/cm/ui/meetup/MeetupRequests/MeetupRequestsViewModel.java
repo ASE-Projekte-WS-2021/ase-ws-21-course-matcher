@@ -3,7 +3,9 @@ package com.example.cm.ui.meetup.MeetupRequests;
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_ACCEPTED;
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_INFO_DECLINED;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.models.MeetupRequest;
@@ -18,15 +20,17 @@ import java.util.Objects;
 
 public class MeetupRequestsViewModel extends ViewModel {
 
-    private final UserRepository userRepository;
+    private final UserRepository userRepository = new UserRepository();
     private final MutableLiveData<User> currentUser;
 
     private final MeetupRepository meetupRepository;
     private final MeetupRequestRepository meetupRequestRepository;
-    private final MutableLiveData<List<MutableLiveData<MeetupRequest>>> requestList;
+    private final MutableLiveData<List<MeetupRequest>> requestList;
+    private final MutableLiveData<List<String>> userIds = new MutableLiveData<>();
+    private final LiveData<List<User>> userLiveData = Transformations.switchMap(userIds,
+            userRepository::getUsersByIds);
 
     public MeetupRequestsViewModel() {
-        userRepository = new UserRepository();
         currentUser = userRepository.getCurrentUser();
 
         meetupRepository = new MeetupRepository();
@@ -34,8 +38,16 @@ public class MeetupRequestsViewModel extends ViewModel {
         requestList = meetupRequestRepository.getMeetupRequestsForUser();
     }
 
-    public MutableLiveData<List<MutableLiveData<MeetupRequest>>> getMeetupRequests() {
+    public MutableLiveData<List<MeetupRequest>> getMeetupRequests() {
         return requestList;
+    }
+
+    public LiveData<List<User>> getUsers() {
+        return userLiveData;
+    }
+
+    public void setUserIds(List<String> userIds) {
+        this.userIds.setValue(userIds);
     }
 
     public void deleteMeetupRequest(MeetupRequest request) {
@@ -55,12 +67,11 @@ public class MeetupRequestsViewModel extends ViewModel {
         meetupRequestRepository.addMeetupRequest(new MeetupRequest(
                 request.getMeetupId(),
                 currentUser.getValue().getId(),
-                currentUser.getValue().getFullName(),
                 request.getSenderId(),
                 request.getLocation(),
                 request.getMeetupAt(),
-                MEETUP_INFO_ACCEPTED
-        ));
+                request.getImageUrl(),
+                MEETUP_INFO_ACCEPTED));
     }
 
     public void declineMeetupRequest(MeetupRequest request) {
@@ -72,12 +83,11 @@ public class MeetupRequestsViewModel extends ViewModel {
         meetupRequestRepository.addMeetupRequest(new MeetupRequest(
                 request.getMeetupId(),
                 currentUser.getValue().getId(),
-                currentUser.getValue().getFullName(),
                 request.getSenderId(),
                 request.getLocation(),
                 request.getMeetupAt(),
-                MEETUP_INFO_DECLINED
-        ));
+                request.getImageUrl(),
+                MEETUP_INFO_DECLINED));
 
         request.setState(Request.RequestState.REQUEST_DECLINED);
         meetupRequestRepository.decline(request);
@@ -85,19 +95,15 @@ public class MeetupRequestsViewModel extends ViewModel {
     }
 
     public void undoDeclineMeetupRequest(MeetupRequest request, int position) {
-        MutableLiveData<MeetupRequest> requestMDL = new MutableLiveData<>();
         request.setState(Request.RequestState.REQUEST_PENDING);
         meetupRepository.addPending(request.getMeetupId(), request.getReceiverId());
         meetupRequestRepository.undoDecline(request);
-        requestMDL.postValue(request);
-        Objects.requireNonNull(requestList.getValue()).add(position, requestMDL);
+        Objects.requireNonNull(requestList.getValue()).add(position, request);
     }
 
     public void undoDeleteMeetupRequest(MeetupRequest request, int position, Request.RequestState previousState) {
-        MutableLiveData<MeetupRequest> requestMDL = new MutableLiveData<>();
         request.setState(previousState);
         meetupRequestRepository.addMeetupRequest(request);
-        requestMDL.postValue(request);
-        Objects.requireNonNull(requestList.getValue()).add(position, requestMDL);
+        Objects.requireNonNull(requestList.getValue()).add(position, request);
     }
 }

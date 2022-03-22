@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +20,9 @@ import com.example.cm.databinding.FragmentMeetupRequestsBinding;
 import com.example.cm.ui.adapters.MeetupRequestListAdapter;
 import com.example.cm.ui.adapters.SwipeToDelete;
 import com.example.cm.utils.Navigator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MeetupRequestsFragment extends Fragment implements
         MeetupRequestListAdapter.OnMeetupRequestListener {
@@ -38,7 +42,7 @@ public class MeetupRequestsFragment extends Fragment implements
     }
 
     private void initUI() {
-        requestsListAdapter = new MeetupRequestListAdapter( this);
+        requestsListAdapter = new MeetupRequestListAdapter(this);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
         binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
@@ -47,10 +51,25 @@ public class MeetupRequestsFragment extends Fragment implements
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
         requestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), requests -> {
-            requestsListAdapter.setRequests(requests);
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
-            itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
+            List<String> userIds = getUserIds(requests);
+            requestsViewModel.setUserIds(userIds);
+
+            requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+                requestsListAdapter.setRequests(requests, users);
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
+                itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
+            });
         });
+    }
+
+    private List<String> getUserIds(List<MeetupRequest> requests) {
+        List<String> ids = new ArrayList<>();
+        for (MeetupRequest request : requests) {
+            if (request != null) {
+                ids.add(request.getSenderId());
+            }
+        }
+        return ids;
     }
 
     @Override
