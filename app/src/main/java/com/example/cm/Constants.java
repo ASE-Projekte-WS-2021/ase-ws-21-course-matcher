@@ -51,7 +51,7 @@ public class Constants {
     public static final String PREFS_SETTINGS_KEY = "settings";
     public static final String PREFS_SHARE_LOCATION_KEY = "shareLocation";
 
-    //Tabbar
+    // Tabbar
     public static final float PENDING_HEADER_WEIGHT = 0.7f;
     public static final float ADD_HEADER_WEIGHT = 0.5f;
     public static final float CREATE_MEETUP_ZOOM_LEVEL = 15f;
@@ -59,6 +59,12 @@ public class Constants {
     public static final int ADD_MORE_TAB_INDEX = 3;
 
     public static final int MAX_QUERY_LENGTH = 10;
+
+    // Firebase errors
+    public static String WEAK_PASSWORD = "Dein Passwort muss mindestens 6 Zeichen lang sein.";
+    public static String INVALID_CREDENTIALS = "Die Email-Adresse und das Passwort stimmen nicht überein.";
+    public static String USER_COLLISION = "Es existiert bereits ein User mit dieser Email-Adresse.";
+    public static String DEFAULT_ERROR = "Etwas ist schief gegangen.";
 
     public enum ImageType {
         PROFILE_IMAGE,
