@@ -25,7 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@+id/ivUserImage"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/userInfo">
 
         <TextView
             android:id="@+id/tvName"
@@ -50,6 +51,15 @@
             android:textColor="@color/gray500"
             tools:text="Username" />
     </LinearLayout>
+
+        <ImageView
+            android:id="@+id/dotAvailabilityIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_dot_available" />
 
     <ImageView
         android:id="@+id/ivFriendLateInfo"
