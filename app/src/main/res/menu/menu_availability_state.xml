@@ -7,9 +7,9 @@
         android:title="@string/available" />
 
     <item
-        android:id="@+id/menuAlmostAvailable"
-        android:icon="@drawable/ic_dot_almostavailable"
-        android:title="@string/menu_almostAvailable" />
+        android:id="@+id/menuSoonAvailable"
+        android:icon="@drawable/ic_dot_soon_available"
+        android:title="@string/soonAvailable" />
 
     <item
         android:id="@+id/menuUnavailable"

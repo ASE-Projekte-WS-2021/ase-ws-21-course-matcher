@@ -23,7 +23,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.availability = Availability.USER_AVAILABLE;
+        this.availability = Availability.AVAILABLE;
     }
 
     public User(String id, String username, String firstName, String lastName, String email, List<String> friends, LatLng location, Availability availability, boolean isSharingLocation) {

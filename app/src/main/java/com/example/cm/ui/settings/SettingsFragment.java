@@ -1,13 +1,8 @@
 package com.example.cm.ui.settings;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.example.cm.Constants.PREFS_SETTINGS_KEY;
-import static com.example.cm.Constants.PREFS_SHARE_LOCATION_KEY;
-import static com.example.cm.data.models.Availability.USER_ALMOST_AVAILABLE;
-import static com.example.cm.data.models.Availability.USER_AVAILABLE;
-import static com.example.cm.data.models.Availability.USER_UNAVAILABLE;
+import static com.example.cm.data.models.Availability.AVAILABLE;
+import static com.example.cm.data.models.Availability.SOON_AVAILABLE;
+import static com.example.cm.data.models.Availability.UNAVAILABLE;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -44,7 +39,6 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private SettingsViewModel settingsViewModel;
     private LogoutDialog logoutDialog;
     private PopupMenu popup;
-    private Availability availabilityState;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -98,13 +92,13 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
 
             if (user.getAvailability() != null) {
                 switch (user.getAvailability()) {
-                    case USER_AVAILABLE:
+                    case AVAILABLE:
                         setAvailableUI();
                         break;
-                    case USER_ALMOST_AVAILABLE:
-                        setAlmostAvailableUI();
+                    case SOON_AVAILABLE:
+                        setSoonAvailableUI();
                         break;
-                    case USER_UNAVAILABLE:
+                    case UNAVAILABLE:
                         setUnavailableUI();
                         break;
                 }
@@ -135,8 +129,8 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                 case R.id.menuAvailable:
                     onAvailable();
                     break;
-                case R.id.menuAlmostAvailable:
-                    onAlmostAvailable();
+                case R.id.menuSoonAvailable:
+                    onSoonAvailable();
                     break;
                 case R.id.menuUnavailable:
                     onUnavailable();
@@ -165,11 +159,11 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         }
     }
 
-    private void onAlmostAvailable() {
-        settingsViewModel.updateAvailablilty(USER_ALMOST_AVAILABLE, new UserListener<Availability>() {
+    private void onSoonAvailable() {
+        settingsViewModel.updateAvailablilty(SOON_AVAILABLE, new UserListener<Availability>() {
             @Override
             public void onUserSuccess(Availability availability) {
-                setAlmostAvailableUI();
+                setSoonAvailableUI();
             }
 
             @Override
@@ -180,7 +174,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     }
 
     private void onUnavailable() {
-        settingsViewModel.updateAvailablilty(USER_UNAVAILABLE, new UserListener<Availability>() {
+        settingsViewModel.updateAvailablilty(UNAVAILABLE, new UserListener<Availability>() {
             @Override
             public void onUserSuccess(Availability availability) {
                 setUnavailableUI();
@@ -194,7 +188,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     }
 
     private void onAvailable() {
-        settingsViewModel.updateAvailablilty(USER_AVAILABLE, new UserListener<Availability>() {
+        settingsViewModel.updateAvailablilty(AVAILABLE, new UserListener<Availability>() {
             @Override
             public void onUserSuccess(Availability availability) {
                 setAvailableUI();
@@ -217,15 +211,9 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         binding.availabilityStateSetter.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
     }
 
-    private void setAlmostAvailableUI() {
-        binding.availabilityStateSetter.availabilityText.setText(R.string.menu_almostAvailable);
-        binding.availabilityStateSetter.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_almostavailable);
-    }
-
-
-    private void onEditProfileClicked() {
-        navigator.getNavController().navigate(R.id.action_settingsFragment_to_editProfileFragment);
-
+    private void setSoonAvailableUI() {
+        binding.availabilityStateSetter.availabilityText.setText(R.string.soonAvailable);
+        binding.availabilityStateSetter.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
     }
 
     private void onEditAccountClicked() {

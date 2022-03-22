@@ -86,13 +86,13 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
 
         if(availability != null){
             switch (availability) {
-                case USER_AVAILABLE:
+                case AVAILABLE:
                     holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
                     break;
-                case USER_ALMOST_AVAILABLE:
-                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_almostavailable);
+                case SOON_AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_soon_available);
                     break;
-                case USER_UNAVAILABLE:
+                case UNAVAILABLE:
                     holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_unavailable);
                     break;
             }

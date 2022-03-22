@@ -78,13 +78,13 @@ public class OtherProfileFragment extends Fragment {
             availability = currentUser.getAvailability();
             if(availability != null){
                 switch (availability) {
-                    case USER_AVAILABLE:
+                    case AVAILABLE:
                         binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
                         break;
-                    case USER_ALMOST_AVAILABLE:
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_almostavailable);
+                    case SOON_AVAILABLE:
+                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
                         break;
-                    case USER_UNAVAILABLE:
+                    case UNAVAILABLE:
                         binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
                         break;
                 }
