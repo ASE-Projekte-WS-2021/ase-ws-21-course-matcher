@@ -54,7 +54,9 @@ public class AuthRepository extends Repository {
             if (task.isSuccessful()) {
                 userLiveData.postValue(firebaseAuth.getCurrentUser());
             } else {
-                error.postValue(Objects.requireNonNull(FirebaseErrorTranslator.getErrorMessage(task.getException())));
+                if(task.getException() != null){
+                    error.postValue(FirebaseErrorTranslator.getErrorMessage(task.getException()));
+                }
             }
         });
     }
@@ -68,7 +70,9 @@ public class AuthRepository extends Repository {
                 callback.onRegisterSuccess(newUser);
 
             } else {
-                error.postValue(Objects.requireNonNull(FirebaseErrorTranslator.getErrorMessage(task.getException())));
+                if(task.getException() != null){
+                    error.postValue(FirebaseErrorTranslator.getErrorMessage(task.getException()));
+                }
             }
         });
     }
