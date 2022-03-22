@@ -10,7 +10,6 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
-import com.example.cm.databinding.DialogDeleteMeetupBinding;
 import com.example.cm.databinding.DialogTextWithButtonBinding;
 
 import timber.log.Timber;

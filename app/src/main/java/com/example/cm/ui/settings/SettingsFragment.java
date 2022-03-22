@@ -14,13 +14,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.R;
+import com.example.cm.data.listener.UserListener;
 import com.example.cm.databinding.FragmentSettingsBinding;
 import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.utils.EditTextDialog;
 import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
-
-import com.example.cm.utils.TextWithButtonDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -30,7 +29,6 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private Navigator navigator;
     private SettingsViewModel settingsViewModel;
     private LogoutDialog logoutDialog;
-    private TextWithButtonDialog textWithButtonDialog;
     private EditTextDialog editTextDialog;
 
     public SettingsFragment() {
@@ -87,21 +85,14 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         navigator = new Navigator(requireActivity());
         binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.linkEditAccount.linkWrapper.setOnClickListener(v -> onEditAccountClicked());
-        // binding.linkEditNotifications.linkWrapper.setOnClickListener(v ->
-        // onEditNotificationsClicked());
         binding.linkPrivacyPolicy.linkWrapper.setOnClickListener(v -> onPrivacyPolicyClicked());
         binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
         binding.linkLogout.linkWrapper.setOnClickListener(v -> onLogoutClicked());
         binding.linkDeleteAccount.linkWrapper.setOnClickListener(v -> onDeleteAccountClicked());
-        binding.switchShareLocation.setOnCheckedChangeListener((v, isChecked) -> onShareLocationClicked(isChecked));
     }
 
     private void onEditAccountClicked() {
         navigator.getNavController().navigate(R.id.action_settingsFragment_to_editAccountFragment);
-    }
-
-    private void onEditNotificationsClicked() {
-        navigator.getNavController().navigate(R.id.action_settingsFragment_to_editNotificationsFragment);
     }
 
     private void onPrivacyPolicyClicked() {
