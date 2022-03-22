@@ -9,7 +9,6 @@ public class Request {
 
     protected String id;
     protected String senderId;
-    protected String senderName;
     protected String receiverId;
     protected Date createdAt;
     protected RequestState state;
@@ -17,9 +16,8 @@ public class Request {
     public Request() {
     }
 
-    public Request(String senderId, String senderName, String receiverId) {
+    public Request(String senderId, String receiverId) {
         this.senderId = senderId;
-        this.senderName = senderName;
         this.receiverId = receiverId;
         this.createdAt = new Date();
         this.state = RequestState.REQUEST_PENDING;
@@ -39,14 +37,6 @@ public class Request {
 
     public void setSenderId(String senderId) {
         this.senderId = senderId;
-    }
-
-    public String getSenderName() {
-        return senderName;
-    }
-
-    public void setSenderName(String senderName) {
-        this.senderName = senderName;
     }
 
     public String getReceiverId() {

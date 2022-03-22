@@ -6,8 +6,8 @@ public class FriendRequest extends Request {
         super();
     }
 
-    public FriendRequest(String senderId, String senderName, String receiverId) {
-        super(senderId, senderName, receiverId);
+    public FriendRequest(String senderId, String receiverId) {
+        super(senderId, receiverId);
     }
 
 }

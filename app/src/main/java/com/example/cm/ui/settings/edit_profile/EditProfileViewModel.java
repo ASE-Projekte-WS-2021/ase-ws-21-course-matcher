@@ -7,6 +7,7 @@ import android.net.Uri;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
@@ -33,7 +34,6 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
     public MutableLiveData<User> getUser() {
         return user;
     }
-
 
     public void updateImage(Uri uri) {
         if (uri == null || user.getValue() == null) {
@@ -94,8 +94,8 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
     }
 
     @Override
-    public void onSuccess(String url) {
-        userRepository.updateField("profileImageUrl", url, this);
+    public void onSuccess(String urlOnline, Uri uriLocal) {
+        userRepository.updateField("profileImageUrl", urlOnline, this);
     }
 
     @Override

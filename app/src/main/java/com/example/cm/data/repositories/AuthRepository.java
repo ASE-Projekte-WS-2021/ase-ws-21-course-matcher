@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
+import com.example.cm.utils.FirebaseErrorTranslator;
+import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,7 +54,9 @@ public class AuthRepository extends Repository {
             if (task.isSuccessful()) {
                 userLiveData.postValue(firebaseAuth.getCurrentUser());
             } else {
-                error.postValue(Objects.requireNonNull(task.getException()).getMessage());
+                if(task.getException() != null){
+                    error.postValue(FirebaseErrorTranslator.getErrorMessage(task.getException()));
+                }
             }
         });
     }
@@ -66,7 +70,9 @@ public class AuthRepository extends Repository {
                 callback.onRegisterSuccess(newUser);
 
             } else {
-                error.postValue(Objects.requireNonNull(task.getException()).getMessage());
+                if(task.getException() != null){
+                    error.postValue(FirebaseErrorTranslator.getErrorMessage(task.getException()));
+                }
             }
         });
     }
