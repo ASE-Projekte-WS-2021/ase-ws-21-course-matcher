@@ -1,6 +1,7 @@
 package com.example.cm.ui.adapters;
 
 import static com.example.cm.utils.Utils.calculateDiff;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
 
-        if(availability != null){
+        if (availability != null) {
             switch (availability) {
                 case AVAILABLE:
                     holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
@@ -152,7 +153,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             return binding.tvUsername;
         }
 
-        public ImageView getAvailabilityDot(){
+        public ImageView getAvailabilityDot() {
             return binding.dotAvailabilityIcon;
         }
     }
