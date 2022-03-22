@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.databinding.FragmentOwnProfileBinding;
 import com.example.cm.utils.Navigator;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,6 +22,7 @@ public class OwnProfileFragment extends Fragment {
     private FragmentOwnProfileBinding binding;
     private Navigator navigator;
     private GoogleMap map;
+    private Availability availability;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOwnProfileBinding.inflate(inflater, container, false);
@@ -53,6 +55,20 @@ public class OwnProfileFragment extends Fragment {
                 binding.ivProfileImage.setScaleY(1f);
                 Picasso.get().load(currentUser.getProfileImageUrl()).fit().centerCrop().into(binding.ivProfileImage);
                 binding.btnProfileSettings.bringToFront();
+            }
+            availability = currentUser.getAvailability();
+            if (availability != null) {
+                switch (availability) {
+                    case USER_AVAILABLE:
+                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
+                        break;
+                    case USER_ALMOST_AVAILABLE:
+                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_almostavailable);
+                        break;
+                    case USER_UNAVAILABLE:
+                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+                        break;
+                }
             }
         });
     }
