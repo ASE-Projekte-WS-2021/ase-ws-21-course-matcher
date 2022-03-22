@@ -1,11 +1,8 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
-
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ACTIVE;
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
 import static com.example.cm.data.repositories.Repository.executorService;
-import static com.example.cm.utils.Utils.getCurrentDay;
 
 import androidx.lifecycle.MutableLiveData;
 
