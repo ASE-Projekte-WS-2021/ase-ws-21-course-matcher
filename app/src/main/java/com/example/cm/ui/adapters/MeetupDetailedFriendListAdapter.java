@@ -41,11 +41,11 @@ public class MeetupDetailedFriendListAdapter
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder,
                                  int position) {
         if (friends != null) {
+            if (position == RecyclerView.NO_POSITION) {
+                return;
+            }
 
-            //User friend = friends.get(position).getValue();
-          
             User friend = friends.get(position);
-
 
             String fullName = Objects.requireNonNull(friend).getFullName();
             String username = friend.getUsername();
@@ -61,6 +61,7 @@ public class MeetupDetailedFriendListAdapter
             }
             holder.getTvFullName().setText(fullName);
             holder.getTvUserName().setText(username);
+
         }
     }
 
