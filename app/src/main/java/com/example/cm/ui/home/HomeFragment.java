@@ -19,8 +19,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -226,11 +224,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
-        //todo: fix bug
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM), 1000, new GoogleMap.CancelableCallback() {
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM),
+                1, new GoogleMap.CancelableCallback() {
             @Override
             public void onCancel() {
-
             }
 
             @Override
@@ -238,12 +235,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 onZoomFinished();
             }
         });
-
     }
 
     private void onZoomFinished() {
-        Log.e("FINISHED", "finished");
-
         googleMap.setOnMapClickListener(this);
         MarkerManager markerManager = new MarkerManager(googleMap);
 
@@ -319,7 +313,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
             @Override
             public void onUserError(Exception error) {
-                Timber.e(error);
+                // Don't display any users
             }
         });
     }
@@ -368,7 +362,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void addMarker(User user, boolean isCurrentUser) {
-        Log.e("ADD MARKER", user.getId() + ": " + user.getLocation());
         if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
             MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
             requireActivity().runOnUiThread(() -> {
@@ -380,7 +373,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         Glide.with(requireActivity()).load(user.getProfileImageUrl()).placeholder(R.drawable.ic_profile).apply(new RequestOptions().override(MARKER_SIZE, MARKER_SIZE)).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
             @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                Log.e("ADD MARKER-ON_READY", user.getId() + ": " + user.getLocation());
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.addItem(markerClusterItem);
@@ -390,7 +382,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
             @Override
             public void onLoadCleared(@Nullable Drawable placeholder) {
-                Log.e("ADD MARKER-ON_CLEARED", user.getId() + ": " + user.getLocation());
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, placeholder, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.addItem(markerClusterItem);
