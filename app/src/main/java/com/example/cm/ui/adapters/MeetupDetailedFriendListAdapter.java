@@ -42,9 +42,9 @@ public class MeetupDetailedFriendListAdapter
                                  int position) {
         if (friends != null) {
 
-            User friend = friends.get(position).getValue();
+            //User friend = friends.get(position).getValue();
           
-            //User friend = friends.get(position);
+            User friend = friends.get(position);
 
 
             String fullName = Objects.requireNonNull(friend).getFullName();
