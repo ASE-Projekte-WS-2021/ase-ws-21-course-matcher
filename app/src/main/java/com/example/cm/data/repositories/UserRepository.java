@@ -527,4 +527,13 @@ public class UserRepository extends Repository {
                     listener.onUserSuccess(true);
                 });
     }
+
+    public void deleteUser(String userId, UserListener<Boolean> listener) {
+        userCollection.document(userId).delete()
+                .addOnFailureListener(executorService, e -> {
+                    listener.onUserError(e);
+                }).addOnSuccessListener(executorService, documentSnapshot -> {
+                    listener.onUserSuccess(true);
+                });
+    }
 }

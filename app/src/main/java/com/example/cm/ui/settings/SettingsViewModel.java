@@ -144,7 +144,7 @@ public class SettingsViewModel extends ViewModel {
 
             @Override
             public void onUserSuccess(Boolean aBoolean) {
-                listener.onUserSuccess(true);
+                onDeleteFromUserRepo(userId, listener);
             }
 
             @Override
@@ -155,11 +155,34 @@ public class SettingsViewModel extends ViewModel {
     }
 
     private void onDeleteFromUserRepo(String userId, UserListener<Boolean> listener) {
+        userRepository.deleteUser(userId, new UserListener<Boolean>() {
 
+            @Override
+            public void onUserSuccess(Boolean aBoolean) {
+                onDeleteFromAuthRepo(listener);
+            }
+
+            @Override
+            public void onUserError(Exception error) {
+                listener.onUserError(error);
+            }
+        });
     }
 
     private void onDeleteFromAuthRepo(UserListener<Boolean> listener) {
+        authRepository.deleteUser(new UserListener<Boolean>() {
 
+            @Override
+            public void onUserSuccess(Boolean aBoolean) {
+                logOut();
+                listener.onUserSuccess(true);
+            }
+
+            @Override
+            public void onUserError(Exception error) {
+                listener.onUserError(error);
+            }
+        });
     }
 
 

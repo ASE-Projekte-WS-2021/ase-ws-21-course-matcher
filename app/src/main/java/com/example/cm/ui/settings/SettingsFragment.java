@@ -168,6 +168,8 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                         @Override
                         public void onUserSuccess(Boolean aBoolean) {
                             Snackbar.make(binding.getRoot(), "Account deleted", Snackbar.LENGTH_LONG).show();
+                            editTextDialog.dismiss();
+                            goToLoginScreen();
                         }
 
                         @Override
@@ -235,8 +237,10 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     @Override
     public void onLogoutApproved() {
         settingsViewModel.logOut();
+        goToLoginScreen();
+    }
 
-        // Navigate to Login Screen
+    private void goToLoginScreen() {
         Intent intent = new Intent(requireActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
