@@ -27,14 +27,11 @@
             <include
                 android:id="@+id/availabilityStateSetter"
                 layout="@layout/item_availability" />
-
+           
             <include
                 android:id="@+id/link_edit_account"
                 layout="@layout/item_settings_link" />
 
-            <include
-                android:id="@+id/link_edit_profile"
-                layout="@layout/item_settings_link" />
 
             <ImageView
                 android:layout_width="match_parent"

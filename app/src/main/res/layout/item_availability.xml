@@ -11,7 +11,9 @@
         android:clickable="true"
         android:focusable="true"
         android:paddingVertical="@dimen/padding_small"
-        android:paddingHorizontal="@dimen/padding_big">
+        android:paddingHorizontal="@dimen/padding_big"
+        android:layout_marginTop="@dimen/medium_margin"
+        android:layout_marginBottom="@dimen/medium_margin">
 
         <TextView
             android:id="@+id/availabilityStateText"
