@@ -1,7 +1,7 @@
 package com.example.cm.ui.adapters;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,6 +11,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
 import com.squareup.picasso.Picasso;
@@ -47,6 +49,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         ItemSingleFriendBinding binding = ItemSingleFriendBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+        binding.dotAvailabilityIcon.setVisibility(View.VISIBLE);
         return new UserViewHolder(binding);
     }
 
@@ -58,13 +61,28 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         String profileImageUrl = Objects.requireNonNull(user).getProfileImageUrl();
         String name = user.getFullName();
         String username = user.getUsername();
+        Availability availability = user.getAvailability();
 
-        if(profileImageUrl != null && !profileImageUrl.isEmpty()) {
+        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
             holder.getProfileImage().setImageTintMode(null);
             Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
         }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
+
+        if(availability != null){
+            switch (availability) {
+                case USER_AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
+                    break;
+                case USER_ALMOST_AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_almostavailable);
+                    break;
+                case USER_UNAVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_unavailable);
+                    break;
+            }
+        }
     }
 
     // Return the size of the list
@@ -74,10 +92,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             return 0;
         }
         return mUsers.size();
-    }
-
-    public interface OnItemClickListener {
-        void onItemClicked(String id);
     }
 
     /**
@@ -92,6 +106,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(String id);
     }
 
     /**
@@ -134,6 +152,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
         public TextView getTvUsername() {
             return binding.tvUsername;
+        }
+
+        public ImageView getAvailabilityDot(){
+            return binding.dotAvailabilityIcon;
         }
     }
 }

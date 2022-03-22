@@ -34,6 +34,7 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     @Override
     public MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemSingleFriendBinding binding = ItemSingleFriendBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        binding.dotAvailabilityIcon.setVisibility(View.INVISIBLE);
         return new MeetupDetailedFriendsListViewHolder(binding);
     }
 
@@ -41,7 +42,7 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
         if (friends != null) {
             User friend = friends.get(position).getValue();
-          
+
             String fullName = Objects.requireNonNull(friend).getFullName();
             String username = friend.getUsername();
             String profileImageUrl = friend.getProfileImageUrl();
@@ -67,10 +68,6 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
         return friends.size();
     }
 
-    public interface OnItemClickListener {
-        void onItemClicked(String id);
-    }
-
     /**
      * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
      * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
@@ -83,6 +80,10 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(String id);
     }
 
     public class MeetupDetailedFriendsListViewHolder extends RecyclerView.ViewHolder {
