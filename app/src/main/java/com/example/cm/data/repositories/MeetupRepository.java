@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ACTIVE;
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
 import static com.example.cm.data.repositories.Repository.executorService;
@@ -49,22 +51,28 @@ public class MeetupRepository {
     private void listenToMeetupListChanges() {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         meetupCollection.whereArrayContains("confirmedFriends", currentUserId)
-                .whereGreaterThan("timestamp", getCurrentDay())
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
+                        List<Meetup> meetups = new ArrayList<>();
                         for (int i = 0; i < value.getDocuments().size(); i++) {
-                            MeetupPhase currentPhase = value.getDocuments().get(i).get("phase", MeetupPhase.class);
-                            if (currentPhase == MEETUP_ENDED) {
-                                value.getDocuments().remove(i);
+                            Meetup meetup = snapshotToMeetup(value.getDocuments().get(i));
+                            MeetupPhase currentPhase = meetup.getPhase();
+                            MeetupPhase phaseInFirestore = value.getDocuments().get(i).get("phase", MeetupPhase.class);
+
+                            if (phaseInFirestore != MEETUP_ENDED) {
+                                if (currentPhase != MEETUP_ENDED) {
+                                    meetups.add(meetup);
+                                } else {
+                                    value.getDocuments().get(i).getReference().update("phase", MEETUP_ENDED);
+                                }
                             }
                         }
+                        meetupListMLD.postValue(meetups);
                     }
-                    List<Meetup> meetups = snapshotToMeetupList(value);
-                    meetupListMLD.postValue(meetups);
                 });
     }
 
