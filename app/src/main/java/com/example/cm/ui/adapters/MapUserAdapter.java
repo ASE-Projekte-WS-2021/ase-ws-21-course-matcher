@@ -1,5 +1,6 @@
 package com.example.cm.ui.adapters;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -8,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemMapUserBinding;
 import com.squareup.picasso.Picasso;
@@ -19,6 +22,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
 
     private final OnItemClickListener listener;
     private final List<User> mUsers = new ArrayList<>();
+    private Activity activity;
 
     public MapUserAdapter(OnItemClickListener listener) {
         this.listener = listener;
@@ -70,6 +74,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
         String profileImageUrl = user.getProfileImageUrl();
         String name = user.getFullName();
         String username = user.getUsername();
+        Availability availability = user.getAvailability();
 
         if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
             holder.getProfileImage().setImageTintMode(null);
@@ -77,6 +82,21 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
         }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
+
+
+        if(availability != null){
+            switch (availability) {
+                case USER_AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
+                    break;
+                case USER_ALMOST_AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_almostavailable);
+                    break;
+                case USER_UNAVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_unavailable);
+                    break;
+            }
+        }
     }
 
     // Return the size of the list
@@ -164,6 +184,9 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
 
         public TextView getTvUsername() {
             return binding.tvUsername;
+        }
+        public ImageView getAvailabilityDot(){
+            return binding.dotAvailabilityIcon;
         }
     }
 }
