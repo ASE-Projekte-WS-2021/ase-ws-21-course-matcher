@@ -129,7 +129,22 @@ public class SettingsViewModel extends ViewModel {
         meetupRepository.deleteMeetupsFromUser(userId, new UserListener<Boolean>() {
             @Override
             public void onUserSuccess(Boolean aBoolean) {
-                onDeleteFromUserRepo(userId, listener);
+                onDeleteUserFromFriendsLists(userId, listener);
+            }
+
+            @Override
+            public void onUserError(Exception error) {
+                listener.onUserError(error);
+            }
+        });
+    }
+
+    private void onDeleteUserFromFriendsLists(String userId, UserListener<Boolean> listener) {
+        userRepository.deleteUserFromFriendsLists(userId, new UserListener<Boolean>() {
+
+            @Override
+            public void onUserSuccess(Boolean aBoolean) {
+                listener.onUserSuccess(true);
             }
 
             @Override
@@ -140,7 +155,7 @@ public class SettingsViewModel extends ViewModel {
     }
 
     private void onDeleteFromUserRepo(String userId, UserListener<Boolean> listener) {
-        listener.onUserSuccess(true);
+
     }
 
     private void onDeleteFromAuthRepo(UserListener<Boolean> listener) {
