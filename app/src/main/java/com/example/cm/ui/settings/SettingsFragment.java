@@ -32,6 +32,7 @@ import com.example.cm.databinding.FragmentSettingsBinding;
 import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -93,23 +94,19 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
 
         settingsViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
-            if (user != null) {
-                boolean isSharingLocation = user.getIsSharingLocation();
 
-                binding.switchShareLocation.setChecked(isSharingLocation);
 
-                if (user.getAvailability() != null) {
-                    switch (user.getAvailability()) {
-                        case USER_AVAILABLE:
-                            setAvailableUI();
-                            break;
-                        case USER_ALMOST_AVAILABLE:
-                            setAlmostAvailableUI();
-                            break;
-                        case USER_UNAVAILABLE:
-                            setUnavailableUI();
-                            break;
-                    }
+            if (user.getAvailability() != null) {
+                switch (user.getAvailability()) {
+                    case USER_AVAILABLE:
+                        setAvailableUI();
+                        break;
+                    case USER_ALMOST_AVAILABLE:
+                        setAlmostAvailableUI();
+                        break;
+                    case USER_UNAVAILABLE:
+                        setUnavailableUI();
+                        break;
                 }
             }
         });
@@ -124,7 +121,6 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
         binding.linkLogout.linkWrapper.setOnClickListener(v -> onLogoutClicked());
 
-        binding.switchShareLocation.setOnCheckedChangeListener((v, isChecked) -> onShareLocationClicked(isChecked));
         binding.availabilityStateSetter.availabilityState.setOnClickListener(v -> popup.show());
     }
 
