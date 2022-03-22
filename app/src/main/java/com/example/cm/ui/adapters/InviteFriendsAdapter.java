@@ -11,6 +11,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSelectFriendBinding;
 import com.squareup.picasso.Picasso;
@@ -103,6 +105,7 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
         String profileImageUrl = mUsers.get(position).getProfileImageUrl();
         String name = mUsers.get(position).getFirstName() + " " + mUsers.get(position).getLastName();
         String username = mUsers.get(position).getUsername();
+        Availability availability = mUsers.get(position).getAvailability();
 
         if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
             holder.getProfileImage().setImageTintMode(null);
@@ -111,8 +114,22 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
 
+
         if (selectedUsers != null) {
             holder.getCbSelect().setChecked(selectedUsers.contains(mUsers.get(position).getId()));
+        }
+        if(availability != null){
+            switch (availability) {
+                case USER_AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
+                    break;
+                case USER_ALMOST_AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_almostavailable);
+                    break;
+                case USER_UNAVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_unavailable);
+                    break;
+            }
         }
     }
 
@@ -196,6 +213,10 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
 
         public CheckBox getCbSelect() {
             return binding.cbSelect;
+        }
+
+        public ImageView getAvailabilityDot(){
+            return binding.dotAvailabilityIcon;
         }
     }
 }
