@@ -128,6 +128,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                         public void onUserError(Exception error) {
                             Snackbar.make(binding.getRoot(), R.string.edit_profile_general_error, Snackbar.LENGTH_LONG)
                                     .show();
+                            editTextDialog.enableConfirmButton();
                         }
                     });
                 }
@@ -137,10 +138,10 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                     if (error.getMessage() != null) {
                         Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_SHORT).show();
                     }
+                    editTextDialog.enableConfirmButton();
                 }
             });
         });
-
         editTextDialog
                 .setTitle(getString(R.string.delete_account_title))
                 .setDescription(getString(R.string.delete_account_description))

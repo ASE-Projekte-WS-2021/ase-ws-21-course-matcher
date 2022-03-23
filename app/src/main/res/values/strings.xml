@@ -169,7 +169,7 @@
     <string name="meet_title">Vereinbart ein Treffen am Campus</string>
     <string name="meet_header">mit nur wenigen Klicks!</string>
     <string name="location_title">Teile deinen Standort</string>
-    <string name="location_header"> damit deine Freunde wissen, dass du am Campus bist.</string>
+    <string name="location_header"> damit deine Freunde wissen, dass du am Campus bist. Dafür fragen wir dich in der App nach deiner Zustimmung.</string>
     <string name="onboarding_btn">Registrieren</string>
     <string name="skiptoLogin">Login</string>
     <string name="img_uni">Picture of the University</string>

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,16 +12,18 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.graphics.drawable.DrawableCompat;
 
+import com.example.cm.R;
 import com.example.cm.databinding.DialogEditTextBinding;
 import com.google.android.material.textfield.TextInputLayout;
-
-import timber.log.Timber;
 
 public class EditTextDialog extends Dialog {
     DialogEditTextBinding binding;
     OnSaveListener listener;
     String initialValue, fieldToUpdate;
+    String confirmButtonText;
 
     public EditTextDialog(@NonNull Context context, OnSaveListener listener) {
         super(context);
@@ -51,11 +54,28 @@ public class EditTextDialog extends Dialog {
 
     public EditTextDialog setConfirmButtonText(String text) {
         binding.btnConfirm.setText(text);
+        confirmButtonText = text;
         return this;
     }
 
+    public void disableConfirmButton() {
+        binding.btnConfirm.setEnabled(false);
+        binding.btnConfirm.setText("Lädt...");
+        Drawable buttonDrawable = DrawableCompat.wrap(binding.btnConfirm.getBackground());
+        DrawableCompat.setTint(buttonDrawable, getContext().getResources().getColor(R.color.gray600));
+        binding.btnConfirm.setBackground(buttonDrawable);
+    }
+
+    public void enableConfirmButton() {
+        binding.btnConfirm.setEnabled(true);
+        binding.btnConfirm.setText(confirmButtonText);
+        Drawable buttonDrawable = DrawableCompat.wrap(binding.btnConfirm.getBackground());
+        DrawableCompat.setTint(buttonDrawable, getContext().getResources().getColor(R.color.orange500));
+        binding.btnConfirm.setBackground(buttonDrawable);
+    }
+
     public EditTextDialog setIconMode(int type) {
-        switch(type) {
+        switch (type) {
             case TextInputLayout.END_ICON_PASSWORD_TOGGLE:
                 binding.inputField.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 break;
@@ -100,6 +120,7 @@ public class EditTextDialog extends Dialog {
         if (listener != null) {
             listener.onTextInputSaved(fieldToUpdate, newValue);
         }
+        disableConfirmButton();
     }
 
     public interface OnSaveListener {
