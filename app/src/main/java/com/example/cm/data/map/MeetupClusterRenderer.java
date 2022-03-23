@@ -91,6 +91,8 @@ public class MeetupClusterRenderer extends DefaultClusterRenderer<MeetupClusterI
 
     @Override
     protected boolean shouldRenderAsCluster(Cluster cluster) {
-        return cluster.getSize() > MEETUP_Z_INDEX;
+        return cluster.getSize() > 1;
     }
+
+
 }

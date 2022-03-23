@@ -39,7 +39,7 @@ public class Constants {
     public static final float FINAL_CARD_ALPHA = 1f;
     public static final float ON_SNAPPED_MAP_ZOOM = 15.0f;
     public static final int DEFAULT_CARD_OFFSET = 0;
-    public static final int MAX_CLUSTER_ITEM_DISTANCE = 15;
+    public static final int MAX_CLUSTER_ITEM_DISTANCE = 40;
     public static final int CURRENT_USER_Z_INDEX = 999;
     public static final int MEETUP_Z_INDEX = 9999;
 

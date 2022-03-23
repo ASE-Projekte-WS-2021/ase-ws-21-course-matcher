@@ -224,28 +224,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM),
-                1, new GoogleMap.CancelableCallback() {
-            @Override
-            public void onCancel() {
-            }
-
-            @Override
-            public void onFinish() {
-                onZoomFinished();
-            }
-        });
-    }
-
-    private void onZoomFinished() {
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM));
         googleMap.setOnMapClickListener(this);
-        MarkerManager markerManager = new MarkerManager(googleMap);
 
+        MarkerManager markerManager = new MarkerManager(googleMap);
         setupUserClusterManager(googleMap, markerManager);
         setupMeetupClusterManager(googleMap, markerManager);
         // Needed to animate zoom changes for markers and cluster items correctly
-        googleMap.setOnCameraIdleListener(userClusterManager);
-        googleMap.setOnCameraIdleListener(meetupClusterManager);
+        googleMap.setOnCameraIdleListener(() -> {
+            userClusterManager.onCameraIdle();
+            meetupClusterManager.onCameraIdle();
+        });
+
     }
 
     private void setupUserClusterManager(GoogleMap googleMap, MarkerManager markerManager) {
@@ -313,7 +303,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
             @Override
             public void onUserError(Exception error) {
-                // Don't display any users
+                Timber.e(error);
             }
         });
     }
