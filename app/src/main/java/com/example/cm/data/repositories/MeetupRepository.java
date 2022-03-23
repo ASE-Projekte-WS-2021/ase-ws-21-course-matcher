@@ -3,12 +3,12 @@ package com.example.cm.data.repositories;
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ACTIVE;
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
 import static com.example.cm.data.repositories.Repository.executorService;
-import static com.example.cm.utils.Utils.getCurrentDay;
 
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.listener.MeetupListener;
+import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPOJO;
 import com.example.cm.data.models.MeetupPhase;
@@ -49,22 +49,28 @@ public class MeetupRepository {
     private void listenToMeetupListChanges() {
         String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         meetupCollection.whereArrayContains("confirmedFriends", currentUserId)
-                .whereGreaterThan("timestamp", getCurrentDay())
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
                         return;
                     }
                     if (value != null && !value.isEmpty()) {
+                        List<Meetup> meetups = new ArrayList<>();
                         for (int i = 0; i < value.getDocuments().size(); i++) {
-                            MeetupPhase currentPhase = value.getDocuments().get(i).get("phase", MeetupPhase.class);
-                            if (currentPhase == MEETUP_ENDED) {
-                                value.getDocuments().remove(i);
+                            Meetup meetup = snapshotToMeetup(value.getDocuments().get(i));
+                            MeetupPhase currentPhase = meetup.getPhase();
+                            MeetupPhase phaseInFirestore = value.getDocuments().get(i).get("phase", MeetupPhase.class);
+
+                            if (phaseInFirestore != MEETUP_ENDED) {
+                                if (currentPhase != MEETUP_ENDED) {
+                                    meetups.add(meetup);
+                                } else {
+                                    value.getDocuments().get(i).getReference().update("phase", MEETUP_ENDED);
+                                }
                             }
                         }
+                        meetupListMLD.postValue(meetups);
                     }
-                    List<Meetup> meetups = snapshotToMeetupList(value);
-                    meetupListMLD.postValue(meetups);
                 });
     }
 
@@ -88,10 +94,7 @@ public class MeetupRepository {
                         MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
                         meetupPOJO.setId(document.getId());
 
-                        boolean isMeetupActive = meetupPOJO.getPhase() == MEETUP_ACTIVE;
-                        boolean isUserInMeetup = meetupPOJO.getConfirmedFriends().contains(currentUserId);
-
-                        if(isMeetupActive && isUserInMeetup) {
+                        if (meetupPOJO.getPhase() == MEETUP_ACTIVE) {
                             meetups.add(meetupPOJO.toObject());
                         }
                     }
@@ -244,5 +247,64 @@ public class MeetupRepository {
         assert meetupPOJO != null;
         meetupPOJO.setId(document.getId());
         return meetupPOJO.toObject();
+    }
+
+
+    public void deleteUserFromMeetups(String userId, UserListener<Boolean> listener) {
+        meetupCollection.get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null) {
+                    return;
+                }
+                if (task.getResult().isEmpty()) {
+                    return;
+                }
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Meetup meetup = snapshotToMeetup(document);
+
+                    if (meetup.getInvitedFriends() != null && meetup.getInvitedFriends().contains(userId)) {
+                        meetupCollection.document(meetup.getId()).update("invitedFriends", FieldValue.arrayRemove(userId));
+                    }
+                    if (meetup.getConfirmedFriends() != null && meetup.getConfirmedFriends().contains(userId)) {
+                        meetupCollection.document(meetup.getId()).update("confirmedFriends", FieldValue.arrayRemove(userId));
+                    }
+                    if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(userId)) {
+                        meetupCollection.document(meetup.getId()).update("declinedFriends", FieldValue.arrayRemove(userId));
+                    }
+                    if (meetup.getLateFriends() != null && meetup.getLateFriends().contains(userId)) {
+                        meetupCollection.document(meetup.getId()).update("lateFriends", FieldValue.arrayRemove(userId));
+                    }
+                }
+                listener.onUserSuccess(true);
+            } else {
+                listener.onUserError(task.getException());
+            }
+        });
+    }
+
+    public void deleteMeetupsFromUser(String userId, UserListener<Boolean> listener) {
+        meetupCollection.get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null) {
+                    return;
+                }
+                if (task.getResult().isEmpty()) {
+                    return;
+                }
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
+                    meetupPOJO.setId(document.getId());
+                    Meetup meetup = meetupPOJO.toObject();
+
+                    if (!meetup.getRequestingUser().equals(userId)) {
+                        continue;
+                    }
+                    meetupCollection.document(meetup.getId()).delete();
+                }
+                listener.onUserSuccess(true);
+            } else {
+                listener.onUserError(task.getException());
+            }
+        });
     }
 }

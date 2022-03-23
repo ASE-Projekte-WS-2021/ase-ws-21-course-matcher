@@ -6,7 +6,9 @@ import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.FriendRequest;
+import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -316,5 +318,25 @@ public class FriendRequestRepository extends Repository {
 
     public void undo(FriendRequest request) {
         friendRequestCollection.document(request.getId()).update("state", request.getState());
+    }
+
+    public void deleteRequestsForUser(String userId, UserListener<Boolean> listener) {
+        friendRequestCollection.get()
+                .addOnFailureListener(executorService, e -> {
+                    listener.onUserError(e);
+                })
+                .addOnSuccessListener(executorService, queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        FriendRequest request = snapshotToFriendRequest(document);
+                        boolean isUserSender = request.getSenderId().equals(userId);
+                        boolean isUserReceiver = request.getReceiverId().equals(userId);
+
+                        if (isUserSender || isUserReceiver) {
+                            document.getReference().delete();
+                        }
+                    }
+
+                    listener.onUserSuccess(true);
+                });
     }
 }

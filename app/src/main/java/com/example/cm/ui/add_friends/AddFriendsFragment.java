@@ -25,9 +25,6 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 
-import timber.log.Timber;
-
-
 public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnRequestSentListener {
 
     private AddFriendsViewModel addFriendsViewModel;
@@ -142,7 +139,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             binding.loadingCircle.setVisibility(View.GONE);
 
             if (users == null || users.size() == 0) {
-                Timber.d("No users found");
                 binding.noFriendsWrapper.setVisibility(View.VISIBLE);
                 binding.rvUserList.setVisibility(View.GONE);
                 return;
