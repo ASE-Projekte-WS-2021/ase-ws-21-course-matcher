@@ -17,6 +17,7 @@ import androidx.navigation.Navigation;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
+import com.example.cm.ui.meetup.MeetupList.MeetupListViewModel;
 import com.example.cm.utils.Navigator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -127,7 +128,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
     @SuppressLint("SimpleDateFormat")
     private void initViewModel() {
-        createMeetupViewModel = new ViewModelProvider(this, new CreateMeetupFactory(requireContext())).get(CreateMeetupViewModel.class);
+        createMeetupViewModel = new ViewModelProvider(this).get(CreateMeetupViewModel.class);
         createMeetupViewModel.getMeetupIsPrivate().observe(getViewLifecycleOwner(), isPrivate -> binding.meetupPrivateCheckBox.setChecked(isPrivate));
         createMeetupViewModel.getMeetupTimestamp().observe(getViewLifecycleOwner(), timestamp -> new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(calendarMeetup.getTime()));
         createMeetupViewModel.getMeetupLatLng().observe(getViewLifecycleOwner(), latLng -> {

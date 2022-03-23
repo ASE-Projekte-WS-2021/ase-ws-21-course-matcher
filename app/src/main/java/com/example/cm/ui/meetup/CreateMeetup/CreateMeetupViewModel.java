@@ -2,10 +2,8 @@ package com.example.cm.ui.meetup.CreateMeetup;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Base64;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -18,7 +16,6 @@ import com.example.cm.data.models.Status;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
-import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -35,7 +32,6 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
     private final UserRepository userRepository;
     private final MutableLiveData<User> currentUser;
     private final MeetupRepository meetupRepository;
-    private final StorageManager storageRepository;
     public MutableLiveData<Status> status = new MutableLiveData<>();
     private final MutableLiveData<LatLng> meetupLatLng = new MutableLiveData<>();
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
@@ -48,11 +44,10 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
     private String imageBaseString;
     private String meetupId;
 
-    public CreateMeetupViewModel(Context context) {
+    public CreateMeetupViewModel() {
         userRepository = new UserRepository();
         currentUser = userRepository.getCurrentUser();
         users = userRepository.getFriends();
-        storageRepository = new StorageManager(context);
 
         meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
@@ -118,7 +113,6 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
         bitmap.compress(Bitmap.CompressFormat.PNG, Constants.QUALITY_MEETUP_IMG, outputStream);
         byte[] imageBytes = outputStream.toByteArray();
         imageBaseString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        Log.e("img string: ", imageBaseString);
     }
 
     public void createMeetup() {
