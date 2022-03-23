@@ -6,6 +6,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import com.example.cm.ui.home.HomeViewModel;
 import com.example.cm.utils.EditTextAreaDialog;
 import com.example.cm.utils.EditTextDialog;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
@@ -97,8 +99,10 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
             binding.inputLastName.inputField.setText(user.getLastName());
             binding.inputFieldBio.setText(user.getBio());
 
-            if (user.getProfileImageString() != null && !user.getProfileImageString().isEmpty()) {
-                Picasso.get().load(user.getProfileImageString()).fit().centerCrop().into(binding.profileImage);
+            String profileImageString = user.getProfileImageString();
+            if (profileImageString != null && !profileImageString.isEmpty()) {
+                Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+                binding.profileImage.setImageBitmap(img);
             }
         });
 
