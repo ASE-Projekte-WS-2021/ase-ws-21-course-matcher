@@ -257,5 +257,6 @@
     <string name="snackbar_share_location">Dein Standort ist jetzt für deine Freunde sichtbar!</string>
     <string name="snackbar_hide_location">Dein Standort ist nicht länger für deine Freunde sichtbar!</string>
     <string name="confirm_button_loading">Lädt...</string>
+    <string name="availability_dot_desc">Button for changing ones availability state.</string>
 
 </resources>
