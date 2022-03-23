@@ -3,6 +3,7 @@ package com.example.cm.data.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.utils.FirebaseErrorTranslator;
 import com.google.firebase.FirebaseError;
@@ -78,6 +79,21 @@ public class AuthRepository extends Repository {
 
     public void logOut() {
         firebaseAuth.signOut();
+    }
+
+    public void deleteUser(UserListener<Boolean> listener) {
+        if (firebaseAuth.getCurrentUser() == null) {
+            return;
+        }
+
+        firebaseAuth.getCurrentUser().delete()
+                .addOnSuccessListener(executorService, task -> {
+                    userLiveData.postValue(null);
+                    listener.onUserSuccess(true);
+                })
+                .addOnFailureListener(executorService, error -> {
+                    listener.onUserError(error);
+                });
     }
 
     public FirebaseUser getCurrentUser() {

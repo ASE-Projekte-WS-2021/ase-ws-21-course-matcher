@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.listener.MeetupListener;
+import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPOJO;
 import com.example.cm.data.models.MeetupPhase;
@@ -91,7 +92,7 @@ public class MeetupRepository {
                         boolean isMeetupActive = meetupPOJO.getPhase() == MEETUP_ACTIVE;
                         boolean isUserInMeetup = meetupPOJO.getConfirmedFriends().contains(currentUserId);
 
-                        if(isMeetupActive && isUserInMeetup) {
+                        if (isMeetupActive && isUserInMeetup) {
                             meetups.add(meetupPOJO.toObject());
                         }
                     }
@@ -244,5 +245,64 @@ public class MeetupRepository {
         assert meetupPOJO != null;
         meetupPOJO.setId(document.getId());
         return meetupPOJO.toObject();
+    }
+
+
+    public void deleteUserFromMeetups(String userId, UserListener<Boolean> listener) {
+        meetupCollection.get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null) {
+                    return;
+                }
+                if (task.getResult().isEmpty()) {
+                    return;
+                }
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Meetup meetup = snapshotToMeetup(document);
+
+                    if (meetup.getInvitedFriends() != null && meetup.getInvitedFriends().contains(userId)) {
+                        meetupCollection.document(meetup.getId()).update("invitedFriends", FieldValue.arrayRemove(userId));
+                    }
+                    if (meetup.getConfirmedFriends() != null && meetup.getConfirmedFriends().contains(userId)) {
+                        meetupCollection.document(meetup.getId()).update("confirmedFriends", FieldValue.arrayRemove(userId));
+                    }
+                    if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(userId)) {
+                        meetupCollection.document(meetup.getId()).update("declinedFriends", FieldValue.arrayRemove(userId));
+                    }
+                    if (meetup.getLateFriends() != null && meetup.getLateFriends().contains(userId)) {
+                        meetupCollection.document(meetup.getId()).update("lateFriends", FieldValue.arrayRemove(userId));
+                    }
+                }
+                listener.onUserSuccess(true);
+            } else {
+                listener.onUserError(task.getException());
+            }
+        });
+    }
+
+    public void deleteMeetupsFromUser(String userId, UserListener<Boolean> listener) {
+        meetupCollection.get().addOnCompleteListener(executorService, task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult() == null) {
+                    return;
+                }
+                if (task.getResult().isEmpty()) {
+                    return;
+                }
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
+                    meetupPOJO.setId(document.getId());
+                    Meetup meetup = meetupPOJO.toObject();
+
+                    if (!meetup.getRequestingUser().equals(userId)) {
+                        continue;
+                    }
+                    meetupCollection.document(meetup.getId()).delete();
+                }
+                listener.onUserSuccess(true);
+            } else {
+                listener.onUserError(task.getException());
+            }
+        });
     }
 }

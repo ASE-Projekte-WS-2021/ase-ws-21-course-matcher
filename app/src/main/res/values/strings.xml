@@ -124,6 +124,7 @@
     <string name="link_label_privacy_policy">Datenschutzerklärung</string>
     <string name="link_label_imprint">Impressum</string>
     <string name="link_label_logout">Abmelden</string>
+    <string name="link_label_delete_account">Account löschen</string>
     <string name="url_imprint">https://www.uni-regensburg.de/impressum/startseite/index.html</string>
     <string name="url_privacy_policy">https://www.uni-regensburg.de/datenschutz/startseite/index.html</string>
     <string name="title_edit_profile">Profil bearbeiten</string>
@@ -168,7 +169,7 @@
     <string name="meet_title">Vereinbart ein Treffen am Campus</string>
     <string name="meet_header">mit nur wenigen Klicks!</string>
     <string name="location_title">Teile deinen Standort</string>
-    <string name="location_header"> damit deine Freunde wissen, dass du am Campus bist.</string>
+    <string name="location_header"> damit deine Freunde wissen, dass du am Campus bist. Dafür fragen wir dich in der App nach deiner Zustimmung.</string>
     <string name="onboarding_btn">Registrieren</string>
     <string name="skiptoLogin">Login</string>
     <string name="img_uni">Picture of the University</string>
@@ -217,6 +218,7 @@
     <string name="location_permission_denied">Der Standort-Zugriff muss in deinen App-Einstellungen erlaubt sein.</string>
     <string name="dialog_delete_meetup_title">Meetup wirklich löschen?</string>
     <string name="dialog_delete_btn">Löschen</string>
+    <string name="account_deleted_success">Dein Account wurde erfolgreich gelöscht.</string>
 
     <!-- Meetup Location Fragment -->
     <string name="title_meetup_location">Meetup Treffpunkt</string>
@@ -240,6 +242,11 @@
     <string name="content_description_show_location_btn">Eigener Standort ist aktuell für Freunde sichtbar</string>
 
     <string name="location_hint">Treffpunkt</string>
+    <string name="delete_account_title">Account wirklich löschen?</string>
+    <string name="delete_account_confirm_button">Löschen</string>
+    <string name="delete_account_wrong_password">Das eingegebene Passwort ist falsch.</string>
+    <string name="no_user_found">Kein Nutzer gefunden.</string>
+    <string name="delete_account_description">Um deinen Account löschen zu können, musst du dein Passwort eingeben.</string>
 
     <string name="availability">Verfügbarkeit:</string>
     <string name="unavailable">beschäftigt</string>
@@ -249,5 +256,6 @@
 
     <string name="snackbar_share_location">Dein Standort ist jetzt für deine Freunde sichtbar!</string>
     <string name="snackbar_hide_location">Dein Standort ist nicht länger für deine Freunde sichtbar!</string>
+    <string name="confirm_button_loading">Lädt...</string>
 
 </resources>

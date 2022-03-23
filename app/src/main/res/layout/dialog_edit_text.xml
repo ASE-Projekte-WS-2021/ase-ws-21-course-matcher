@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/rounded_dialog_bg"
     android:orientation="vertical"
     android:padding="@dimen/padding_double">
@@ -11,29 +12,45 @@
         android:id="@+id/dialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/padding_big"
         android:fontFamily="@font/readexpro_semibold"
         android:textSize="@dimen/text_size_medium"
         tools:text="%FIELDNAME% bearbeiten" />
 
+    <TextView
+        android:id="@+id/dialogDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/padding_big"
+        >
 
-        <EditText
-            android:id="@+id/inputField"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_half"
-            android:background="@drawable/style_edittext"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:lines="1"
-            android:maxLines="1"
-            android:paddingHorizontal="@dimen/padding_medium"
-            android:paddingVertical="@dimen/padding_small"
-            tools:ignore="LabelFor" />
+            app:boxStrokeWidth="0dp"
+            app:endIconTint="@color/gray700"
+            app:boxStrokeWidthFocused="0dp"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputField"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/padding_medium"
+                android:paddingVertical="@dimen/padding_small"
+                android:background="@drawable/style_edittext"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -58,7 +75,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/btnSave"
+            android:id="@+id/btnConfirm"
             style="@style/BtnOrangeSmall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -22,13 +22,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.R;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Availability;
-
 import com.example.cm.databinding.FragmentSettingsBinding;
 import com.example.cm.ui.auth.LoginActivity;
+import com.example.cm.utils.EditTextDialog;
 import com.example.cm.utils.LogoutDialog;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
-
+import com.google.android.material.textfield.TextInputLayout;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -38,6 +38,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private Navigator navigator;
     private SettingsViewModel settingsViewModel;
     private LogoutDialog logoutDialog;
+    private EditTextDialog editTextDialog;
     private PopupMenu popup;
 
     public SettingsFragment() {
@@ -62,22 +63,24 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
 
         // Set labels of links
         binding.linkEditAccount.linkText.setText(getString(R.string.link_label_edit_account));
-        //binding.linkEditNotifications.linkText.setText(getString(R.string.link_label_edit_notifications));
         binding.linkPrivacyPolicy.linkText.setText(getString(R.string.link_label_privacy_policy));
         binding.linkImprint.linkText.setText(getString(R.string.link_label_imprint));
         binding.linkLogout.linkText.setText(getString(R.string.link_label_logout));
+        binding.linkDeleteAccount.linkText.setText(getString(R.string.link_label_delete_account));
+        binding.linkDeleteAccount.linkText.setTextColor(getResources().getColor(R.color.red));
         binding.availabilityStateSetter.availabilityStateText.setText(R.string.availability);
 
         // Set icons of links
         binding.linkEditAccount.linkIcon.setImageResource(R.drawable.ic_edit_account);
-        //binding.linkEditNotifications.linkIcon.setImageResource(R.drawable.ic_edit_notifications);
         binding.linkPrivacyPolicy.linkIcon.setImageResource(R.drawable.ic_privacy_policy);
         binding.linkImprint.linkIcon.setImageResource(R.drawable.ic_imprint);
         binding.linkLogout.linkIcon.setImageResource(R.drawable.ic_logout);
+        binding.linkDeleteAccount.linkIcon.setImageResource(R.drawable.ic_delete);
 
         // Set version number
         try {
-            PackageInfo packageInfo = requireActivity().getPackageManager().getPackageInfo(requireActivity().getPackageName(), 0);
+            PackageInfo packageInfo = requireActivity().getPackageManager()
+                    .getPackageInfo(requireActivity().getPackageName(), 0);
             binding.tvVersionNumber.setText(getString(R.string.app_version_prefix) + " " + packageInfo.versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
@@ -110,11 +113,10 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         navigator = new Navigator(requireActivity());
         binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.linkEditAccount.linkWrapper.setOnClickListener(v -> onEditAccountClicked());
-        //binding.linkEditNotifications.linkWrapper.setOnClickListener(v -> onEditNotificationsClicked());
         binding.linkPrivacyPolicy.linkWrapper.setOnClickListener(v -> onPrivacyPolicyClicked());
         binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
         binding.linkLogout.linkWrapper.setOnClickListener(v -> onLogoutClicked());
-
+        binding.linkDeleteAccount.linkWrapper.setOnClickListener(v -> onDeleteAccountClicked());
         binding.availabilityStateSetter.availabilityState.setOnClickListener(v -> popup.show());
     }
 
@@ -220,10 +222,6 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         navigator.getNavController().navigate(R.id.action_settingsFragment_to_editAccountFragment);
     }
 
-    private void onEditNotificationsClicked() {
-        navigator.getNavController().navigate(R.id.action_settingsFragment_to_editNotificationsFragment);
-    }
-
     private void onPrivacyPolicyClicked() {
         String url = getString(R.string.url_privacy_policy);
         openLink(url);
@@ -237,6 +235,46 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private void onLogoutClicked() {
         logoutDialog = new LogoutDialog(requireActivity(), this);
         logoutDialog.show();
+    }
+
+    private void onDeleteAccountClicked() {
+        editTextDialog = new EditTextDialog(requireActivity(), (fieldToUpdate, updatedValue) -> {
+            settingsViewModel.reauthenticate(requireContext(), updatedValue, new UserListener<Boolean>() {
+                @Override
+                public void onUserSuccess(Boolean aBoolean) {
+                    settingsViewModel.deleteAccount(new UserListener<Boolean>() {
+                        @Override
+                        public void onUserSuccess(Boolean aBoolean) {
+                            Snackbar.make(binding.getRoot(), R.string.account_deleted_success, Snackbar.LENGTH_LONG)
+                                    .show();
+                            editTextDialog.dismiss();
+                            goToLoginScreen();
+                        }
+
+                        @Override
+                        public void onUserError(Exception error) {
+                            Snackbar.make(binding.getRoot(), R.string.edit_profile_general_error, Snackbar.LENGTH_LONG)
+                                    .show();
+                            editTextDialog.enableConfirmButton();
+                        }
+                    });
+                }
+
+                @Override
+                public void onUserError(Exception error) {
+                    if (error.getMessage() != null) {
+                        Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_SHORT).show();
+                    }
+                    editTextDialog.enableConfirmButton();
+                }
+            });
+        });
+        editTextDialog
+                .setTitle(getString(R.string.delete_account_title))
+                .setDescription(getString(R.string.delete_account_description))
+                .setConfirmButtonText(getString(R.string.dialog_delete_btn))
+                .setIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE)
+                .show();
     }
 
     private void openLink(String url) {
@@ -255,8 +293,10 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     @Override
     public void onLogoutApproved() {
         settingsViewModel.logOut();
+        goToLoginScreen();
+    }
 
-        // Navigate to Login Screen
+    private void goToLoginScreen() {
         Intent intent = new Intent(requireActivity(), LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

@@ -571,4 +571,33 @@ public class UserRepository extends Repository {
         userCollection.document(ownId).update("friends", FieldValue.arrayRemove(friendIdToUnfriend));
         userCollection.document(friendIdToUnfriend).update("friends", FieldValue.arrayRemove(ownId));
     }
+
+    public void deleteUserFromFriendsLists(String userId, UserListener<Boolean> listener) {
+        userCollection.get().addOnFailureListener(executorService, e -> {
+                    listener.onUserError(e);
+                })
+                .addOnSuccessListener(executorService, documentSnapshot -> {
+                    for (DocumentSnapshot document : documentSnapshot.getDocuments()) {
+                        User user = snapshotToUser(document);
+                        if (user.getFriends() == null) {
+                            continue;
+                        }
+
+                        if (!user.getFriends().contains(userId)) {
+                            continue;
+                        }
+                        userCollection.document(user.getId()).update("friends", FieldValue.arrayRemove(userId));
+                    }
+                    listener.onUserSuccess(true);
+                });
+    }
+
+    public void deleteUser(String userId, UserListener<Boolean> listener) {
+        userCollection.document(userId).delete()
+                .addOnFailureListener(executorService, e -> {
+                    listener.onUserError(e);
+                }).addOnSuccessListener(executorService, documentSnapshot -> {
+                    listener.onUserSuccess(true);
+                });
+    }
 }
