@@ -105,6 +105,10 @@ public class SettingsViewModel extends ViewModel {
             @Override
             public void onUserError(Exception error) {
                 listener.onUserError(error);
+            }
+        });
+
+    }
 
     public void updateAvailablilty(Availability availabilityState, UserListener<Availability> listener) {
         userRepository.updateField("availability", availabilityState, new Callback() {
@@ -120,6 +124,7 @@ public class SettingsViewModel extends ViewModel {
             }
         });
     }
+
 
 
     private void onDeleteFromFriendRequestRepo(String userId, UserListener<Boolean> listener) {

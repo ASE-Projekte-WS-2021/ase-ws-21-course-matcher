@@ -60,7 +60,7 @@ public class EditTextDialog extends Dialog {
 
     public void disableConfirmButton() {
         binding.btnConfirm.setEnabled(false);
-        binding.btnConfirm.setText("Lädt...");
+        binding.btnConfirm.setText(R.string.confirm_button_loading);
         Drawable buttonDrawable = DrawableCompat.wrap(binding.btnConfirm.getBackground());
         DrawableCompat.setTint(buttonDrawable, getContext().getResources().getColor(R.color.gray600));
         binding.btnConfirm.setBackground(buttonDrawable);
