@@ -62,8 +62,8 @@ public class OwnProfileFragment extends Fragment {
             binding.ivProfileImage.setImageTintMode(null);
             binding.ivProfileImage.setScaleX(1f);
             binding.ivProfileImage.setScaleY(1f);
-            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
-            binding.ivProfileImage.setImageBitmap(img);
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString).copy(Bitmap.Config.ARGB_8888,true);
+            binding.ivProfileImage.setImageBitmap(Bitmap.createScaledBitmap(img, binding.ivProfileImage.getWidth(), binding.ivProfileImage.getHeight(), false));
         }
 
         availability = currentUser.getAvailability();
