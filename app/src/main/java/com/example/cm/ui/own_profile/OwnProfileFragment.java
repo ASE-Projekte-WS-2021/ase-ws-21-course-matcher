@@ -1,5 +1,6 @@
 package com.example.cm.ui.own_profile;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,15 +15,13 @@ import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentOwnProfileBinding;
 import com.example.cm.utils.Navigator;
-import com.google.android.gms.maps.GoogleMap;
-import com.squareup.picasso.Picasso;
+import com.example.cm.utils.Utils;
 
 public class OwnProfileFragment extends Fragment {
 
     private OwnProfileViewModel ownProfileViewModel;
     private FragmentOwnProfileBinding binding;
     private Navigator navigator;
-    private GoogleMap map;
     private Availability availability;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,33 +48,7 @@ public class OwnProfileFragment extends Fragment {
             if (currentUser == null) {
                 return;
             }
-
-            binding.tvName.setText(currentUser.getFullName());
-            binding.tvUsername.setText(currentUser.getUsername());
-            binding.tvBioDescription.setText(currentUser.getBio());
-            if (currentUser.getProfileImageUrl() != null && !currentUser.getProfileImageUrl().isEmpty()) {
-                binding.ivProfileImage.setImageTintMode(null);
-                binding.ivProfileImage.setScaleX(1f);
-                binding.ivProfileImage.setScaleY(1f);
-                Picasso.get().load(currentUser.getProfileImageUrl()).fit().centerCrop().into(binding.ivProfileImage);
-                binding.btnProfileSettings.bringToFront();
-            }
-            availability = currentUser.getAvailability();
-            if (availability != null) {
-                switch (availability) {
-                    case AVAILABLE:
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
-                        break;
-                    case SOON_AVAILABLE:
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
-                        break;
-                    case UNAVAILABLE:
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
-                        break;
-                }
-            }
             initUi(currentUser);
-
         });
     }
 
@@ -84,11 +57,28 @@ public class OwnProfileFragment extends Fragment {
         binding.tvName.setText(currentUser.getFullName());
         binding.tvUsername.setText(currentUser.getUsername());
         binding.tvBioDescription.setText(currentUser.getBio());
-        if (currentUser.getProfileImageUrl() != null && !currentUser.getProfileImageUrl().isEmpty()) {
+        String profileImageString = currentUser.getProfileImageString();
+        if (profileImageString != null && !profileImageString.isEmpty()) {
             binding.ivProfileImage.setImageTintMode(null);
             binding.ivProfileImage.setScaleX(1f);
             binding.ivProfileImage.setScaleY(1f);
-            Picasso.get().load(currentUser.getProfileImageUrl()).fit().centerCrop().into(binding.ivProfileImage);
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            binding.ivProfileImage.setImageBitmap(img);
+        }
+
+        availability = currentUser.getAvailability();
+        if (availability != null) {
+            switch (availability) {
+                case AVAILABLE:
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
+                    break;
+                case SOON_AVAILABLE:
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
+                    break;
+                case UNAVAILABLE:
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+                    break;
+            }
         }
         binding.btnProfileSettings.bringToFront();
     }

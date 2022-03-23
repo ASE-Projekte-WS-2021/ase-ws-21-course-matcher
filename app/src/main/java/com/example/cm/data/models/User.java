@@ -8,11 +8,12 @@ import java.util.List;
 public class User {
 
     private String id;
-    private String username, firstName, lastName, email, bio, profileImageUrl;
+    private String username, firstName, lastName, email, bio, profileImageString;
     private List<String> friends;
     private LatLng location;
     private boolean isSharingLocation;
     private Availability availability;
+    private byte[] profileImageBytes;
 
     public User() {
     }
@@ -99,12 +100,20 @@ public class User {
         this.bio = bio;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
+    public String getProfileImageString() {
+        return profileImageString;
     }
 
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void setProfileImageString(String profileImageString) {
+        this.profileImageString = profileImageString;
+    }
+
+    public byte[] getProfileImageBytes() {
+        return profileImageBytes;
+    }
+
+    public void setProfileImageBytes(byte[] profileImageBytes) {
+        this.profileImageBytes = profileImageBytes;
     }
 
     public Availability getAvailability() {

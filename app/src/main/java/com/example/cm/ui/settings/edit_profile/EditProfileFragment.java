@@ -22,11 +22,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.R;
 import com.example.cm.config.FieldType;
 import com.example.cm.databinding.FragmentEditProfileBinding;
+import com.example.cm.ui.home.HomeViewModel;
 import com.example.cm.utils.EditTextAreaDialog;
 import com.example.cm.utils.EditTextDialog;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
+
+import java.io.FileNotFoundException;
 
 public class EditProfileFragment extends Fragment implements EditTextDialog.OnSaveListener, EditTextAreaDialog.OnSaveListener {
     ActivityResultLauncher<String> storagePermissionRequestLauncher;
@@ -59,9 +62,13 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                        Intent intent = result.getData();
-                        Uri uri = intent.getData();
-                        editProfileViewModel.updateImage(uri);
+                        try {
+                            Intent intent = result.getData();
+                            Uri uri = intent.getData();
+                            editProfileViewModel.updateImage(uri, requireContext());
+                        } catch (FileNotFoundException e) {
+                            Snackbar.make(binding.getRoot(), "ohoh", Snackbar.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -83,15 +90,15 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     }
 
     private void initViewModel() {
-        editProfileViewModel = new ViewModelProvider(this, new EditProfileViewModelFactory(requireContext())).get(EditProfileViewModel.class);
+        editProfileViewModel = new ViewModelProvider(this).get(EditProfileViewModel.class);
         editProfileViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             binding.inputUsername.inputField.setText(user.getUsername());
             binding.inputFirstName.inputField.setText(user.getFirstName());
             binding.inputLastName.inputField.setText(user.getLastName());
             binding.inputFieldBio.setText(user.getBio());
 
-            if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
-                Picasso.get().load(user.getProfileImageUrl()).fit().centerCrop().into(binding.profileImage);
+            if (user.getProfileImageString() != null && !user.getProfileImageString().isEmpty()) {
+                Picasso.get().load(user.getProfileImageString()).fit().centerCrop().into(binding.profileImage);
             }
         });
 

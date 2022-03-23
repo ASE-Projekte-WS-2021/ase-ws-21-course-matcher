@@ -24,6 +24,7 @@ import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.example.cm.utils.DeleteDialog;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,6 +36,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener, OnMapReadyCallback {
 
@@ -97,9 +99,8 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void initImg(Meetup meetup) {
-        byte[] decodedString = Base64.decode(meetup.getLocationImageString(), Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        binding.ivLocation.setImageBitmap(decodedByte);
+        Bitmap img = Utils.convertBaseStringToBitmap(meetup.getLocationImageString());
+        binding.ivLocation.setImageBitmap(img);
     }
 
     private void initTabbar() {
@@ -194,7 +195,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
                 if ("mPopup".equals(field.getName())) {
                     field.setAccessible(true);
                     Object menuPopupHelper = field.get(popupMenu);
-                    Class<?> popupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    Class<?> popupHelper = Class.forName(Objects.requireNonNull(menuPopupHelper).getClass().getName());
                     Method mMethods = popupHelper.getMethod("setForceShowIcon", boolean.class);
                     mMethods.invoke(menuPopupHelper, true);
                     break;

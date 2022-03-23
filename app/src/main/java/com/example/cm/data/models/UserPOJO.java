@@ -7,11 +7,12 @@ import java.util.List;
 
 public class UserPOJO {
     private String id;
-    private String username, firstName, lastName, email, bio, profileImageUrl;
+    private String username, firstName, lastName, email, bio, profileImageString;
     private List<String> friends;
     private List<Double> location;
     private boolean isSharingLocation;
     private Availability availability;
+    private byte[] profileImageBytes;
 
     public UserPOJO() {
         // Required empty constructor
@@ -24,7 +25,8 @@ public class UserPOJO {
         this.lastName = user.getLastName();
         this.email = user.getEmail();
         this.bio = user.getBio();
-        this.profileImageUrl = user.getProfileImageUrl();
+        this.profileImageString = user.getProfileImageString();
+        this.profileImageBytes = user.getProfileImageBytes();
         this.friends = user.getFriends();
         this.availability = user.getAvailability();
         this.isSharingLocation = user.getIsSharingLocation();
@@ -84,12 +86,20 @@ public class UserPOJO {
         this.bio = bio;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
+    public String getProfileImageString() {
+        return profileImageString;
     }
 
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void setProfileImageString(String profileImageString) {
+        this.profileImageString = profileImageString;
+    }
+
+    public byte[] getProfileImageBytes() {
+        return profileImageBytes;
+    }
+
+    public void setProfileImageBytes(byte[] profileImageBytes) {
+        this.profileImageBytes = profileImageBytes;
     }
 
     public Availability getAvailability() {
@@ -132,7 +142,8 @@ public class UserPOJO {
         user.setLastName(this.lastName);
         user.setEmail(this.email);
         user.setBio(this.bio);
-        user.setProfileImageUrl(this.profileImageUrl);
+        user.setProfileImageString(this.profileImageString);
+        user.setProfileImageBytes(this.profileImageBytes);
         user.setFriends(this.friends);
         user.setAvailability(this.availability);
         user.setIsSharingLocation(this.isSharingLocation);

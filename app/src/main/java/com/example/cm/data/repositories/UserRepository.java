@@ -8,7 +8,9 @@ import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.data.models.UserPOJO;
 import com.example.cm.utils.Utils;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Bytes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -20,6 +22,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -340,8 +343,6 @@ public class UserRepository extends Repository {
 
     /**
      * Get static friends list of current authorized user
-     *
-     * @return MutableLiveData-List of mutable friends
      */
     public void getStaticFriends(UserListener<List<User>> listener) {
         if (auth.getCurrentUser() == null) {
@@ -396,7 +397,6 @@ public class UserRepository extends Repository {
      * Get user list by list of userIds
      *
      * @param userIds IDs of users to retrieve
-     * @return MutableLiveData-List of mutable users with ids
      */
     public void getStaticUsersByIds(List<String> userIds, UserListener<List<User>> listener) {
         if (userIds == null || userIds.isEmpty()) {
@@ -507,6 +507,10 @@ public class UserRepository extends Repository {
             }
         });
         return mutableUsers;
+    }
+
+    public void updateProfileImage(String profileImageString, String userId) {
+        userCollection.document(userId).update("profileImageString", profileImageString);
     }
 
     /**

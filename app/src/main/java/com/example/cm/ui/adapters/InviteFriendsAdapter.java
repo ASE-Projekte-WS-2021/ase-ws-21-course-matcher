@@ -1,5 +1,6 @@
 package com.example.cm.ui.adapters;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -14,6 +15,7 @@ import com.example.cm.R;
 import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSelectFriendBinding;
+import com.example.cm.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -101,14 +103,14 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
-        String profileImageUrl = mUsers.get(position).getProfileImageUrl();
+        String profileImageString = mUsers.get(position).getProfileImageString();
         String name = mUsers.get(position).getFirstName() + " " + mUsers.get(position).getLastName();
         String username = mUsers.get(position).getUsername();
         Availability availability = mUsers.get(position).getAvailability();
 
-        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-            holder.getProfileImage().setImageTintMode(null);
-            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+        if (profileImageString != null && !profileImageString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            holder.getProfileImage().setImageBitmap(img);
         }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);

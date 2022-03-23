@@ -1,6 +1,7 @@
 package com.example.cm.ui.adapters;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import com.example.cm.R;
 import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemMapUserBinding;
+import com.example.cm.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -71,14 +73,14 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
             return;
         }
 
-        String profileImageUrl = user.getProfileImageUrl();
+        String profileImageString = user.getProfileImageString();
         String name = user.getFullName();
         String username = user.getUsername();
         Availability availability = user.getAvailability();
 
-        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-            holder.getProfileImage().setImageTintMode(null);
-            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+        if (profileImageString != null && !profileImageString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            holder.getProfileImage().setImageBitmap(img);
         }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
@@ -102,9 +104,6 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
     // Return the size of the list
     @Override
     public int getItemCount() {
-        if (mUsers == null) {
-            return 0;
-        }
         return mUsers.size();
     }
 
