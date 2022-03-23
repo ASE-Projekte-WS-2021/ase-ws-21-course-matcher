@@ -247,6 +247,13 @@
     <string name="delete_account_wrong_password">Das eingegebene Passwort ist falsch.</string>
     <string name="no_user_found">Kein Nutzer gefunden.</string>
     <string name="delete_account_description">Um deinen Account löschen zu können, musst du dein Passwort eingeben.</string>
+
+    <string name="availability">Verfügbarkeit:</string>
+    <string name="unavailable">beschäftigt</string>
+    <string name="soonAvailable">bald verfügbar</string>
+    <string name="available">verfügbar</string>
+    <string name="availavilityError">Verfügbarkeit konnte nicht upgedatet werden.</string>
+
     <string name="snackbar_share_location">Dein Standort ist jetzt für deine Freunde sichtbar!</string>
     <string name="snackbar_hide_location">Dein Standort ist nicht länger für deine Freunde sichtbar!</string>
 

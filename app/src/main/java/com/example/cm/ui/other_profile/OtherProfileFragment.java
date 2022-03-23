@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.databinding.FragmentOtherProfileBinding;
 import com.example.cm.utils.Navigator;
 import com.squareup.picasso.Picasso;
@@ -24,6 +25,7 @@ public class OtherProfileFragment extends Fragment {
     private Bundle bundle;
     private String profileId;
     private Navigator navigator;
+    private Availability availability;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOtherProfileBinding.inflate(inflater, container, false);
@@ -72,6 +74,20 @@ public class OtherProfileFragment extends Fragment {
                 binding.ivProfileImage.setScaleX(1f);
                 binding.ivProfileImage.setScaleY(1f);
                 Picasso.get().load(currentUser.getProfileImageUrl()).fit().centerCrop().into(binding.ivProfileImage);
+            }
+            availability = currentUser.getAvailability();
+            if(availability != null){
+                switch (availability) {
+                    case AVAILABLE:
+                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
+                        break;
+                    case SOON_AVAILABLE:
+                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
+                        break;
+                    case UNAVAILABLE:
+                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+                        break;
+                }
             }
         });
     }

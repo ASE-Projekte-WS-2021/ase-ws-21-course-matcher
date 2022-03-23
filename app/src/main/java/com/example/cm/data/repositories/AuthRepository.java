@@ -112,5 +112,3 @@ public class AuthRepository extends Repository {
         void onRegisterSuccess(User user);
     }
 }
-
-

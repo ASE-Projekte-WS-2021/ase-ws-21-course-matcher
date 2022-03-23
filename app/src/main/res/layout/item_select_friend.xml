@@ -5,15 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:padding="@dimen/padding_medium"
-    >
+    android:padding="@dimen/padding_medium">
 
-          <com.google.android.material.imageview.ShapeableImageView
+    <RelativeLayout
+        android:layout_width="@dimen/profile_img_size"
+        android:layout_height="@dimen/profile_img_size"
+        android:id="@+id/image"
+        android:layout_marginEnd="@dimen/padding_big"
+        >
+
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivUserImage"
-            android:layout_width="@dimen/profile_img_size"
-            android:layout_height="@dimen/profile_img_size"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/padding_big"
             android:background="@color/gray500"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_profile"
@@ -21,37 +26,49 @@
             app:layout_constraintStart_toStartOf="parent"
             app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
+
+        <ImageView
+            android:id="@+id/dotAvailabilityIcon"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/cbSelect"
-            android:layout_toEndOf="@+id/ivUserImage"
-            android:orientation="vertical">
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_dot_available" />
 
-            <TextView
-                android:id="@+id/tvName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:includeFontPadding="false"
-                android:maxLines="1"
-                android:text="@{username}"
-                android:textColor="@color/gray700"
-                android:textSize="@dimen/text_size_medium"
-                tools:text="Name" />
+    </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tvUsername"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:includeFontPadding="false"
-                android:maxLines="1"
-                android:text="@{username}"
-                android:textColor="@color/gray500"
-                tools:text="Username" />
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@+id/cbSelect"
+        android:layout_toEndOf="@+id/image"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{username}"
+            android:textColor="@color/gray700"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="Name" />
+
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@{username}"
+            android:textColor="@color/gray500"
+            tools:text="Username" />
+    </LinearLayout>
 
     <CheckBox
         android:id="@+id/cbSelect"

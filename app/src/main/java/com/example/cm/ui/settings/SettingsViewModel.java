@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.listener.UserListener;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.Callback;
@@ -35,6 +36,7 @@ public class SettingsViewModel extends ViewModel {
         meetupRequestRepository = new MeetupRequestRepository();
         friendRequestRepository = new FriendRequestRepository();
     }
+
 
     public MutableLiveData<User> getUser() {
         return userRepository.getStaticCurrentUser();
@@ -103,9 +105,22 @@ public class SettingsViewModel extends ViewModel {
             @Override
             public void onUserError(Exception error) {
                 listener.onUserError(error);
+
+    public void updateAvailablilty(Availability availabilityState, UserListener<Availability> listener) {
+        userRepository.updateField("availability", availabilityState, new Callback() {
+            @Override
+            public OnSuccessListener<? super Void> onSuccess(Object object) {
+                listener.onUserSuccess(availabilityState);
+                return null;
+            }
+
+            @Override
+            public void onError(Object object) {
+                listener.onUserError((Exception) object);
             }
         });
     }
+
 
     private void onDeleteFromFriendRequestRepo(String userId, UserListener<Boolean> listener) {
         friendRequestRepository.deleteRequestsForUser(userId, new UserListener<Boolean>() {
@@ -194,7 +209,6 @@ public class SettingsViewModel extends ViewModel {
             }
         });
     }
-
 
     public void logOut() {
         authRepository.logOut();
