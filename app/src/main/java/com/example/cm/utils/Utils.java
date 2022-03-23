@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
@@ -33,8 +32,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class Utils {
-
-    private static int mapViewWidth, mapViewHeight;
 
     /**
      * Hides the keyboard
