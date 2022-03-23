@@ -64,9 +64,8 @@ public class MeetupRepository {
                             if (phaseInFirestore != MEETUP_ENDED) {
                                 if (currentPhase != MEETUP_ENDED) {
                                     meetups.add(meetup);
-                                } else {
-                                    value.getDocuments().get(i).getReference().update("phase", MEETUP_ENDED);
                                 }
+                                value.getDocuments().get(i).getReference().update("phase", currentPhase);
                             }
                         }
                         meetupListMLD.postValue(meetups);

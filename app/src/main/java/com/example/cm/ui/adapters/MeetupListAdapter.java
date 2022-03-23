@@ -5,9 +5,11 @@ import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_SIZE;
 import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_STROKE;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -17,14 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
@@ -77,19 +75,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     }
 
     private void initLocationImg(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {
-        Glide.with(holder.getContext()).load(meetup.getLocationImageUrl()).placeholder(R.drawable.cafe)
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource,
-                                                @Nullable Transition<? super Drawable> transition) {
-                        holder.getIvLocation().setImageDrawable(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                        holder.getIvLocation().setImageDrawable(placeholder);
-                    }
-                });
+        byte[] decodedString = Base64.decode(meetup.getLocationImageString(), Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        holder.getIvLocation().setImageBitmap(decodedByte);
     }
 
     private void initTextViews(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {

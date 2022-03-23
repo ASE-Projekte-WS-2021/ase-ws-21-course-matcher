@@ -2,29 +2,20 @@ package com.example.cm.ui.meetup.CreateMeetup;
 
 import static com.example.cm.utils.Utils.convertToAddress;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
-import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.databinding.FragmentMeetupBinding;
 import com.example.cm.utils.Navigator;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,7 +32,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback, StorageManager.Callback {
+public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback {
 
     private final Calendar calendarMeetup = Calendar.getInstance();
     private final Calendar calendarNow = Calendar.getInstance();
@@ -174,21 +165,12 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void onMeetupInfoBtnClicked() {
-        boolean hasWriteExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        if (!hasWriteExternalStoragePermission) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        } else {
-            disableButtonWhileLoading();
-            map.snapshot(bitmap -> createMeetupViewModel.setMeetupImg(bitmap, this));
-        }
-    }
+        map.snapshot(bitmap -> createMeetupViewModel.setMeetupImg(bitmap));
+        createMeetupViewModel.setMeetupTimestamp(calendarMeetup.getTime());
 
-    private void disableButtonWhileLoading() {
-        binding.meetupInfoBtn.setEnabled(false);
-        binding.meetupInfoBtn.setText(R.string.meetup_info_submit_btn_loading);
-        Drawable buttonDrawable = DrawableCompat.wrap(binding.meetupInfoBtn.getBackground());
-        DrawableCompat.setTint(buttonDrawable, getResources().getColor(R.color.outgreyed));
-        binding.meetupInfoBtn.setBackground(buttonDrawable);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Constants.KEY_CREATE_MEETUP_VM, createMeetupViewModel);
+        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends, bundle);
     }
 
     @Override
@@ -240,38 +222,5 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     private void geocodeLatLng(LatLng latLng) {
         String address = convertToAddress(requireActivity(), latLng);
         binding.locationMeetup.setText(address);
-    }
-
-    @Override
-    public void onSuccess(String urlOnline, Uri uriLocal) {
-        setMeetupInfo(urlOnline);
-        deleteLocalImg(uriLocal);
-        navigateToInviteFriends();
-    }
-
-    private void setMeetupInfo(String url) {
-        //TODO den boolean wieder benutzen wenn gefiltert werden kann
-        //Boolean isPrivate = binding.meetupPrivateCheckBox.isChecked();
-
-        Boolean isPrivate = true;
-
-        createMeetupViewModel.setIsPrivate(isPrivate);
-        createMeetupViewModel.setMeetupTimestamp(calendarMeetup.getTime());
-        createMeetupViewModel.setUrl(url);
-    }
-
-    private void deleteLocalImg(Uri localUri) {
-        createMeetupViewModel.deleteLocalImg(localUri, getContext());
-    }
-
-    private void navigateToInviteFriends() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Constants.KEY_CREATE_MEETUP_VM, createMeetupViewModel);
-        Navigation.findNavController(binding.getRoot()).navigate(R.id.navigateToInviteFriends, bundle);
-    }
-
-    @Override
-    public void onError(Exception e) {
-        Snackbar.make(binding.getRoot(), R.string.meetup_create_error, Snackbar.LENGTH_LONG).show();
     }
 }

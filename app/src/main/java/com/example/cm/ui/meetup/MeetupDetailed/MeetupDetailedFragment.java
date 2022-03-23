@@ -1,10 +1,10 @@
 package com.example.cm.ui.meetup.MeetupDetailed;
 
-import static com.example.cm.utils.Utils.convertToAddress;
-
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -13,14 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
@@ -101,18 +97,9 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void initImg(Meetup meetup) {
-        Glide.with(requireActivity()).load(meetup.getLocationImageUrl()).placeholder(R.drawable.cafe)
-                .into(new CustomTarget<Drawable>() {
-            @Override
-            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                binding.ivLocation.setImageDrawable(resource);
-            }
-
-            @Override
-            public void onLoadCleared(@Nullable Drawable placeholder) {
-                binding.ivLocation.setImageDrawable(placeholder);
-            }
-        });
+        byte[] decodedString = Base64.decode(meetup.getLocationImageString(), Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        binding.ivLocation.setImageBitmap(decodedByte);
     }
 
     private void initTabbar() {
