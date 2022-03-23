@@ -44,11 +44,12 @@ public class MeetupTabsFragment extends Fragment {
     }
 
     private void initViewModel() {
-        meetupRequestsViewModel = new ViewModelProvider(requireActivity()).get(MeetupRequestsViewModel.class);
+        meetupRequestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
         meetupRequestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), meetupRequests -> {
             if (meetupRequests == null) {
                 return;
             }
+
             int openRequests = Utils.getOpenRequestCount(meetupRequests);
             TabLayout.Tab tab = binding.tabLayout.getTabAt(1);
             Utils.hideShowBadge(tab, openRequests, getResources());
@@ -61,7 +62,6 @@ public class MeetupTabsFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         meetupTabAdapter = new MeetupTabAdapter(this);
         viewPager = view.findViewById(R.id.meetup_tab_pager);
         viewPager.setAdapter(meetupTabAdapter);
