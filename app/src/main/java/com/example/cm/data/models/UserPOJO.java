@@ -12,7 +12,6 @@ public class UserPOJO {
     private List<Double> location;
     private boolean isSharingLocation;
     private Availability availability;
-    private byte[] profileImageBytes;
 
     public UserPOJO() {
         // Required empty constructor
@@ -26,7 +25,6 @@ public class UserPOJO {
         this.email = user.getEmail();
         this.bio = user.getBio();
         this.profileImageString = user.getProfileImageString();
-        this.profileImageBytes = user.getProfileImageBytes();
         this.friends = user.getFriends();
         this.availability = user.getAvailability();
         this.isSharingLocation = user.getIsSharingLocation();
@@ -94,14 +92,6 @@ public class UserPOJO {
         this.profileImageString = profileImageString;
     }
 
-    public byte[] getProfileImageBytes() {
-        return profileImageBytes;
-    }
-
-    public void setProfileImageBytes(byte[] profileImageBytes) {
-        this.profileImageBytes = profileImageBytes;
-    }
-
     public Availability getAvailability() {
         return availability;
     }
@@ -143,7 +133,6 @@ public class UserPOJO {
         user.setEmail(this.email);
         user.setBio(this.bio);
         user.setProfileImageString(this.profileImageString);
-        user.setProfileImageBytes(this.profileImageBytes);
         user.setFriends(this.friends);
         user.setAvailability(this.availability);
         user.setIsSharingLocation(this.isSharingLocation);

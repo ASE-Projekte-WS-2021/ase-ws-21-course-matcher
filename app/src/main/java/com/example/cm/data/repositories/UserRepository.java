@@ -514,6 +514,55 @@ public class UserRepository extends Repository {
     }
 
     /**
+     * Add each other to friends list
+     *
+     * @param friend1Id ID of friend to add to other's friend list
+     * @param friend2Id ID of friend to add to other's friend list
+     */
+    public void addFriends(String friend1Id, String friend2Id) {
+        userCollection.document(friend1Id).update("friends", FieldValue.arrayUnion(friend2Id));
+        userCollection.document(friend2Id).update("friends", FieldValue.arrayUnion(friend1Id));
+    }
+
+    public void unfriend(String friendIdToUnfriend) {
+        if (auth.getCurrentUser() == null) {
+            return;
+        }
+        String ownId = auth.getCurrentUser().getUid();
+        userCollection.document(ownId).update("friends", FieldValue.arrayRemove(friendIdToUnfriend));
+        userCollection.document(friendIdToUnfriend).update("friends", FieldValue.arrayRemove(ownId));
+    }
+
+    public void deleteUserFromFriendsLists(String userId, UserListener<Boolean> listener) {
+        userCollection.get().addOnFailureListener(executorService, e -> {
+            listener.onUserError(e);
+        })
+                .addOnSuccessListener(executorService, documentSnapshot -> {
+                    for (DocumentSnapshot document : documentSnapshot.getDocuments()) {
+                        User user = snapshotToUser(document);
+                        if (user.getFriends() == null) {
+                            continue;
+                        }
+
+                        if (!user.getFriends().contains(userId)) {
+                            continue;
+                        }
+                        userCollection.document(user.getId()).update("friends", FieldValue.arrayRemove(userId));
+                    }
+                    listener.onUserSuccess(true);
+                });
+    }
+
+    public void deleteUser(String userId, UserListener<Boolean> listener) {
+        userCollection.document(userId).delete()
+                .addOnFailureListener(executorService, e -> {
+                    listener.onUserError(e);
+                }).addOnSuccessListener(executorService, documentSnapshot -> {
+            listener.onUserSuccess(true);
+        });
+    }
+
+    /**
      * Convert a list of snapshots to a list of users
      *
      * @param documents List of snapshots returned from Firestore
@@ -554,54 +603,5 @@ public class UserRepository extends Repository {
         userPOJO.setLocation((List<Double>) document.get("location"));
 
         return userPOJO.toObject();
-    }
-
-    /**
-     * Add each other to friends list
-     *
-     * @param friend1Id ID of friend to add to other's friend list
-     * @param friend2Id ID of friend to add to other's friend list
-     */
-    public void addFriends(String friend1Id, String friend2Id) {
-        userCollection.document(friend1Id).update("friends", FieldValue.arrayUnion(friend2Id));
-        userCollection.document(friend2Id).update("friends", FieldValue.arrayUnion(friend1Id));
-    }
-
-    public void unfriend(String friendIdToUnfriend) {
-        if (auth.getCurrentUser() == null) {
-            return;
-        }
-        String ownId = auth.getCurrentUser().getUid();
-        userCollection.document(ownId).update("friends", FieldValue.arrayRemove(friendIdToUnfriend));
-        userCollection.document(friendIdToUnfriend).update("friends", FieldValue.arrayRemove(ownId));
-    }
-
-    public void deleteUserFromFriendsLists(String userId, UserListener<Boolean> listener) {
-        userCollection.get().addOnFailureListener(executorService, e -> {
-                    listener.onUserError(e);
-                })
-                .addOnSuccessListener(executorService, documentSnapshot -> {
-                    for (DocumentSnapshot document : documentSnapshot.getDocuments()) {
-                        User user = snapshotToUser(document);
-                        if (user.getFriends() == null) {
-                            continue;
-                        }
-
-                        if (!user.getFriends().contains(userId)) {
-                            continue;
-                        }
-                        userCollection.document(user.getId()).update("friends", FieldValue.arrayRemove(userId));
-                    }
-                    listener.onUserSuccess(true);
-                });
-    }
-
-    public void deleteUser(String userId, UserListener<Boolean> listener) {
-        userCollection.document(userId).delete()
-                .addOnFailureListener(executorService, e -> {
-                    listener.onUserError(e);
-                }).addOnSuccessListener(executorService, documentSnapshot -> {
-                    listener.onUserSuccess(true);
-                });
     }
 }

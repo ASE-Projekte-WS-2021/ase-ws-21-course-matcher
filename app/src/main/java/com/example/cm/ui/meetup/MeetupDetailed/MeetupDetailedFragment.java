@@ -2,9 +2,7 @@ package com.example.cm.ui.meetup.MeetupDetailed;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;

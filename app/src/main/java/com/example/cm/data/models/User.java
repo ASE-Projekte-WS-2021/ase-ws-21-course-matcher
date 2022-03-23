@@ -13,7 +13,6 @@ public class User {
     private LatLng location;
     private boolean isSharingLocation;
     private Availability availability;
-    private byte[] profileImageBytes;
 
     public User() {
     }
@@ -106,14 +105,6 @@ public class User {
 
     public void setProfileImageString(String profileImageString) {
         this.profileImageString = profileImageString;
-    }
-
-    public byte[] getProfileImageBytes() {
-        return profileImageBytes;
-    }
-
-    public void setProfileImageBytes(byte[] profileImageBytes) {
-        this.profileImageBytes = profileImageBytes;
     }
 
     public Availability getAvailability() {
