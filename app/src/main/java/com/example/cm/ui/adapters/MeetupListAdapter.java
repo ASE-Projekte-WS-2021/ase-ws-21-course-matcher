@@ -6,10 +6,8 @@ import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_STROKE;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -31,7 +29,6 @@ import com.example.cm.databinding.ItemMeetupBinding;
 import com.example.cm.utils.Utils;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;

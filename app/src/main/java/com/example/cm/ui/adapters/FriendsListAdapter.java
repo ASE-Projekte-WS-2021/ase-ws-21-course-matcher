@@ -18,7 +18,6 @@ import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
 import com.example.cm.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;

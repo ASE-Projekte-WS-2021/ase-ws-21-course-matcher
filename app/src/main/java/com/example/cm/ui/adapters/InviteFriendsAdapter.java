@@ -16,7 +16,6 @@ import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSelectFriendBinding;
 import com.example.cm.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;

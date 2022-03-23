@@ -1,7 +1,6 @@
 package com.example.cm.ui.adapters;
 
 import static com.example.cm.utils.Utils.calculateDiff;
-import static com.example.cm.utils.Utils.convertBaseStringToBitmap;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -24,7 +23,6 @@ import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSendFriendRequestBinding;
 import com.example.cm.ui.add_friends.AddFriendsViewModel;
 import com.example.cm.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;

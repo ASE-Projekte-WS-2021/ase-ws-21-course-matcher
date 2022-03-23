@@ -15,7 +15,6 @@ import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemMapUserBinding;
 import com.example.cm.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,6 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
 
     private final OnItemClickListener listener;
     private final List<User> mUsers = new ArrayList<>();
-    private Activity activity;
 
     public MapUserAdapter(OnItemClickListener listener) {
         this.listener = listener;
