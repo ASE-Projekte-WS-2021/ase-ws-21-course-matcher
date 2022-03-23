@@ -94,10 +94,7 @@ public class MeetupRepository {
                         MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
                         meetupPOJO.setId(document.getId());
 
-                        boolean isMeetupActive = meetupPOJO.getPhase() == MEETUP_ACTIVE;
-                        boolean isUserInMeetup = meetupPOJO.getConfirmedFriends().contains(currentUserId);
-
-                        if (isMeetupActive && isUserInMeetup) {
+                        if (meetupPOJO.getPhase() == MEETUP_ACTIVE) {
                             meetups.add(meetupPOJO.toObject());
                         }
                     }
