@@ -308,7 +308,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         });
     }
 
-
     private void observeMeetups() {
         homeViewModel.getCurrentMeetups(new MeetupListener<List<Meetup>>() {
 
@@ -328,7 +327,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             }
         });
     }
-
 
     @Override
     public void onPositionChanged(LatLng position) {

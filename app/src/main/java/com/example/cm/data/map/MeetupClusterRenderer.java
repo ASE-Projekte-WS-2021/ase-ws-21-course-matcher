@@ -94,5 +94,8 @@ public class MeetupClusterRenderer extends DefaultClusterRenderer<MeetupClusterI
         return cluster.getSize() > 1;
     }
 
-
+    @Override
+    protected int getColor(int clusterSize) {
+        return ContextCompat.getColor(context, R.color.orange600);
+    }
 }
