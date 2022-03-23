@@ -31,10 +31,9 @@ public class MeetupDetailedFriendListAdapter
 
     @NonNull
     @Override
-    public MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder onCreateViewHolder(
-            @NonNull ViewGroup parent, int viewType) {
-        ItemSingleFriendBinding binding = ItemSingleFriendBinding.inflate(LayoutInflater.from(parent.getContext()),
-                parent, false);
+    public MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        ItemSingleFriendBinding binding = ItemSingleFriendBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        binding.dotAvailabilityIcon.setVisibility(View.INVISIBLE);
         return new MeetupDetailedFriendsListViewHolder(binding);
     }
 
@@ -42,6 +41,10 @@ public class MeetupDetailedFriendListAdapter
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder,
                                  int position) {
         if (friends != null) {
+            if (position == RecyclerView.NO_POSITION) {
+                return;
+            }
+
             User friend = friends.get(position);
 
             String fullName = Objects.requireNonNull(friend).getFullName();
@@ -58,6 +61,7 @@ public class MeetupDetailedFriendListAdapter
             }
             holder.getTvFullName().setText(fullName);
             holder.getTvUserName().setText(username);
+
         }
     }
 
@@ -67,10 +71,6 @@ public class MeetupDetailedFriendListAdapter
             return 0;
         }
         return friends.size();
-    }
-
-    public interface OnItemClickListener {
-        void onItemClicked(String id);
     }
 
     /**
@@ -87,6 +87,10 @@ public class MeetupDetailedFriendListAdapter
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(String id);
     }
 
     public class MeetupDetailedFriendsListViewHolder extends RecyclerView.ViewHolder {

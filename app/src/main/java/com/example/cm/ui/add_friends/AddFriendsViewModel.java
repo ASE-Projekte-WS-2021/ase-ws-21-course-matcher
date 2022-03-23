@@ -11,8 +11,6 @@ import com.example.cm.data.repositories.UserRepository;
 import java.util.List;
 import java.util.Objects;
 
-import timber.log.Timber;
-
 public class AddFriendsViewModel extends ViewModel {
 
     private final UserRepository userRepository;
@@ -93,7 +91,6 @@ public class AddFriendsViewModel extends ViewModel {
      * @param receiverId the id of the receiver
      */
     private void onFriendRequestDoesNotExist(String receiverId) {
-        Timber.d("Sending friend request to %s", receiverId);
         if (currentUser.getValue() == null) {
             return;
         }
@@ -109,7 +106,6 @@ public class AddFriendsViewModel extends ViewModel {
      * @param receiverId the id of the receiver
      */
     private void onFriendRequestExists(String receiverId) {
-        Timber.d("Deleting friend request to %s", receiverId);
         requestRepository.deleteFriendRequest(receiverId, userRepository.getFirebaseUser().getUid());
         listener.onRequestDeleted();
     }
@@ -118,10 +114,10 @@ public class AddFriendsViewModel extends ViewModel {
      * checks whether current user sent an friend request to user with given id
      *
      * @param requests   list of friend requests
-     * @param receiverId id of the friend to check if has received friend request of
-     *                   current
+     * @param receiverId id of the friend to check if has received friend request of current
      * @return has current user sent an friend request to user with given id
      */
+  
     private boolean hasReceivedFriendRequest(List<FriendRequest> requests, String receiverId) {
         for (FriendRequest request : requests) {
             if (request.getReceiverId().equals(receiverId)

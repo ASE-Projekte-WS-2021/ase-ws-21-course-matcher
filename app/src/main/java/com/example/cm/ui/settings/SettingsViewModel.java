@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.data.listener.UserListener;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.Callback;
@@ -19,6 +20,7 @@ public class SettingsViewModel extends ViewModel {
         userRepository = UserRepository.getInstance();
     }
 
+
     public MutableLiveData<User> getUser() {
         return userRepository.getStaticCurrentUser();
     }
@@ -28,6 +30,21 @@ public class SettingsViewModel extends ViewModel {
             @Override
             public OnSuccessListener<? super Void> onSuccess(Object object) {
                 listener.onUserSuccess(enabled);
+                return null;
+            }
+
+            @Override
+            public void onError(Object object) {
+                listener.onUserError((Exception) object);
+            }
+        });
+    }
+
+    public void updateAvailablilty(Availability availabilityState, UserListener<Availability> listener) {
+        userRepository.updateField("availability", availabilityState, new Callback() {
+            @Override
+            public OnSuccessListener<? super Void> onSuccess(Object object) {
+                listener.onUserSuccess(availabilityState);
                 return null;
             }
 

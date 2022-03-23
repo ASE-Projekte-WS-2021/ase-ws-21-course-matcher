@@ -177,7 +177,6 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         boolean hasWriteExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         if (!hasWriteExternalStoragePermission) {
             ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            binding.meetupInfoBtn.performClick();
         } else {
             disableButtonWhileLoading();
             map.snapshot(bitmap -> createMeetupViewModel.setMeetupImg(bitmap, this));

@@ -11,7 +11,6 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class AuthRepository extends Repository {
@@ -97,5 +96,3 @@ public class AuthRepository extends Repository {
         void onRegisterSuccess(User user);
     }
 }
-
-
