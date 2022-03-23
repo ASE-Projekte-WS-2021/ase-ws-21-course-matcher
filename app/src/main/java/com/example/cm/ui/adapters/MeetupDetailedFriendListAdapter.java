@@ -7,8 +7,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
+import com.example.cm.data.repositories.UserRepository;
 
+import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
 import com.squareup.picasso.Picasso;
@@ -22,6 +26,7 @@ public class MeetupDetailedFriendListAdapter
     private final List<User> friends;
     private final List<String> lateFriends;
     private final OnItemClickListener listener;
+    public MutableLiveData<User> currentUser;
 
     public MeetupDetailedFriendListAdapter(List<User> friends, List<String> lateFriends, OnItemClickListener listener) {
         this.friends = friends;
@@ -33,7 +38,7 @@ public class MeetupDetailedFriendListAdapter
     @Override
     public MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemSingleFriendBinding binding = ItemSingleFriendBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        binding.dotAvailabilityIcon.setVisibility(View.INVISIBLE);
+        //binding.dotAvailabilityIcon.setVisibility(View.INVISIBLE);
         return new MeetupDetailedFriendsListViewHolder(binding);
     }
 
@@ -50,6 +55,7 @@ public class MeetupDetailedFriendListAdapter
             String fullName = Objects.requireNonNull(friend).getFullName();
             String username = friend.getUsername();
             String profileImageUrl = friend.getProfileImageUrl();
+            Availability availability = friend.getAvailability();
 
             if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
                 holder.getProfileImage().setImageTintMode(null);
@@ -61,6 +67,20 @@ public class MeetupDetailedFriendListAdapter
             }
             holder.getTvFullName().setText(fullName);
             holder.getTvUserName().setText(username);
+
+            if (availability != null) {
+                switch (availability) {
+                    case AVAILABLE:
+                        holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
+                        break;
+                    case SOON_AVAILABLE:
+                        holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_soon_available);
+                        break;
+                    case UNAVAILABLE:
+                        holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_unavailable);
+                        break;
+                }
+            }
 
         }
     }
@@ -131,6 +151,10 @@ public class MeetupDetailedFriendListAdapter
 
         public ImageView getIvLate() {
             return binding.ivFriendLateInfo;
+        }
+
+        public ImageView getAvailabilityDot() {
+            return binding.dotAvailabilityIcon;
         }
     }
 }
