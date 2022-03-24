@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -142,16 +141,17 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         switch (request.getPhase()) {
             case MEETUP_UPCOMING:
                 holder.getTvMeetupTime().setText(request.getFormattedTime());
+                holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_upcoming));
                 break;
             case MEETUP_ACTIVE:
-                holder.getTvMeetupTime()
-                        .setText(context.getString(R.string.meetup_active_text, request.getFormattedTime()));
+                holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getFormattedTime()));
+                holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_active));
                 break;
             case MEETUP_ENDED:
-                int color = context.getResources().getColor(R.color.outgreyed);
                 holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
+                holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_ended));
 
-                holder.getTvMeetupTime().setTextColor(color);
+                int color = context.getResources().getColor(R.color.outgreyed);
                 holder.getTvLocation().setTextColor(color);
                 holder.getTvSender().setTextColor(color);
                 holder.getTvDescription().setTextColor(color);
