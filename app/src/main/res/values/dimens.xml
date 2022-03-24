@@ -39,4 +39,5 @@
     <dimen name="layout_weight_four">4</dimen>
     <dimen name="layout_weight_nine">9</dimen>
     <dimen name="layout_weight_thirteen">13</dimen>
+    <dimen name="edit_profile_img_size">100dp</dimen>
 </resources>

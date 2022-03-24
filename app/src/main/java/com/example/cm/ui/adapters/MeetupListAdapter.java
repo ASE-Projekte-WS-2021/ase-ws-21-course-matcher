@@ -125,6 +125,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
                 imageRounded.setStrokeWidth(MEETUP_DETAILED_USER_IMAGE_STROKE);
                 imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING,
                         MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
+                imageRounded.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 layout.addView(imageRounded);
             }
         }
