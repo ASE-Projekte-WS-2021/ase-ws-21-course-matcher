@@ -24,7 +24,7 @@ public class OwnProfileViewModel extends ViewModel {
         return currentUser;
     }
 
-    public void updateAvailablilty(Availability availabilityState, UserListener<Availability> listener) {
+    public void updateAvailability(Availability availabilityState, UserListener<Availability> listener) {
         userRepository.updateField("availability", availabilityState, new Callback() {
             @Override
             public OnSuccessListener<? super Void> onSuccess(Object object) {

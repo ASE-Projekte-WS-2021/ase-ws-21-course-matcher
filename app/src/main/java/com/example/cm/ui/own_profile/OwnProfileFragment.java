@@ -4,6 +4,7 @@ import static com.example.cm.data.models.Availability.AVAILABLE;
 import static com.example.cm.data.models.Availability.SOON_AVAILABLE;
 import static com.example.cm.data.models.Availability.UNAVAILABLE;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -22,21 +23,18 @@ import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentOwnProfileBinding;
 import com.example.cm.utils.Navigator;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import timber.log.Timber;
 
 public class OwnProfileFragment extends Fragment {
 
     private OwnProfileViewModel ownProfileViewModel;
     private FragmentOwnProfileBinding binding;
     private Navigator navigator;
-    private GoogleMap map;
     private Availability availability;
     private PopupMenu popup;
 
@@ -51,16 +49,10 @@ public class OwnProfileFragment extends Fragment {
 
     private void initListeners() {
         navigator = new Navigator(requireActivity());
-        binding.btnProfileSettings.setOnClickListener(v -> {
-            navigator.getNavController().navigate(R.id.action_navigation_profile_to_settingsFragment);
-        });
-        binding.btnEditProfile.setOnClickListener(v -> {
-            navigator.getNavController().navigate(R.id.action_ownProfileFragment_to_editProfileFragment);
-        });
+        binding.btnProfileSettings.setOnClickListener(v -> navigator.getNavController().navigate(R.id.action_navigation_profile_to_settingsFragment));
+        binding.btnEditProfile.setOnClickListener(v -> navigator.getNavController().navigate(R.id.action_ownProfileFragment_to_editProfileFragment));
 
-        binding.dotAvailabilityIcon.setOnClickListener(v ->{
-            popup.show();
-        });
+        binding.dotAvailabilityIcon.setOnClickListener(v -> popup.show());
     }
 
     private void initViewModel() {
@@ -115,6 +107,7 @@ public class OwnProfileFragment extends Fragment {
     }
 
 
+    @SuppressLint("NonConstantResourceId")
     private void initAvailabilityMenu() {
         popup = new PopupMenu(requireContext(), binding.dotAvailabilityIcon);
         setForceShowIcon(popup);
@@ -157,7 +150,7 @@ public class OwnProfileFragment extends Fragment {
     }
 
     private void onSoonAvailable() {
-        ownProfileViewModel.updateAvailablilty(SOON_AVAILABLE, new UserListener<Availability>() {
+        ownProfileViewModel.updateAvailability(SOON_AVAILABLE, new UserListener<Availability>() {
             @Override
             public void onUserSuccess(Availability availability) {
                 setSoonAvailableUI();
@@ -171,7 +164,7 @@ public class OwnProfileFragment extends Fragment {
     }
 
     private void onUnavailable() {
-        ownProfileViewModel.updateAvailablilty(UNAVAILABLE, new UserListener<Availability>() {
+        ownProfileViewModel.updateAvailability(UNAVAILABLE, new UserListener<Availability>() {
             @Override
             public void onUserSuccess(Availability availability) {
                 setUnavailableUI();
@@ -185,7 +178,7 @@ public class OwnProfileFragment extends Fragment {
     }
 
     private void onAvailable() {
-        ownProfileViewModel.updateAvailablilty(AVAILABLE, new UserListener<Availability>() {
+        ownProfileViewModel.updateAvailability(AVAILABLE, new UserListener<Availability>() {
             @Override
             public void onUserSuccess(Availability availability) {
                 setAvailableUI();
