@@ -60,8 +60,6 @@ public class OwnProfileFragment extends Fragment {
         String profileImageString = currentUser.getProfileImageString();
         if (profileImageString != null && !profileImageString.isEmpty()) {
             binding.ivProfileImage.setImageTintMode(null);
-            binding.ivProfileImage.setScaleX(1f);
-            binding.ivProfileImage.setScaleY(1f);
             Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
             binding.ivProfileImage.setImageBitmap(img);
         }
