@@ -50,8 +50,7 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupDetailedFriendsListBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
 
