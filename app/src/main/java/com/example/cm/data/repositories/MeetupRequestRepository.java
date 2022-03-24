@@ -42,6 +42,7 @@ public class MeetupRequestRepository extends Repository {
         String currentUserId = auth.getCurrentUser().getUid();
 
         meetupRequestCollection.whereEqualTo("receiverId", currentUserId)
+                .orderBy("state", Query.Direction.DESCENDING)
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
