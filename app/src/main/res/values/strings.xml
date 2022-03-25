@@ -121,6 +121,7 @@
     <string name="link_label_edit_profile">Profil bearbeiten</string>
     <string name="link_label_edit_account">Account bearbeiten</string>
     <string name="link_label_edit_notifications">Benachrichtigungen</string>
+    <string name="about"><u>Über die App</u></string>
     <string name="link_label_privacy_policy">Datenschutzerklärung</string>
     <string name="link_label_imprint">Impressum</string>
     <string name="link_label_logout">Abmelden</string>

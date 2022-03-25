@@ -6,8 +6,6 @@ import static com.example.cm.data.models.Availability.UNAVAILABLE;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -32,7 +30,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutListener {
+public class AboutFragment extends Fragment implements LogoutDialog.OnLogoutListener {
 
     private FragmentSettingsBinding binding;
     private Navigator navigator;
@@ -41,7 +39,7 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     private EditTextDialog editTextDialog;
     private PopupMenu popup;
 
-    public SettingsFragment() {
+    public AboutFragment() {
         // Required empty public constructor
     }
 
