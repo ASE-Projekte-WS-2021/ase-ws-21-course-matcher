@@ -1,5 +1,6 @@
 package com.example.cm.ui.own_profile;
 
+import android.graphics.Bitmap;
 import static com.example.cm.data.models.Availability.AVAILABLE;
 import static com.example.cm.data.models.Availability.SOON_AVAILABLE;
 import static com.example.cm.data.models.Availability.UNAVAILABLE;
@@ -23,8 +24,8 @@ import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentOwnProfileBinding;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -61,34 +62,7 @@ public class OwnProfileFragment extends Fragment {
             if (currentUser == null) {
                 return;
             }
-
-            binding.tvName.setText(currentUser.getFullName());
-            binding.tvUsername.setText(currentUser.getUsername());
-            binding.tvBioDescription.setText(currentUser.getBio());
-            if (currentUser.getProfileImageUrl() != null && !currentUser.getProfileImageUrl().isEmpty()) {
-                binding.ivProfileImage.setImageTintMode(null);
-                binding.ivProfileImage.setScaleX(Constants.FINAL_CARD_ALPHA);
-                binding.ivProfileImage.setScaleY(Constants.FINAL_CARD_ALPHA);
-                Picasso.get().load(currentUser.getProfileImageUrl()).fit().centerCrop().into(binding.ivProfileImage);
-                binding.btnProfileSettings.bringToFront();
-            }
-
-            availability = currentUser.getAvailability();
-            if (availability != null) {
-                switch (availability) {
-                    case AVAILABLE:
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_available_button);
-                        break;
-                    case SOON_AVAILABLE:
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_soon_button);
-                        break;
-                    case UNAVAILABLE:
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_unavailable_button);
-                        break;
-                }
-            }
             initUi(currentUser);
-
         });
     }
 
@@ -97,11 +71,26 @@ public class OwnProfileFragment extends Fragment {
         binding.tvName.setText(currentUser.getFullName());
         binding.tvUsername.setText(currentUser.getUsername());
         binding.tvBioDescription.setText(currentUser.getBio());
-        if (currentUser.getProfileImageUrl() != null && !currentUser.getProfileImageUrl().isEmpty()) {
+        String profileImageString = currentUser.getProfileImageString();
+        if (profileImageString != null && !profileImageString.isEmpty()) {
             binding.ivProfileImage.setImageTintMode(null);
-            binding.ivProfileImage.setScaleX(1f);
-            binding.ivProfileImage.setScaleY(1f);
-            Picasso.get().load(currentUser.getProfileImageUrl()).fit().centerCrop().into(binding.ivProfileImage);
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            binding.ivProfileImage.setImageBitmap(img);
+        }
+
+        availability = currentUser.getAvailability();
+        if (availability != null) {
+            switch (availability) {
+                case AVAILABLE:
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
+                    break;
+                case SOON_AVAILABLE:
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
+                    break;
+                case UNAVAILABLE:
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+                    break;
+            }
         }
         binding.btnProfileSettings.bringToFront();
     }

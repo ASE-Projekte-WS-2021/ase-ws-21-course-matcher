@@ -30,12 +30,12 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp">
+                android:layout_marginBottom="@dimen/padding_double">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profileImage"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="@dimen/edit_profile_img_size"
+                    android:layout_height="@dimen/edit_profile_img_size"
                     android:layout_gravity="center"
                     android:background="@color/gray500"
                     android:scaleType="centerCrop"
@@ -47,8 +47,8 @@
 
                 <ImageView
                     android:id="@+id/editProfileImageBtn"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/btn_size"
+                    android:layout_height="@dimen/btn_size"
                     android:src="@drawable/ic_edit_button_round"
                     app:layout_constraintBottom_toBottomOf="@+id/profileImage"
                     app:layout_constraintEnd_toEndOf="@+id/profileImage"

@@ -1,6 +1,7 @@
 package com.example.cm.ui.other_profile;
 
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.example.cm.R;
 import com.example.cm.data.models.Availability;
 import com.example.cm.databinding.FragmentOtherProfileBinding;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import timber.log.Timber;
@@ -71,11 +73,11 @@ public class OtherProfileFragment extends Fragment {
             binding.tvName.setText(currentUser.getFullName());
             binding.tvUsername.setText(currentUser.getUsername());
             binding.tvBioDescription.setText(currentUser.getBio());
-            if (currentUser.getProfileImageUrl() != null && !currentUser.getProfileImageUrl().isEmpty()) {
+            String profileImageString = currentUser.getProfileImageString();
+            if (profileImageString != null && !profileImageString.isEmpty()) {
                 binding.ivProfileImage.setImageTintMode(null);
-                binding.ivProfileImage.setScaleX(1f);
-                binding.ivProfileImage.setScaleY(1f);
-                Picasso.get().load(currentUser.getProfileImageUrl()).fit().centerCrop().into(binding.ivProfileImage);
+                Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+                binding.ivProfileImage.setImageBitmap(img);
             }
 
             availability = currentUser.getAvailability();

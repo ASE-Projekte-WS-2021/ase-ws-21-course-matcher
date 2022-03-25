@@ -7,7 +7,9 @@ import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.data.models.UserPOJO;
 import com.example.cm.utils.Utils;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.Bytes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -19,6 +21,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -479,47 +482,8 @@ public class UserRepository extends Repository {
         return mutableUsers;
     }
 
-    /**
-     * Convert a list of snapshots to a list of users
-     *
-     * @param documents List of snapshots returned from Firestore
-     * @return List of users
-     */
-    private List<User> snapshotToUserList(QuerySnapshot documents) {
-        List<User> users = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents) {
-            users.add(snapshotToUser(document));
-        }
-        return users;
-    }
-
-    /**
-     * Convert a list of snapshots to a list of mutable users
-     *
-     * @param documents List of snapshots returned from Firestore
-     * @return List of mutable users
-     */
-    private List<User> snapshotToMutableUserList(QuerySnapshot documents) {
-        List<User> users = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents) {
-            users.add(snapshotToUser(document));
-        }
-        return users;
-    }
-
-    /**
-     * Convert a single snapshot to a user model
-     *
-     * @param document Snapshot of a user returned from Firestore
-     * @return Returns a user model
-     */
-    public User snapshotToUser(DocumentSnapshot document) {
-        UserPOJO userPOJO = document.toObject(UserPOJO.class);
-        assert userPOJO != null;
-        userPOJO.setId(document.getId());
-        userPOJO.setLocation((List<Double>) document.get("location"));
-
-        return userPOJO.toObject();
+    public void updateProfileImage(String profileImageString, String userId) {
+        userCollection.document(userId).update("profileImageString", profileImageString);
     }
 
     /**
@@ -569,5 +533,48 @@ public class UserRepository extends Repository {
                 }).addOnSuccessListener(executorService, documentSnapshot -> {
             listener.onUserSuccess(true);
         });
+    }
+
+    /**
+     * Convert a list of snapshots to a list of users
+     *
+     * @param documents List of snapshots returned from Firestore
+     * @return List of users
+     */
+    private List<User> snapshotToUserList(QuerySnapshot documents) {
+        List<User> users = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            users.add(snapshotToUser(document));
+        }
+        return users;
+    }
+
+    /**
+     * Convert a list of snapshots to a list of mutable users
+     *
+     * @param documents List of snapshots returned from Firestore
+     * @return List of mutable users
+     */
+    private List<User> snapshotToMutableUserList(QuerySnapshot documents) {
+        List<User> users = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            users.add(snapshotToUser(document));
+        }
+        return users;
+    }
+
+    /**
+     * Convert a single snapshot to a user model
+     *
+     * @param document Snapshot of a user returned from Firestore
+     * @return Returns a user model
+     */
+    public User snapshotToUser(DocumentSnapshot document) {
+        UserPOJO userPOJO = document.toObject(UserPOJO.class);
+        assert userPOJO != null;
+        userPOJO.setId(document.getId());
+        userPOJO.setLocation((List<Double>) document.get("location"));
+
+        return userPOJO.toObject();
     }
 }

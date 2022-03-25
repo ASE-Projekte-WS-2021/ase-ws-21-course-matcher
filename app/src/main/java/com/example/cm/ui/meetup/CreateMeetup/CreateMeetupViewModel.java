@@ -2,11 +2,8 @@ package com.example.cm.ui.meetup.CreateMeetup;
 
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
-import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
+import android.util.Base64;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -19,11 +16,10 @@ import com.example.cm.data.models.Status;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
-import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,24 +32,22 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
     private final UserRepository userRepository;
     private final MutableLiveData<User> currentUser;
     private final MeetupRepository meetupRepository;
-    private final StorageManager storageRepository;
+    public MutableLiveData<Status> status = new MutableLiveData<>();
     private final MutableLiveData<LatLng> meetupLatLng = new MutableLiveData<>();
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>(true);
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
     private final MutableLiveData<String> meetupLocationName = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
     private final MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
-    public MutableLiveData<Status> status = new MutableLiveData<>();
     public MutableLiveData<List<User>> users;
-    private String url;
+    private String imageBaseString;
     private String meetupId;
 
-    public CreateMeetupViewModel(Context context) {
+    public CreateMeetupViewModel() {
         userRepository = new UserRepository();
         currentUser = userRepository.getCurrentUser();
         users = userRepository.getFriends();
-        storageRepository = new StorageManager(context);
 
         meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
@@ -114,38 +108,16 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
         meetupTimestamp.postValue(timestamp);
     }
 
-    public void setIsPrivate(Boolean isPrivate) {
-        meetupIsPrivate.postValue(isPrivate);
-    }
-
-    public void setMeetupImg(Bitmap bitmap, StorageManager.Callback callback) {
-        meetupId = UUID.randomUUID().toString();
-        storageRepository.uploadImage(bitmap, meetupId, callback, Constants.ImageType.MEETUP_IMAGE);
-    }
-
-    public void deleteLocalImg(Uri localUri, Context context) {
-        String path = "";
-
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = context.getContentResolver().query(localUri, projection, null, null, null);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(projection[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            path = picturePath;
-        }
-
-        if (!path.isEmpty()) {
-            File fileToDelete = new File(path);
-            if (fileToDelete.exists()) {
-                fileToDelete.delete();
-            }
-        }
+    public void setMeetupImg(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, Constants.QUALITY_MEETUP_IMG, outputStream);
+        byte[] imageBytes = outputStream.toByteArray();
+        imageBaseString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
     public void createMeetup() {
         Objects.requireNonNull(selectedUsers.getValue());
+        meetupId = UUID.randomUUID().toString();
 
         Meetup meetupToAdd = new Meetup(
                 meetupId,
@@ -154,7 +126,8 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
                 meetupLocationName.getValue(),
                 meetupTimestamp.getValue(),
                 Boolean.TRUE.equals(meetupIsPrivate.getValue()),
-                selectedUsers.getValue(), url);
+                selectedUsers.getValue(),
+                imageBaseString);
 
         meetupRepository.addMeetup(meetupToAdd);
         sendMeetupRequests();
@@ -170,7 +143,7 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
                         invitedFriendId,
                         meetupLocation.getValue(),
                         meetupTimestamp.getValue(),
-                        url,
+                        imageBaseString,
                         MEETUP_REQUEST);
                 meetupRequestRepository.addMeetupRequest(request);
             }
@@ -189,9 +162,5 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
         if (selectedUsers.getValue() != null) {
             selectedUsers.getValue().clear();
         }
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 }
