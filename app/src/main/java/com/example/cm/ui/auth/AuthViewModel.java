@@ -26,8 +26,8 @@ public class AuthViewModel extends ViewModel implements AuthRepository.RegisterC
         authRepository.login(email, password);
     }
 
-    public void register(String email, String password, String userName, String firstName, String lastName) {
-        authRepository.register(email, password, userName, firstName, lastName, this);
+    public void register(String email, String password, String userName, String displayName, String imgString) {
+        authRepository.register(email, password, userName, displayName, imgString, this);
     }
 
     public LiveData<FirebaseUser> getUserLiveData() {
@@ -36,6 +36,10 @@ public class AuthViewModel extends ViewModel implements AuthRepository.RegisterC
 
     public LiveData<String> getErrorLiveData() {
         return error;
+    }
+
+    public boolean doesUsernameExist(String username) {
+        return userRepository.checkUsernameExists(username);
     }
 
     @Override

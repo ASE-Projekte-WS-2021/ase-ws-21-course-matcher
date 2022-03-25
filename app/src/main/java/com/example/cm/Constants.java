@@ -10,6 +10,8 @@ public class Constants {
     public static final String KEY_MEETUP_LOCATION_LAT = "keyMeetupLocationLat";
     public static final String KEY_MEETUP_LOCATION_LNG = "keyMeetupLocationLng";
     public static final String KEY_CREATE_MEETUP_VM = "keyCreateMeetupViewModel";
+    public static final String KEY_EMAIL = "keyEmail";
+    public static final String KEY_PASSWORD = "keyPassword";
     public static final int MAX_CHAR_COUNT = 125;
     public static final int SPLASH_TIMER = 000;
 

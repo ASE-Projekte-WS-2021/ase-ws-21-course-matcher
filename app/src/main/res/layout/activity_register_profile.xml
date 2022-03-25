@@ -8,7 +8,7 @@
     tools:context=".ui.auth.RegisterActivity">
 
     <LinearLayout
-        android:id="@+id/headerRegister"
+        android:id="@+id/headerCreateProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/ic_header_orange"
@@ -18,23 +18,23 @@
         tools:ignore="MissingConstraints">
 
         <TextView
-            android:id="@+id/registerTitle"
+            android:id="@+id/createProfileTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:text="@string/registerTitle"
+            android:text="@string/createProfileTitle"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="@dimen/text_size_big" />
 
         <TextView
-            android:id="@+id/registerTitleDes"
+            android:id="@+id/createProfileTitleDes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_big"
             android:layout_marginBottom="@dimen/small_margin"
             android:gravity="start"
-            android:text="@string/registerTitleDesc"
+            android:text="@string/createProfileTitleDesc"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_medium" />
     </LinearLayout>
@@ -44,7 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintTop_toBottomOf="@id/headerRegister"
+        app:layout_constraintTop_toBottomOf="@id/headerCreateProfile"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
@@ -52,48 +52,65 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="vertical"
-            android:padding="@dimen/padding_big"
-            android:weightSum="3">
+            android:padding="@dimen/padding_big">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/padding_double">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="@dimen/create_profile_img_size"
+                    android:layout_height="@dimen/create_profile_img_size"
+                    android:layout_gravity="center"
+                    android:background="@color/gray500"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView"
+                    tools:ignore="MissingConstraints" />
+
+                <ImageView
+                    android:id="@+id/editProfileImageBtn"
+                    android:layout_width="@dimen/btn_size"
+                    android:layout_height="@dimen/btn_size"
+                    android:src="@drawable/ic_edit_button_round"
+                    app:layout_constraintBottom_toBottomOf="@+id/profileImage"
+                    app:layout_constraintEnd_toEndOf="@+id/profileImage" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <include
-                android:id="@+id/registerEmailEditText"
+                android:id="@+id/registerUsernameEditText"
                 layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_big"/>
+                />
 
-            <include
-                android:id="@+id/registerPasswordEditText"
-                layout="@layout/input_password_with_label"
+            <TextView
+                android:id="@+id/usernameAlreadyExistsTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_big"/>
+                android:text="@string/username_already_exists"
+                android:textColor="@color/gray600"
+                android:visibility="gone"/>
 
             <include
-                android:id="@+id/registerPasswordRepeatEditText"
-                layout="@layout/input_password_with_label"
+                android:id="@+id/registerDisplayNameEditText"
+                layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_big"/>
+                android:layout_marginVertical="@dimen/padding_big"/>
 
             <Button
-                android:id="@+id/registerRegisterBtn"
+                android:id="@+id/createProfileBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_double"
                 android:gravity="center"
-                android:text="@string/registerRegisterBtn" />
+                android:text="@string/createProfileBtn" />
 
-            <Button
-                android:id="@+id/registerLoginBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:background="@color/white"
-                android:text="@string/registerLoginBtn"
-                android:gravity="center"
-                android:textAllCaps="false"
-                android:textColor="@color/black" />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

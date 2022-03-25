@@ -93,8 +93,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         editProfileViewModel = new ViewModelProvider(this).get(EditProfileViewModel.class);
         editProfileViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             binding.inputUsername.inputField.setText(user.getUsername());
-            binding.inputFirstName.inputField.setText(user.getFirstName());
-            binding.inputLastName.inputField.setText(user.getLastName());
+            binding.inputDisplayName.inputField.setText(user.getDisplayName());
             binding.inputFieldBio.setText(user.getBio());
 
             String profileImageString = user.getProfileImageString();
@@ -123,11 +122,8 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         binding.inputUsername.inputLabel.setText(R.string.input_label_username);
         binding.inputUsername.inputField.setFocusable(false);
 
-        binding.inputFirstName.inputLabel.setText(getString(R.string.input_label_first_name));
-        binding.inputFirstName.inputField.setFocusable(false);
-
-        binding.inputLastName.inputLabel.setText(getString(R.string.input_label_last_name));
-        binding.inputLastName.inputField.setFocusable(false);
+        binding.inputDisplayName.inputLabel.setText(getString(R.string.input_label_display_name));
+        binding.inputDisplayName.inputField.setFocusable(false);
     }
 
     private void initListeners() {
@@ -136,11 +132,8 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         binding.inputUsername.inputField.setOnClickListener(v -> {
             openDialog(FieldType.TEXT_INPUT.toString(), getString(R.string.input_label_username), binding.inputUsername.inputField.getText().toString());
         });
-        binding.inputFirstName.inputField.setOnClickListener(v -> {
-            openDialog(FieldType.TEXT_INPUT.toString(), getString(R.string.input_label_first_name), binding.inputFirstName.inputField.getText().toString());
-        });
-        binding.inputLastName.inputField.setOnClickListener(v -> {
-            openDialog(FieldType.TEXT_INPUT.toString(), getString(R.string.input_label_last_name), binding.inputLastName.inputField.getText().toString());
+        binding.inputDisplayName.inputField.setOnClickListener(v -> {
+            openDialog(FieldType.TEXT_INPUT.toString(), getString(R.string.input_label_display_name), binding.inputDisplayName.inputField.getText().toString());
         });
         binding.inputFieldBio.setOnClickListener(v -> {
             openDialog(FieldType.TEXT_AREA.toString(), getString(R.string.input_label_bio), binding.inputFieldBio.getText().toString());
@@ -161,7 +154,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     }
 
     private void onEditProfileImageClicked() {
-        boolean hasReadExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        /*boolean hasReadExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         boolean hasWriteExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
         if (!hasReadExternalStoragePermission) {
@@ -173,6 +166,13 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         }
 
         if (hasReadExternalStoragePermission && hasWriteExternalStoragePermission) {
+            storagePermissionRequestLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }*/
+        boolean hasReadExternalStoragePermission = ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+
+        if (!hasReadExternalStoragePermission) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        } else {
             storagePermissionRequestLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
         }
     }

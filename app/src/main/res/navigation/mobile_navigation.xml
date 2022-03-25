@@ -180,6 +180,7 @@
             app:destination="@id/editProfileFragment" />
     </fragment>
 
+
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.cm.ui.settings.edit_profile.EditProfileFragment"

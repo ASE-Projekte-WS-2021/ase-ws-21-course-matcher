@@ -130,7 +130,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setSentRequests(FriendRequestViewHolder holder, FriendRequest request) {
-        String fullName = getFullName(request.getReceiverId());
+        String fullName = getDisplayName(request.getReceiverId());
         String userName = getUserName(request.getReceiverId());
 
         String profileImageString = getprofileImageString(request.getReceiverId());
@@ -173,12 +173,12 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private String getFullName(String userId) {
+    private String getDisplayName(String userId) {
         User user = users.stream()
                 .filter(userData -> userData.getId().equals(userId)).findAny()
                 .orElse(null);
         if (user != null) {
-            return user.getFirstName() + " " + user.getLastName();
+            return user.getDisplayName();
         } else {
             return null;
         }
@@ -198,7 +198,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setReceivedRequests(FriendRequestViewHolder holder, FriendRequest request) {
-        String fullName = getFullName(request.getSenderId());
+        String fullName = getDisplayName(request.getSenderId());
         String userName = getUserName(request.getSenderId());
 
         String profileImageString = getprofileImageString(request.getSenderId());

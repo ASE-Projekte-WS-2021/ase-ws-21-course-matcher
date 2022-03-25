@@ -8,7 +8,7 @@ import java.util.List;
 public class User {
 
     private String id;
-    private String username, firstName, lastName, email, bio, profileImageString;
+    private String username, displayName, email, bio, profileImageString;
     private List<String> friends;
     private LatLng location;
     private boolean isSharingLocation;
@@ -17,20 +17,19 @@ public class User {
     public User() {
     }
 
-    public User(String id, String username, String firstName, String lastName, String email) {
+    public User(String id, String username, String displayName, String email, String imgString) {
         this.id = id;
         this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.displayName = displayName;
         this.email = email;
+        this.profileImageString = imgString;
         this.availability = Availability.AVAILABLE;
     }
 
-    public User(String id, String username, String firstName, String lastName, String email, List<String> friends, LatLng location, Availability availability, boolean isSharingLocation) {
+    public User(String id, String username, String displayName, String email, List<String> friends, LatLng location, Availability availability, boolean isSharingLocation) {
         this.id = id;
         this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.displayName = displayName;
         this.email = email;
         this.friends = friends;
         this.location = location;
@@ -54,25 +53,12 @@ public class User {
         this.username = username;
     }
 
-    @Exclude
-    public String getFullName() {
-        return firstName + " " + lastName;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getEmail() {

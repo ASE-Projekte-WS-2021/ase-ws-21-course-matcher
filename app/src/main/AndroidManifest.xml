@@ -59,6 +59,13 @@
             android:screenOrientation="portrait"
              />
         <activity
+            android:name=".ui.auth.CreateProfileActivity"
+            android:exported="false"
+            android:noHistory="true"
+            android:theme="@style/Theme.CM.NoActionBar"
+            android:screenOrientation="portrait"
+            />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.CM.NoActionBar"

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class UserPOJO {
     private String id;
-    private String username, firstName, lastName, email, bio, profileImageString;
+    private String username, displayName, email, bio, profileImageString;
     private List<String> friends;
     private List<Double> location;
     private boolean isSharingLocation;
@@ -20,8 +20,7 @@ public class UserPOJO {
     public UserPOJO(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
+        this.displayName = user.getDisplayName();
         this.email = user.getEmail();
         this.bio = user.getBio();
         this.profileImageString = user.getProfileImageString();
@@ -52,20 +51,12 @@ public class UserPOJO {
         this.username = username;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getEmail() {
@@ -128,8 +119,7 @@ public class UserPOJO {
         User user = new User();
         user.setId(this.id);
         user.setUsername(this.username);
-        user.setFirstName(this.firstName);
-        user.setLastName(this.lastName);
+        user.setDisplayName(this.displayName);
         user.setEmail(this.email);
         user.setBio(this.bio);
         user.setProfileImageString(this.profileImageString);

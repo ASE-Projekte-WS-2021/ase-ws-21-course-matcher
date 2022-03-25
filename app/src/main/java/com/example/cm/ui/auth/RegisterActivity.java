@@ -11,12 +11,12 @@ import com.example.cm.Constants;
 import com.example.cm.MainActivity;
 import com.example.cm.R;
 import com.example.cm.databinding.ActivityRegisterBinding;
+import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
-    private Button registerBtn;
     private ActivityRegisterBinding binding;
 
     @Override
@@ -26,11 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
         setContentView(R.layout.activity_register);
-        registerBtn = findViewById(R.id.registerRegisterBtn);
-
-        authViewModel = new ViewModelProvider(RegisterActivity.this).get(AuthViewModel.class);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
-
         setContentView(binding.getRoot());
 
         initViewModel();
@@ -51,59 +47,31 @@ public class RegisterActivity extends AppCompatActivity {
 
         authViewModel.getErrorLiveData().observe(this, errorMsg -> {
             Snackbar.make(findViewById(R.id.registerLayout), errorMsg, Snackbar.LENGTH_LONG).show();
-            registerBtn.setEnabled(true);
+            binding.registerRegisterBtn.setEnabled(true);
         });
     }
 
     private void initTexts() {
-        binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
-        binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
-
-        binding.registerFirstNameEditText.inputLabel.setText(R.string.registerFirstnameText);
-        binding.registerFirstNameEditText.inputField.setHint(R.string.registerFirstNameHint);
-
-        binding.registerLastNameEditText.inputLabel.setText(R.string.registerLastnameText);
-        binding.registerLastNameEditText.inputField.setHint(R.string.registerLastNameHint);
-
         binding.registerEmailEditText.inputLabel.setText(R.string.registerEmailText);
         binding.registerEmailEditText.inputField.setHint(R.string.userEmailHint);
 
         binding.registerPasswordEditText.inputLabel.setText(R.string.registerPasswordText);
         binding.registerPasswordEditText.inputField.setHint(R.string.userPasswordHint);
+
+        binding.registerPasswordRepeatEditText.inputLabel.setText(R.string.registerPasswordRepeatText);
+        binding.registerPasswordRepeatEditText.inputField.setHint(R.string.userPasswordHint);
     }
 
 
     private void initListeners() {
-        binding.registerRegisterBtn.setOnClickListener(this::register);
         binding.registerLoginBtn.setOnClickListener(this::goToLogin);
+        binding.registerRegisterBtn.setOnClickListener(this::register);
     }
 
-    public void goToLogin(View view) {
-        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-        finish();
-    }
-
-    public void register(View view) {
-        String userName = binding.registerUsernameEditText.inputField.getText().toString();
+    private void register(View view) {
         String email = binding.registerEmailEditText.inputField.getText().toString();
         String password = binding.registerPasswordEditText.inputField.getText().toString();
-        String firstName = binding.registerFirstNameEditText.inputField.getText().toString();
-        String lastName = binding.registerLastNameEditText.inputField.getText().toString();
-
-        if (userName.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.registerUsernameEmpty, Snackbar.LENGTH_LONG).show();
-            return;
-        }
-
-        if (firstName.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.registerFirstnameEmpty, Snackbar.LENGTH_LONG).show();
-            return;
-        }
-
-        if (lastName.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.registerLastnameEmpty, Snackbar.LENGTH_LONG).show();
-            return;
-        }
+        String passwordRepeated = binding.registerPasswordRepeatEditText.inputField.getText().toString();
 
         if (email.isEmpty()) {
             Snackbar.make(binding.getRoot(), R.string.registerEmailEmpty, Snackbar.LENGTH_LONG).show();
@@ -115,8 +83,27 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        if (!password.equals(passwordRepeated)) {
+            Snackbar.make(binding.getRoot(), R.string.registerPasswordRepeatNotEqual, Snackbar.LENGTH_LONG).show();
+            return;
+        }
 
-        authViewModel.register(email, password, userName, firstName, lastName);
-        registerBtn.setEnabled(false);
+        binding.registerRegisterBtn.setEnabled(false);
+
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_EMAIL, email);
+        bundle.putString(Constants.KEY_PASSWORD, password);
+        goToCreateProfile(bundle);
     }
+
+    private void goToCreateProfile(Bundle bundle) {
+        startActivity(new Intent(RegisterActivity.this, CreateProfileActivity.class), bundle);
+        finish();
+    }
+
+    private void goToLogin(View view) {
+        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        finish();
+    }
+
 }

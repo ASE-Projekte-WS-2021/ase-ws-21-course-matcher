@@ -110,8 +110,7 @@ public class Utils {
                 User oldUser = oldUsers.get(oldItemPosition);
 
                 return Objects.equals(Objects.requireNonNull(newUser).getId(), Objects.requireNonNull(oldUser).getId())
-                        && Objects.equals(newUser.getFirstName(), oldUser.getFirstName())
-                        && Objects.equals(newUser.getLastName(), oldUser.getLastName())
+                        && Objects.equals(newUser.getDisplayName(), oldUser.getDisplayName())
                         && Objects.equals(newUser.getUsername(), oldUser.getUsername());
             }
         });

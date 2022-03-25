@@ -66,14 +66,7 @@
                 android:layout_marginBottom="@dimen/padding_big" />
 
             <include
-                android:id="@+id/inputFirstName"
-                layout="@layout/input_text_with_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_big" />
-
-            <include
-                android:id="@+id/inputLastName"
+                android:id="@+id/inputDisplayName"
                 layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
