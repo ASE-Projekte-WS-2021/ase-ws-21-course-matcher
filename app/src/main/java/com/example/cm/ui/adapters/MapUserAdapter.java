@@ -32,6 +32,10 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
         mUsers.add(user);
     }
 
+    public void removeUsers() {
+        mUsers.clear();
+    }
+
     public void setUsers(List<User> users) {
         for (User user : users) {
             addUser(user);
@@ -39,7 +43,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
     }
 
     public User getUserAt(int position) {
-        if (position >= mUsers.size()) {
+        if (position >= mUsers.size() || position == RecyclerView.NO_POSITION) {
             return null;
         }
         return mUsers.get(position);

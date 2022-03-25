@@ -39,7 +39,7 @@ public class SettingsViewModel extends ViewModel {
 
 
     public MutableLiveData<User> getUser() {
-        return userRepository.getStaticCurrentUser();
+        return userRepository.getCurrentUser();
     }
 
     public void updateLocationSharing(boolean enabled, UserListener<Boolean> listener) {
