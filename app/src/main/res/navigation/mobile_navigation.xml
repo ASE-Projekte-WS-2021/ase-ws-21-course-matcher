@@ -74,7 +74,6 @@
         <action
             android:id="@+id/navigateToInviteFriends"
             app:destination="@+id/navigation_invite_friends" />
-
     </fragment>
 
     <fragment
@@ -178,7 +177,16 @@
         <action
             android:id="@+id/action_settingsFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.cm.ui.settings.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_settings_about" />
 
     <fragment
         android:id="@+id/editProfileFragment"

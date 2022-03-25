@@ -121,7 +121,7 @@
     <string name="link_label_edit_profile">Profil bearbeiten</string>
     <string name="link_label_edit_account">Account bearbeiten</string>
     <string name="link_label_edit_notifications">Benachrichtigungen</string>
-    <string name="about"><u>Über die App</u></string>
+    <string name="about"><u>Über CourseMatcher</u></string>
     <string name="link_label_privacy_policy">Datenschutzerklärung</string>
     <string name="link_label_imprint">Impressum</string>
     <string name="link_label_logout">Abmelden</string>
@@ -258,5 +258,6 @@
     <string name="snackbar_share_location">Dein Standort ist jetzt für deine Freunde sichtbar!</string>
     <string name="snackbar_hide_location">Dein Standort ist nicht länger für deine Freunde sichtbar!</string>
     <string name="confirm_button_loading">Lädt...</string>
+    <string name="about_header">Über CourseMatcher</string>
 
 </resources>

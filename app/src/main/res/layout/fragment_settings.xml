@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray400"
                     android:textSize="@dimen/text_size_small"
-                    tools:text="@string/about" />
+                    android:text="@string/about" />
 
             </LinearLayout>
 
