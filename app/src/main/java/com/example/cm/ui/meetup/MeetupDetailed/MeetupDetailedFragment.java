@@ -1,7 +1,5 @@
 package com.example.cm.ui.meetup.MeetupDetailed;
 
-import static com.example.cm.utils.Utils.convertToAddress;
-
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -103,16 +101,16 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     private void initImg(Meetup meetup) {
         Glide.with(requireActivity()).load(meetup.getLocationImageUrl()).placeholder(R.drawable.cafe)
                 .into(new CustomTarget<Drawable>() {
-            @Override
-            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                binding.ivLocation.setImageDrawable(resource);
-            }
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        binding.ivLocation.setImageDrawable(resource);
+                    }
 
-            @Override
-            public void onLoadCleared(@Nullable Drawable placeholder) {
-                binding.ivLocation.setImageDrawable(placeholder);
-            }
-        });
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        binding.ivLocation.setImageDrawable(placeholder);
+                    }
+                });
     }
 
     private void initTabbar() {
@@ -131,7 +129,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         });
         tabLayoutMediator.attach();
 
-        ViewGroup slidingTabStrip = (ViewGroup)tabLayout.getChildAt(0);
+        ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
 
         View tab2 = slidingTabStrip.getChildAt(Constants.PENDING_TAB_INDEX);
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) tab2.getLayoutParams();
@@ -163,7 +161,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
             popup.getMenu().findItem(R.id.menuLate).setVisible(true);
         }
         // current user has declined
-        else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)){
+        else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)) {
             popup.getMenu().findItem(R.id.menuAccept).setVisible(true);
             popup.getMenu().findItem(R.id.menuLate).setVisible(false);
             popup.getMenu().findItem(R.id.menuDecline).setVisible(false);

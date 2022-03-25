@@ -14,6 +14,7 @@ public class MeetupDetailedFriendsListViewModel extends ViewModel {
 
     private final MutableLiveData<List<User>> users;
     private final MutableLiveData<List<String>> lateUsers;
+    private final MutableLiveData<User> currentUser;
 
     private UserRepository userRepository;
     private MeetupRepository meetupRepository;
@@ -23,6 +24,11 @@ public class MeetupDetailedFriendsListViewModel extends ViewModel {
         meetupRepository = new MeetupRepository();
         users = userRepository.getUsersByIds(userIds);
         lateUsers = meetupRepository.getLateUsers(meetupId);
+        currentUser = userRepository.getCurrentUser();
+    }
+
+    public MutableLiveData<User> getCurrentUser() {
+        return currentUser;
     }
 
     public MutableLiveData<List<User>> getUsers() {
