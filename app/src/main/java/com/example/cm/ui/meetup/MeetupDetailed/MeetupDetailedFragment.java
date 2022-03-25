@@ -97,9 +97,11 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void initImg(Meetup meetup) {
-      // todo: null check
-        Bitmap img = Utils.convertBaseStringToBitmap(meetup.getLocationImageString());
-        binding.ivLocation.setImageBitmap(img);
+        String imgString = meetup.getLocationImageString();
+        if (imgString != null && !imgString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(meetup.getLocationImageString());
+            binding.ivLocation.setImageBitmap(img);
+        }
     }
 
     private void initTabbar() {
