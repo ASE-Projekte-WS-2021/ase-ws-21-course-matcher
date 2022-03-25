@@ -9,7 +9,6 @@ import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 
 import java.util.List;
-import java.util.Objects;
 
 public class AddFriendsViewModel extends ViewModel {
 

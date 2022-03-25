@@ -13,17 +13,17 @@
         android:id="@+id/image"
         android:layout_marginEnd="@dimen/padding_big">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/ivUserImage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="@color/gray500"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_profile"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ivUserImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@color/gray500"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView" />
 
     <ImageView
         android:id="@+id/dotAvailabilityIcon"

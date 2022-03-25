@@ -2,6 +2,7 @@ package com.example.cm.ui.adapters;
 
 import static com.example.cm.utils.Utils.calculateDiff;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import com.example.cm.R;
 import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
-import com.squareup.picasso.Picasso;
+import com.example.cm.utils.Utils;
 
 import java.util.List;
 import java.util.Objects;
@@ -57,14 +58,14 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
         User user = mUsers.get(position);
 
-        String profileImageUrl = Objects.requireNonNull(user).getProfileImageUrl();
+        String profileImageString = Objects.requireNonNull(user).getProfileImageString();
         String name = user.getFullName();
         String username = user.getUsername();
         Availability availability = user.getAvailability();
 
-        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-            holder.getProfileImage().setImageTintMode(null);
-            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+        if (profileImageString != null && !profileImageString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            holder.getProfileImage().setImageBitmap(img);
         }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);

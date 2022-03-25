@@ -1,8 +1,10 @@
 package com.example.cm.ui.settings.edit_profile;
 
-
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.util.Base64;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -18,16 +20,18 @@ import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.utils.InputValidator;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 
 public class EditProfileViewModel extends ViewModel implements Callback, StorageManager.Callback {
     private final UserRepository userRepository;
-    private final StorageManager storageRepository;
     public MutableLiveData<Status> status = new MutableLiveData<>();
     private MutableLiveData<User> user;
 
-    public EditProfileViewModel(Context context) {
+    public EditProfileViewModel() {
         userRepository = new UserRepository();
-        storageRepository = new StorageManager(context);
         user = userRepository.getCurrentUser();
     }
 
@@ -35,12 +39,15 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
         return user;
     }
 
-    public void updateImage(Uri uri) {
-        if (uri == null || user.getValue() == null) {
-            status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
-            return;
-        }
-        storageRepository.uploadProfileImage(uri, user.getValue().getId(), this);
+    public void updateImage(Uri uri, Context context) throws FileNotFoundException {
+        InputStream imageStream = context.getContentResolver().openInputStream(uri);
+        Bitmap selectedImageBitmap = BitmapFactory.decodeStream(imageStream);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        selectedImageBitmap.compress(Bitmap.CompressFormat.JPEG, Constants.QUALITY_PROFILE_IMG, outputStream);
+        byte[] imageBytes = outputStream.toByteArray();
+        String imageBaseString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
+        userRepository.updateProfileImage(imageBaseString, user.getValue().getId());
     }
 
     public void updateField(String field, String value) {
@@ -95,7 +102,7 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
 
     @Override
     public void onSuccess(String urlOnline, Uri uriLocal) {
-        userRepository.updateField("profileImageUrl", urlOnline, this);
+        userRepository.updateField("profileImageString", urlOnline, this);
     }
 
     @Override

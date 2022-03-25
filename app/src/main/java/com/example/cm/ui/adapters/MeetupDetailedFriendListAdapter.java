@@ -1,5 +1,6 @@
 package com.example.cm.ui.adapters;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import com.example.cm.R;
 import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
-import com.squareup.picasso.Picasso;
+import com.example.cm.utils.Utils;
 
 import java.util.List;
 import java.util.Objects;
@@ -52,12 +53,12 @@ public class MeetupDetailedFriendListAdapter
 
             String fullName = Objects.requireNonNull(friend).getFullName();
             String username = friend.getUsername();
-            String profileImageUrl = friend.getProfileImageUrl();
+            String profileImageString = friend.getProfileImageString();
             Availability availability = friend.getAvailability();
 
-            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                holder.getProfileImage().setImageTintMode(null);
-                Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+            if (profileImageString != null && !profileImageString.isEmpty()) {
+                Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+                holder.getProfileImage().setImageBitmap(img);
             }
 
             if (lateFriends != null && lateFriends.contains(friend.getId())) {

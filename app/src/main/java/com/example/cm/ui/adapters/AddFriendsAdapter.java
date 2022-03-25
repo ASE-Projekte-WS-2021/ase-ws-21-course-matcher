@@ -5,7 +5,7 @@ import static com.example.cm.utils.Utils.calculateDiff;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.util.Log;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +22,7 @@ import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSendFriendRequestBinding;
 import com.example.cm.ui.add_friends.AddFriendsViewModel;
-import com.squareup.picasso.Picasso;
+import com.example.cm.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,13 +77,13 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
         User user = mUsers.get(position);
 
-        String profileImageUrl = Objects.requireNonNull(user).getProfileImageUrl();
+        String profileImageString = Objects.requireNonNull(user).getProfileImageString();
         String name = user.getFullName();
         String username = user.getUsername();
 
-        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-            holder.getProfileImage().setImageTintMode(null);
-            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+        if (profileImageString != null && !profileImageString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            holder.getProfileImage().setImageBitmap(img);
         }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
