@@ -14,7 +14,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import timber.log.Timber;
 
@@ -47,6 +49,9 @@ public class HomeViewModel extends ViewModel implements Callback {
                 int friendsCount = friends.size();
                 if (friendsCount == currentUserFriendCount) {
                     Timber.d("Sending friends list to listener");
+                    Set<User> friendsSet = new HashSet<>(friends);
+                    friends.clear();
+                    friends.addAll(friendsSet);
                     listener.onUserSuccess(friends);
                     resetUserList();
                 }

@@ -58,7 +58,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
@@ -172,12 +174,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
         boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED;
 
+        Timber.d("hasFineLocationPermission: %s", hasFineLocationPermission);
+        Timber.d("hasCoarseLocationPermission: %s", hasCoarseLocationPermission);
+
+
         if (hasCoarseLocationPermission && hasFineLocationPermission) {
-            positionManager.requestCurrentLocation(this);
+            positionManager.requestCurrentLocation(requireActivity(), this);
         } else if (!hasCoarseLocationPermission && !hasFineLocationPermission) {
             locationPermissionLauncher.launch(ACCESS_FINE_LOCATION);
         } else {
-            positionManager.requestCurrentLocation(this);
+            positionManager.requestCurrentLocation(requireActivity(), this);
         }
     }
 
@@ -186,7 +192,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 new ActivityResultContracts.RequestPermission(),
                 request -> {
                     if (request) {
-                        positionManager.requestCurrentLocation(this);
+                        positionManager.requestCurrentLocation(requireActivity(), this);
                         homeViewModel.updateLocationSharing(true);
                     }
                 }
@@ -216,7 +222,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM));
         googleMap.setOnMapClickListener(latLng -> {
             binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
         });
@@ -282,7 +288,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 Timber.d("Got %d friends", users.size());
 
                 requireActivity().runOnUiThread(() -> {
-                    googleMap.clear();
+                    userClusterManager.clearItems();
                     userClusterManager.cluster();
                     mapUserAdapter.removeUsers();
 
@@ -301,6 +307,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                         Timber.d("%s: %s", i, user.getUsername());
                     }
                 }
+                requireActivity().runOnUiThread(() -> {
+                    userClusterManager.cluster();
+                });
             }
 
             @Override
@@ -316,9 +325,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
             @Override
             public void onMeetupSuccess(List<Meetup> meetups) {
-                if (userClusterManager == null || meetups.isEmpty()) {
+                if (meetupClusterManager == null || meetups.isEmpty()) {
                     return;
                 }
+
+                requireActivity().runOnUiThread(() -> {
+                    meetupClusterManager.clearItems();
+                    meetupClusterManager.cluster();
+                });
+
+
                 for (Meetup meetup : meetups) {
                     addMeetupMarker(meetup);
                 }
@@ -337,6 +353,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             return;
         }
 
+        Timber.d("Position changed: %s", position);
+
         currentUser.setLocation(position);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_MAP_ZOOM));
         homeViewModel.updateLocation(position);
@@ -353,6 +371,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void addMarker(User user, boolean isCurrentUser) {
+        Timber.d("Adding marker for %s", user.getUsername());
         if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
             MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
             requireActivity().runOnUiThread(() -> {
@@ -365,8 +384,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
             @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource, isCurrentUser);
-                userClusterManager.addItem(markerClusterItem);
-                userClusterManager.cluster();
+                requireActivity().runOnUiThread(() -> {
+                    userClusterManager.addItem(markerClusterItem);
+                });
             }
 
             @Override
@@ -374,7 +394,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, placeholder, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.addItem(markerClusterItem);
-                    userClusterManager.cluster();
                 });
             }
         });
@@ -452,6 +471,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         super.onResume();
         if (mapView != null) {
             mapView.onResume();
+            initPermissionCheck();
             observeMeetups();
             observeCurrentUser();
         }
