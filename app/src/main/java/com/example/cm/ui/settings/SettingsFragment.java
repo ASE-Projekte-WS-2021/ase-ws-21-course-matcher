@@ -121,6 +121,10 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                 .show();
     }
 
+    private void onAboutClicked() {
+        navigator.getNavController().navigate(R.id.action_settingsFragment_to_aboutFragment);
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
