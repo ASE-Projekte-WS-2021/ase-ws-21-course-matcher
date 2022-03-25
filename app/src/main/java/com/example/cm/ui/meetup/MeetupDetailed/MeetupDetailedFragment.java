@@ -97,6 +97,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void initImg(Meetup meetup) {
+      // todo: null check
         Bitmap img = Utils.convertBaseStringToBitmap(meetup.getLocationImageString());
         binding.ivLocation.setImageBitmap(img);
     }
@@ -117,7 +118,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         });
         tabLayoutMediator.attach();
 
-        ViewGroup slidingTabStrip = (ViewGroup)tabLayout.getChildAt(0);
+        ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
 
         View tab2 = slidingTabStrip.getChildAt(Constants.PENDING_TAB_INDEX);
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) tab2.getLayoutParams();
@@ -149,7 +150,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
             popup.getMenu().findItem(R.id.menuLate).setVisible(true);
         }
         // current user has declined
-        else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)){
+        else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)) {
             popup.getMenu().findItem(R.id.menuAccept).setVisible(true);
             popup.getMenu().findItem(R.id.menuLate).setVisible(false);
             popup.getMenu().findItem(R.id.menuDecline).setVisible(false);

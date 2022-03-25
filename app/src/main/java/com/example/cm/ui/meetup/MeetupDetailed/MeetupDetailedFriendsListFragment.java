@@ -8,14 +8,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentMeetupDetailedFriendsListBinding;
 import com.example.cm.ui.adapters.MeetupDetailedFriendListAdapter;
 import com.example.cm.utils.Navigator;
@@ -30,6 +28,7 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
     private FragmentMeetupDetailedFriendsListBinding binding;
     private MeetupDetailedFriendsListViewModel meetupDetailedFriendsListViewModel;
     private Navigator navigator;
+    private MeetupDetailedFriendListAdapter adapter;
 
     public MeetupDetailedFriendsListFragment(List<String> friends, String meetupId) {
         this.friends = friends;
@@ -63,12 +62,10 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
 
     private void initViewModel() {
         meetupDetailedFriendsListViewModel = new ViewModelProvider(this, new MeetupDetailedFriendsListFactory(friends, meetupId)).get(MeetupDetailedFriendsListViewModel.class);
-        meetupDetailedFriendsListViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-            meetupDetailedFriendsListViewModel.getLateUsers().observe(getViewLifecycleOwner(), lateUsers -> {
-                MeetupDetailedFriendListAdapter adapter = new MeetupDetailedFriendListAdapter(users, lateUsers,this);
-                binding.meetupDetailedFriendsList.setAdapter(adapter);
-            });
-        });
+        meetupDetailedFriendsListViewModel.getUsers().observe(getViewLifecycleOwner(), users -> meetupDetailedFriendsListViewModel.getLateUsers().observe(getViewLifecycleOwner(), lateUsers -> meetupDetailedFriendsListViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
+            adapter = new MeetupDetailedFriendListAdapter(users, lateUsers, currentUser, this);
+            binding.meetupDetailedFriendsList.setAdapter(adapter);
+        })));
     }
 
     @Override
