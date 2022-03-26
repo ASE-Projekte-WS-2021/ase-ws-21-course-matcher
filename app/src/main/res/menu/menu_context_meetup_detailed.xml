@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/menuLeave"
-        android:icon="@drawable/ic_logout"
+        android:icon="@drawable/ic_logout_menu"
         android:title="@string/leave"
         android:visible="false"/>
 

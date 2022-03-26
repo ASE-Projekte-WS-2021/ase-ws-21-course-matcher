@@ -2,9 +2,6 @@ package com.example.cm.ui.settings;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,27 +51,14 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
 
         // Set labels of links
         binding.linkEditAccount.linkText.setText(getString(R.string.link_label_edit_account));
-        binding.linkPrivacyPolicy.linkText.setText(getString(R.string.link_label_privacy_policy));
-        binding.linkImprint.linkText.setText(getString(R.string.link_label_imprint));
         binding.linkLogout.linkText.setText(getString(R.string.link_label_logout));
         binding.linkDeleteAccount.linkText.setText(getString(R.string.link_label_delete_account));
         binding.linkDeleteAccount.linkText.setTextColor(getResources().getColor(R.color.red));
 
         // Set icons of links
         binding.linkEditAccount.linkIcon.setImageResource(R.drawable.ic_edit_account);
-        binding.linkPrivacyPolicy.linkIcon.setImageResource(R.drawable.ic_privacy_policy);
-        binding.linkImprint.linkIcon.setImageResource(R.drawable.ic_imprint);
         binding.linkLogout.linkIcon.setImageResource(R.drawable.ic_logout);
         binding.linkDeleteAccount.linkIcon.setImageResource(R.drawable.ic_delete);
-
-        // Set version number
-        try {
-            PackageInfo packageInfo = requireActivity().getPackageManager()
-                    .getPackageInfo(requireActivity().getPackageName(), 0);
-            binding.tvVersionNumber.setText(getString(R.string.app_version_prefix) + " " + packageInfo.versionName);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     private void initViewModel() {
@@ -85,25 +69,13 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         navigator = new Navigator(requireActivity());
         binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.linkEditAccount.linkWrapper.setOnClickListener(v -> onEditAccountClicked());
-        binding.linkPrivacyPolicy.linkWrapper.setOnClickListener(v -> onPrivacyPolicyClicked());
-        binding.linkImprint.linkWrapper.setOnClickListener(v -> onImprintClicked());
         binding.linkLogout.linkWrapper.setOnClickListener(v -> onLogoutClicked());
         binding.linkDeleteAccount.linkWrapper.setOnClickListener(v -> onDeleteAccountClicked());
+        binding.tvAbout.setOnClickListener(v -> onAboutClicked());
     }
-
 
     private void onEditAccountClicked() {
         navigator.getNavController().navigate(R.id.action_settingsFragment_to_editAccountFragment);
-    }
-
-    private void onPrivacyPolicyClicked() {
-        String url = getString(R.string.url_privacy_policy);
-        openLink(url);
-    }
-
-    private void onImprintClicked() {
-        String url = getString(R.string.url_imprint);
-        openLink(url);
     }
 
     private void onLogoutClicked() {
@@ -149,9 +121,8 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                 .show();
     }
 
-    private void openLink(String url) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        startActivity(browserIntent);
+    private void onAboutClicked() {
+        navigator.getNavController().navigate(R.id.action_settingsFragment_to_aboutFragment);
     }
 
     @Override

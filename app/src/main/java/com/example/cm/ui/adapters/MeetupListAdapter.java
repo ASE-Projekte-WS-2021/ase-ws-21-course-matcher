@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ItemMeetupBinding;
 import com.example.cm.utils.Utils;
 import com.google.android.material.card.MaterialCardView;
@@ -55,13 +57,17 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
             return;
         }
 
-        initCardListener(holder.getMeetupCard(), meetup);
+        initCard(holder, meetup);
         initLocationImg(holder, meetup);
         initTextViews(holder, meetup);
         initUserIcons(holder.getImagesLayout(), meetup);
     }
 
-    private void initCardListener(MaterialCardView meetupCard, Meetup meetup) {
+    private void initCard(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {
+        MaterialCardView meetupCard = holder.getMeetupCard();
+        if (meetup.getRequestingUser().equals(new AuthRepository().getCurrentUser().getUid())) {
+            holder.getOwnMeetupMarker().setVisibility(View.VISIBLE);
+        }
         meetupCard.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
             bundle.putString(Constants.KEY_MEETUP_ID, Objects.requireNonNull(meetup).getId());

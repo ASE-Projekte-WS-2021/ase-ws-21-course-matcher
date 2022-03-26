@@ -1,7 +1,10 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.Constants.MAX_QUERY_LENGTH;
+
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.cm.Constants;
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
@@ -378,14 +381,19 @@ public class UserRepository extends Repository {
             return;
         }
 
-        userCollection.whereIn(FieldPath.documentId(), userIds).get()
-                .addOnFailureListener(executorService, (exception) -> listener.onUserError(exception))
-                .addOnSuccessListener(executorService, (value) -> {
-                    if (value != null && !value.isEmpty()) {
-                        List<User> users = snapshotToUserList(value);
-                        listener.onUserSuccess(users);
-                    }
-                });
+        List<List<String>> batches = Lists.partition(userIds, MAX_QUERY_LENGTH);
+        for (List<String> batch : batches) {
+            userCollection.whereIn(FieldPath.documentId(), batch).get()
+                    .addOnFailureListener(executorService, (exception) -> {
+                        listener.onUserError(exception);
+                    })
+                    .addOnSuccessListener(executorService, (value) -> {
+                        if (value != null && !value.isEmpty()) {
+                            List<User> users = snapshotToUserList(value);
+                            listener.onUserSuccess(users);
+                        }
+                    });
+        }
     }
 
     /**
