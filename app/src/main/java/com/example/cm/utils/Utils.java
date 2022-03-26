@@ -1,5 +1,8 @@
 package com.example.cm.utils;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 import android.content.Context;
@@ -9,8 +12,8 @@ import android.os.Build;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
@@ -30,8 +33,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class Utils {
-
-    private static int mapViewWidth, mapViewHeight;
 
     /**
      * Hides the keyboard
@@ -191,5 +192,22 @@ public class Utils {
             }
         }
         return openRequests;
+    }
+
+
+    /**
+     * Returns whether user has given permission to access the location
+     *
+     * @param context The context the method is called from
+     * @param type    The type of the permission
+     * @return Whether user has given permission to access the location
+     */
+    public static boolean hasLocationPermission(Context context, String type) {
+        if (type.equals(ACCESS_FINE_LOCATION)) {
+            return ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
+        } else if (type.equals(ACCESS_COARSE_LOCATION)) {
+            return ContextCompat.checkSelfPermission(context, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED;
+        }
+        return false;
     }
 }
