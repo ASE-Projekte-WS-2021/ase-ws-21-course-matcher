@@ -23,7 +23,6 @@ import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ItemFriendRequestBinding;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +52,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     public static DiffUtil.DiffResult calculateDiffFriendRequests(List<FriendRequest> oldRequests,
-            List<FriendRequest> newRequests) {
+                                                                  List<FriendRequest> newRequests) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -102,7 +101,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     @NonNull
     @Override
     public FriendRequestListAdapter.FriendRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-            int viewType) {
+                                                                               int viewType) {
         this.parent = parent;
         ItemFriendRequestBinding binding = ItemFriendRequestBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false);
@@ -203,8 +202,8 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
         String profileImageString = getprofileImageString(request.getSenderId());
         if (profileImageString != null && !profileImageString.isEmpty()) {
-            holder.getIvProfilePicture().setImageTintMode(null);
-            Picasso.get().load(profileImageString).fit().centerCrop().into(holder.getIvProfilePicture());
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            holder.getIvProfilePicture().setImageBitmap(img);
         }
 
         String date = request.getCreationTimeAgo();
