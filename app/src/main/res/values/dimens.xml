@@ -43,4 +43,5 @@
     <dimen name="edit_profile_img_size">100dp</dimen>
 
     <dimen name="availability_button_size">35dp</dimen>
+    <dimen name="padding_label">3dp</dimen>
 </resources>

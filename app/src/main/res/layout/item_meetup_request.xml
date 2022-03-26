@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="@dimen/padding_small"
-    android:paddingTop="@dimen/padding_small"
     android:paddingEnd="@dimen/padding_small">
 
     <ImageView
@@ -43,9 +42,11 @@
         android:layout_height="wrap_content"
         android:background="@drawable/label_rounded_active"
         android:includeFontPadding="false"
-        android:paddingHorizontal="@dimen/padding_half"
-        android:paddingVertical="@dimen/stroke_width"
-        android:textSize="@dimen/text_size_label"
+        android:paddingHorizontal="@dimen/padding_small"
+        android:paddingVertical="@dimen/padding_label"
+        android:text="xxxxxxx"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintBottom_toTopOf="@+id/locationIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -53,7 +54,7 @@
         android:id="@+id/locationTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/padding_half"
+        android:layout_marginTop="@dimen/padding_medium"
         android:ellipsize="end"
         android:includeFontPadding="false"
         android:maxLines="1"
