@@ -96,10 +96,6 @@ public class UserPOJO {
         this.profileImageString = profileImageString;
     }
 
-    public void setProfileImageString(String profileImageString) {
-        this.profileImageString = profileImageString;
-    }
-
     public Availability getAvailability() {
         return availability;
     }
