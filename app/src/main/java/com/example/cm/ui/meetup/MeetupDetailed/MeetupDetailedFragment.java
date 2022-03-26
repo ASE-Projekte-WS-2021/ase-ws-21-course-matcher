@@ -1,7 +1,7 @@
 package com.example.cm.ui.meetup.MeetupDetailed;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -13,14 +13,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
@@ -28,6 +24,7 @@ import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.example.cm.utils.DeleteDialog;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -36,6 +33,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Objects;
 
 
 public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener, OnMapReadyCallback {
@@ -99,7 +100,8 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void initImg(Meetup meetup) {
-        Glide.with(requireActivity()).load(meetup.getLocationImageUrl()).placeholder(R.drawable.cafe)
+
+/*        Glide.with(requireActivity()).load(meetup.getLocationImageUrl()).placeholder(R.drawable.cafe)
                 .into(new CustomTarget<Drawable>() {
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
@@ -110,7 +112,13 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
                     public void onLoadCleared(@Nullable Drawable placeholder) {
                         binding.ivLocation.setImageDrawable(placeholder);
                     }
-                });
+                });*/
+
+        String imgString = meetup.getLocationImageString();
+        if (imgString != null && !imgString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(meetup.getLocationImageString());
+            binding.ivLocation.setImageBitmap(img);
+        }
     }
 
     private void initTabbar() {
@@ -160,9 +168,15 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
 
         // current user has declined
         else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)) {
+
             binding.acceptButton.setVisibility(View.INVISIBLE);
             binding.lateButton.setVisibility(View.GONE);
             binding.declineButton.setVisibility(View.GONE);
+
+          /*  popup.getMenu().findItem(R.id.menuAccept).setVisible(true);
+            popup.getMenu().findItem(R.id.menuLate).setVisible(false);
+            popup.getMenu().findItem(R.id.menuDecline).setVisible(false);*/
+
         }
 
         // current user is creator of meetup
@@ -195,7 +209,28 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
             meetupDetailedViewModel.onLate(binding.lateButton.getLabelText().equals(getString(R.string.late)));
             binding.fabMenu.close(true);
         });
+
     }
+
+  /*  // https://stackoverflow.com/questions/20836385/popup-menu-with-icon-on-android
+    private void setForceShowIcon(PopupMenu popupMenu) {
+        try {
+            Field[] mFields = popupMenu.getClass().getDeclaredFields();
+            for (Field field : mFields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popupMenu);
+                    Class<?> popupHelper = Class.forName(Objects.requireNonNull(menuPopupHelper).getClass().getName());
+                    Method mMethods = popupHelper.getMethod("setForceShowIcon", boolean.class);
+                    mMethods.invoke(menuPopupHelper, true);
+                    break;
+                }
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+
+    }*/
 
     private void initListeners() {
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());

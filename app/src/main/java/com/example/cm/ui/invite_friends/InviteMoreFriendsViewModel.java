@@ -70,7 +70,7 @@ public class InviteMoreFriendsViewModel extends ViewModel {
                         invitedFriendId,
                         mtp.getLocation().toString(),
                         mtp.getTimestamp(),
-                        mtp.getLocationImageUrl(),
+                        mtp.getLocationImageString(),
                         MEETUP_REQUEST);
                 meetupRequestRepository.addMeetupRequest(request);
             }

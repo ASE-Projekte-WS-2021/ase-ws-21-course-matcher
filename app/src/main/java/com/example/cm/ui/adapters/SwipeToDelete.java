@@ -1,6 +1,5 @@
 package com.example.cm.ui.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.ColorDrawable;

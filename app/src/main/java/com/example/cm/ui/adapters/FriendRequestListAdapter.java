@@ -2,6 +2,7 @@ package com.example.cm.ui.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +21,7 @@ import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ItemFriendRequestBinding;
+import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 import com.squareup.picasso.Picasso;
 
@@ -132,10 +133,10 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         String fullName = getFullName(request.getReceiverId());
         String userName = getUserName(request.getReceiverId());
 
-        String profileImageUrl = getProfileImageUrl(request.getReceiverId());
-        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-            holder.getIvProfilePicture().setImageTintMode(null);
-            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getIvProfilePicture());
+        String profileImageString = getprofileImageString(request.getReceiverId());
+        if (profileImageString != null && !profileImageString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            holder.getIvProfilePicture().setImageBitmap(img);
         }
 
         String date = request.getCreationTimeAgo();
@@ -200,10 +201,10 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         String fullName = getFullName(request.getSenderId());
         String userName = getUserName(request.getSenderId());
 
-        String profileImageUrl = getProfileImageUrl(request.getSenderId());
-        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+        String profileImageString = getprofileImageString(request.getSenderId());
+        if (profileImageString != null && !profileImageString.isEmpty()) {
             holder.getIvProfilePicture().setImageTintMode(null);
-            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getIvProfilePicture());
+            Picasso.get().load(profileImageString).fit().centerCrop().into(holder.getIvProfilePicture());
         }
 
         String date = request.getCreationTimeAgo();
@@ -223,12 +224,12 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private String getProfileImageUrl(String senderId) {
+    private String getprofileImageString(String senderId) {
         User user = users.stream()
                 .filter(userData -> userData.getId().equals(senderId)).findAny()
                 .orElse(null);
         if (user != null) {
-            return user.getProfileImageUrl();
+            return user.getProfileImageString();
         } else {
             return null;
         }

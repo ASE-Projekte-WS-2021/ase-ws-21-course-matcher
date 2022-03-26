@@ -11,21 +11,15 @@ import android.widget.AdapterView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.models.Status;
-import com.example.cm.data.models.StatusFlag;
-import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
-import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupFactory;
 import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
 import com.example.cm.utils.Navigator;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 

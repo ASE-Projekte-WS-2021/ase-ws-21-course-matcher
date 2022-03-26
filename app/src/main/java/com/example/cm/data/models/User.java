@@ -8,7 +8,7 @@ import java.util.List;
 public class User {
 
     private String id;
-    private String username, firstName, lastName, email, bio, profileImageUrl;
+    private String username, firstName, lastName, email, bio, profileImageString;
     private List<String> friends;
     private LatLng location;
     private boolean isSharingLocation;
@@ -99,12 +99,12 @@ public class User {
         this.bio = bio;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
+    public String getProfileImageString() {
+        return profileImageString;
     }
 
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void setProfileImageString(String profileImageString) {
+        this.profileImageString = profileImageString;
     }
 
     public Availability getAvailability() {
