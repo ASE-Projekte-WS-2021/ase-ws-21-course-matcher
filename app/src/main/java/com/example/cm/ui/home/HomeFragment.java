@@ -17,6 +17,7 @@ import static com.example.cm.utils.Utils.hasLocationPermission;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -353,7 +354,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     }
 
     private void addMarker(User user, boolean isCurrentUser) {
-        if (user.getProfileImageUrl() == null || user.getProfileImageUrl().isEmpty()) {
+        if (user.getProfileImageString() == null || user.getProfileImageString().isEmpty()) {
             MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
             requireActivity().runOnUiThread(() -> {
                 userClusterManager.addItem(markerClusterItem);
@@ -361,7 +362,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
             });
             return;
         }
-        Glide.with(requireActivity()).load(user.getProfileImageUrl()).placeholder(R.drawable.ic_profile).apply(new RequestOptions().override(MARKER_SIZE, MARKER_SIZE)).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
+        Bitmap img = Utils.convertBaseStringToBitmap(user.getProfileImageString());
+        Glide.with(requireActivity()).load(img).placeholder(R.drawable.ic_profile).apply(new RequestOptions().override(MARKER_SIZE, MARKER_SIZE)).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
             @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource, isCurrentUser);

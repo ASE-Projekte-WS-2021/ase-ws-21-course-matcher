@@ -1,5 +1,6 @@
 package com.example.cm.ui.adapters;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,9 +10,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
-import com.squareup.picasso.Picasso;
+import com.example.cm.utils.Utils;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,11 +24,13 @@ public class MeetupDetailedFriendListAdapter
 
     private final List<User> friends;
     private final List<String> lateFriends;
+    private final User currentUser;
     private final OnItemClickListener listener;
 
-    public MeetupDetailedFriendListAdapter(List<User> friends, List<String> lateFriends, OnItemClickListener listener) {
+    public MeetupDetailedFriendListAdapter(List<User> friends, List<String> lateFriends, User currentUser, OnItemClickListener listener) {
         this.friends = friends;
         this.lateFriends = lateFriends;
+        this.currentUser = currentUser;
         this.listener = listener;
     }
 
@@ -33,7 +38,6 @@ public class MeetupDetailedFriendListAdapter
     @Override
     public MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemSingleFriendBinding binding = ItemSingleFriendBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        binding.dotAvailabilityIcon.setVisibility(View.INVISIBLE);
         return new MeetupDetailedFriendsListViewHolder(binding);
     }
 
@@ -49,11 +53,12 @@ public class MeetupDetailedFriendListAdapter
 
             String fullName = Objects.requireNonNull(friend).getFullName();
             String username = friend.getUsername();
-            String profileImageUrl = friend.getProfileImageUrl();
+            String profileImageString = friend.getProfileImageString();
+            Availability availability = friend.getAvailability();
 
-            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                holder.getProfileImage().setImageTintMode(null);
-                Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+            if (profileImageString != null && !profileImageString.isEmpty()) {
+                Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+                holder.getProfileImage().setImageBitmap(img);
             }
 
             if (lateFriends != null && lateFriends.contains(friend.getId())) {
@@ -62,6 +67,25 @@ public class MeetupDetailedFriendListAdapter
             holder.getTvFullName().setText(fullName);
             holder.getTvUserName().setText(username);
 
+            boolean isFriendOfCurrentUser = currentUser.getFriends().contains(friend.getId());
+
+            if (isFriendOfCurrentUser) {
+                if (availability != null) {
+                    switch (availability) {
+                        case AVAILABLE:
+                            holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
+                            break;
+                        case SOON_AVAILABLE:
+                            holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_soon_available);
+                            break;
+                        case UNAVAILABLE:
+                            holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_unavailable);
+                            break;
+                    }
+                }
+            } else {
+                holder.getAvailabilityDot().setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -131,6 +155,10 @@ public class MeetupDetailedFriendListAdapter
 
         public ImageView getIvLate() {
             return binding.ivFriendLateInfo;
+        }
+
+        public ImageView getAvailabilityDot() {
+            return binding.dotAvailabilityIcon;
         }
     }
 }

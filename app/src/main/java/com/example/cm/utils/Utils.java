@@ -7,8 +7,11 @@ import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Geocoder;
 import android.os.Build;
+import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -194,7 +197,6 @@ public class Utils {
         return openRequests;
     }
 
-
     /**
      * Returns whether user has given permission to access the location
      *
@@ -210,4 +212,10 @@ public class Utils {
         }
         return false;
     }
+
+    public static Bitmap convertBaseStringToBitmap(String imageString) {
+        byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
 }
+

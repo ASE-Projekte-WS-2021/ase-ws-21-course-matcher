@@ -2,22 +2,18 @@ package com.example.cm.ui.settings;
 
 import android.content.Context;
 
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.listener.UserListener;
-import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
-import com.example.cm.data.repositories.Callback;
 import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,23 +38,8 @@ public class SettingsViewModel extends ViewModel {
         return userRepository.getCurrentUser();
     }
 
-    public void updateLocationSharing(boolean enabled, UserListener<Boolean> listener) {
-        userRepository.updateField("isSharingLocation", enabled, new Callback() {
-            @Override
-            public OnSuccessListener<? super Void> onSuccess(Object object) {
-                listener.onUserSuccess(enabled);
-                return null;
-            }
-
-            @Override
-            public void onError(Object object) {
-                listener.onUserError((Exception) object);
-            }
-        });
-    }
-
     public void reauthenticate(Context context, String password, UserListener<Boolean> listener) {
-        if(password.isEmpty() || password.length() < Constants.MIN_PASSWORD_LENGTH) {
+        if (password.isEmpty() || password.length() < Constants.MIN_PASSWORD_LENGTH) {
             listener.onUserError(new Exception(context.getString(R.string.edit_account_error_password_min_length)));
             return;
         }
@@ -77,12 +58,8 @@ public class SettingsViewModel extends ViewModel {
 
         AuthCredential credential = EmailAuthProvider.getCredential(emailAddress, password);
         user.reauthenticate(credential)
-                .addOnFailureListener(e -> {
-                    listener.onUserError(new Exception(context.getString(R.string.delete_account_wrong_password)));
-                })
-                .addOnSuccessListener(e -> {
-                    listener.onUserSuccess(true);
-                });
+                .addOnFailureListener(e -> listener.onUserError(new Exception(context.getString(R.string.delete_account_wrong_password))))
+                .addOnSuccessListener(e -> listener.onUserSuccess(true));
 
     }
 
@@ -109,22 +86,6 @@ public class SettingsViewModel extends ViewModel {
         });
 
     }
-
-    public void updateAvailablilty(Availability availabilityState, UserListener<Availability> listener) {
-        userRepository.updateField("availability", availabilityState, new Callback() {
-            @Override
-            public OnSuccessListener<? super Void> onSuccess(Object object) {
-                listener.onUserSuccess(availabilityState);
-                return null;
-            }
-
-            @Override
-            public void onError(Object object) {
-                listener.onUserError((Exception) object);
-            }
-        });
-    }
-
 
 
     private void onDeleteFromFriendRequestRepo(String userId, UserListener<Boolean> listener) {

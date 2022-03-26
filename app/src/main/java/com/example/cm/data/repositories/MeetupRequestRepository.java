@@ -47,6 +47,9 @@ public class MeetupRequestRepository extends Repository {
                     if (error != null) {
                         return;
                     }
+                    if (value != null && value.isEmpty()) {
+                        receivedRequests.postValue(new ArrayList<>());
+                    }
                     if (value != null && !value.isEmpty()) {
                         List<MeetupRequest> requestsToReturn = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {

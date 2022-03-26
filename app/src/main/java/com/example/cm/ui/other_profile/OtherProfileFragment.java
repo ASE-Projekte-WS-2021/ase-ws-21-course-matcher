@@ -1,6 +1,7 @@
 package com.example.cm.ui.other_profile;
 
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +17,10 @@ import com.example.cm.R;
 import com.example.cm.data.models.Availability;
 import com.example.cm.databinding.FragmentOtherProfileBinding;
 import com.example.cm.utils.Navigator;
+import com.example.cm.utils.Utils;
 import com.squareup.picasso.Picasso;
+
+import timber.log.Timber;
 
 public class OtherProfileFragment extends Fragment {
 
@@ -48,10 +52,10 @@ public class OtherProfileFragment extends Fragment {
             observeFriendship(profileId);
         }
 
-        if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_add_friend)){
+        if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_add_friend)) {
             otherProfileViewModel.sendFriendRequestTo(profileId);
             binding.btnAddRemoveFriend.setText(getResources().getString(R.string.btn_send_friend_request_pending));
-        } else if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_remove_friend)){
+        } else if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_remove_friend)) {
             otherProfileViewModel.unfriend(profileId);
             binding.btnAddRemoveFriend.setText(getResources().getString(R.string.profile_btn_add_friend));
         } else if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_edit)) {
@@ -69,26 +73,15 @@ public class OtherProfileFragment extends Fragment {
             binding.tvName.setText(currentUser.getFullName());
             binding.tvUsername.setText(currentUser.getUsername());
             binding.tvBioDescription.setText(currentUser.getBio());
-            if (currentUser.getProfileImageUrl() != null && !currentUser.getProfileImageUrl().isEmpty()) {
+            String profileImageString = currentUser.getProfileImageString();
+            if (profileImageString != null && !profileImageString.isEmpty()) {
                 binding.ivProfileImage.setImageTintMode(null);
-                binding.ivProfileImage.setScaleX(1f);
-                binding.ivProfileImage.setScaleY(1f);
-                Picasso.get().load(currentUser.getProfileImageUrl()).fit().centerCrop().into(binding.ivProfileImage);
+                Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+                binding.ivProfileImage.setImageBitmap(img);
             }
+
             availability = currentUser.getAvailability();
-            if(availability != null){
-                switch (availability) {
-                    case AVAILABLE:
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
-                        break;
-                    case SOON_AVAILABLE:
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
-                        break;
-                    case UNAVAILABLE:
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
-                        break;
-                }
-            }
+
         });
     }
 
@@ -136,6 +129,8 @@ public class OtherProfileFragment extends Fragment {
         binding.btnAddRemoveFriend.setBackgroundTintList(btnBackground);
         binding.btnAddRemoveFriend.setTextColor(btnTextColor);
         binding.btnAddRemoveFriend.setText(R.string.profile_btn_edit);
+
+        showAvailabilityDot();
     }
 
     private void onFriendRequestPending() {
@@ -145,6 +140,8 @@ public class OtherProfileFragment extends Fragment {
         binding.btnAddRemoveFriend.setBackgroundTintList(btnBackground);
         binding.btnAddRemoveFriend.setTextColor(btnTextColor);
         binding.btnAddRemoveFriend.setText(R.string.btn_send_friend_request_pending);
+
+        hideAvailabilityDot();
     }
 
     private void onIsNotBefriended() {
@@ -154,6 +151,7 @@ public class OtherProfileFragment extends Fragment {
         binding.btnAddRemoveFriend.setBackgroundTintList(btnBackground);
         binding.btnAddRemoveFriend.setTextColor(btnTextColor);
         binding.btnAddRemoveFriend.setText(R.string.profile_btn_add_friend);
+        hideAvailabilityDot();
     }
 
     private void onIsAlreadyBefriended() {
@@ -163,6 +161,31 @@ public class OtherProfileFragment extends Fragment {
         binding.btnAddRemoveFriend.setBackgroundTintList(btnBackground);
         binding.btnAddRemoveFriend.setTextColor(btnTextColor);
         binding.btnAddRemoveFriend.setText(R.string.profile_btn_remove_friend);
+
+        showAvailabilityDot();
+    }
+
+
+    private void hideAvailabilityDot() {
+        binding.dotAvailabilityIcon.setVisibility(View.GONE);
+    }
+
+    private void showAvailabilityDot() {
+
+        Timber.d("ava %s", availability);
+        if (availability != null) {
+            switch (availability) {
+                case AVAILABLE:
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
+                    break;
+                case SOON_AVAILABLE:
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
+                    break;
+                case UNAVAILABLE:
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+                    break;
+            }
+        }
     }
 
     @Override
