@@ -35,7 +35,7 @@ public class SettingsViewModel extends ViewModel {
 
 
     public MutableLiveData<User> getUser() {
-        return userRepository.getStaticCurrentUser();
+        return userRepository.getCurrentUser();
     }
 
     public void reauthenticate(Context context, String password, UserListener<Boolean> listener) {

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class UserPOJO {
     private String id;
-    private String username, firstName, lastName, email, bio, profileImageString;
+    private String username, firstName, lastName, fullName, email, bio, profileImageString, profileImageUrl;
     private List<String> friends;
     private List<Double> location;
     private boolean isSharingLocation;
@@ -66,6 +66,10 @@ public class UserPOJO {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getEmail() {
