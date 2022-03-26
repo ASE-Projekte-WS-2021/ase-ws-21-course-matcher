@@ -27,7 +27,7 @@ public class FriendRequestsViewModel extends ViewModel {
 
     public FriendRequestsViewModel() {
         friendRequestRepository = new FriendRequestRepository();
-        receivedRequests = friendRequestRepository.getReceivedAndSentRequestsForUser();
+        receivedRequests = friendRequestRepository.getFriendRequestsForUser();
     }
 
     public MutableLiveData<List<FriendRequest>> getFriendRequests() {
