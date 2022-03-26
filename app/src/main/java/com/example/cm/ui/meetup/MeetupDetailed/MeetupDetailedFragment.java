@@ -1,7 +1,5 @@
 package com.example.cm.ui.meetup.MeetupDetailed;
 
-import static com.example.cm.utils.Utils.convertToAddress;
-
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -9,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
@@ -37,8 +37,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener, OnMapReadyCallback {
 
@@ -48,7 +46,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     private FragmentMeetupDetailedBinding binding;
     private TabLayoutMediator tabLayoutMediator;
     private Navigator navigator;
-    private PopupMenu popup;
     private DeleteDialog deleteDialog;
 
     private GoogleMap map;
@@ -70,6 +67,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         initListeners();
         return binding.getRoot();
     }
+
 
     @SuppressLint("NotifyDataSetChanged")
     private void initUIAndViewModel() {
@@ -103,16 +101,16 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     private void initImg(Meetup meetup) {
         Glide.with(requireActivity()).load(meetup.getLocationImageUrl()).placeholder(R.drawable.cafe)
                 .into(new CustomTarget<Drawable>() {
-            @Override
-            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                binding.ivLocation.setImageDrawable(resource);
-            }
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        binding.ivLocation.setImageDrawable(resource);
+                    }
 
-            @Override
-            public void onLoadCleared(@Nullable Drawable placeholder) {
-                binding.ivLocation.setImageDrawable(placeholder);
-            }
-        });
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        binding.ivLocation.setImageDrawable(placeholder);
+                    }
+                });
     }
 
     private void initTabbar() {
@@ -129,9 +127,10 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
                 tab.setText(R.string.meetup_tabs_label_add);
             }
         });
+
         tabLayoutMediator.attach();
 
-        ViewGroup slidingTabStrip = (ViewGroup)tabLayout.getChildAt(0);
+        ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
 
         View tab2 = slidingTabStrip.getChildAt(Constants.PENDING_TAB_INDEX);
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) tab2.getLayoutParams();
@@ -145,83 +144,69 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void initMenu(Meetup meetup) {
-        popup = new PopupMenu(requireContext(), binding.meetupContextMenuBtn);
-        setForceShowIcon(popup);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_context_meetup_detailed, popup.getMenu());
 
         String currentUserId = meetupDetailedViewModel.getCurrentUserId();
 
         // current user has accepted
         if (meetup.getConfirmedFriends() != null && meetup.getConfirmedFriends().contains(currentUserId)) {
-            popup.getMenu().findItem(R.id.menuAccept).setVisible(false);
-            popup.getMenu().findItem(R.id.menuLeave).setVisible(true);
-            popup.getMenu().findItem(R.id.menuDecline).setVisible(false);
+            binding.acceptButton.setVisibility(View.GONE);
+            binding.leaveButton.setVisibility(View.INVISIBLE);
+            binding.declineButton.setVisibility(View.GONE);
 
             int titleRes = meetup.getLateFriends() != null && meetup.getLateFriends().contains(currentUserId) ? R.string.not_late : R.string.late;
-            popup.getMenu().findItem(R.id.menuLate).setTitle(titleRes);
-            popup.getMenu().findItem(R.id.menuLate).setVisible(true);
+            binding.lateButton.setLabelText(getString(titleRes));
+            binding.lateButton.setVisibility(View.INVISIBLE);
         }
+
         // current user has declined
-        else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)){
-            popup.getMenu().findItem(R.id.menuAccept).setVisible(true);
-            popup.getMenu().findItem(R.id.menuLate).setVisible(false);
-            popup.getMenu().findItem(R.id.menuDecline).setVisible(false);
+        else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)) {
+            binding.acceptButton.setVisibility(View.INVISIBLE);
+            binding.lateButton.setVisibility(View.GONE);
+            binding.declineButton.setVisibility(View.GONE);
         }
 
         // current user is creator of meetup
         if (!meetup.getRequestingUser().equals(currentUserId)) {
-            popup.getMenu().findItem(R.id.menuDelete).setVisible(false);
+            binding.deleteButton.setVisibility(View.GONE);
+            binding.fabMenu.close(true);
         }
 
-        popup.setOnMenuItemClickListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.menuAccept:
-                    meetupDetailedViewModel.onJoin();
-                    break;
-                case R.id.menuDecline:
-                    meetupDetailedViewModel.onDecline();
-                    break;
-                case R.id.menuLeave:
-                    meetupDetailedViewModel.onLeave();
-                    break;
-                case R.id.menuLate:
-                    meetupDetailedViewModel.onLate(item.getTitle().equals(getString(R.string.late)));
-                    break;
-                case R.id.menuMap:
-                    onMap();
-                    break;
-                case R.id.menuDelete:
-                    onDelete();
-                    break;
-            }
-            return true;
+        binding.deleteButton.setOnClickListener(v -> {
+            onDelete();
+            binding.fabMenu.close(true);
         });
-    }
-
-    // https://stackoverflow.com/questions/20836385/popup-menu-with-icon-on-android
-    private void setForceShowIcon(PopupMenu popupMenu) {
-        try {
-            Field[] mFields = popupMenu.getClass().getDeclaredFields();
-            for (Field field : mFields) {
-                if ("mPopup".equals(field.getName())) {
-                    field.setAccessible(true);
-                    Object menuPopupHelper = field.get(popupMenu);
-                    Class<?> popupHelper = Class.forName(menuPopupHelper.getClass().getName());
-                    Method mMethods = popupHelper.getMethod("setForceShowIcon", boolean.class);
-                    mMethods.invoke(menuPopupHelper, true);
-                    break;
-                }
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        binding.declineButton.setOnClickListener(v -> {
+            meetupDetailedViewModel.onDecline();
+            binding.fabMenu.close(true);
+        });
+        binding.acceptButton.setOnClickListener(v -> {
+            meetupDetailedViewModel.onJoin();
+            binding.fabMenu.close(true);
+        });
+        binding.locationButton.setOnClickListener(v -> {
+            onMap();
+            binding.fabMenu.close(true);
+        });
+        binding.leaveButton.setOnClickListener(v -> {
+            meetupDetailedViewModel.onLeave();
+            binding.fabMenu.close(true);
+        });
+        binding.lateButton.setOnClickListener(v -> {
+            meetupDetailedViewModel.onLate(binding.lateButton.getLabelText().equals(getString(R.string.late)));
+            binding.fabMenu.close(true);
+        });
     }
 
     private void initListeners() {
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
-        binding.meetupContextMenuBtn.setOnClickListener(v -> popup.show());
         binding.ivLocation.setOnClickListener(v -> onMap());
+        if (binding.fabMenu.isOpened()) {
+            binding.fabBackground.setVisibility(View.VISIBLE);
+        }
+        if (!binding.fabMenu.isOpened()) {
+            binding.fabBackground.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     private void onMap() {
