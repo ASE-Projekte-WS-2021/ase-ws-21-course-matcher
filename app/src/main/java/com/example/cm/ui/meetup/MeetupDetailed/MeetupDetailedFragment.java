@@ -7,10 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -33,11 +30,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Objects;
-
 
 public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener, OnMapReadyCallback {
 
@@ -100,20 +92,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void initImg(Meetup meetup) {
-
-/*        Glide.with(requireActivity()).load(meetup.getLocationImageUrl()).placeholder(R.drawable.cafe)
-                .into(new CustomTarget<Drawable>() {
-                    @Override
-                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                        binding.ivLocation.setImageDrawable(resource);
-                    }
-
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
-                        binding.ivLocation.setImageDrawable(placeholder);
-                    }
-                });*/
-
         String imgString = meetup.getLocationImageString();
         if (imgString != null && !imgString.isEmpty()) {
             Bitmap img = Utils.convertBaseStringToBitmap(meetup.getLocationImageString());
@@ -173,10 +151,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
             binding.lateButton.setVisibility(View.GONE);
             binding.declineButton.setVisibility(View.GONE);
 
-          /*  popup.getMenu().findItem(R.id.menuAccept).setVisible(true);
-            popup.getMenu().findItem(R.id.menuLate).setVisible(false);
-            popup.getMenu().findItem(R.id.menuDecline).setVisible(false);*/
-
         }
 
         // current user is creator of meetup
@@ -212,25 +186,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
 
     }
 
-  /*  // https://stackoverflow.com/questions/20836385/popup-menu-with-icon-on-android
-    private void setForceShowIcon(PopupMenu popupMenu) {
-        try {
-            Field[] mFields = popupMenu.getClass().getDeclaredFields();
-            for (Field field : mFields) {
-                if ("mPopup".equals(field.getName())) {
-                    field.setAccessible(true);
-                    Object menuPopupHelper = field.get(popupMenu);
-                    Class<?> popupHelper = Class.forName(Objects.requireNonNull(menuPopupHelper).getClass().getName());
-                    Method mMethods = popupHelper.getMethod("setForceShowIcon", boolean.class);
-                    mMethods.invoke(menuPopupHelper, true);
-                    break;
-                }
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-
-    }*/
 
     private void initListeners() {
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
