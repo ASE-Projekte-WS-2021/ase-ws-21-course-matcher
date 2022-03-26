@@ -6,7 +6,6 @@ import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_STROKE;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,7 +47,6 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         return new MeetupListViewHolder(binding);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull MeetupListAdapter.MeetupListViewHolder holder, int position) {
         Meetup meetup = meetups.get(position);
@@ -91,7 +88,6 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void initUserIcons(LinearLayout imgLayout, Meetup meetup) {
         List<String> confirmedFriends = meetup.getConfirmedFriends();
         List<String> invitedFriends = meetup.getInvitedFriends();
@@ -104,7 +100,6 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         addUserImage(declinedFriends, imgLayout, R.color.red);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void addUserImage(List<String> friendIds, LinearLayout layout, int color) {
         if (friendIds != null) {
             for (String id : friendIds) {
@@ -131,14 +126,13 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private String getImageUrl(String id) {
-        User user = users.stream().filter(userData -> userData.getId().equals(id)).findAny().orElse(null);
-        if (user != null) {
-            return user.getProfileImageString();
-        } else {
-            return null;
+        for (User user : users) {
+            if (user.getId().equals(id)) {
+                return user.getProfileImageString();
+            }
         }
+        return null;
     }
 
     @Override
