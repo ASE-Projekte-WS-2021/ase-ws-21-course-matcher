@@ -44,6 +44,7 @@ public class FriendRequestRepository extends Repository {
 
         String userId = auth.getCurrentUser().getUid();
         friendRequestCollection.whereEqualTo("receiverId", userId)
+                .orderBy("state", Query.Direction.DESCENDING)
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
