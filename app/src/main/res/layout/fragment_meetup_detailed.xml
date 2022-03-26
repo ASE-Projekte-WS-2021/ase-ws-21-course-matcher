@@ -1,102 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="@dimen/layout_weight_thirteen"
     tools:context=".ui.meetup.MeetupDetailed.MeetupDetailedFragment">
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="@dimen/layout_weight_four"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="13">
+        <!-- Meetup Location Image -->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4"
+            android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/ivLocation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/location"
-                android:scaleType="centerCrop"
-                android:src="@drawable/cafe" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gradient_gray700_transparent_to_transparent_top_down"
-                android:paddingHorizontal="@dimen/padding_small"
-                android:paddingTop="@dimen/padding_small">
+                android:layout_height="match_parent">
 
                 <ImageView
-                    android:id="@+id/btnBack"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/ivLocation"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/content_description_back_button"
-                    android:src="@drawable/ic_back_button"
-                    tools:ignore="RtlSymmetry" />
+                    android:contentDescription="@string/location"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/cafe" />
 
-                <ImageView
-                    android:id="@+id/meetup_context_menu_btn"
-                    android:layout_width="@dimen/btn_size"
-                    android:layout_height="@dimen/btn_size"
-                    android:layout_alignParentEnd="true"
-                    android:src="@drawable/ic_more_options" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/gradient_gray700_transparent_to_transparent_top_down"
+                    android:paddingHorizontal="@dimen/padding_small"
+                    android:paddingTop="@dimen/padding_small">
 
+                    <ImageView
+                        android:id="@+id/btnBack"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/content_description_back_button"
+                        android:src="@drawable/ic_back_button"
+                        tools:ignore="RtlSymmetry" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/gradient_gray700_to_transparent_bottom_up"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/activity_vertical_margin"
+                    android:paddingTop="@dimen/padding_ultra"
+                    android:paddingBottom="@dimen/padding_medium">
+
+                    <TextView
+                        android:id="@+id/meetupDetailedTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gray300"
+                        android:textSize="@dimen/text_size_small" />
+
+                    <TextView
+                        android:id="@+id/meetupDetailedLocation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gray300"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </RelativeLayout>
+        </LinearLayout>
 
-            <LinearLayout
+        <!-- Meetup User Lists Wrapper -->
+        <!-- Tabs + Viewpager -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            android:orientation="vertical">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/meetup_detailed_tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/gradient_gray700_to_transparent_bottom_up"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/activity_vertical_margin"
-                android:paddingTop="@dimen/padding_ultra"
-                android:paddingBottom="@dimen/padding_medium">
+                app:tabGravity="fill"
+                app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
+                app:tabUnboundedRipple="true"
+                tools:ignore="SpeakableTextPresentCheck" />
 
-                <TextView
-                    android:id="@+id/meetupDetailedTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/gray300"
-                    android:textSize="@dimen/text_size_small" />
-
-                <TextView
-                    android:id="@+id/meetupDetailedLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/gray300"
-                    android:textSize="@dimen/text_size_medium"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </RelativeLayout>
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/meetup_detailed_tab_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="0dp"
-        android:layout_weight="@dimen/layout_weight_nine"
+        android:id="@+id/fabBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/outwhited"
+        android:orientation="vertical"
+        android:visibility="invisible" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/big_margin"
         android:orientation="vertical">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/meetup_detailed_tab_layout"
-            android:layout_width="match_parent"
+        <com.github.clans.fab.FloatingActionMenu
+            android:id="@+id/fabMenu"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:tabGravity="fill"
-            app:tabTextAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:tabUnboundedRipple="true"
-            tools:ignore="SpeakableTextPresentCheck" />
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/big_margin"
+            android:clickable="true"
+            android:focusable="true"
+            app:menu_animationDelayPerItem="50"
+            app:menu_colorNormal="@color/orange_dark"
+            app:menu_fab_hide_animation="@anim/rotate_close_anim"
+            app:menu_fab_show_animation="@anim/rotate_open_anim"
+            app:menu_fab_size="normal"
+            app:menu_icon="@drawable/ic_dotdotdot"
+            app:menu_labels_colorNormal="@color/outwhited"
+            app:menu_labels_showShadow="false"
+            app:menu_labels_textColor="@color/gray700"
+            app:menu_openDirection="up"
+            tools:ignore="MissingConstraints">
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/meetup_detailed_tab_pager"
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent" />
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/locationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_map_small"
+                app:fabSize="mini"
+                app:fab_colorNormal="@color/gray300"
+                app:fab_label="@string/location" />
 
-    </LinearLayout>
-</LinearLayout>
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/acceptButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_accept"
+                app:fabSize="mini"
+                app:fab_colorNormal="@color/gray300"
+                app:fab_label="@string/accept" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/declineButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_decline"
+                app:fabSize="mini"
+                app:fab_colorNormal="@color/gray300"
+                app:fab_label="@string/decline" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/lateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_late"
+                app:fabSize="mini"
+                app:fab_colorNormal="@color/gray300"
+                app:fab_label="@string/late" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/leaveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_logout"
+                app:fabSize="mini"
+                app:fab_colorNormal="@color/gray300"
+                app:fab_label="@string/leave" />
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/deleteButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_trash_menu"
+                app:fabSize="mini"
+                app:fab_colorNormal="@color/gray300"
+                app:fab_label="@string/delete" />
+
+        </com.github.clans.fab.FloatingActionMenu>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
