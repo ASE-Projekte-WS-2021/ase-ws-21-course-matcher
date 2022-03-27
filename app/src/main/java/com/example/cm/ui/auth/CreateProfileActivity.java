@@ -187,7 +187,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
 
     @Override
     public void onRegisterSuccess(User user) {
-        if (user.getEmail().equals("course.matcher@temp.cm")) {
+        if (user.getEmail().equals(Constants.TEMP_EMAIL)) {
             initListeners();
         } else {
             authViewModel.createUser(user);
@@ -202,7 +202,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     protected void onDestroy() {
         super.onDestroy();
         if (authViewModel.getUserLiveData().getValue() != null
-                && authViewModel.getUserLiveData().getValue().getEmail().equals("course.matcher@temp.cm")) {
+                && authViewModel.getUserLiveData().getValue().getEmail().equals(Constants.TEMP_EMAIL)) {
             authViewModel.deleteCurrentAuth();
         }
     }

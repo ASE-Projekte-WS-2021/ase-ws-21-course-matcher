@@ -1,16 +1,14 @@
 package com.example.cm.ui.auth;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.Constants;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.UserRepository;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AuthViewModel extends ViewModel implements UserListener {
@@ -31,7 +29,7 @@ public class AuthViewModel extends ViewModel implements UserListener {
     }
 
     public void createTemporaryUser(AuthRepository.RegisterCallback callback) {
-        authRepository.register("course.matcher@temp.cm", "temporaryUser",
+        authRepository.register(Constants.TEMP_EMAIL, Constants.TEMP_PASSWORD,
                 "", "", "", callback);
     }
 
@@ -44,8 +42,6 @@ public class AuthViewModel extends ViewModel implements UserListener {
     }
 
     public void deleteCurrentAuth() {
-        boolean isAuth = FirebaseAuth.getInstance().getCurrentUser() != null;
-        Log.e("IS AUTH", "view model:" + isAuth);
         if (authRepository.getCurrentUser() != null) {
             authRepository.deleteUser(this);
         }
@@ -65,11 +61,9 @@ public class AuthViewModel extends ViewModel implements UserListener {
 
     @Override
     public void onUserSuccess(Object o) {
-        Log.e("DELETE", "succ");
     }
 
     @Override
     public void onUserError(Exception error) {
-        Log.e("DELETE", "error: " + error);
     }
 }
