@@ -141,11 +141,9 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
                 binding.fabBackground.setVisibility(View.VISIBLE);
                 binding.fabMenu.open(true);
             } else {
-                binding.fabMenu.close(true);
-                binding.fabBackground.setVisibility(View.INVISIBLE);
+                closeFabMenu();
             }
         });
-
 
         // current user has accepted
         if (meetup.getConfirmedFriends() != null && meetup.getConfirmedFriends().contains(currentUserId)) {
@@ -160,7 +158,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
 
         // current user has declined
         else if (meetup.getDeclinedFriends() != null && meetup.getDeclinedFriends().contains(currentUserId)) {
-
             binding.acceptButton.setVisibility(View.INVISIBLE);
             binding.lateButton.setVisibility(View.GONE);
             binding.declineButton.setVisibility(View.GONE);
@@ -170,34 +167,38 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         // current user is creator of meetup
         if (!meetup.getRequestingUser().equals(currentUserId)) {
             binding.deleteButton.setVisibility(View.GONE);
-            binding.fabMenu.close(true);
+            closeFabMenu();
         }
 
         binding.deleteButton.setOnClickListener(v -> {
             onDelete();
-            binding.fabMenu.close(true);
+            closeFabMenu();
         });
         binding.declineButton.setOnClickListener(v -> {
             meetupDetailedViewModel.onDecline();
-            binding.fabMenu.close(true);
+            closeFabMenu();
         });
         binding.acceptButton.setOnClickListener(v -> {
             meetupDetailedViewModel.onJoin();
-            binding.fabMenu.close(true);
+            closeFabMenu();
         });
         binding.locationButton.setOnClickListener(v -> {
             onMap();
-            binding.fabMenu.close(true);
+            closeFabMenu();
         });
         binding.leaveButton.setOnClickListener(v -> {
             meetupDetailedViewModel.onLeave();
-            binding.fabMenu.close(true);
+            closeFabMenu();
         });
         binding.lateButton.setOnClickListener(v -> {
             meetupDetailedViewModel.onLate(binding.lateButton.getLabelText().equals(getString(R.string.late)));
-            binding.fabMenu.close(true);
+            closeFabMenu();
         });
+    }
 
+    private void closeFabMenu() {
+        binding.fabBackground.setVisibility(View.INVISIBLE);
+        binding.fabMenu.close(true);
     }
 
 
