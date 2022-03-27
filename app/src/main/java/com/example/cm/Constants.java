@@ -66,6 +66,11 @@ public class Constants {
     public static String USER_COLLISION = "Es existiert bereits ein User mit dieser Email-Adresse.";
     public static String DEFAULT_ERROR = "Etwas ist schief gegangen.";
 
+    // Repository Field Names
+    public static final String FIELD_FRIENDS = "friends";
+    public static final String FIELD_PROFILE_IMAGE_STRING = "profileImageString";
+    public static final String FIELD_LOCATION = "location";
+
     public enum ImageType {
         PROFILE_IMAGE,
         MEETUP_IMAGE
