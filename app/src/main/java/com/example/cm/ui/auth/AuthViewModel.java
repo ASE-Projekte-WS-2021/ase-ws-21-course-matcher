@@ -30,6 +30,10 @@ public class AuthViewModel extends ViewModel implements AuthRepository.RegisterC
         authRepository.register(email, password, userName, firstName, lastName, this);
     }
 
+    public LiveData<User> getUser() {
+        return userRepository.getCurrentUser();
+    }
+
     public LiveData<FirebaseUser> getUserLiveData() {
         return userLiveData;
     }
