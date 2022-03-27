@@ -70,6 +70,12 @@ public class Constants {
     public static final String FIELD_FRIENDS = "friends";
     public static final String FIELD_PROFILE_IMAGE_STRING = "profileImageString";
     public static final String FIELD_LOCATION = "location";
+    public static final String FIELD_CONFIRMED_FRIENDS = "confirmedFriends";
+    public static final String FIELD_DECLINED_FRIENDS = "declinedFriends";
+    public static final String FIELD_INVITED_FRIENDS = "invitedFriends";
+    public static final String FIELD_LATE_FRIENDS = "lateFriends";
+    public static final String FIELD_TIMESTAMP = "timestamp";
+    public static final String FIELD_PHASE = "phase";
 
     public enum ImageType {
         PROFILE_IMAGE,
