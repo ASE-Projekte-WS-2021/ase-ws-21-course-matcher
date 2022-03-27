@@ -167,32 +167,31 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         // current user is creator of meetup
         if (!meetup.getRequestingUser().equals(currentUserId)) {
             binding.deleteButton.setVisibility(View.GONE);
-            closeFabMenu();
         }
 
         binding.deleteButton.setOnClickListener(v -> {
-            onDelete();
             closeFabMenu();
+            onDelete();
         });
         binding.declineButton.setOnClickListener(v -> {
-            meetupDetailedViewModel.onDecline();
             closeFabMenu();
+            meetupDetailedViewModel.onDecline();
         });
         binding.acceptButton.setOnClickListener(v -> {
-            meetupDetailedViewModel.onJoin();
             closeFabMenu();
+            meetupDetailedViewModel.onJoin();
         });
         binding.locationButton.setOnClickListener(v -> {
-            onMap();
             closeFabMenu();
+            onMap();
         });
         binding.leaveButton.setOnClickListener(v -> {
-            meetupDetailedViewModel.onLeave();
             closeFabMenu();
+            meetupDetailedViewModel.onLeave();
         });
         binding.lateButton.setOnClickListener(v -> {
-            meetupDetailedViewModel.onLate(binding.lateButton.getLabelText().equals(getString(R.string.late)));
             closeFabMenu();
+            meetupDetailedViewModel.onLate(binding.lateButton.getLabelText().equals(getString(R.string.late)));
         });
     }
 
