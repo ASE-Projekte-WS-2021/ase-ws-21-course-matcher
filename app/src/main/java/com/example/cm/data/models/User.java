@@ -17,12 +17,13 @@ public class User {
     public User() {
     }
 
-    public User(String id, String username, String displayName, String email, String imgString) {
+    public User(String id, String username, String displayName, String email, String imgString, String bio) {
         this.id = id;
         this.username = username;
         this.displayName = displayName;
         this.email = email;
         this.profileImageString = imgString;
+        this.bio = bio;
         this.availability = Availability.AVAILABLE;
     }
 

@@ -30,11 +30,11 @@ public class AuthViewModel extends ViewModel implements UserListener {
 
     public void createTemporaryUser(AuthRepository.RegisterCallback callback) {
         authRepository.register(Constants.TEMP_EMAIL, Constants.TEMP_PASSWORD,
-                "", "", "", callback);
+                "", "", "", "", callback);
     }
 
-    public void register(String email, String password, String userName, String displayName, String imgString, AuthRepository.RegisterCallback callback) {
-        authRepository.register(email, password, userName, displayName, imgString, callback);
+    public void register(String email, String password, String userName, String displayName, String imgString, String bio, AuthRepository.RegisterCallback callback) {
+        authRepository.register(email, password, userName, displayName, imgString, bio, callback);
     }
 
     public void createUser(User user) {

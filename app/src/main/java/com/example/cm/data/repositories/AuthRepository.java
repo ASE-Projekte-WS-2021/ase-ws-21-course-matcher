@@ -62,12 +62,12 @@ public class AuthRepository extends Repository {
         });
     }
 
-    public void register(String email, String password, String username, String displayName, String imgString, RegisterCallback callback) {
+    public void register(String email, String password, String username, String displayName, String imgString, String bio, RegisterCallback callback) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 FirebaseUser authUser = getCurrentUser();
                 userLiveData.postValue(authUser);
-                User newUser = new User(authUser.getUid(), username, displayName, email, imgString);
+                User newUser = new User(authUser.getUid(), username, displayName, email, imgString, bio);
                 callback.onRegisterSuccess(newUser);
             } else {
                 if(task.getException() != null){

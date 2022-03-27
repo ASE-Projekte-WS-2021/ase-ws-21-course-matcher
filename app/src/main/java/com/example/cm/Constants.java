@@ -17,6 +17,7 @@ public class Constants {
 
     public static final String TEMP_EMAIL = "course.matcher@temp.cm";
     public static final String TEMP_PASSWORD = "temporaryUser";
+    public static final String ALLOWED_CHARS_FOR_USERNAME = "qwertzuiopasdfghjklyxcvbnm0123456789_-.";
 
     public static final String FIREBASE_STORAGE_FOLDER_PROFILE_IMAGES = "profile_images/";
     public static final String FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES = "meetup_images/";

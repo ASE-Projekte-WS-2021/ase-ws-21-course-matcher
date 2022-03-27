@@ -137,9 +137,8 @@
     <string name="content_description_splash_screen_logo">Splash Screen Logo</string>
 
     <string name="input_label_bio">Bio</string>
-    <string name="input_label_username">Benutzername</string>
-    <string name="input_label_first_name">Vorname</string>
-    <string name="input_label_last_name">Nachname</string>
+    <string name="input_label_username">Nutzername</string>
+    <string name="input_label_display_name">Anzeigename</string>
     <string name="edit_cancel">Abbrechen</string>
     <string name="edit_save">Speichern</string>
     <string name="edit_profile_success_message">Änderungen wurden gespeichert</string>
@@ -266,5 +265,6 @@
     <string name="registerDisplayNameEmpty">Bitte gib einen Anzeigenamen ein.</string>
     <string name="registerUsernameAlreadyExists">Nutzername existiert bereits.</string>
     <string name="registerDisplaynameText">Anzeigename*</string>
+    <string name="register_hint_bio">Miau! Sitze gern am Campus in der Sonne.</string>
 
 </resources>

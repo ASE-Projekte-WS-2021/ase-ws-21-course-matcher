@@ -57,7 +57,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_double">
+                android:layout_marginBottom="@dimen/padding_big">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profileImage"
@@ -135,13 +135,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_half"
                 android:background="@drawable/style_edittext"
-                android:focusable="false"
                 android:gravity="top"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine|textNoSuggestions"
                 android:lines="3"
                 android:maxLength="125"
                 android:maxLines="3"
+                android:hint="@string/register_hint_bio"
                 android:paddingHorizontal="@dimen/padding_medium"
                 android:paddingVertical="@dimen/padding_small"
                 android:scrollbars="vertical"
@@ -151,7 +151,7 @@
                 android:id="@+id/createProfileBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_double"
+                android:layout_marginTop="@dimen/padding_big"
                 android:gravity="center"
                 android:text="@string/createProfileBtn" />
 

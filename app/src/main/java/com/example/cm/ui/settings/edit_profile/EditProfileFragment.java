@@ -154,20 +154,6 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     }
 
     private void onEditProfileImageClicked() {
-        /*boolean hasReadExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-        boolean hasWriteExternalStoragePermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-
-        if (!hasReadExternalStoragePermission) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-        }
-
-        if (!hasWriteExternalStoragePermission) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-        }
-
-        if (hasReadExternalStoragePermission && hasWriteExternalStoragePermission) {
-            storagePermissionRequestLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }*/
         boolean hasReadExternalStoragePermission = ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 
         if (!hasReadExternalStoragePermission) {

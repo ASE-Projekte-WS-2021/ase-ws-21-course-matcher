@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.Base64;
 import android.view.View;
 
@@ -73,6 +74,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     private void initTexts() {
         binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
         binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
+        binding.registerUsernameEditText.inputField.setKeyListener(DigitsKeyListener.getInstance(Constants.ALLOWED_CHARS_FOR_USERNAME));
 
         binding.registerDisplayNameEditText.inputLabel.setText(R.string.registerDisplaynameText);
         binding.registerDisplayNameEditText.inputField.setHint(R.string.registerFirstNameHint);
@@ -164,6 +166,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         String password = bundle.getString(Constants.KEY_PASSWORD);
         String userName = binding.registerUsernameEditText.inputField.getText().toString();
         String displayName = binding.registerDisplayNameEditText.inputField.getText().toString();
+        String bio = binding.inputFieldBio.getText().toString();
 
         if (userName.isEmpty()) {
             Snackbar.make(binding.getRoot(), R.string.registerUsernameEmpty, Snackbar.LENGTH_LONG).show();
@@ -181,7 +184,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         }
 
         authViewModel.deleteCurrentAuth();
-        authViewModel.register(email, password, userName, displayName, imgString, this);
+        authViewModel.register(email, password, userName, displayName, imgString, bio, this);
         binding.createProfileBtn.setEnabled(false);
     }
 
