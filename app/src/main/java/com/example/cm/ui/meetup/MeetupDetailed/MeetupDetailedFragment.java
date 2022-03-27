@@ -31,6 +31,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import timber.log.Timber;
+
 public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener, OnMapReadyCallback {
 
     private MeetupDetailedTabAdapter tabAdapter;
@@ -133,6 +135,18 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
 
         String currentUserId = meetupDetailedViewModel.getCurrentUserId();
 
+        binding.fabMenu.setClosedOnTouchOutside(true);
+        binding.fabMenu.setOnMenuButtonClickListener(v -> {
+            if (!binding.fabMenu.isOpened()) {
+                binding.fabBackground.setVisibility(View.VISIBLE);
+                binding.fabMenu.open(true);
+            } else {
+                binding.fabMenu.close(true);
+                binding.fabBackground.setVisibility(View.INVISIBLE);
+            }
+        });
+
+
         // current user has accepted
         if (meetup.getConfirmedFriends() != null && meetup.getConfirmedFriends().contains(currentUserId)) {
             binding.acceptButton.setVisibility(View.GONE);
@@ -190,13 +204,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     private void initListeners() {
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.ivLocation.setOnClickListener(v -> onMap());
-        if (binding.fabMenu.isOpened()) {
-            binding.fabBackground.setVisibility(View.VISIBLE);
-        }
-        if (!binding.fabMenu.isOpened()) {
-            binding.fabBackground.setVisibility(View.INVISIBLE);
-        }
-
     }
 
     private void onMap() {
