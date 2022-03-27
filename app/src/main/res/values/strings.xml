@@ -266,5 +266,6 @@
     <string name="registerDisplayNameEmpty">Bitte gib einen Anzeigename ein.</string>
     <string name="username_already_exists">Nutzername existiert bereits.</string>
     <string name="input_label_display_name">Anzeigename</string>
+    <string name="registerUsernameAlreadyExists">Nutzername existiert bereits.</string>
 
 </resources>

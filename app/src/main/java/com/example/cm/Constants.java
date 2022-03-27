@@ -12,6 +12,8 @@ public class Constants {
     public static final String KEY_CREATE_MEETUP_VM = "keyCreateMeetupViewModel";
     public static final String KEY_EMAIL = "keyEmail";
     public static final String KEY_PASSWORD = "keyPassword";
+    public static final String KEY_NEW_USER_UID = "keyNewUserUID";
+    public static final String KEY_USER_ID_TO_DELETE = "keyUserIdToDelete";
     public static final int MAX_CHAR_COUNT = 125;
     public static final int SPLASH_TIMER = 000;
 

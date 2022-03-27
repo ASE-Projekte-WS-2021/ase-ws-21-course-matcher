@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -496,6 +498,13 @@ public class UserRepository extends Repository {
         return doesUsernameExist[0];
     }
 
+    public void checkProfile(String userId, ProfileCheckListener listener) {
+        userCollection.document(userId).get().addOnCompleteListener(task -> {
+            DocumentSnapshot result = task.getResult();
+            listener.onProfileChecked(result != null && result.exists() && result.getData() != null);
+        });
+    }
+
     public void updateProfileImage(String profileImageString, String userId) {
         userCollection.document(userId).update("profileImageString", profileImageString);
     }
@@ -590,5 +599,9 @@ public class UserRepository extends Repository {
         userPOJO.setLocation((List<Double>) document.get("location"));
 
         return userPOJO.toObject();
+    }
+
+    public interface ProfileCheckListener {
+        void onProfileChecked(boolean hasProfile);
     }
 }

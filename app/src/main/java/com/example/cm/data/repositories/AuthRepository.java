@@ -1,12 +1,13 @@
 package com.example.cm.data.repositories;
 
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.utils.FirebaseErrorTranslator;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -61,14 +62,13 @@ public class AuthRepository extends Repository {
         });
     }
 
-    public void register(String email, String password, String userName, String displayName, String imgString, RegisterCallback callback) {
+    public void register(String email, String password, String username, String displayName, String imgString, RegisterCallback callback) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 FirebaseUser authUser = getCurrentUser();
                 userLiveData.postValue(authUser);
-                User newUser = new User(authUser.getUid(), userName, displayName, email, imgString);
+                User newUser = new User(authUser.getUid(), username, displayName, email, imgString);
                 callback.onRegisterSuccess(newUser);
-
             } else {
                 if(task.getException() != null){
                     error.postValue(FirebaseErrorTranslator.getErrorMessage(task.getException()));
@@ -85,6 +85,9 @@ public class AuthRepository extends Repository {
         if (firebaseAuth.getCurrentUser() == null) {
             return;
         }
+
+        boolean isAuth = FirebaseAuth.getInstance().getCurrentUser() != null;
+        Log.e("IS AUTH", "repo:" + isAuth);
 
         firebaseAuth.getCurrentUser().delete()
                 .addOnSuccessListener(executorService, task -> {

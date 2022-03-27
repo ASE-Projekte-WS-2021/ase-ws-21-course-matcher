@@ -1,7 +1,6 @@
 package com.example.cm.ui.auth;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -23,15 +22,16 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.Constants;
 import com.example.cm.MainActivity;
 import com.example.cm.R;
+import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ActivityRegisterProfileBinding;
-import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class CreateProfileActivity extends AppCompatActivity {
+public class CreateProfileActivity extends AppCompatActivity implements AuthRepository.RegisterCallback {
 
     private Bundle bundle;
     private AuthViewModel authViewModel;
@@ -52,23 +52,18 @@ public class CreateProfileActivity extends AppCompatActivity {
         bundle = getIntent().getExtras();
 
         initViewModel();
-        initListeners();
         initImagePicker();
         initPermissionRequest();
         initTexts();
+        initTemporaryAuth();
+    }
+
+    private void initTemporaryAuth() {
+        authViewModel.createTemporaryUser(this);
     }
 
     private void initViewModel() {
         authViewModel = new ViewModelProvider(CreateProfileActivity.this).get(AuthViewModel.class);
-        authViewModel.getUserLiveData().observe(this, firebaseUser -> {
-            if (firebaseUser != null) {
-                Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
-        });
-
         authViewModel.getErrorLiveData().observe(this, errorMsg -> {
             Snackbar.make(findViewById(R.id.registerLayout), errorMsg, Snackbar.LENGTH_LONG).show();
             binding.createProfileBtn.setEnabled(true);
@@ -79,13 +74,14 @@ public class CreateProfileActivity extends AppCompatActivity {
         binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
         binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
 
-        binding.registerDisplayNameEditText.inputLabel.setText(R.string.registerFirstnameText);
+        binding.registerDisplayNameEditText.inputLabel.setText(R.string.input_label_display_name);
         binding.registerDisplayNameEditText.inputField.setHint(R.string.registerFirstNameHint);
     }
 
     private void initListeners() {
         binding.editProfileImageBtn.setOnClickListener(this::onEditImgClicked);
         binding.createProfileBtn.setOnClickListener(this::registerAndStart);
+
         binding.registerUsernameEditText.inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
@@ -93,8 +89,9 @@ public class CreateProfileActivity extends AppCompatActivity {
                 if (authViewModel.doesUsernameExist(charSequence.toString())) {
                     binding.usernameAlreadyExistsTv.setVisibility(View.VISIBLE);
                 } else {
-                    binding.usernameAlreadyExistsTv.setVisibility(View.GONE);
-                    binding.createProfileBtn.setEnabled(false);
+                    binding.usernameAlreadyExistsTv.setVisibility(View.VISIBLE);
+                    binding.usernameAlreadyExistsTv.setText("ok");
+                    binding.createProfileBtn.setEnabled(true);
                 }
             }
 
@@ -178,9 +175,35 @@ public class CreateProfileActivity extends AppCompatActivity {
             return;
         }
 
-        if (authViewModel.doesUsernameExist(userName))
+        if (!binding.usernameAlreadyExistsTv.getText().equals("ok")) {
+            Snackbar.make(binding.getRoot(), R.string.registerUsernameAlreadyExists, Snackbar.LENGTH_LONG).show();
+            return;
+        }
 
-        authViewModel.register(email, password, userName, displayName, imgString);
+        authViewModel.deleteCurrentAuth();
+        authViewModel.register(email, password, userName, displayName, imgString, this);
         binding.createProfileBtn.setEnabled(false);
+    }
+
+    @Override
+    public void onRegisterSuccess(User user) {
+        if (user.getEmail().equals("course.matcher@temp.cm")) {
+            initListeners();
+        } else {
+            authViewModel.createUser(user);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (authViewModel.getUserLiveData().getValue() != null
+                && authViewModel.getUserLiveData().getValue().getEmail().equals("course.matcher@temp.cm")) {
+            authViewModel.deleteCurrentAuth();
+        }
     }
 }

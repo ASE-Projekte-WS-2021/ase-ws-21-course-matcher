@@ -10,6 +10,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.Constants;
 import com.example.cm.MainActivity;
 import com.example.cm.R;
+import com.example.cm.data.models.User;
+import com.example.cm.data.repositories.AuthRepository;
+import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ActivityRegisterBinding;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
@@ -36,15 +39,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initViewModel() {
         authViewModel = new ViewModelProvider(RegisterActivity.this).get(AuthViewModel.class);
-        authViewModel.getUserLiveData().observe(this, firebaseUser -> {
-            if (firebaseUser != null) {
-                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
-        });
-
         authViewModel.getErrorLiveData().observe(this, errorMsg -> {
             Snackbar.make(findViewById(R.id.registerLayout), errorMsg, Snackbar.LENGTH_LONG).show();
             binding.registerRegisterBtn.setEnabled(true);
@@ -89,16 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         binding.registerRegisterBtn.setEnabled(false);
-
-        Bundle bundle = new Bundle();
-        bundle.putString(Constants.KEY_EMAIL, email);
-        bundle.putString(Constants.KEY_PASSWORD, password);
-        goToCreateProfile(bundle);
-    }
-
-    private void goToCreateProfile(Bundle bundle) {
-        startActivity(new Intent(RegisterActivity.this, CreateProfileActivity.class), bundle);
-        finish();
+        goToCreateProfile(email, password);
     }
 
     private void goToLogin(View view) {
@@ -106,4 +91,11 @@ public class RegisterActivity extends AppCompatActivity {
         finish();
     }
 
+    private void goToCreateProfile(String email, String password) {
+        Intent intent = new Intent(RegisterActivity.this, CreateProfileActivity.class);
+        intent.putExtra(Constants.KEY_EMAIL, email);
+        intent.putExtra(Constants.KEY_PASSWORD, password);
+        startActivity(intent);
+        finish();
+    }
 }
