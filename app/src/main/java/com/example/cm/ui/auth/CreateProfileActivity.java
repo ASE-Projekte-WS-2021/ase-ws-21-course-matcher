@@ -74,7 +74,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
         binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
 
-        binding.registerDisplayNameEditText.inputLabel.setText(R.string.input_label_display_name);
+        binding.registerDisplayNameEditText.inputLabel.setText(R.string.registerDisplaynameText);
         binding.registerDisplayNameEditText.inputField.setHint(R.string.registerFirstNameHint);
     }
 
@@ -170,13 +170,13 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
             return;
         }
 
-        if (displayName.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.registerDisplayNameEmpty, Snackbar.LENGTH_LONG).show();
+        if (binding.usernameAlreadyExistsTv.getVisibility() == View.VISIBLE) {
+            Snackbar.make(binding.getRoot(), R.string.registerUsernameAlreadyExists, Snackbar.LENGTH_LONG).show();
             return;
         }
 
-        if (!binding.usernameAlreadyExistsTv.getText().equals("ok")) {
-            Snackbar.make(binding.getRoot(), R.string.registerUsernameAlreadyExists, Snackbar.LENGTH_LONG).show();
+        if (displayName.isEmpty()) {
+            Snackbar.make(binding.getRoot(), R.string.registerDisplayNameEmpty, Snackbar.LENGTH_LONG).show();
             return;
         }
 
