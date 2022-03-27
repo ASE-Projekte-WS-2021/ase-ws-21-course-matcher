@@ -19,57 +19,40 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
             <include
                 android:id="@+id/link_edit_account"
                 layout="@layout/item_settings_link" />
 
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/stroke_width"
-                android:contentDescription="@string/content_description_divider"
-                android:src="@drawable/divider_horizontal" />
-
-            <!-- Datenschutz -->
             <include
-                android:id="@+id/link_privacy_policy"
+                android:id="@+id/link_logout"
                 layout="@layout/item_settings_link" />
 
             <include
-                android:id="@+id/link_imprint"
+                android:id="@+id/link_delete_account"
                 layout="@layout/item_settings_link" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/stroke_width"
-                android:contentDescription="@string/content_description_divider"
-                android:src="@drawable/divider_horizontal" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginTop="@dimen/padding_medium"
+                android:orientation="horizontal"
+                android:gravity="center">
 
-                <include
-                    android:id="@+id/link_logout"
-                    layout="@layout/item_settings_link" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_info_24"/>
 
-                <include
-                    android:id="@+id/link_delete_account"
-                    layout="@layout/item_settings_link" />
+                <TextView
+                    android:id="@+id/tvAbout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray400"
+                    android:textSize="@dimen/text_size_small"
+                    android:text="@string/about" />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvVersionNumber"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_big"
-                android:textAlignment="center"
-                android:textColor="@color/gray600"
-                android:textSize="@dimen/text_size_small"
-                tools:text="App-Version 1.3.9" />
         </LinearLayout>
 
     </ScrollView>
