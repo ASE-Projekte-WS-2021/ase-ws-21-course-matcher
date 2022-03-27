@@ -30,7 +30,6 @@
             android:paddingHorizontal="@dimen/padding_medium"
             android:paddingVertical="@dimen/padding_small"
             tools:ignore="LabelFor"/>
-
     </LinearLayout>
 
 </layout>

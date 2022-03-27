@@ -32,6 +32,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import static com.example.cm.Constants.MAX_CHAR_COUNT;
+
 public class CreateProfileActivity extends AppCompatActivity implements AuthRepository.RegisterCallback {
 
     private Bundle bundle;
@@ -74,7 +76,6 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     private void initTexts() {
         binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
         binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
-        binding.registerUsernameEditText.inputField.setKeyListener(DigitsKeyListener.getInstance(Constants.ALLOWED_CHARS_FOR_USERNAME));
 
         binding.registerDisplayNameEditText.inputLabel.setText(R.string.registerDisplaynameText);
         binding.registerDisplayNameEditText.inputField.setHint(R.string.registerFirstNameHint);
@@ -98,11 +99,27 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
             }
 
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        binding.inputFieldBio.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int currCharCount = s.length();
+                binding.bioCharacterCount.setText(String.format("%d/%d", currCharCount, MAX_CHAR_COUNT));
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
+            public void afterTextChanged(Editable s) {
+                if (s.length() > MAX_CHAR_COUNT) {
+                    binding.inputFieldBio.getText().delete(MAX_CHAR_COUNT, s.length());
+                }
             }
         });
     }
