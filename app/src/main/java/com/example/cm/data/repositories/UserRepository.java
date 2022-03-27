@@ -8,6 +8,7 @@ import static com.example.cm.Constants.MAX_QUERY_LENGTH;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.listener.Callback;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.data.models.UserPOJO;

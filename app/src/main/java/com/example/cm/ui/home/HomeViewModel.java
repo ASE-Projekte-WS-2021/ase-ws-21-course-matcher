@@ -7,11 +7,10 @@ import com.example.cm.data.listener.MeetupListener;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.User;
-import com.example.cm.data.repositories.Callback;
+import com.example.cm.data.listener.Callback;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -97,9 +96,8 @@ public class HomeViewModel extends ViewModel implements Callback {
     public void updateLocationSharing(boolean enabled, UserListener<Boolean> listener) {
         userRepository.updateField("isSharingLocation", enabled, new Callback() {
             @Override
-            public OnSuccessListener<? super Void> onSuccess(Object object) {
+            public void onSuccess(Object object) {
                 listener.onUserSuccess(enabled);
-                return null;
             }
 
             @Override
@@ -110,8 +108,7 @@ public class HomeViewModel extends ViewModel implements Callback {
     }
 
     @Override
-    public OnSuccessListener<? super Void> onSuccess(Object object) {
-        return null;
+    public void onSuccess(Object object) {
     }
 
     @Override
