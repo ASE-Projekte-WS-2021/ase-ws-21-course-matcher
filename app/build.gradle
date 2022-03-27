@@ -76,4 +76,7 @@ dependencies {
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // Konfetti for Meetup Success
+    implementation 'nl.dionsegijn:konfetti-xml:2.0.2'
 }
