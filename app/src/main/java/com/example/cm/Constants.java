@@ -1,7 +1,5 @@
 package com.example.cm;
 
-import android.os.Environment;
-
 import com.google.android.gms.maps.model.LatLng;
 
 public class Constants {

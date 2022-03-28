@@ -7,11 +7,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -21,20 +19,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.cm.AuthActivity;
 import com.example.cm.Constants;
 import com.example.cm.MainActivity;
 import com.example.cm.R;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
-import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ActivityRegisterProfileBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.List;
 
 import static com.example.cm.Constants.MAX_CHAR_COUNT;
 
