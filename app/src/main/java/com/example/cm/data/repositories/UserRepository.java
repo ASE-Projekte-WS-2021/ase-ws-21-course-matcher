@@ -360,6 +360,12 @@ public class UserRepository extends Repository {
                     if (value != null && value.exists()) {
                         User user = snapshotToUser(value);
                         List<String> friends = user.getFriends();
+
+                        // Handle case when user does not have friends
+                        if (friends.isEmpty()) {
+                            listener.onUserSuccess(new ArrayList<>());
+                            return;
+                        }
                         getStaticUsersByIds(friends, listener);
                     }
                 });

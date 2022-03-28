@@ -47,7 +47,6 @@ public class HomeViewModel extends ViewModel implements Callback {
                 int currentUserFriendCount = currentUser.getValue().getFriends().size();
                 int friendsCount = friends.size();
                 if (friendsCount == currentUserFriendCount) {
-                    Timber.d("Sending friends list to listener");
                     Set<User> friendsSet = new HashSet<>(friends);
                     friends.clear();
                     friends.addAll(friendsSet);
