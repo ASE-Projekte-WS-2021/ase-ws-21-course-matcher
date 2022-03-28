@@ -44,7 +44,7 @@ import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.listener.MeetupListener;
 import com.example.cm.data.listener.UserListener;
-import com.example.cm.data.map.MarkerClusterRenderer;
+import com.example.cm.data.map.UserClusterRenderer;
 import com.example.cm.data.map.MeetupClusterRenderer;
 import com.example.cm.data.map.SnapPagerScrollListener;
 import com.example.cm.data.models.MarkerClusterItem;
@@ -237,16 +237,25 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
 
     private void setupUserClusterManager(GoogleMap googleMap, MarkerManager markerManager) {
         userClusterManager = new ClusterManager<>(requireActivity(), googleMap, markerManager);
-        userClusterManager.setRenderer(new MarkerClusterRenderer(requireActivity(), googleMap, userClusterManager));
+        userClusterManager.setRenderer(new UserClusterRenderer(requireActivity(), googleMap, userClusterManager));
 
         userClusterManager.setOnClusterClickListener(cluster -> {
             Collection<MarkerClusterItem> clusterItems = cluster.getItems();
             List<MarkerClusterItem> users = new ArrayList<>(clusterItems);
-            User user = users.get(0).getUser();
 
-            showUserCards(user);
+            for (int i = 0; i < users.size(); i++) {
+                User user = users.get(i).getUser();
+                boolean isCurrentUser = user.getId().equals(currentUser.getId());
+
+                if (isCurrentUser) {
+                    continue;
+                }
+                showUserCards(user);
+                break;
+            }
+
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(cluster.getPosition()));
-            return false;
+            return true;
         });
         userClusterManager.setOnClusterItemClickListener(item -> {
             boolean isCurrentUser = item.isCurrentUser();
@@ -256,7 +265,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
             }
 
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(item.getUser().getLocation()));
-            return false;
+            return true;
         });
 
         NonHierarchicalDistanceBasedAlgorithm<MarkerClusterItem> clusterAlgorithm = new NonHierarchicalDistanceBasedAlgorithm<>();
@@ -297,6 +306,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
 
                 for (int i = 0; i < users.size(); i++) {
                     User user = users.get(i);
+                    if (user == null) {
+                        continue;
+                    }
+
                     if (user.getIsSharingLocation() && user.getLocation() != null) {
                         mapUserAdapter.addUser(user);
                         addMarker(user, false);
@@ -394,7 +407,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     }
 
     private MarkerClusterItem getDefaultMarker(User user, boolean isCurrentUser) {
-        Drawable drawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_profile);
+        Drawable drawable = ContextCompat.getDrawable(requireActivity(), R.drawable.ic_default_user_marker);
         return new MarkerClusterItem(user, drawable, isCurrentUser);
     }
 
@@ -402,7 +415,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_USER_ID, id);
-
         Utils.findNavController(requireActivity()).navigate(R.id.action_navigation_home_to_navigation_other_profile, bundle);
     }
 
