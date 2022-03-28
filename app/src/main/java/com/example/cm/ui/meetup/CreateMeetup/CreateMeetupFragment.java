@@ -17,12 +17,12 @@ import androidx.navigation.Navigation;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupBinding;
-import com.example.cm.ui.meetup.MeetupList.MeetupListViewModel;
 import com.example.cm.utils.Navigator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.snackbar.Snackbar;
@@ -180,10 +180,15 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         binding = null;
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
-        setMarker(Constants.DEFAULT_LOCATION, Constants.CREATE_MEETUP_ZOOM_LEVEL);
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style));
+
+        createMeetupViewModel.getCurrentUser().observe(getViewLifecycleOwner(), user -> {
+            setInitialMarker(user.getLocation());
+        });
 
         map.setOnMapClickListener(latLng -> {
             float zoomLevel = map.getCameraPosition().zoom;
@@ -193,6 +198,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
         map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker arg) {
+                // Required override
             }
 
             @Override
@@ -203,8 +209,17 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
             @Override
             public void onMarkerDrag(Marker arg) {
+                // Required override
             }
         });
+    }
+
+    private void setInitialMarker(LatLng currentLocation) {
+        if (currentLocation != null) {
+            setMarker(currentLocation, Constants.CREATE_MEETUP_ZOOM_LEVEL);
+        } else {
+            setMarker(Constants.DEFAULT_LOCATION, Constants.CREATE_MEETUP_ZOOM_LEVEL);
+        }
     }
 
     private void setMarker(LatLng latLng, float zoomLevel) {
