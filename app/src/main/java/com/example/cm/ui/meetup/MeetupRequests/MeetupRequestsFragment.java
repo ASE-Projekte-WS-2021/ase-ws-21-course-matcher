@@ -52,14 +52,29 @@ public class MeetupRequestsFragment extends Fragment implements
         requestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
         requestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), requests -> {
             List<String> userIds = getUserIds(requests);
+            List<String> meetupIds = getMeetupIds(requests);
             requestsViewModel.setUserIds(userIds);
 
             requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-                requestsListAdapter.setRequests(requests, users);
-                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
-                itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
+                requestsViewModel.setMeetupIds(meetupIds);
+
+                requestsViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
+                    requestsListAdapter.setRequests(requests, users, meetups);
+                    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
+                    itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
+                });
             });
         });
+    }
+
+    private List<String> getMeetupIds(List<MeetupRequest> requests) {
+        List<String> ids = new ArrayList<>();
+        for (MeetupRequest request : requests) {
+            if (request != null) {
+                ids.add(request.getMeetupId());
+            }
+        }
+        return ids;
     }
 
     private List<String> getUserIds(List<MeetupRequest> requests) {

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cm.R;
+import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
@@ -26,16 +27,18 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     private ViewGroup parent;
     private List<MeetupRequest> mRequests;
     private List<User> users;
+    private List<Meetup> meetups;
     private final OnMeetupRequestListener listener;
 
     public MeetupRequestListAdapter(OnMeetupRequestListener listener) {
         this.listener = listener;
     }
 
-    public void setRequests(List<MeetupRequest> newRequests, List<User> users) {
+    public void setRequests(List<MeetupRequest> newRequests, List<User> users, List<Meetup> meetups) {
         if (mRequests == null) {
             mRequests = newRequests;
             this.users = users;
+            this.meetups = meetups;
             notifyItemRangeInserted(0, newRequests.size());
             return;
         }
@@ -106,58 +109,61 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
         Context context = holder.binding.getRoot().getContext();
         MeetupRequest request = mRequests.get(position);
+        Meetup meetup = getMeetup(request.getMeetupId());
 
-        String user = String.format("@%s ", getFullName(Objects.requireNonNull(request).getSenderId()));
-        String date = request.getCreationTimeAgo();
-        String location = request.getLocation();
+        if(meetup != null){
+            String user = String.format("@%s ", getFullName(Objects.requireNonNull(request).getSenderId()));
+            String date = request.getCreationTimeAgo();
+            String location = meetup.getLocationName();
 
-        boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
+            boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
 
-        int content = 0;
-        switch (request.getType()) {
-            case MEETUP_REQUEST:
-                content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_description;
-                break;
-            case MEETUP_INFO_ACCEPTED:
-                isAccepted = true;
-                content = R.string.meetup_accepted_text;
-                break;
-            case MEETUP_INFO_DECLINED:
-                isAccepted = true;
-                content = R.string.meetup_declined_text;
-                break;
-        }
+            int content = 0;
+            switch (request.getType()) {
+                case MEETUP_REQUEST:
+                    content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_description;
+                    break;
+                case MEETUP_INFO_ACCEPTED:
+                    isAccepted = true;
+                    content = R.string.meetup_accepted_text;
+                    break;
+                case MEETUP_INFO_DECLINED:
+                    isAccepted = true;
+                    content = R.string.meetup_declined_text;
+                    break;
+            }
 
-        holder.getTvLocation().setText(location);
-        holder.getTvSender().setText(user);
-        holder.getTvDate().setText(date);
-        holder.getTvDescription().setText(content);
-        holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
-        holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
+            holder.getTvLocation().setText(location);
+            holder.getTvSender().setText(user);
+            holder.getTvDate().setText(date);
+            holder.getTvDescription().setText(content);
+            holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
+            holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
 
-        switch (request.getPhase()) {
-            case MEETUP_UPCOMING:
-                holder.getTvMeetupTime().setText(request.getFormattedTime());
-                holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.orange400));
-                holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_upcoming));
-                break;
-            case MEETUP_ACTIVE:
-                holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getFormattedTime()));
-                holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.orange600));
-                holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_active));
-                break;
-            case MEETUP_ENDED:
-                holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
-                holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.gray500));
-                holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_ended));
+            switch (meetup.getPhase()) {
+                case MEETUP_UPCOMING:
+                    holder.getTvMeetupTime().setText(request.getFormattedTime());
+                    holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.orange400));
+                    holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_upcoming));
+                    break;
+                case MEETUP_ACTIVE:
+                    holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, request.getFormattedTime()));
+                    holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.orange600));
+                    holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_active));
+                    break;
+                case MEETUP_ENDED:
+                    holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
+                    holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.gray500));
+                    holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_ended));
 
-                int color = context.getResources().getColor(R.color.outgreyed);
-                holder.getTvLocation().setTextColor(color);
-                holder.getTvSender().setTextColor(color);
-                holder.getTvDescription().setTextColor(color);
-                holder.getBtnAccept().setVisibility(View.GONE);
-                holder.getBtnDecline().setVisibility(View.GONE);
-                break;
+                    int color = context.getResources().getColor(R.color.outgreyed);
+                    holder.getTvLocation().setTextColor(color);
+                    holder.getTvSender().setTextColor(color);
+                    holder.getTvDescription().setTextColor(color);
+                    holder.getBtnAccept().setVisibility(View.GONE);
+                    holder.getBtnDecline().setVisibility(View.GONE);
+                    break;
+            }
         }
     }
 
@@ -165,6 +171,15 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         for (User user : users) {
             if (user.getId().equals(userId)) {
                 return user.getFirstName() + " " + user.getLastName();
+            }
+        }
+        return null;
+    }
+
+    private Meetup getMeetup(String meetupId) {
+        for (Meetup meetup : meetups) {
+            if (meetup.getId().equals(meetupId)) {
+                return meetup;
             }
         }
         return null;
