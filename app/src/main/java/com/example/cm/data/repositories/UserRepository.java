@@ -1,7 +1,5 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
