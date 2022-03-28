@@ -11,6 +11,7 @@ public class Constants {
     public static final String KEY_MEETUP_LOCATION_LNG = "keyMeetupLocationLng";
     public static final String KEY_CREATE_MEETUP_VM = "keyCreateMeetupViewModel";
     public static final String KEY_EMAIL = "keyEmail";
+    public static final String KEY_USERNAME = "keyUsername";
     public static final String KEY_PASSWORD = "keyPassword";
     public static final int MAX_CHAR_COUNT = 125;
     public static final int SPLASH_TIMER = 000;
@@ -65,12 +66,13 @@ public class Constants {
     public static final int ADD_MORE_TAB_INDEX = 3;
 
     public static final int MAX_QUERY_LENGTH = 10;
-    public static final long MAX_REGISTRATION_TIME = 20000; //180000
 
     // Firebase errors
     public static String WEAK_PASSWORD = "Dein Passwort muss mindestens 6 Zeichen lang sein.";
     public static String INVALID_CREDENTIALS = "Die Email-Adresse und das Passwort stimmen nicht überein.";
     public static String USER_COLLISION = "Es existiert bereits ein User mit dieser Email-Adresse.";
+    public static final long MAX_REGISTRATION_TIME = 240000;
+    public static final Throwable UNEXPECTED_USER = new Throwable("This user is not expected here.");
     public static String DEFAULT_ERROR = "Etwas ist schief gegangen.";
 
     public enum ImageType {

@@ -485,7 +485,7 @@ public class UserRepository extends Repository {
     public void getUsernames(UsernamesRetrievedCallback callback) {
         List<String> usernames = new ArrayList<>();
         userCollection.get().addOnCompleteListener(executorService, task -> {
-            if (task.isComplete()) {
+            if (task.isComplete() && FirebaseAuth.getInstance().getCurrentUser() != null) {
                 QuerySnapshot result = task.getResult();
                 List<User> users = snapshotToUserList(result);
                 for(User user : users) {

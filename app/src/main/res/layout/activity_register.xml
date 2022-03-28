@@ -63,11 +63,25 @@
                 android:layout_marginBottom="@dimen/padding_big"/>
 
             <include
+                android:id="@+id/registerUsernameEditText"
+                layout="@layout/input_text_with_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:id="@+id/usernameAlreadyExistsTv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/registerUsernameAlreadyExists"
+                android:textColor="@color/gray600"
+                android:visibility="gone"/>
+
+            <include
                 android:id="@+id/registerPasswordEditText"
                 layout="@layout/input_password_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_big"/>
+                android:layout_marginVertical="@dimen/padding_big"/>
 
             <include
                 android:id="@+id/registerPasswordRepeatEditText"
@@ -80,7 +94,7 @@
                 android:id="@+id/registerRegisterBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_double"
+                android:layout_marginTop="@dimen/padding_big"
                 android:gravity="center"
                 android:text="@string/registerRegisterBtn" />
 

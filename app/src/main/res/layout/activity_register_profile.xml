@@ -82,21 +82,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <include
-                android:id="@+id/registerUsernameEditText"
-                layout="@layout/input_text_with_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
-
-            <TextView
-                android:id="@+id/usernameAlreadyExistsTv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/registerUsernameAlreadyExists"
-                android:textColor="@color/gray600"
-                android:visibility="gone"/>
-
-            <include
                 android:id="@+id/registerDisplayNameEditText"
                 layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"

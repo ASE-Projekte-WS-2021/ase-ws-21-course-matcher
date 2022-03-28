@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -37,18 +38,14 @@ import java.util.List;
 
 import static com.example.cm.Constants.MAX_CHAR_COUNT;
 
-public class CreateProfileActivity extends AppCompatActivity implements AuthRepository.RegisterCallback, UserRepository.UsernamesRetrievedCallback {
+public class CreateProfileActivity extends AppCompatActivity implements AuthRepository.RegisterCallback {
 
     private Bundle bundle;
     private AuthViewModel authViewModel;
     private ActivityRegisterProfileBinding binding;
     private ActivityResultLauncher<String> storagePermissionRequestLauncher;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
-    private List<String> usernames;
     private String imgString;
-
-    private Handler handler;
-    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,44 +58,11 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         setContentView(binding.getRoot());
         bundle = getIntent().getExtras();
 
-        initTimer();
         initViewModel();
         initImagePicker();
         initPermissionRequest();
         initTexts();
-        initTemporaryAuth();
-    }
-
-    private void initTimer() {
-        handler = new Handler();
-        runnable = () -> {
-            closeActivityOnTimeout();
-        };
-    }
-
-    private void closeActivityOnTimeout() {
-        binding.createProfileBtn.setEnabled(false);
-        Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.registrationTooLong, Snackbar.LENGTH_LONG);
-        snackbar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
-                    Intent intent = new Intent(CreateProfileActivity.this, AuthActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-
-            @Override
-            public void onShown(Snackbar snackbar) {
-            }
-        });
-        snackbar.show();
-    }
-
-    private void initTemporaryAuth() {
-        authViewModel.createTemporaryUser(this);
+        initListeners();
     }
 
     private void initViewModel() {
@@ -110,9 +74,6 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     }
 
     private void initTexts() {
-        binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
-        binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
-
         binding.registerDisplayNameEditText.inputLabel.setText(R.string.registerDisplaynameText);
         binding.registerDisplayNameEditText.inputField.setHint(R.string.registerFirstNameHint);
     }
@@ -120,28 +81,6 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     private void initListeners() {
         binding.editProfileImageBtn.setOnClickListener(this::onEditImgClicked);
         binding.createProfileBtn.setOnClickListener(this::registerAndStart);
-
-        authViewModel.getUsernames(this);
-        binding.registerUsernameEditText.inputField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                binding.createProfileBtn.setEnabled(false);
-
-                // check if username is in use already
-                if (usernames.contains(charSequence.toString())) {
-                    binding.usernameAlreadyExistsTv.setVisibility(View.VISIBLE);
-                } else {
-                    binding.usernameAlreadyExistsTv.setVisibility(View.GONE);
-                    binding.createProfileBtn.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-            @Override
-            public void afterTextChanged(Editable editable) {}
-        });
 
         binding.inputFieldBio.addTextChangedListener(new TextWatcher() {
             @Override
@@ -160,10 +99,6 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
                 }
             }
         });
-    }
-
-    private void startTimer() {
-        handler.postDelayed(runnable, Constants.MAX_REGISTRATION_TIME);
     }
 
     /**
@@ -222,20 +157,10 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
 
     public void registerAndStart(View view) {
         String email = bundle.getString(Constants.KEY_EMAIL);
+        String username = bundle.getString(Constants.KEY_USERNAME);
         String password = bundle.getString(Constants.KEY_PASSWORD);
-        String userName = binding.registerUsernameEditText.inputField.getText().toString();
         String displayName = binding.registerDisplayNameEditText.inputField.getText().toString();
         String bio = binding.inputFieldBio.getText().toString();
-
-        if (userName.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.registerUsernameEmpty, Snackbar.LENGTH_LONG).show();
-            return;
-        }
-
-        if (usernames.contains(userName)) {
-            Snackbar.make(binding.getRoot(), R.string.registerUsernameAlreadyExists, Snackbar.LENGTH_LONG).show();
-            return;
-        }
 
         if (displayName.isEmpty()) {
             Snackbar.make(binding.getRoot(), R.string.registerDisplayNameEmpty, Snackbar.LENGTH_LONG).show();
@@ -243,36 +168,16 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         }
 
         authViewModel.deleteCurrentAuth();
-        authViewModel.register(email, password, userName, displayName, imgString, bio, this);
+        authViewModel.register(email, password, username, displayName, imgString, bio, this);
         binding.createProfileBtn.setEnabled(false);
     }
 
     @Override
     public void onRegisterSuccess(User user) {
-        if (user.getEmail().equals(Constants.TEMP_EMAIL)) {
-            startTimer();
-            initListeners();
-        } else {
-            authViewModel.createUser(user);
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (authViewModel.getUserLiveData().getValue() != null
-                && authViewModel.getUserLiveData().getValue().getEmail().equals(Constants.TEMP_EMAIL)) {
-            authViewModel.deleteCurrentAuth();
-        }
-        handler.removeCallbacks(runnable);
-    }
-
-    @Override
-    public void onUsernamesRetrieved(List<String> usernames) {
-        this.usernames = usernames;
+        authViewModel.createUser(user);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
