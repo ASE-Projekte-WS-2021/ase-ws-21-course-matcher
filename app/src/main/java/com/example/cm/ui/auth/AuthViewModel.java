@@ -51,6 +51,10 @@ public class AuthViewModel extends ViewModel implements UserListener {
         }
     }
 
+    public LiveData<User> getUser() {
+        return userRepository.getCurrentUser();
+    }
+
     public LiveData<FirebaseUser> getUserLiveData() {
         return userLiveData;
     }

@@ -14,11 +14,10 @@ import com.example.cm.R;
 import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
-import com.example.cm.data.repositories.Callback;
+import com.example.cm.data.listener.Callback;
 import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.utils.InputValidator;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -83,10 +82,9 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
     }
 
     @Override
-    public OnSuccessListener<? super Void> onSuccess(Object object) {
+    public void onSuccess(Object object) {
         status.postValue(new Status(StatusFlag.SUCCESS, R.string.edit_profile_success));
         user = userRepository.getCurrentUser();
-        return null;
     }
 
     @Override

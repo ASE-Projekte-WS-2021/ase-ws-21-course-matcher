@@ -2,7 +2,6 @@ package com.example.cm.ui.home;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static com.example.cm.Constants.DEFAULT_CARD_OFFSET;
 import static com.example.cm.Constants.DEFAULT_LOCATION;
 import static com.example.cm.Constants.DEFAULT_MAP_ZOOM;
@@ -14,6 +13,7 @@ import static com.example.cm.Constants.MAX_CLUSTER_ITEM_DISTANCE;
 import static com.example.cm.Constants.ON_SNAPPED_MAP_ZOOM;
 import static com.example.cm.Constants.PREFS_SETTINGS_KEY;
 import static com.example.cm.Constants.PREFS_SHARE_LOCATION_KEY;
+import static com.example.cm.utils.Utils.hasLocationPermission;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -58,9 +58,9 @@ import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
@@ -72,7 +72,7 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback, PositionManager.PositionListener, MapUserAdapter.OnItemClickListener, SnapPagerScrollListener.OnChangeListener, GoogleMap.OnMapClickListener {
+public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUserAdapter.OnItemClickListener, SnapPagerScrollListener.OnChangeListener {
 
     private ActivityResultLauncher<String> locationPermissionLauncher;
     private ClusterManager<MarkerClusterItem> userClusterManager;
@@ -90,12 +90,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         initRecyclerView();
         initLocationPermissionLauncher();
-        initPermissionCheck();
         initGoogleMap(savedInstanceState);
-        initViewModel();
-        initListeners();
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initPermissionCheck();
+        initViewModel();
+        initListeners();
     }
 
     private void initListeners() {
@@ -125,10 +130,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(PREFS_SETTINGS_KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
-        boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED;
-
-        if (!hasCoarseLocationPermission || !hasFineLocationPermission) {
+        if (!hasLocationPermission(requireActivity(), ACCESS_COARSE_LOCATION) || !hasLocationPermission(requireActivity(), ACCESS_FINE_LOCATION)) {
             locationPermissionLauncher.launch(ACCESS_FINE_LOCATION);
             return;
         }
@@ -154,13 +156,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         mapView = binding.mapView;
         mapView.onCreate(savedInstanceState);
         mapView.onResume();
-
-        try {
-            MapsInitializer.initialize(requireActivity().getApplicationContext());
-        } catch (Exception e) {
-            Timber.e(e);
-        }
-
         mapView.getMapAsync(this);
     }
 
@@ -178,15 +173,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     private void initPermissionCheck() {
-        boolean hasFineLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
-        boolean hasCoarseLocationPermission = ContextCompat.checkSelfPermission(requireActivity(), ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED;
-
-        if (hasCoarseLocationPermission && hasFineLocationPermission) {
-            positionManager.requestCurrentLocation(this);
-        } else if (!hasCoarseLocationPermission && !hasFineLocationPermission) {
-            locationPermissionLauncher.launch(ACCESS_FINE_LOCATION);
+        if (hasLocationPermission(requireActivity(), ACCESS_COARSE_LOCATION) && hasLocationPermission(requireActivity(), ACCESS_FINE_LOCATION)) {
+            positionManager.requestCurrentLocation(position -> {
+                onPositionChanged(position);
+            });
         } else {
-            positionManager.requestCurrentLocation(this);
+            locationPermissionLauncher.launch(ACCESS_FINE_LOCATION);
         }
     }
 
@@ -195,7 +187,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 new ActivityResultContracts.RequestPermission(),
                 request -> {
                     if (request) {
-                        positionManager.requestCurrentLocation(this);
+                        positionManager.requestCurrentLocation(position -> {
+                            onPositionChanged(position);
+                        });
                         homeViewModel.updateLocationSharing(true);
                     }
                 }
@@ -204,49 +198,54 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
     private void initViewModel() {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-        observeCurrentUser();
     }
 
     private void observeCurrentUser() {
         homeViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
-            if (currentUser == null) {
-                return;
-            }
-
             this.currentUser = currentUser;
-            if (currentUser.getIsSharingLocation()) {
-                binding.btnShowLocation.setVisibility(View.VISIBLE);
-            } else {
-                binding.btnHideLocation.setVisibility(View.VISIBLE);
-            }
+            updateShareLocationButton(currentUser);
+            observeFriends();
         });
+    }
+
+    private void updateShareLocationButton(User currentUser) {
+        if (currentUser.getIsSharingLocation()) {
+            binding.btnShowLocation.setVisibility(View.VISIBLE);
+        } else {
+            binding.btnHideLocation.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style));
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM));
-        googleMap.setOnMapClickListener(this);
+        googleMap.setOnMapClickListener(latLng -> {
+            binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
+        });
 
         MarkerManager markerManager = new MarkerManager(googleMap);
-
         setupUserClusterManager(googleMap, markerManager);
         setupMeetupClusterManager(googleMap, markerManager);
         // Needed to animate zoom changes for markers and cluster items correctly
-        googleMap.setOnCameraIdleListener(userClusterManager);
-        googleMap.setOnCameraIdleListener(meetupClusterManager);
+        googleMap.setOnCameraIdleListener(() -> {
+            userClusterManager.onCameraIdle();
+            meetupClusterManager.onCameraIdle();
+        });
     }
 
     private void setupUserClusterManager(GoogleMap googleMap, MarkerManager markerManager) {
         userClusterManager = new ClusterManager<>(requireActivity(), googleMap, markerManager);
         userClusterManager.setRenderer(new MarkerClusterRenderer(requireActivity(), googleMap, userClusterManager));
+
         userClusterManager.setOnClusterClickListener(cluster -> {
             Collection<MarkerClusterItem> clusterItems = cluster.getItems();
             List<MarkerClusterItem> users = new ArrayList<>(clusterItems);
             User user = users.get(0).getUser();
+
             showUserCards(user);
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(cluster.getPosition()));
-
             return false;
         });
         userClusterManager.setOnClusterItemClickListener(item -> {
@@ -276,6 +275,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         });
     }
 
+
     private void observeFriends() {
         homeViewModel.getFriends(new UserListener<List<User>>() {
             @Override
@@ -286,18 +286,27 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
 
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.clearItems();
+                    userClusterManager.cluster();
+                    mapUserAdapter.removeUsers();
+
+                    // Set initial position of user cards offset of screen
+                    if (binding != null) {
+                        binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
+                    }
                 });
 
-                for (User user : users) {
+                for (int i = 0; i < users.size(); i++) {
+                    User user = users.get(i);
                     if (user.getIsSharingLocation() && user.getLocation() != null) {
                         mapUserAdapter.addUser(user);
                         addMarker(user, false);
                     }
                 }
-                // Set initial position of user cards offset of screen
-                if (binding != null) {
-                    binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
-                }
+                addMarker(currentUser, true);
+
+                requireActivity().runOnUiThread(() -> {
+                    userClusterManager.cluster();
+                });
             }
 
             @Override
@@ -307,15 +316,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         });
     }
 
-
     private void observeMeetups() {
         homeViewModel.getCurrentMeetups(new MeetupListener<List<Meetup>>() {
-
             @Override
             public void onMeetupSuccess(List<Meetup> meetups) {
-                if (userClusterManager == null || meetups.isEmpty()) {
+                if (meetupClusterManager == null || meetups.isEmpty()) {
                     return;
                 }
+
+                requireActivity().runOnUiThread(() -> {
+                    meetupClusterManager.clearItems();
+                    meetupClusterManager.cluster();
+                });
+
                 for (Meetup meetup : meetups) {
                     addMeetupMarker(meetup);
                 }
@@ -328,18 +341,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         });
     }
 
-
-    @Override
-    public void onPositionChanged(LatLng position) {
-        if (googleMap == null || currentUser == null) {
+    private void onPositionChanged(LatLng position) {
+        if (googleMap == null || currentUser == null || homeViewModel == null || binding == null) {
             return;
         }
 
         currentUser.setLocation(position);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position, DEFAULT_MAP_ZOOM));
         homeViewModel.updateLocation(position);
-        addMarker(currentUser, true);
-        userClusterManager.cluster();
+        observeCurrentUser();
     }
 
     private void addMeetupMarker(Meetup meetup) {
@@ -366,7 +376,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.addItem(markerClusterItem);
-                    userClusterManager.cluster();
                 });
             }
 
@@ -375,7 +384,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, placeholder, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.addItem(markerClusterItem);
-                    userClusterManager.cluster();
                 });
             }
         });
@@ -424,12 +432,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, ON_SNAPPED_MAP_ZOOM));
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
     private void showUserCards(User user) {
         String userId = user.getId();
         int position = mapUserAdapter.getPositionBy(userId);
@@ -449,9 +451,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
     }
 
     @Override
-    public void onMapClick(@NonNull LatLng latLng) {
-        // Hide user cards
-        binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        homeViewModel.getCurrentUser().removeObservers(getViewLifecycleOwner());
     }
 
     @Override
@@ -459,8 +462,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         super.onResume();
         if (mapView != null) {
             mapView.onResume();
-            observeFriends();
+            //initPermissionCheck();
             observeMeetups();
+            observeCurrentUser();
         }
     }
 
@@ -470,6 +474,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Positi
         if (mapView != null) {
             mapView.onPause();
         }
+        homeViewModel.resetUserList();
     }
 
     @Override

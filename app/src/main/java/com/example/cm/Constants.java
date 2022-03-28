@@ -34,7 +34,7 @@ public class Constants {
     public static final int HALVING_FACTOR = 2;
     public static final LatLng DEFAULT_LOCATION = new LatLng(48.992162698, 12.090332972);
     public static final int MARKER_PADDING = 25;
-    public static final float DEFAULT_MAP_ZOOM = 12.5f;
+    public static final float DEFAULT_MAP_ZOOM = 10f;
     public static final int MARKER_SIZE = 150;
     public static final int MEETUP_COUNT_RADIUS = 30;
     public static final int MEETUP_COUNT_TEXT_SIZE = 30;
@@ -44,7 +44,7 @@ public class Constants {
     public static final float FINAL_CARD_ALPHA = 1f;
     public static final float ON_SNAPPED_MAP_ZOOM = 15.0f;
     public static final int DEFAULT_CARD_OFFSET = 0;
-    public static final int MAX_CLUSTER_ITEM_DISTANCE = 15;
+    public static final int MAX_CLUSTER_ITEM_DISTANCE = 40;
     public static final int CURRENT_USER_Z_INDEX = 999;
     public static final int MEETUP_Z_INDEX = 9999;
 
@@ -75,6 +75,25 @@ public class Constants {
     public static final long MAX_REGISTRATION_TIME = 240000;
     public static final Throwable UNEXPECTED_USER = new Throwable("This user is not expected here.");
     public static String DEFAULT_ERROR = "Etwas ist schief gegangen.";
+
+    // Repository Field Names
+    public static final String FIELD_FRIENDS = "friends";
+    public static final String FIELD_PROFILE_IMAGE_STRING = "profileImageString";
+    public static final String FIELD_LOCATION = "location";
+    public static final String FIELD_CONFIRMED_FRIENDS = "confirmedFriends";
+    public static final String FIELD_DECLINED_FRIENDS = "declinedFriends";
+    public static final String FIELD_INVITED_FRIENDS = "invitedFriends";
+    public static final String FIELD_LATE_FRIENDS = "lateFriends";
+    public static final String FIELD_TIMESTAMP = "timestamp";
+    public static final String FIELD_PHASE = "phase";
+    public static final String FIELD_SENDER_ID = "senderId";
+    public static final String FIELD_RECEIVER_ID = "receiverId";
+    public static final String FIELD_STATE = "state";
+    public static final String FIELD_TYPE = "type";
+    public static final String FIELD_CREATED_AT = "createdAt";
+    public static final String FIELD_MEETUP_AT = "meetupAt";
+    public static final String FIELD_MEETUP_ID = "meetupId";
+    public static final String FIELD_ID = "id";
 
     public enum ImageType {
         PROFILE_IMAGE,

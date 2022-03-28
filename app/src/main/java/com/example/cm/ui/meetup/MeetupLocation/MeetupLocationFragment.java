@@ -20,6 +20,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -61,6 +62,7 @@ public class MeetupLocationFragment extends Fragment implements OnMapReadyCallba
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style));
 
         if (bundle.containsKey(Constants.KEY_MEETUP_LOCATION_LAT)) {
             double meetupLat = bundle.getDouble(Constants.KEY_MEETUP_LOCATION_LAT);

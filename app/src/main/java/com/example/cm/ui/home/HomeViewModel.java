@@ -7,19 +7,23 @@ import com.example.cm.data.listener.MeetupListener;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.User;
-import com.example.cm.data.repositories.Callback;
+import com.example.cm.data.listener.Callback;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import timber.log.Timber;
 
 public class HomeViewModel extends ViewModel implements Callback {
     private final UserRepository userRepository;
     private final MeetupRepository meetupRepository;
     private final MutableLiveData<User> currentUser;
+    private final List<User> friends = new ArrayList<>();
 
     public HomeViewModel() {
         userRepository = UserRepository.getInstance();
@@ -27,11 +31,29 @@ public class HomeViewModel extends ViewModel implements Callback {
         currentUser = userRepository.getStaticCurrentUser();
     }
 
+    public void resetUserList() {
+        friends.clear();
+    }
+
     public void getFriends(UserListener<List<User>> listener) {
         userRepository.getStaticFriends(new UserListener<List<User>>() {
             @Override
             public void onUserSuccess(List<User> users) {
-                listener.onUserSuccess(users);
+                if (currentUser.getValue() == null) {
+                    return;
+                }
+                friends.addAll(users);
+
+                int currentUserFriendCount = currentUser.getValue().getFriends().size();
+                int friendsCount = friends.size();
+                if (friendsCount == currentUserFriendCount) {
+                    Timber.d("Sending friends list to listener");
+                    Set<User> friendsSet = new HashSet<>(friends);
+                    friends.clear();
+                    friends.addAll(friendsSet);
+                    listener.onUserSuccess(friends);
+                    resetUserList();
+                }
             }
 
             @Override
@@ -74,9 +96,8 @@ public class HomeViewModel extends ViewModel implements Callback {
     public void updateLocationSharing(boolean enabled, UserListener<Boolean> listener) {
         userRepository.updateField("isSharingLocation", enabled, new Callback() {
             @Override
-            public OnSuccessListener<? super Void> onSuccess(Object object) {
+            public void onSuccess(Object object) {
                 listener.onUserSuccess(enabled);
-                return null;
             }
 
             @Override
@@ -87,8 +108,7 @@ public class HomeViewModel extends ViewModel implements Callback {
     }
 
     @Override
-    public OnSuccessListener<? super Void> onSuccess(Object object) {
-        return null;
+    public void onSuccess(Object object) {
     }
 
     @Override

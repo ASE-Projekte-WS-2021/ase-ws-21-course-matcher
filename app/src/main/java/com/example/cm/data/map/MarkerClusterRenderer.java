@@ -10,7 +10,9 @@ import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
+import com.example.cm.R;
 import com.example.cm.data.models.MarkerClusterItem;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -24,9 +26,11 @@ import com.google.maps.android.ui.IconGenerator;
 public class MarkerClusterRenderer extends DefaultClusterRenderer<MarkerClusterItem> {
     private final ImageView imageView;
     private final IconGenerator iconGenerator;
+    private final Context context;
 
     public MarkerClusterRenderer(Context context, GoogleMap googleMap, ClusterManager<MarkerClusterItem> clusterManager) {
         super(context, googleMap, clusterManager);
+        this.context = context;
         imageView = new ImageView(context);
         iconGenerator = new IconGenerator(context);
         imageView.setPadding(MARKER_PADDING, MARKER_PADDING, MARKER_PADDING, MARKER_PADDING);
@@ -55,10 +59,13 @@ public class MarkerClusterRenderer extends DefaultClusterRenderer<MarkerClusterI
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
-
-    // Only show clusters when 2 or more items are close together
     @Override
     protected boolean shouldRenderAsCluster(Cluster cluster) {
         return cluster.getSize() > 1;
+    }
+
+    @Override
+    protected int getColor(int clusterSize) {
+        return ContextCompat.getColor(context, R.color.gray600);
     }
 }
