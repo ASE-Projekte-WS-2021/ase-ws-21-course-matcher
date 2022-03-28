@@ -81,36 +81,12 @@
                     app:layout_constraintEnd_toEndOf="@+id/profileImage" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
+            <include
+                android:id="@+id/registerUsernameEditText"
+                layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/readexpro_regular"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/gray700"
-                    android:textSize="@dimen/text_size_small"
-                    android:text="@string/input_label_username" />
-
-                <EditText
-                    android:id="@+id/inputUsername"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_half"
-                    android:background="@drawable/style_edittext"
-                    android:importantForAutofill="no"
-                    android:inputType="textNoSuggestions"
-                    android:lines="1"
-                    android:maxLines="1"
-                    android:hint="@string/registerUsernameHint"
-                    android:digits="qwertzuiopasdfghjklyxcvbnm0123456789_-."
-                    android:paddingHorizontal="@dimen/padding_medium"
-                    android:paddingVertical="@dimen/padding_small"
-                    tools:ignore="LabelFor"/>
-            </LinearLayout>
+                />
 
             <TextView
                 android:id="@+id/usernameAlreadyExistsTv"

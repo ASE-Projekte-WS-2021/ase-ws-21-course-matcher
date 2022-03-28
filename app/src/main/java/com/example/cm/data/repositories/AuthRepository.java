@@ -86,9 +86,6 @@ public class AuthRepository extends Repository {
             return;
         }
 
-        boolean isAuth = FirebaseAuth.getInstance().getCurrentUser() != null;
-        Log.e("IS AUTH", "repo:" + isAuth);
-
         firebaseAuth.getCurrentUser().delete()
                 .addOnSuccessListener(executorService, task -> {
                     userLiveData.postValue(null);

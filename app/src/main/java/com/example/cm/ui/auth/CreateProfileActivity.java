@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,22 +26,25 @@ import com.example.cm.MainActivity;
 import com.example.cm.R;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
+import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ActivityRegisterProfileBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.List;
 
 import static com.example.cm.Constants.MAX_CHAR_COUNT;
 
-public class CreateProfileActivity extends AppCompatActivity implements AuthRepository.RegisterCallback {
+public class CreateProfileActivity extends AppCompatActivity implements AuthRepository.RegisterCallback, UserRepository.UsernamesRetrievedCallback {
 
     private Bundle bundle;
     private AuthViewModel authViewModel;
     private ActivityRegisterProfileBinding binding;
     private ActivityResultLauncher<String> storagePermissionRequestLauncher;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private List<String> usernames;
     private String imgString;
 
     @Override
@@ -85,15 +89,17 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         binding.editProfileImageBtn.setOnClickListener(this::onEditImgClicked);
         binding.createProfileBtn.setOnClickListener(this::registerAndStart);
 
+        authViewModel.getUsernames(this);
         binding.registerUsernameEditText.inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 binding.createProfileBtn.setEnabled(false);
-                if (authViewModel.doesUsernameExist(charSequence.toString())) {
+
+                // check if username is in use already
+                if (usernames.contains(charSequence.toString())) {
                     binding.usernameAlreadyExistsTv.setVisibility(View.VISIBLE);
                 } else {
-                    binding.usernameAlreadyExistsTv.setVisibility(View.VISIBLE);
-                    binding.usernameAlreadyExistsTv.setText("ok");
+                    binding.usernameAlreadyExistsTv.setVisibility(View.GONE);
                     binding.createProfileBtn.setEnabled(true);
                 }
             }
@@ -190,7 +196,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
             return;
         }
 
-        if (binding.usernameAlreadyExistsTv.getVisibility() == View.VISIBLE) {
+        if (usernames.contains(userName)) {
             Snackbar.make(binding.getRoot(), R.string.registerUsernameAlreadyExists, Snackbar.LENGTH_LONG).show();
             return;
         }
@@ -225,5 +231,10 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
                 && authViewModel.getUserLiveData().getValue().getEmail().equals(Constants.TEMP_EMAIL)) {
             authViewModel.deleteCurrentAuth();
         }
+    }
+
+    @Override
+    public void onUsernamesRetrieved(List<String> usernames) {
+        this.usernames = usernames;
     }
 }

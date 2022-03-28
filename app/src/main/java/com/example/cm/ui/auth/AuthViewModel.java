@@ -1,5 +1,7 @@
 package com.example.cm.ui.auth;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,6 +12,8 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.List;
 
 public class AuthViewModel extends ViewModel implements UserListener {
     private final AuthRepository authRepository;
@@ -55,8 +59,9 @@ public class AuthViewModel extends ViewModel implements UserListener {
         return error;
     }
 
-    public boolean doesUsernameExist(String username) {
-        return userRepository.checkUsernameExists(username);
+    public void getUsernames(UserRepository.UsernamesRetrievedCallback callback) {
+        Log.e("GET USERNAMES", "view model");
+        userRepository.getUsernames(callback);
     }
 
     @Override

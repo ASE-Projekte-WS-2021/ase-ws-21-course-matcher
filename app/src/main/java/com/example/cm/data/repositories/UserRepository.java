@@ -33,6 +33,7 @@ public class UserRepository extends Repository {
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
+    private MutableLiveData<List<String>> mutableUsernames = new MutableLiveData<>();
 
     public UserRepository() {
     }
@@ -481,27 +482,17 @@ public class UserRepository extends Repository {
         return mutableUsers;
     }
 
-    public boolean checkUsernameExists(String username) {
-        final Boolean[] doesUsernameExist = {false};
-        userCollection.get().addOnCompleteListener(task -> {
-            QuerySnapshot result = task.getResult();
-            if (result != null) {
-                for (DocumentSnapshot userSnapshot : result) {
-                    User user = snapshotToUser(userSnapshot);
-                    if (user.getUsername().equals(username)) {
-                        doesUsernameExist[0] = true;
-                        break;
-                    }
+    public void getUsernames(UsernamesRetrievedCallback callback) {
+        List<String> usernames = new ArrayList<>();
+        userCollection.get().addOnCompleteListener(executorService, task -> {
+            if (task.isComplete()) {
+                QuerySnapshot result = task.getResult();
+                List<User> users = snapshotToUserList(result);
+                for(User user : users) {
+                    usernames.add(user.getUsername());
                 }
+                callback.onUsernamesRetrieved(usernames);
             }
-        });
-        return doesUsernameExist[0];
-    }
-
-    public void checkProfile(String userId, ProfileCheckListener listener) {
-        userCollection.document(userId).get().addOnCompleteListener(task -> {
-            DocumentSnapshot result = task.getResult();
-            listener.onProfileChecked(result != null && result.exists() && result.getData() != null);
         });
     }
 
@@ -601,7 +592,7 @@ public class UserRepository extends Repository {
         return userPOJO.toObject();
     }
 
-    public interface ProfileCheckListener {
-        void onProfileChecked(boolean hasProfile);
+    public interface UsernamesRetrievedCallback {
+        void onUsernamesRetrieved(List<String> usernames);
     }
 }
