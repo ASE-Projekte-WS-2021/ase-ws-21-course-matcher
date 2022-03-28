@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -30,8 +29,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import timber.log.Timber;
 
 public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener, OnMapReadyCallback {
 
@@ -62,7 +59,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         initListeners();
         return binding.getRoot();
     }
-
 
     @SuppressLint("NotifyDataSetChanged")
     private void initUIAndViewModel() {
@@ -161,7 +157,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
             binding.acceptButton.setVisibility(View.INVISIBLE);
             binding.lateButton.setVisibility(View.GONE);
             binding.declineButton.setVisibility(View.GONE);
-
         }
 
         // current user is creator of meetup
@@ -199,7 +194,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         binding.fabBackground.setVisibility(View.INVISIBLE);
         binding.fabMenu.close(true);
     }
-
 
     private void initListeners() {
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
@@ -242,9 +236,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     public void onMapReady(@NonNull GoogleMap googleMap) {
         map = googleMap;
         setMarker(meetupDetailedViewModel.getMeetupLocation());
-        map.setOnMapClickListener(latLng -> {
-            onMap();
-        });
+        map.setOnMapClickListener(latLng -> onMap());
     }
 
     private void setMarker(LatLng latLng) {
