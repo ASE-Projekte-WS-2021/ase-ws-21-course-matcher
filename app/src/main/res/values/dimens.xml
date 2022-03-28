@@ -39,10 +39,12 @@
     <dimen name="padding_ultra">80dp</dimen>
     <dimen name="stroke_width_half">1dp</dimen>
 
+
     <dimen name="layout_weight_four">4</dimen>
     <dimen name="layout_weight_nine">9</dimen>
     <dimen name="layout_weight_thirteen">13</dimen>
     <dimen name="edit_profile_img_size">100dp</dimen>
 
     <dimen name="availability_button_size">35dp</dimen>
+
 </resources>

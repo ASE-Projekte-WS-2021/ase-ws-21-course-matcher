@@ -23,6 +23,7 @@
     <color name="red">#E54E3A</color>
 
     <!-- Alpha -->
+    <color name="outwhited">#C6FFFFFF</color>
     <color name="outgreyed">#73505971</color>
     <color name="orange400_alpha">#15E89654</color>
     <color name="orange600_alpha">#15B34A24</color>
@@ -40,4 +41,5 @@
     <color name="gray_600">#FF757575</color>
     <color name="green">#009944</color>
     <color name="onbarding_background">#f2f2f2</color>
+    
 </resources>
