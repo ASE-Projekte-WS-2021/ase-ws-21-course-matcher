@@ -1,5 +1,15 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.Constants.FIELD_CREATED_AT;
+import static com.example.cm.Constants.FIELD_ID;
+import static com.example.cm.Constants.FIELD_LOCATION;
+import static com.example.cm.Constants.FIELD_MEETUP_AT;
+import static com.example.cm.Constants.FIELD_MEETUP_ID;
+import static com.example.cm.Constants.FIELD_PHASE;
+import static com.example.cm.Constants.FIELD_RECEIVER_ID;
+import static com.example.cm.Constants.FIELD_SENDER_ID;
+import static com.example.cm.Constants.FIELD_STATE;
+import static com.example.cm.Constants.FIELD_TYPE;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
@@ -16,14 +26,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class MeetupRequestRepository extends Repository {
-
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());
@@ -34,6 +41,8 @@ public class MeetupRequestRepository extends Repository {
 
     /**
      * Get all meetup requests for currently signed in user
+     *
+     * @return LiveData List of meetup requests
      */
     public MutableLiveData<List<MeetupRequest>> getMeetupRequestsForUser() {
         if (auth.getCurrentUser() == null) {
@@ -41,9 +50,9 @@ public class MeetupRequestRepository extends Repository {
         }
         String currentUserId = auth.getCurrentUser().getUid();
 
-        meetupRequestCollection.whereEqualTo("receiverId", currentUserId)
-                .orderBy("state", Query.Direction.DESCENDING)
-                .orderBy("createdAt", Query.Direction.DESCENDING)
+        meetupRequestCollection.whereEqualTo(FIELD_RECEIVER_ID, currentUserId)
+                .orderBy(FIELD_STATE, Query.Direction.DESCENDING)
+                .orderBy(FIELD_CREATED_AT, Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         return;
@@ -54,7 +63,7 @@ public class MeetupRequestRepository extends Repository {
                     if (value != null && !value.isEmpty()) {
                         List<MeetupRequest> requestsToReturn = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
-                            Request.RequestState currentState = snapshot.get("state", Request.RequestState.class);
+                            Request.RequestState currentState = snapshot.get(FIELD_STATE, Request.RequestState.class);
                             if (currentState != REQUEST_DECLINED) {
                                 requestsToReturn.add(snapshotToMeetupRequest(snapshot));
                             }
@@ -66,38 +75,24 @@ public class MeetupRequestRepository extends Repository {
     }
 
     /**
-     * Convert a list of snapshots to a list of mutable meetup requests
-     *
-     * @param documents List of snapshots returned from Firestore
-     * @return List of mutable meetup requests
-     */
-    private List<MutableLiveData<MeetupRequest>> snapshotToMutableMeetupRequestList(QuerySnapshot documents) {
-        List<MutableLiveData<MeetupRequest>> requests = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents) {
-            requests.add(new MutableLiveData<>(snapshotToMeetupRequest(document)));
-        }
-        return requests;
-    }
-
-    /**
      * Convert a single snapshot to a meetup request model
      *
      * @param document Snapshot of a meetup request returned from Firestore
      * @return Returns a meetup request built from firestore document
      */
     private MeetupRequest snapshotToMeetupRequest(DocumentSnapshot document) {
-        MeetupRequest.MeetupRequestType notType = Objects.requireNonNull(document.get("type", MeetupRequest.MeetupRequestType.class));
+        MeetupRequest.MeetupRequestType notType = document.get(FIELD_TYPE, MeetupRequest.MeetupRequestType.class);
         MeetupRequest request = new MeetupRequest(notType);
 
         request.setId(document.getId());
-        request.setSenderId(document.getString("senderId"));
-        request.setReceiverId(document.getString("receiverId"));
-        request.setCreatedAt(document.getDate("createdAt"));
-        request.setState(document.get("state", Request.RequestState.class));
-        request.setMeetupId(document.getString("meetupId"));
-        request.setLocation(document.getString("location"));
-        request.setMeetupAt(document.getDate("meetupAt"));
-        request.setPhase(document.get("phase", MeetupPhase.class));
+        request.setSenderId(document.getString(FIELD_SENDER_ID));
+        request.setReceiverId(document.getString(FIELD_RECEIVER_ID));
+        request.setCreatedAt(document.getDate(FIELD_CREATED_AT));
+        request.setState(document.get(FIELD_STATE, Request.RequestState.class));
+        request.setMeetupId(document.getString(FIELD_MEETUP_ID));
+        request.setLocation(document.getString(FIELD_LOCATION));
+        request.setMeetupAt(document.getDate(FIELD_MEETUP_AT));
+        request.setPhase(document.get(FIELD_PHASE, MeetupPhase.class));
 
         return request;
     }
@@ -114,7 +109,7 @@ public class MeetupRequestRepository extends Repository {
                     return;
                 }
                 request.setId(task.getResult().getId());
-                task.getResult().update("id", task.getResult().getId());
+                task.getResult().update(FIELD_ID, task.getResult().getId());
             }
         });
     }
@@ -128,14 +123,13 @@ public class MeetupRequestRepository extends Repository {
         meetupRequestCollection.document(request.getId()).delete();
     }
 
-
     /**
      * Delete Meetup Requests with given meetupId
      *
      * @param meetupId meetup id
      */
     public void deleteRequestForMeetup(String meetupId) {
-        meetupRequestCollection.whereEqualTo("meetupId", meetupId)
+        meetupRequestCollection.whereEqualTo(FIELD_MEETUP_ID, meetupId)
                 .get().addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
                         if (task.getResult() == null) {
@@ -155,24 +149,34 @@ public class MeetupRequestRepository extends Repository {
      */
     public void accept(MeetupRequest request) {
         meetupRequestCollection.document(request.getId()).
-                update("state", Request.RequestState.REQUEST_ACCEPTED);
+                update(FIELD_STATE, Request.RequestState.REQUEST_ACCEPTED);
         meetupRequestCollection.document(request.getId()).
-                update("createdAt", request.getCreatedAt());
+                update(FIELD_CREATED_AT, request.getCreatedAt());
     }
 
+    /**
+     * Decline a request
+     *
+     * @param request The request to decline
+     */
     public void decline(MeetupRequest request) {
         meetupRequestCollection.document(request.getId()).
-                update("state", Request.RequestState.REQUEST_DECLINED);
+                update(FIELD_STATE, Request.RequestState.REQUEST_DECLINED);
     }
 
+    /**
+     * Undo decline of request
+     *
+     * @param request The request to undo decline
+     */
     public void undoDecline(MeetupRequest request) {
         request.setState(REQUEST_PENDING);
         addMeetupRequest(request);
 
-        meetupRequestCollection.whereEqualTo("meetupId", request.getMeetupId())
-                .whereEqualTo("state", Request.RequestState.REQUEST_ANSWERED)
-                .whereEqualTo("senderId", request.getReceiverId())
-                .whereEqualTo("type", MeetupRequest.MeetupRequestType.MEETUP_INFO_DECLINED)
+        meetupRequestCollection.whereEqualTo(FIELD_MEETUP_ID, request.getMeetupId())
+                .whereEqualTo(FIELD_STATE, Request.RequestState.REQUEST_ANSWERED)
+                .whereEqualTo(FIELD_SENDER_ID, request.getReceiverId())
+                .whereEqualTo(FIELD_TYPE, MeetupRequest.MeetupRequestType.MEETUP_INFO_DECLINED)
                 .get().addOnCompleteListener(executorService, task -> {
                     if (task.isSuccessful()) {
                         if (task.getResult() == null) {
@@ -185,11 +189,15 @@ public class MeetupRequestRepository extends Repository {
                 });
     }
 
+    /**
+     * Delete all request for a given user
+     *
+     * @param userId   The id of the user
+     * @param listener The listener to be notified when the requests are deleted
+     */
     public void deleteRequestsForUser(String userId, UserListener<Boolean> listener) {
         meetupRequestCollection.get()
-                .addOnFailureListener(executorService, e -> {
-                    listener.onUserError(e);
-                })
+                .addOnFailureListener(executorService, listener::onUserError)
                 .addOnSuccessListener(executorService, queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         MeetupRequest request = snapshotToMeetupRequest(document);
@@ -204,5 +212,4 @@ public class MeetupRequestRepository extends Repository {
                     listener.onUserSuccess(true);
                 });
     }
-
 }
