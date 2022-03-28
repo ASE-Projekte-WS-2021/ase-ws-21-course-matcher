@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
@@ -53,9 +54,9 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         setContentView(binding.getRoot());
         bundle = getIntent().getExtras();
 
-        initViewModel();
-        initImagePicker();
         initPermissionRequest();
+        initImagePicker();
+        initViewModel();
         initTexts();
         initListeners();
     }
@@ -71,6 +72,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     private void initTexts() {
         binding.registerDisplayNameEditText.inputLabel.setText(R.string.registerDisplaynameText);
         binding.registerDisplayNameEditText.inputField.setHint(R.string.registerFirstNameHint);
+        binding.registerDisplayNameEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
     }
 
     private void initListeners() {
@@ -108,6 +110,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
                             Intent intent = result.getData();
                             Uri uri = intent.getData();
                             setImgString(uri);
+                            binding.profileImage.setImageURI(uri);
                         } catch (FileNotFoundException e) {
                             Snackbar.make(binding.getRoot(), R.string.edit_profile_error_message, Snackbar.LENGTH_SHORT).show();
                         }
@@ -157,7 +160,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         String displayName = binding.registerDisplayNameEditText.inputField.getText().toString();
         String bio = binding.inputFieldBio.getText().toString();
 
-        if (displayName.isEmpty()) {
+        if (displayName.isEmpty() || displayName.length() < Constants.MIN_NAME_LENGTH) {
             Snackbar.make(binding.getRoot(), R.string.registerDisplayNameEmpty, Snackbar.LENGTH_LONG).show();
             return;
         }

@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Objects;
 
 
 public class EditProfileViewModel extends ViewModel implements Callback, StorageManager.Callback {
@@ -47,7 +48,7 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
         byte[] imageBytes = outputStream.toByteArray();
         String imageBaseString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
-        userRepository.updateProfileImage(imageBaseString, user.getValue().getId());
+        userRepository.updateProfileImage(imageBaseString, Objects.requireNonNull(user.getValue()).getId());
     }
 
     public void updateField(String field, String value) {
@@ -60,25 +61,18 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
 
         switch (field) {
             case "Benutzername":
-                if (!InputValidator.hasMinLength(trimmedValue, 4)) {
+                if (!InputValidator.hasMinLength(trimmedValue, Constants.MIN_USERNAME_LENGTH)) {
                     status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_username_min_length));
                     break;
                 }
                 userRepository.updateField("username", trimmedValue, this);
                 break;
             case "Vorname":
-                if (!InputValidator.hasMinLength(trimmedValue, 2)) {
-                    status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_first_name_min_length));
+                if (!InputValidator.hasMinLength(trimmedValue, Constants.MIN_NAME_LENGTH)) {
+                    status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_display_name_min_length));
                     break;
                 }
-                userRepository.updateField("firstName", trimmedValue, this);
-                break;
-            case "Nachname":
-                if (!InputValidator.hasMinLength(trimmedValue, 2)) {
-                    status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_last_name_min_length));
-                    break;
-                }
-                userRepository.updateField("lastName", trimmedValue, this);
+                userRepository.updateField("displayName", trimmedValue, this);
                 break;
             case "Bio":
                 userRepository.updateField("bio", trimmedValue, this);

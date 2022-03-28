@@ -43,4 +43,5 @@
 
     <dimen name="availability_button_size">35dp</dimen>
     <dimen name="create_profile_img_size">150dp</dimen>
+    <dimen name="max_width_username_meetup_request">200dp</dimen>
 </resources>

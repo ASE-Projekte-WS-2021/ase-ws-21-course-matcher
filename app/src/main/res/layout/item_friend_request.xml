@@ -94,8 +94,8 @@
                     android:maxLines="1"
                     android:textColor="@color/gray500"
                     app:layout_constraintTop_toBottomOf="@+id/senderTextView"
-                    tools:layout_editor_absoluteX="10dp"
-                    tools:text="Username" />
+                    tools:layout_editor_absoluteX="@dimen/padding_small"
+                    tools:text="username" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
@@ -103,7 +103,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
+        android:paddingTop="@dimen/padding_small"
         app:layout_constraintTop_toBottomOf="@+id/topRowWrapper">
 
         <TextView
@@ -119,7 +119,7 @@
             android:textColor="@color/gray500"
             android:textSize="@dimen/text_size_small"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="ist jetzt auf deiner Freundesliste. aefeafeafja" />
+            tools:text="ist jetzt auf deiner Freundesliste." />
 
         <TextView
             android:id="@+id/sentDateTextView"

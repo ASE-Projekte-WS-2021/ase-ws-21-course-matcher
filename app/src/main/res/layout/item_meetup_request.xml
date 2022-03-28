@@ -91,6 +91,9 @@
         android:layout_marginTop="@dimen/small_margin"
         android:textColor="@color/gray500"
         android:textSize="@dimen/text_size_small"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:maxWidth="@dimen/max_width_username_meetup_request"
 
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"

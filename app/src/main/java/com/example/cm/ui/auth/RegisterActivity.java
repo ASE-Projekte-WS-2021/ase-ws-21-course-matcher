@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
@@ -88,17 +89,19 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     private void initTexts() {
         binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
         binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
+        binding.registerUsernameEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
 
         binding.registerEmailEditText.inputLabel.setText(R.string.registerEmailText);
         binding.registerEmailEditText.inputField.setHint(R.string.userEmailHint);
 
         binding.registerPasswordEditText.inputLabel.setText(R.string.registerPasswordText);
         binding.registerPasswordEditText.inputField.setHint(R.string.userPasswordHint);
+        binding.registerPasswordEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
 
         binding.registerPasswordRepeatEditText.inputLabel.setText(R.string.registerPasswordRepeatText);
         binding.registerPasswordRepeatEditText.inputField.setHint(R.string.userPasswordHint);
+        binding.registerPasswordRepeatEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
     }
-
 
     private void initListeners() {
         authViewModel.getUsernames(this);
@@ -108,7 +111,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
                 binding.registerRegisterBtn.setEnabled(false);
 
                 // check if username is in use already
-                if (usernames.contains(charSequence.toString())) {
+                if (usernames != null && usernames.contains(charSequence.toString())) {
                     binding.usernameAlreadyExistsTv.setVisibility(View.VISIBLE);
                 } else {
                     binding.usernameAlreadyExistsTv.setVisibility(View.GONE);
@@ -138,12 +141,12 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
             return;
         }
 
-        if (username.isEmpty()) {
+        if (username.isEmpty() || username.length() < Constants.MIN_USERNAME_LENGTH) {
             Snackbar.make(binding.getRoot(), R.string.registerUsernameEmpty, Snackbar.LENGTH_LONG).show();
             return;
         }
 
-        if (usernames.contains(username)) {
+        if (usernames != null && usernames.contains(username)) {
             Snackbar.make(binding.getRoot(), R.string.registerUsernameAlreadyExists, Snackbar.LENGTH_LONG).show();
             return;
         }

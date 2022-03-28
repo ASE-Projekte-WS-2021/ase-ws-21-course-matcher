@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.config.FieldType;
 import com.example.cm.databinding.FragmentEditProfileBinding;
@@ -121,9 +123,11 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
 
         binding.inputUsername.inputLabel.setText(R.string.input_label_username);
         binding.inputUsername.inputField.setFocusable(false);
+        binding.inputUsername.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
 
         binding.inputDisplayName.inputLabel.setText(getString(R.string.input_label_display_name));
         binding.inputDisplayName.inputField.setFocusable(false);
+        binding.inputDisplayName.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
     }
 
     private void initListeners() {
