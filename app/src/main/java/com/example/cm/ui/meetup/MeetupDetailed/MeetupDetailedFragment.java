@@ -191,8 +191,8 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void closeFabMenu() {
-        binding.fabBackground.setVisibility(View.INVISIBLE);
         binding.fabMenu.close(true);
+        binding.fabBackground.setVisibility(View.INVISIBLE);
     }
 
     private void initListeners() {
