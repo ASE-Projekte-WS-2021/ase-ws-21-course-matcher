@@ -7,11 +7,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -21,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cm.AuthActivity;
 import com.example.cm.Constants;
 import com.example.cm.MainActivity;
 import com.example.cm.R;
@@ -47,6 +47,9 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     private List<String> usernames;
     private String imgString;
 
+    private Handler handler;
+    private Runnable runnable;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,11 +61,40 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         setContentView(binding.getRoot());
         bundle = getIntent().getExtras();
 
+        initTimer();
         initViewModel();
         initImagePicker();
         initPermissionRequest();
         initTexts();
         initTemporaryAuth();
+    }
+
+    private void initTimer() {
+        handler = new Handler();
+        runnable = () -> {
+            closeActivityOnTimeout();
+        };
+    }
+
+    private void closeActivityOnTimeout() {
+        binding.createProfileBtn.setEnabled(false);
+        Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.registrationTooLong, Snackbar.LENGTH_LONG);
+        snackbar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                    Intent intent = new Intent(CreateProfileActivity.this, AuthActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
+        snackbar.show();
     }
 
     private void initTemporaryAuth() {
@@ -128,6 +160,10 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
                 }
             }
         });
+    }
+
+    private void startTimer() {
+        handler.postDelayed(runnable, Constants.MAX_REGISTRATION_TIME);
     }
 
     /**
@@ -214,6 +250,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     @Override
     public void onRegisterSuccess(User user) {
         if (user.getEmail().equals(Constants.TEMP_EMAIL)) {
+            startTimer();
             initListeners();
         } else {
             authViewModel.createUser(user);
@@ -231,6 +268,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
                 && authViewModel.getUserLiveData().getValue().getEmail().equals(Constants.TEMP_EMAIL)) {
             authViewModel.deleteCurrentAuth();
         }
+        handler.removeCallbacks(runnable);
     }
 
     @Override

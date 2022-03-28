@@ -266,5 +266,6 @@
     <string name="registerUsernameAlreadyExists">Nutzername existiert bereits.</string>
     <string name="registerDisplaynameText">Anzeigename*</string>
     <string name="register_hint_bio">Miau! Sitze gern am Campus in der Sonne.</string>
+    <string name="registrationTooLong">Der Registriervorgang hat zu lange gedauert. Starte erneut.</string>
 
 </resources>
