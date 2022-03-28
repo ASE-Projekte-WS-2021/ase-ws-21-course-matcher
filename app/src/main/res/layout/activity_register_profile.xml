@@ -61,8 +61,8 @@
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profileImage"
-                    android:layout_width="@dimen/edit_profile_img_size"
-                    android:layout_height="@dimen/edit_profile_img_size"
+                    android:layout_width="@dimen/create_profile_img_size"
+                    android:layout_height="@dimen/create_profile_img_size"
                     android:layout_gravity="center"
                     android:background="@color/gray500"
                     android:scaleType="centerCrop"
