@@ -125,12 +125,15 @@
             android:focusable="true"
             app:menu_animationDelayPerItem="50"
             app:menu_colorNormal="@color/orange_dark"
+            app:menu_colorPressed="@color/orange_dark"
+            app:menu_colorRipple="@color/orange_dark"
             app:menu_fab_hide_animation="@anim/rotate_close_anim"
             app:menu_fab_show_animation="@anim/rotate_open_anim"
             app:menu_fab_size="normal"
             app:menu_icon="@drawable/ic_dotdotdot"
             app:menu_labels_colorNormal="@color/outwhited"
             app:menu_labels_colorPressed="@color/outwhited"
+            app:menu_labels_colorRipple="@color/outwhited"
             app:menu_labels_showShadow="false"
             app:menu_labels_textColor="@color/gray700"
             app:menu_openDirection="up"
@@ -143,7 +146,8 @@
                 android:src="@drawable/ic_map_small"
                 app:fabSize="mini"
                 app:fab_colorNormal="@color/gray300"
-                app:fab_colorPressed="@color/gray500"
+                app:fab_colorPressed="@color/gray400"
+                app:fab_colorRipple="@color/gray400"
                 app:fab_label="@string/location" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -153,7 +157,8 @@
                 android:src="@drawable/ic_accept"
                 app:fabSize="mini"
                 app:fab_colorNormal="@color/gray300"
-                app:fab_colorPressed="@color/gray500"
+                app:fab_colorPressed="@color/gray400"
+                app:fab_colorRipple="@color/gray400"
                 app:fab_label="@string/accept" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -163,7 +168,8 @@
                 android:src="@drawable/ic_decline"
                 app:fabSize="mini"
                 app:fab_colorNormal="@color/gray300"
-                app:fab_colorPressed="@color/gray500"
+                app:fab_colorPressed="@color/gray400"
+                app:fab_colorRipple="@color/gray400"
                 app:fab_label="@string/decline" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -173,7 +179,8 @@
                 android:src="@drawable/ic_late"
                 app:fabSize="mini"
                 app:fab_colorNormal="@color/gray300"
-                app:fab_colorPressed="@color/gray500"
+                app:fab_colorPressed="@color/gray400"
+                app:fab_colorRipple="@color/gray400"
                 app:fab_label="@string/late" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -183,7 +190,8 @@
                 android:src="@drawable/ic_logout"
                 app:fabSize="mini"
                 app:fab_colorNormal="@color/gray300"
-                app:fab_colorPressed="@color/gray500"
+                app:fab_colorPressed="@color/gray400"
+                app:fab_colorRipple="@color/gray400"
                 app:fab_label="@string/leave" />
 
             <com.github.clans.fab.FloatingActionButton
@@ -193,7 +201,8 @@
                 android:src="@drawable/ic_trash_menu"
                 app:fabSize="mini"
                 app:fab_colorNormal="@color/gray300"
-                app:fab_colorPressed="@color/gray500"
+                app:fab_colorPressed="@color/gray400"
+                app:fab_colorRipple="@color/gray400"
                 app:fab_label="@string/delete" />
 
         </com.github.clans.fab.FloatingActionMenu>
