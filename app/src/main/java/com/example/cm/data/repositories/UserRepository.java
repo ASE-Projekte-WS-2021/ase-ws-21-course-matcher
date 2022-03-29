@@ -362,7 +362,7 @@ public class UserRepository extends Repository {
                         List<String> friends = user.getFriends();
 
                         // Handle case when user does not have friends
-                        if (friends.isEmpty()) {
+                        if (friends == null || friends.isEmpty()) {
                             listener.onUserSuccess(new ArrayList<>());
                             return;
                         }

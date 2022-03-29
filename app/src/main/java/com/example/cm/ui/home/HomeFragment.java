@@ -302,7 +302,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                         addMarker(user, false);
                     }
                 }
-                addMarker(currentUser, true);
+
+                if (currentUser.getLocation() != null) {
+                    addMarker(currentUser, true);
+                }
 
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.cluster();
