@@ -145,7 +145,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
             return;
         }
 
-        if (email.isEmpty()) {
+        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             Snackbar.make(binding.getRoot(), R.string.registerEmailEmpty, Snackbar.LENGTH_LONG).show();
             return;
         }
