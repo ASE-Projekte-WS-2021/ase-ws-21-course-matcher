@@ -38,6 +38,10 @@ public class EditProfileViewModel extends ViewModel implements Callback {
     }
 
     public void updateImage(Uri uri, Context context) throws FileNotFoundException {
+        if(user.getValue() == null) {
+            return;
+        }
+
         InputStream imageStream = context.getContentResolver().openInputStream(uri);
         Bitmap selectedImageBitmap = BitmapFactory.decodeStream(imageStream);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -49,7 +53,7 @@ public class EditProfileViewModel extends ViewModel implements Callback {
     }
 
     public void updateField(String field, String value) {
-        if (value.trim().isEmpty()) {
+        if (value.trim().isEmpty() && !field.equals("Bio")) {
             status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_field_not_empty));
             return;
         }

@@ -243,6 +243,7 @@
     <string name="content_description_show_location_btn">Eigener Standort ist aktuell für Freunde sichtbar</string>
 
     <string name="location_hint">Treffpunkt</string>
+    <string name="location_hint_empty">Treffpunkt eingeben</string>
     <string name="delete_account_title">Account wirklich löschen?</string>
     <string name="delete_account_confirm_button">Löschen</string>
     <string name="delete_account_wrong_password">Das eingegebene Passwort ist falsch.</string>

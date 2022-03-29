@@ -55,11 +55,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initTexts() {
-        binding.loginEmailEditText.inputLabel.setText(R.string.registerEmailText);
-        binding.loginEmailEditText.inputField.setHint(R.string.userEmailHint);
-
-        binding.loginPasswordEditText.inputLabel.setText(R.string.registerPasswordText);
-        binding.loginPasswordEditText.inputField.setHint(R.string.userPasswordHint);
+        binding.loginEmailEditText.textInputLayout.setHint(R.string.registerEmailText);
+        binding.loginPasswordEditText.textInputLayout.setHint(R.string.registerPasswordText);
     }
 
     private void initListeners() {
@@ -71,18 +68,22 @@ public class LoginActivity extends AppCompatActivity {
         String email = binding.loginEmailEditText.inputField.getText().toString();
         String password = binding.loginPasswordEditText.inputField.getText().toString();
 
+        // Reset error fields
+        binding.loginEmailEditText.textInputLayout.setErrorEnabled(false);
+        binding.loginPasswordEditText.textInputLayout.setErrorEnabled(false);
+
+        if (email.isEmpty() && password.isEmpty()) {
+            Snackbar.make(binding.getRoot(), R.string.loginEmailPasswordNeeded, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
         if (email.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.loginEmailNeeded, Snackbar.LENGTH_LONG).show();
+            binding.loginEmailEditText.textInputLayout.setError(getString(R.string.loginEmailNeeded));
             return;
         }
 
         if (password.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.loginPasswordNeeded, Snackbar.LENGTH_LONG).show();
-            return;
-        }
-
-        if (email.isEmpty() && password.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.loginEmailPasswordNeeded, Snackbar.LENGTH_LONG).show();
+            binding.loginPasswordEditText.textInputLayout.setError(getString(R.string.loginPasswordNeeded));
             return;
         }
 

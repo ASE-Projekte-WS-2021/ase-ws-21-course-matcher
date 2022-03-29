@@ -3,6 +3,7 @@ package com.example.cm.ui.settings;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +16,21 @@ import com.example.cm.R;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.databinding.FragmentSettingsBinding;
 import com.example.cm.ui.auth.LoginActivity;
-import com.example.cm.utils.EditTextDialog;
-import com.example.cm.utils.LogoutDialog;
+import com.example.cm.ui.dialogs.EditTextDialog;
+import com.example.cm.ui.dialogs.TextWithButtonDialog;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 
-public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutListener {
+public class SettingsFragment extends Fragment {
 
+    private final Handler handler = new Handler();
     private FragmentSettingsBinding binding;
     private Navigator navigator;
     private SettingsViewModel settingsViewModel;
-    private LogoutDialog logoutDialog;
-    private EditTextDialog editTextDialog;
+    private TextWithButtonDialog logoutDialog;
+    private EditTextDialog deleteAccountDialog;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -41,6 +43,8 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         initUI();
         initViewModel();
         initListeners();
+        initLogoutDialog();
+        initDeleteAccountDialog();
 
         return binding.getRoot();
     }
@@ -61,6 +65,16 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         binding.linkDeleteAccount.linkIcon.setImageResource(R.drawable.ic_delete);
     }
 
+    private void initLogoutDialog() {
+        logoutDialog = new TextWithButtonDialog(requireActivity(), () -> {
+            settingsViewModel.logOut();
+            goToLoginScreen();
+        });
+        logoutDialog
+                .setTitle(getString(R.string.dialog_logout_title))
+                .setConfirmButtonText(getString(R.string.dialog_logout_btn));
+    }
+
     private void initViewModel() {
         settingsViewModel = new ViewModelProvider(requireActivity()).get(SettingsViewModel.class);
     }
@@ -79,12 +93,11 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
     }
 
     private void onLogoutClicked() {
-        logoutDialog = new LogoutDialog(requireActivity(), this);
         logoutDialog.show();
     }
 
-    private void onDeleteAccountClicked() {
-        editTextDialog = new EditTextDialog(requireActivity(), (fieldToUpdate, updatedValue) -> settingsViewModel.reauthenticate(requireContext(), updatedValue, new UserListener<Boolean>() {
+    private void initDeleteAccountDialog() {
+        deleteAccountDialog = new EditTextDialog(requireActivity(), (fieldToUpdate, updatedValue) -> settingsViewModel.reauthenticate(requireContext(), updatedValue, new UserListener<Boolean>() {
             @Override
             public void onUserSuccess(Boolean aBoolean) {
                 settingsViewModel.deleteAccount(new UserListener<Boolean>() {
@@ -92,33 +105,41 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
                     public void onUserSuccess(Boolean aBoolean) {
                         Snackbar.make(binding.getRoot(), R.string.account_deleted_success, Snackbar.LENGTH_LONG)
                                 .show();
-                        editTextDialog.dismiss();
+                        deleteAccountDialog.dismiss();
                         goToLoginScreen();
                     }
 
                     @Override
                     public void onUserError(Exception error) {
-                        Snackbar.make(binding.getRoot(), R.string.edit_profile_general_error, Snackbar.LENGTH_LONG)
-                                .show();
-                        editTextDialog.enableConfirmButton();
+                        handler.post(() -> {
+                            deleteAccountDialog.setError(getString(R.string.edit_profile_general_error));
+                            deleteAccountDialog.enableConfirmButton();
+                            deleteAccountDialog.show();
+                        });
                     }
                 });
             }
 
             @Override
             public void onUserError(Exception error) {
-                if (error.getMessage() != null) {
-                    Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_SHORT).show();
-                }
-                editTextDialog.enableConfirmButton();
+                handler.post(() -> {
+                    if (error.getMessage() != null) {
+                        deleteAccountDialog.setError(error.getMessage());
+                    }
+                    deleteAccountDialog.enableConfirmButton();
+                    deleteAccountDialog.show();
+                });
             }
         }));
-        editTextDialog
+        deleteAccountDialog
                 .setTitle(getString(R.string.delete_account_title))
                 .setDescription(getString(R.string.delete_account_description))
                 .setConfirmButtonText(getString(R.string.dialog_delete_btn))
-                .setIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE)
-                .show();
+                .setIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
+    }
+
+    private void onDeleteAccountClicked() {
+        deleteAccountDialog.show();
     }
 
     private void onAboutClicked() {
@@ -131,12 +152,6 @@ public class SettingsFragment extends Fragment implements LogoutDialog.OnLogoutL
         if (logoutDialog != null) {
             logoutDialog.dismiss();
         }
-    }
-
-    @Override
-    public void onLogoutApproved() {
-        settingsViewModel.logOut();
-        goToLoginScreen();
     }
 
     private void goToLoginScreen() {

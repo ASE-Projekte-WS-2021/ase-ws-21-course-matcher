@@ -100,26 +100,42 @@
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/item_friend_request.xml" value="0.36367753623188404" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup.xml" value="0.33" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup_friend.xml" value="0.23550724637681159" />
+        <entry key="app/src/main/res/drawable/bg_outwhited.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/gradient_gray700_to_transparent_bottom_up.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/gradient_gray700_transparent_to_transparent_top_down.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.2355" />
         <entry key="app/src/main/res/drawable/ic_round_search_24.xml" value="0.2355" />
+        <entry key="app/src/main/res/drawable/rounded_dialog_bg.xml" value="0.189" />
         <entry key="app/src/main/res/layout/action_bar_with_back_button.xml" value="0.2368659420289855" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.15260416666666668" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.296195652173913" />
+        <entry key="app/src/main/res/layout/activity_register_profile.xml" value="0.12291666666666666" />
+        <entry key="app/src/main/res/layout/dialog_delete_meetup.xml" value="0.15260416666666668" />
+        <entry key="app/src/main/res/layout/dialog_edit_text.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/dialog_logout.xml" value="0.2368659420289855" />
+        <entry key="app/src/main/res/layout/dialog_textarea.xml" value="0.25407608695652173" />
         <entry key="app/src/main/res/layout/fragment_add_friends.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/fragment_friend_requests.xml" value="0.16041666666666668" />
         <entry key="app/src/main/res/layout/fragment_friends.xml" value="0.1765625" />
         <entry key="app/src/main/res/layout/fragment_friends_list.xml" value="0.2368659420289855" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3416666666666667" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33384146341463417" />
         <entry key="app/src/main/res/layout/fragment_meetup.xml" value="0.2368659420289855" />
+        <entry key="app/src/main/res/layout/fragment_meetup_invite_success.xml" value="0.17658930373360243" />
+        <entry key="app/src/main/res/layout/fragment_meetup_list.xml" value="0.16041666666666668" />
+        <entry key="app/src/main/res/layout/fragment_meetup_requests.xml" value="0.16041666666666668" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.1765625" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.14177703857421872" />
         <entry key="app/src/main/res/layout/fragment_select_friends.xml" value="0.32019927536231885" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.2368659420289855" />
+        <entry key="app/src/main/res/layout/input_password_with_label.xml" value="0.15260416666666668" />
+        <entry key="app/src/main/res/layout/input_text_with_label.xml" value="0.15260416666666668" />
         <entry key="app/src/main/res/layout/item_select_friend.xml" value="0.2658514492753623" />
         <entry key="app/src/main/res/layout/item_settings_link.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/item_single_friend.xml" value="0.2658514492753623" />
         <entry key="app/src/main/res/layout/user_list_item.xml" value="0.29224141438802087" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.3645833333333333" />
+        <entry key="app/src/main/res/menu/menu_context_meetup_detailed.xml" value="0.15260416666666668" />
         <entry key="app/src/main/res/menu/menu_fragment_friends.xml" value="0.17552083333333332" />
       </map>
     </option>
