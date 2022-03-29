@@ -39,6 +39,10 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
     }
 
     public void updateImage(Uri uri, Context context) throws FileNotFoundException {
+        if(user.getValue() == null) {
+            return;
+        }
+
         InputStream imageStream = context.getContentResolver().openInputStream(uri);
         Bitmap selectedImageBitmap = BitmapFactory.decodeStream(imageStream);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

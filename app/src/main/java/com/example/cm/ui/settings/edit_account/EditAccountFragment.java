@@ -35,10 +35,10 @@ public class EditAccountFragment extends Fragment {
 
     private void initUI() {
         binding.actionBar.tvTitle.setText(R.string.title_edit_account);
-        binding.inputEmail.inputLabel.setText(getString(R.string.input_label_email));
-        binding.inputCurrentPassword.inputLabel.setText(getString(R.string.input_label_current_password));
-        binding.inputNewPassword.inputLabel.setText(getString(R.string.input_label_new_password));
-        binding.inputNewPasswordConfirm.inputLabel.setText(getString(R.string.input_label_new_password_confirm));
+        binding.inputEmail.textInputLayout.setHint(getString(R.string.input_label_email));
+        binding.inputCurrentPassword.textInputLayout.setHint(getString(R.string.input_label_current_password));
+        binding.inputNewPassword.textInputLayout.setHint(getString(R.string.input_label_new_password));
+        binding.inputNewPasswordConfirm.textInputLayout.setHint(getString(R.string.input_label_new_password_confirm));
         // Disable editing of email field
         binding.inputEmail.inputField.setEnabled(false);
     }

@@ -18,8 +18,6 @@ import com.example.cm.R;
 import com.example.cm.databinding.DialogEditTextBinding;
 import com.google.android.material.textfield.TextInputLayout;
 
-import timber.log.Timber;
-
 public class EditTextDialog extends Dialog {
     DialogEditTextBinding binding;
     OnSaveListener listener;
@@ -68,7 +66,6 @@ public class EditTextDialog extends Dialog {
     }
 
     public void enableConfirmButton() {
-        Timber.d("Enabling button");
         binding.btnConfirm.setEnabled(true);
         binding.btnConfirm.setText(confirmButtonText);
         Drawable buttonDrawable = DrawableCompat.wrap(binding.btnConfirm.getBackground());
@@ -102,6 +99,10 @@ public class EditTextDialog extends Dialog {
         return this;
     }
 
+    public void setError(String error) {
+        binding.textInputLayout.setError(error);
+    }
+
     private void initRootView() {
         Window window = this.getWindow();
         // Make root transparent so rounded border is visible
@@ -113,11 +114,21 @@ public class EditTextDialog extends Dialog {
     }
 
     private void initListeners() {
-        binding.btnCancel.setOnClickListener(v -> dismiss());
+        binding.btnCancel.setOnClickListener(v -> onDismissClicked());
         binding.btnConfirm.setOnClickListener(v -> onSaveClicked());
     }
 
+    private void onDismissClicked() {
+        binding.textInputLayout.setErrorEnabled(false);
+        binding.inputField.setText(null);
+        dismiss();
+    }
+
     private void onSaveClicked() {
+        if (binding.inputField.getText() == null) {
+            return;
+        }
+
         String newValue = binding.inputField.getText().toString();
         if (listener != null) {
             listener.onTextInputSaved(fieldToUpdate, newValue);

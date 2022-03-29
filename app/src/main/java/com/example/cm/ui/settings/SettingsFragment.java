@@ -111,8 +111,8 @@ public class SettingsFragment extends Fragment {
 
                     @Override
                     public void onUserError(Exception error) {
-                        Snackbar.make(binding.getRoot(), R.string.edit_profile_general_error, Snackbar.LENGTH_LONG).show();
                         handler.post(() -> {
+                            deleteAccountDialog.setError(getString(R.string.edit_profile_general_error));
                             deleteAccountDialog.enableConfirmButton();
                             deleteAccountDialog.show();
                         });
@@ -122,10 +122,10 @@ public class SettingsFragment extends Fragment {
 
             @Override
             public void onUserError(Exception error) {
-                if (error.getMessage() != null) {
-                    Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_SHORT).show();
-                }
                 handler.post(() -> {
+                    if (error.getMessage() != null) {
+                        deleteAccountDialog.setError(error.getMessage());
+                    }
                     deleteAccountDialog.enableConfirmButton();
                     deleteAccountDialog.show();
                 });

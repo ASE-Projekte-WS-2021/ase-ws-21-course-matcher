@@ -56,20 +56,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void initTexts() {
-        binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
-        binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
-
-        binding.registerFirstNameEditText.inputLabel.setText(R.string.registerFirstnameText);
-        binding.registerFirstNameEditText.inputField.setHint(R.string.registerFirstNameHint);
-
-        binding.registerLastNameEditText.inputLabel.setText(R.string.registerLastnameText);
-        binding.registerLastNameEditText.inputField.setHint(R.string.registerLastNameHint);
-
-        binding.registerEmailEditText.inputLabel.setText(R.string.registerEmailText);
-        binding.registerEmailEditText.inputField.setHint(R.string.userEmailHint);
-
-        binding.registerPasswordEditText.inputLabel.setText(R.string.registerPasswordText);
-        binding.registerPasswordEditText.inputField.setHint(R.string.userPasswordHint);
+        binding.registerUsernameEditText.textInputLayout.setHint(R.string.registerUsernameText);
+        binding.registerFirstNameEditText.textInputLayout.setHint(R.string.registerFirstnameText);
+        binding.registerLastNameEditText.textInputLayout.setHint(R.string.registerLastnameText);
+        binding.registerEmailEditText.textInputLayout.setHint(R.string.registerEmailText);
+        binding.registerPasswordEditText.textInputLayout.setHint(R.string.registerPasswordText);
     }
 
 

@@ -55,11 +55,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initTexts() {
-        binding.loginEmailEditText.inputLabel.setText(R.string.registerEmailText);
-        binding.loginEmailEditText.inputField.setHint(R.string.userEmailHint);
-
-        binding.loginPasswordEditText.inputLabel.setText(R.string.registerPasswordText);
-        binding.loginPasswordEditText.inputField.setHint(R.string.userPasswordHint);
+        binding.loginEmailEditText.textInputLayout.setHint(R.string.registerEmailText);
+        binding.loginPasswordEditText.textInputLayout.setHint(R.string.registerPasswordText);
     }
 
     private void initListeners() {
