@@ -1,7 +1,6 @@
 package com.example.cm.ui.adapters;
 
 import android.content.Context;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,7 +46,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     }
 
     public static DiffUtil.DiffResult calculateDiffMeetupRequests(List<MeetupRequest> oldRequests,
-            List<MeetupRequest> newRequests) {
+                                                                  List<MeetupRequest> newRequests) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -97,14 +95,13 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     @NonNull
     @Override
     public MeetupRequestListAdapter.MeetupRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-            int viewType) {
+                                                                               int viewType) {
         this.parent = parent;
         ItemMeetupRequestBinding binding = ItemMeetupRequestBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false);
         return new MeetupRequestListAdapter.MeetupRequestViewHolder(binding);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
         Context context = holder.binding.getRoot().getContext();
@@ -164,16 +161,13 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private String getDisplayName(String userId) {
-        User user = users.stream()
-                .filter(userData -> userData.getId().equals(userId)).findAny()
-                .orElse(null);
-        if (user != null) {
-            return user.getDisplayName();
-        } else {
-            return null;
+        for (User user : users) {
+            if (user.getId().equals(userId)) {
+                return user.getDisplayName();
+            }
         }
+        return null;
     }
 
     @Override

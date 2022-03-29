@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -46,13 +45,10 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     private void initUI() {
-        requestsListAdapter = new FriendRequestListAdapter(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
         binding.notificationsRecyclerView.addItemDecoration(dividerItemDecoration);
-        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
-        binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.notificationsRecyclerView.setHasFixedSize(true);
+        initAdapter();
     }
 
     private void initViewModel() {
@@ -62,11 +58,20 @@ public class FriendRequestsFragment extends Fragment implements
             requestsViewModel.setUserIds(userIds);
 
             requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+                initAdapter();
+
                 requestsListAdapter.setRequests(requests, users);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
                 itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
             });
         });
+    }
+
+    private void initAdapter() {
+        requestsListAdapter = new FriendRequestListAdapter(this);
+        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
+        binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.notificationsRecyclerView.setHasFixedSize(true);
     }
 
     private List<String> getUserIds(List<FriendRequest> requests) {
@@ -112,5 +117,4 @@ public class FriendRequestsFragment extends Fragment implements
     public void onUndo(FriendRequest request, int position, Request.RequestState previousState) {
         requestsViewModel.undoFriendRequest(request, position, previousState);
     }
-
 }
