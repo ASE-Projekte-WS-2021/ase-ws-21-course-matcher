@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -18,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.Constants;
@@ -165,8 +167,17 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
             return;
         }
 
+        disableBtn();
         authViewModel.register(email, password, username, displayName, imgString, bio, this);
+    }
+
+    private void disableBtn() {
         binding.createProfileBtn.setEnabled(false);
+        binding.createProfileBtn.setText(getResources().getText(R.string.confirm_button_loading));
+
+        Drawable buttonDrawable = DrawableCompat.wrap(binding.createProfileBtn.getBackground());
+        DrawableCompat.setTint(buttonDrawable, getResources().getColor(R.color.gray600));
+        binding.createProfileBtn.setBackground(buttonDrawable);
     }
 
     @Override

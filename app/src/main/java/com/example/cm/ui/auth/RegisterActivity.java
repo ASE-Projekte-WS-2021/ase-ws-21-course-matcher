@@ -1,6 +1,7 @@
 package com.example.cm.ui.auth;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -8,6 +9,8 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.AuthActivity;
@@ -174,10 +177,17 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
             return;
         }
 
-        binding.registerRegisterBtn.setEnabled(false);
-        binding.registerRegisterBtn.setBackgroundColor(getResources().getColor(R.color.gray600));
-        binding.registerRegisterBtn.setText(getResources().getText(R.string.confirm_button_loading));
+        disableBtn();
         goToCreateProfile(email, username, password);
+    }
+
+    private void disableBtn() {
+        binding.registerRegisterBtn.setEnabled(false);
+        binding.registerRegisterBtn.setText(getResources().getText(R.string.confirm_button_loading));
+
+        Drawable buttonDrawable = DrawableCompat.wrap(binding.registerRegisterBtn.getBackground());
+        DrawableCompat.setTint(buttonDrawable, getResources().getColor(R.color.gray600));
+        binding.registerRegisterBtn.setBackground(buttonDrawable);
     }
 
     private void startTimer() {
