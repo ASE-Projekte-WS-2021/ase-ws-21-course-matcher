@@ -53,7 +53,6 @@
                     android:layout_alignParentBottom="true"
                     android:background="@drawable/gradient_gray700_to_transparent_bottom_up"
                     android:orientation="vertical"
-                    android:paddingHorizontal="@dimen/activity_vertical_margin"
                     android:paddingTop="@dimen/padding_ultra"
                     android:paddingBottom="@dimen/padding_medium">
 
@@ -61,13 +60,18 @@
                         android:id="@+id/meetupDetailedTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray300"
+                        android:background="@drawable/label_rounded_active"
+                        android:includeFontPadding="false"
+                        android:paddingHorizontal="@dimen/padding_small"
+                        android:paddingVertical="@dimen/padding_label"
+                        android:layout_marginLeft="@dimen/padding_medium"
                         android:textSize="@dimen/text_size_small" />
 
                     <TextView
                         android:id="@+id/meetupDetailedLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:paddingHorizontal="@dimen/activity_vertical_margin"
                         android:textColor="@color/gray300"
                         android:textSize="@dimen/text_size_medium"
                         android:textStyle="bold" />
