@@ -3,6 +3,7 @@ package com.example.cm.ui.settings;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class SettingsFragment extends Fragment {
 
+    private final Handler handler = new Handler();
     private FragmentSettingsBinding binding;
     private Navigator navigator;
     private SettingsViewModel settingsViewModel;
@@ -110,8 +112,10 @@ public class SettingsFragment extends Fragment {
                     @Override
                     public void onUserError(Exception error) {
                         Snackbar.make(binding.getRoot(), R.string.edit_profile_general_error, Snackbar.LENGTH_LONG).show();
-                        deleteAccountDialog.enableConfirmButton();
-                        deleteAccountDialog.show();
+                        handler.post(() -> {
+                            deleteAccountDialog.enableConfirmButton();
+                            deleteAccountDialog.show();
+                        });
                     }
                 });
             }
@@ -121,8 +125,10 @@ public class SettingsFragment extends Fragment {
                 if (error.getMessage() != null) {
                     Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_SHORT).show();
                 }
-                deleteAccountDialog.enableConfirmButton();
-                deleteAccountDialog.show();
+                handler.post(() -> {
+                    deleteAccountDialog.enableConfirmButton();
+                    deleteAccountDialog.show();
+                });
             }
         }));
         deleteAccountDialog
