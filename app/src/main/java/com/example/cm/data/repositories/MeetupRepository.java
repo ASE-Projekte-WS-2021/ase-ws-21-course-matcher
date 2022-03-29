@@ -42,6 +42,7 @@ public class MeetupRepository {
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
 
     private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
+    private final MutableLiveData<List<Meetup>> meetupsForRequestsMLD = new MutableLiveData<>();
     private final MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
     private final MutableLiveData<List<String>> usersMLD = new MutableLiveData<>();
 
@@ -103,8 +104,8 @@ public class MeetupRepository {
      */
     public MutableLiveData<List<Meetup>> getMeetupsByIds(List<String> meetupIds) {
         if (meetupIds == null || meetupIds.isEmpty()) {
-            meetupListMLD.postValue(new ArrayList<>());
-            return meetupListMLD;
+            meetupsForRequestsMLD.postValue(new ArrayList<>());
+            return meetupsForRequestsMLD;
         }
 
         List<String> userIdsNoDuplicates = new ArrayList<>(new HashSet<>(meetupIds));
@@ -122,11 +123,11 @@ public class MeetupRepository {
                                 Meetup meetup = snapshotToMeetup(value.getDocuments().get(i));
                                 meetups.add(meetup);
                             }
-                            meetupListMLD.postValue(meetups);
+                            meetupsForRequestsMLD.postValue(meetups);
                         }
                     });
         }
-        return meetupListMLD;
+        return meetupsForRequestsMLD;
     }
 
     /**
