@@ -171,6 +171,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
         }
 
         binding.registerRegisterBtn.setEnabled(false);
+        binding.registerRegisterBtn.setBackgroundColor(getResources().getColor(R.color.gray600));
         goToCreateProfile(email, username, password);
     }
 
