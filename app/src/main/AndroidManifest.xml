@@ -36,7 +36,7 @@
         <activity
             android:name=".ui.auth.RegisterActivity"
             android:exported="false"
-            android:noHistory="true"
+            android:noHistory="false"
             android:theme="@style/Theme.CM.NoActionBar"
             android:screenOrientation="portrait"
             />

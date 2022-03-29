@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -78,6 +79,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     }
 
     private void initListeners() {
+        binding.btnBack.setOnClickListener(this::onBackBtnClicked);
         binding.editProfileImageBtn.setOnClickListener(this::onEditImgClicked);
         binding.createProfileBtn.setOnClickListener(this::registerAndStart);
 
@@ -98,6 +100,10 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
                 }
             }
         });
+    }
+
+    private void onBackBtnClicked(View view) {
+        super.onBackPressed();
     }
 
     /**
@@ -187,5 +193,14 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (authViewModel.getUserLiveData().getValue() != null
+                && authViewModel.getUserLiveData().getValue().getEmail().equals(Constants.TEMP_EMAIL)) {
+            authViewModel.logout();
+        }
+        super.onDestroy();
     }
 }

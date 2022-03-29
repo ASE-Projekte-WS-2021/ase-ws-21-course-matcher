@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.drawable.DrawableCompat;
@@ -205,7 +206,6 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
         intent.putExtra(Constants.KEY_USERNAME, username);
         intent.putExtra(Constants.KEY_PASSWORD, password);
         startActivity(intent);
-        finish();
     }
 
     private void endTemporaryAuth() {
@@ -220,6 +220,14 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     protected void onDestroy() {
         endTemporaryAuth();
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        binding.registerRegisterBtn.setEnabled(true);
+        binding.registerRegisterBtn.setText(getResources().getText(R.string.registerRegisterBtn));
+        binding.registerRegisterBtn.setBackground(getDrawable(R.drawable.btn_rounded));
     }
 
     @Override
