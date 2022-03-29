@@ -266,5 +266,6 @@
     <string name="register_hint_bio">Miau! Sitze gern am Campus in der Sonne.</string>
     <string name="registrationTooLong">Der Registriervorgang hat zu lange gedauert. Starte erneut.</string>
     <string name="edit_profile_display_name_min_length">Anzeigename muss mindestens 2 Zeichen lang sein.</string>
+    <string name="registerMultipleFieldsEmpty">Bitte fülle alle Felder aus.</string>
 
 </resources>

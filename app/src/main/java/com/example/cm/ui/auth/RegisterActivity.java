@@ -136,6 +136,15 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
         String password = binding.registerPasswordEditText.inputField.getText().toString();
         String passwordRepeated = binding.registerPasswordRepeatEditText.inputField.getText().toString();
 
+        if (email.isEmpty() && username.isEmpty() ||
+                email.isEmpty() && password.isEmpty() ||
+                email.isEmpty() && passwordRepeated.isEmpty() ||
+                username.isEmpty() && password.isEmpty() ||
+                username.isEmpty() && passwordRepeated.isEmpty()) {
+            Snackbar.make(binding.getRoot(), R.string.registerMultipleFieldsEmpty, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
         if (email.isEmpty()) {
             Snackbar.make(binding.getRoot(), R.string.registerEmailEmpty, Snackbar.LENGTH_LONG).show();
             return;
