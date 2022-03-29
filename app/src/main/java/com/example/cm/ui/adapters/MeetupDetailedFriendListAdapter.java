@@ -68,8 +68,9 @@ public class MeetupDetailedFriendListAdapter
             holder.getTvUserName().setText(username);
 
             boolean isFriendOfCurrentUser = currentUser.getFriends().contains(friend.getId());
+            boolean isCurrentUser = currentUser.getId().equals(currentUser.getId());
 
-            if (isFriendOfCurrentUser) {
+            if (isFriendOfCurrentUser || isCurrentUser) {
                 if (availability != null) {
                     switch (availability) {
                         case AVAILABLE:
