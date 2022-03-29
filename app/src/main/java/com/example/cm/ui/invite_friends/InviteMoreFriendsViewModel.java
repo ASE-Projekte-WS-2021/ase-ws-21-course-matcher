@@ -68,7 +68,6 @@ public class InviteMoreFriendsViewModel extends ViewModel {
                         mtp.getId(),
                         userRepository.getFirebaseUser().getUid(),
                         invitedFriendId,
-                        mtp.getLocation().toString(),
                         mtp.getTimestamp(),
                         mtp.getLocationImageString(),
                         MEETUP_REQUEST);

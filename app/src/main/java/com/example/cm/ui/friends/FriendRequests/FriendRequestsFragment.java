@@ -59,7 +59,6 @@ public class FriendRequestsFragment extends Fragment implements
 
             requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
                 initAdapter();
-
                 requestsListAdapter.setRequests(requests, users);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
                 itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);

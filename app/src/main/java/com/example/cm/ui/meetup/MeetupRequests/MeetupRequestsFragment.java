@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,16 +35,16 @@ public class MeetupRequestsFragment extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupRequestsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-        initUI();
+        initAdapter();
         initViewModel();
         return binding.getRoot();
     }
 
-    private void initUI() {
+    private void initAdapter() {
         requestsListAdapter = new MeetupRequestListAdapter(this);
+        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
-        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
     }
 
     private void initViewModel() {
@@ -59,6 +58,7 @@ public class MeetupRequestsFragment extends Fragment implements
                 requestsViewModel.setMeetupIds(meetupIds);
 
                 requestsViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
+                    initAdapter();
                     requestsListAdapter.setRequests(requests, users, meetups);
                     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
                     itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);

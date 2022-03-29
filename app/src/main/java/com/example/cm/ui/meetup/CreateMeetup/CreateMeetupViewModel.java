@@ -145,7 +145,6 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
                         meetupId,
                         userRepository.getFirebaseUser().getUid(),
                         invitedFriendId,
-                        meetupLocation.getValue(),
                         meetupTimestamp.getValue(),
                         imageBaseString,
                         MEETUP_REQUEST);
