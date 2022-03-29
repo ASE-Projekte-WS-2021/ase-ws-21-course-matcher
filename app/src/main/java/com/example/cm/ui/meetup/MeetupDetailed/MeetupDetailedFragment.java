@@ -76,12 +76,18 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
             switch (meetup.getPhase()) {
                 case MEETUP_UPCOMING:
                     binding.meetupDetailedTime.setText(meetup.getFormattedTime());
+                    binding.meetupDetailedTime.setTextColor(getResources().getColor(R.color.orange400));
+                    binding.meetupDetailedTime.setBackground(getResources().getDrawable(R.drawable.label_rounded_upcoming_white));
                     break;
                 case MEETUP_ACTIVE:
                     binding.meetupDetailedTime.setText(getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                    binding.meetupDetailedTime.setTextColor(getResources().getColor(R.color.orange600));
+                    binding.meetupDetailedTime.setBackground(getResources().getDrawable(R.drawable.label_rounded_active_white));
                     break;
                 case MEETUP_ENDED:
                     binding.meetupDetailedTime.setText(R.string.meetup_ended_text);
+                    binding.meetupDetailedTime.setTextColor(getResources().getColor(R.color.gray500));
+                    binding.meetupDetailedTime.setBackground(getResources().getDrawable(R.drawable.label_rounded_ended_white));
                     break;
             }
             initMenu(meetup);
