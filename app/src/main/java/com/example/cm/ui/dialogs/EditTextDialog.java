@@ -1,4 +1,4 @@
-package com.example.cm.utils;
+package com.example.cm.ui.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -12,7 +12,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.cm.R;

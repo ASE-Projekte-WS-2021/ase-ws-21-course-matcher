@@ -1,4 +1,4 @@
-package com.example.cm.utils;
+package com.example.cm.ui.dialogs;
 
 import static com.example.cm.Constants.MAX_CHAR_COUNT;
 

@@ -15,9 +15,9 @@ import com.example.cm.R;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.databinding.FragmentSettingsBinding;
 import com.example.cm.ui.auth.LoginActivity;
-import com.example.cm.utils.EditTextDialog;
+import com.example.cm.ui.dialogs.EditTextDialog;
 import com.example.cm.utils.Navigator;
-import com.example.cm.utils.TextWithButtonDialog;
+import com.example.cm.ui.dialogs.TextWithButtonDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 

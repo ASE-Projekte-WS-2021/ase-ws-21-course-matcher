@@ -19,7 +19,7 @@ import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
 import com.example.cm.utils.Navigator;
-import com.example.cm.utils.TextWithButtonDialog;
+import com.example.cm.ui.dialogs.TextWithButtonDialog;
 import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
