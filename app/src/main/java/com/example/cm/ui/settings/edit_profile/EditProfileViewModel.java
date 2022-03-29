@@ -15,7 +15,6 @@ import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
 import com.example.cm.data.listener.Callback;
-import com.example.cm.data.repositories.StorageManager;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.utils.InputValidator;
 
@@ -25,7 +24,7 @@ import java.io.InputStream;
 import java.util.Objects;
 
 
-public class EditProfileViewModel extends ViewModel implements Callback, StorageManager.Callback {
+public class EditProfileViewModel extends ViewModel implements Callback {
     private final UserRepository userRepository;
     public MutableLiveData<Status> status = new MutableLiveData<>();
     private MutableLiveData<User> user;
@@ -40,6 +39,10 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
     }
 
     public void updateImage(Uri uri, Context context) throws FileNotFoundException {
+        if(user.getValue() == null) {
+            return;
+        }
+
         InputStream imageStream = context.getContentResolver().openInputStream(uri);
         Bitmap selectedImageBitmap = BitmapFactory.decodeStream(imageStream);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -54,7 +57,7 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
     }
 
     public void updateField(String field, String value) {
-        if (value.trim().isEmpty()) {
+        if (value.trim().isEmpty() && !field.equals("Bio")) {
             status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_field_not_empty));
             return;
         }
@@ -92,16 +95,6 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
 
     @Override
     public void onError(Object object) {
-        status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
-    }
-
-    @Override
-    public void onSuccess(String urlOnline, Uri uriLocal) {
-        userRepository.updateField("profileImageString", urlOnline, this);
-    }
-
-    @Override
-    public void onError(Exception e) {
         status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_general_error));
     }
 }

@@ -42,8 +42,7 @@ public class MeetupDetailedFriendListAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder,
-                                 int position) {
+    public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
         if (friends != null) {
             if (position == RecyclerView.NO_POSITION) {
                 return;
@@ -68,8 +67,9 @@ public class MeetupDetailedFriendListAdapter
             holder.getTvUserName().setText(username);
 
             boolean isFriendOfCurrentUser = currentUser.getFriends().contains(friend.getId());
+            boolean isCurrentUser = friend.getId().equals(currentUser.getId());
 
-            if (isFriendOfCurrentUser) {
+            if (isFriendOfCurrentUser || isCurrentUser) {
                 if (availability != null) {
                     switch (availability) {
                         case AVAILABLE:

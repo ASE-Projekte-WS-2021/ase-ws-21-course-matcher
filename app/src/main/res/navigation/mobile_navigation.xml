@@ -70,7 +70,7 @@
         android:id="@+id/navigation_meetup"
         android:name="com.example.cm.ui.meetup.CreateMeetup.CreateMeetupFragment"
         android:label="Meetup"
-        tools:layout="@layout/fragment_meetup">
+        tools:layout="@layout/fragment_create_meetup">
         <action
             android:id="@+id/navigateToInviteFriends"
             app:destination="@+id/navigation_invite_friends" />

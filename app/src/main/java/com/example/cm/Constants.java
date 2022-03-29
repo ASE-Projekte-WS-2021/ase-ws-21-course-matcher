@@ -95,6 +95,20 @@ public class Constants {
     public static final String FIELD_MEETUP_ID = "meetupId";
     public static final String FIELD_ID = "id";
 
+    // Konfetti
+    public static final Long KONFETTI_DURATION = 5L;
+    public static final int KOFFETTI_COUNT = 50;
+    public static final int KOFFETTI_SIZE = 12;
+    public static final float KONFETTI_MASS = 5f;
+    public static final float KONFETTI_MASS_VARIANCE = 0.2f;
+    public static final int KONFETTI_ANGLE = 270;
+    public static final int KONFETTI_SPREAD = 90;
+    public static final float KONFEETI_MIN_SPEED = 1f;
+    public static final float KONFEETI_MAX_SPEED = 5f;
+    public static final Long KONFETTI_TIME_TO_LIVE = 2000L;
+    public static final double KONFETTI_MIN_POSITION = 0.0;
+    public static final double KONFETTI_MAX_POSITION = 1.0;
+
     public enum ImageType {
         PROFILE_IMAGE,
         MEETUP_IMAGE

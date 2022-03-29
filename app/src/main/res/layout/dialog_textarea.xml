@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/rounded_dialog_bg"
     android:orientation="vertical"
     android:padding="@dimen/padding_double">
@@ -38,8 +39,17 @@
 
         </RelativeLayout>
 
-        <EditText
-            android:id="@+id/inputField"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_half"
+            app:boxStrokeWidth="0dp"
+            app:endIconTint="@color/gray700"
+            app:boxStrokeWidthFocused="0dp"
+            >
+
+        <com.google.android.material.textfield.TextInputEditText            android:id="@+id/inputField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_half"
@@ -54,6 +64,9 @@
             android:paddingVertical="@dimen/padding_small"
             android:scrollbars="vertical"
             tools:ignore="LabelFor" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
     </LinearLayout>
 
     <LinearLayout

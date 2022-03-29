@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +25,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.config.FieldType;
+import com.example.cm.data.models.StatusFlag;
 import com.example.cm.databinding.FragmentEditProfileBinding;
-import com.example.cm.utils.EditTextAreaDialog;
-import com.example.cm.utils.EditTextDialog;
+import com.example.cm.ui.dialogs.EditTextAreaDialog;
+import com.example.cm.ui.dialogs.EditTextDialog;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
@@ -34,12 +36,13 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.FileNotFoundException;
 
 public class EditProfileFragment extends Fragment implements EditTextDialog.OnSaveListener, EditTextAreaDialog.OnSaveListener {
-    ActivityResultLauncher<String> storagePermissionRequestLauncher;
-    ActivityResultLauncher<Intent> imagePickerLauncher;
-    FragmentEditProfileBinding binding;
-    EditProfileViewModel editProfileViewModel;
-    Navigator navigator;
-    Dialog dialog;
+    private ActivityResultLauncher<String> storagePermissionRequestLauncher;
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
+    private FragmentEditProfileBinding binding;
+    private EditProfileViewModel editProfileViewModel;
+    private Navigator navigator;
+    private Dialog dialog;
+    private Handler handler = new Handler();
 
     public EditProfileFragment() {
     }
@@ -110,24 +113,38 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
                 return;
             }
 
-            if (dialog != null) {
-                dialog.hide();
+            if (status.getFlag() == StatusFlag.ERROR) {
+                if (dialog instanceof EditTextDialog) {
+                    ((EditTextDialog) dialog).setError(getString(status.getMessageResourceId()));
+                    ((EditTextDialog) dialog).enableConfirmButton();
+                    ((EditTextDialog) dialog).setConfirmButtonText(getString(R.string.edit_save));
+
+                } else {
+                    ((EditTextAreaDialog) dialog).setError(getString(status.getMessageResourceId()));
+                    ((EditTextAreaDialog) dialog).enableConfirmButton();
+                    ((EditTextAreaDialog) dialog).setConfirmButtonText(getString(R.string.edit_save));
+                }
+                return;
             }
 
             Snackbar.make(binding.getRoot(), status.getMessageResourceId(), Snackbar.LENGTH_SHORT).show();
+            dialog.dismiss();
         });
     }
 
     private void initUI() {
         binding.actionBar.tvTitle.setText(getString(R.string.title_edit_profile));
 
-        binding.inputUsername.inputLabel.setText(R.string.input_label_username);
+        binding.inputUsername.textInputLayout.setHint(R.string.input_label_username);
         binding.inputUsername.inputField.setFocusable(false);
         binding.inputUsername.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
 
         binding.inputDisplayName.inputLabel.setText(getString(R.string.input_label_display_name));
         binding.inputDisplayName.inputField.setFocusable(false);
         binding.inputDisplayName.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
+
+        binding.inputBio.textInputLayout.setHint(getString(R.string.input_label_bio));
+        binding.inputBio.inputField.setFocusable(false);
     }
 
     private void initListeners() {
@@ -139,8 +156,8 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         binding.inputDisplayName.inputField.setOnClickListener(v -> {
             openDialog(FieldType.TEXT_INPUT.toString(), getString(R.string.input_label_display_name), binding.inputDisplayName.inputField.getText().toString());
         });
-        binding.inputFieldBio.setOnClickListener(v -> {
-            openDialog(FieldType.TEXT_AREA.toString(), getString(R.string.input_label_bio), binding.inputFieldBio.getText().toString());
+        binding.inputBio.inputField.setOnClickListener(v -> {
+            openDialog(FieldType.TEXT_AREA.toString(), getString(R.string.input_label_bio), binding.inputBio.inputField.getText().toString());
         });
         binding.editProfileImageBtn.setOnClickListener(v -> {
             onEditProfileImageClicked();

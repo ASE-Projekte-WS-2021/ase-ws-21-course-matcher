@@ -1,4 +1,4 @@
-package com.example.cm.utils;
+package com.example.cm.ui.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,19 +10,30 @@ import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
-import com.example.cm.databinding.DialogLogoutBinding;
+import com.example.cm.databinding.DialogTextWithButtonBinding;
 
-public class LogoutDialog extends Dialog {
-    DialogLogoutBinding binding;
-    OnLogoutListener listener;
+public class TextWithButtonDialog extends Dialog {
 
-    public LogoutDialog(@NonNull Context context, OnLogoutListener listener) {
+    DialogTextWithButtonBinding binding;
+    TextWithButtonDialog.OnConfirmListener listener;
+
+    public TextWithButtonDialog(@NonNull Context context, TextWithButtonDialog.OnConfirmListener listener) {
         super(context);
         this.listener = listener;
-        binding = DialogLogoutBinding.inflate(LayoutInflater.from(context));
+        binding = DialogTextWithButtonBinding.inflate(LayoutInflater.from(context));
         setContentView(binding.getRoot());
         initRootView();
         initListeners();
+    }
+
+    public TextWithButtonDialog setTitle(String title) {
+        binding.dialogTitle.setText(title);
+        return this;
+    }
+
+    public TextWithButtonDialog setConfirmButtonText(String text) {
+        binding.btnConfirm.setText(text);
+        return this;
     }
 
     private void initRootView() {
@@ -37,14 +48,12 @@ public class LogoutDialog extends Dialog {
 
     private void initListeners() {
         binding.btnCancel.setOnClickListener(v -> dismiss());
-        binding.btnLogout.setOnClickListener(v -> onLogoutClicked());
+        binding.btnConfirm.setOnClickListener(v -> {
+            listener.onConfirmClicked();
+        });
     }
 
-    private void onLogoutClicked() {
-        listener.onLogoutApproved();
-    }
-
-    public interface OnLogoutListener {
-        void onLogoutApproved();
+    public interface OnConfirmListener {
+        void onConfirmClicked();
     }
 }

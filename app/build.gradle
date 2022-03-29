@@ -55,7 +55,7 @@ dependencies {
     implementation 'android.arch.lifecycle:extensions:1.1.1'
     
     // Firebase Auth + Storage
-    implementation platform('com.google.firebase:firebase-bom:29.0.3')
+    implementation platform('com.google.firebase:firebase-bom:29.2.1')
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-database:20.0.3'
     implementation 'com.google.firebase:firebase-firestore:24.0.1'
@@ -76,6 +76,9 @@ dependencies {
 
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    // Konfetti for Meetup Success
+    implementation 'nl.dionsegijn:konfetti-xml:2.0.2'
 
     //Fab Menu
     implementation 'com.github.clans:fab:1.6.4'

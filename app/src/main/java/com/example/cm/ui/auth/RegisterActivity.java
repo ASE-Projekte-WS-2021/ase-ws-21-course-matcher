@@ -168,7 +168,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
         }
 
         if (password.isEmpty() || password.length() < Constants.MIN_PASSWORD_LENGTH) {
-            Snackbar.make(binding.getRoot(), R.string.registerPasswordEmpty, Snackbar.LENGTH_LONG).show();
+            binding.registerPasswordEditText.textInputLayout.setError(getString(R.string.registerPasswordEmpty));
             return;
         }
 
