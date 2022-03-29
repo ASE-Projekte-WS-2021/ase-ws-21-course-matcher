@@ -60,6 +60,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.algo.NonHierarchicalDistanceBasedAlgorithm;
@@ -89,12 +90,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         initRecyclerView();
         initLocationPermissionLauncher();
-        initPermissionCheck();
         initGoogleMap(savedInstanceState);
-        initViewModel();
-        initListeners();
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initPermissionCheck();
+        initViewModel();
+        initListeners();
     }
 
     private void initListeners() {
@@ -168,7 +174,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
 
     private void initPermissionCheck() {
         if (hasLocationPermission(requireActivity(), ACCESS_COARSE_LOCATION) && hasLocationPermission(requireActivity(), ACCESS_FINE_LOCATION)) {
-            positionManager.requestCurrentLocation(requireActivity(), position -> {
+            positionManager.requestCurrentLocation(position -> {
                 onPositionChanged(position);
             });
         } else {
@@ -181,7 +187,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                 new ActivityResultContracts.RequestPermission(),
                 request -> {
                     if (request) {
-                        positionManager.requestCurrentLocation(requireActivity(), position -> {
+                        positionManager.requestCurrentLocation(position -> {
                             onPositionChanged(position);
                         });
                         homeViewModel.updateLocationSharing(true);
@@ -213,6 +219,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style));
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_MAP_ZOOM));
         googleMap.setOnMapClickListener(latLng -> {
             binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
@@ -335,7 +342,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     }
 
     private void onPositionChanged(LatLng position) {
-        if (googleMap == null || currentUser == null) {
+        if (googleMap == null || currentUser == null || homeViewModel == null || binding == null) {
             return;
         }
 
@@ -447,6 +454,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        homeViewModel.getCurrentUser().removeObservers(getViewLifecycleOwner());
     }
 
     @Override
@@ -454,7 +462,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
         super.onResume();
         if (mapView != null) {
             mapView.onResume();
-            initPermissionCheck();
+            //initPermissionCheck();
             observeMeetups();
             observeCurrentUser();
         }

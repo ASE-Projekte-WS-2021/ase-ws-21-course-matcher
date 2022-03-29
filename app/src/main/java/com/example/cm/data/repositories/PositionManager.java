@@ -1,19 +1,14 @@
 package com.example.cm.data.repositories;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.Task;
 
 import java.util.List;
 
@@ -25,12 +20,10 @@ public class PositionManager {
     private final LocationManager locationManager;
     private final LocationListener locationListener;
     private PositionListener positionListener;
-    private final FusedLocationProviderClient fusedLocationProviderClient;
 
     private PositionManager(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         locationListener = getLocationListener();
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
     }
 
     public static PositionManager getInstance(Context context) {
@@ -45,7 +38,6 @@ public class PositionManager {
             @SuppressLint("MissingPermission")
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                Timber.d("onLocationChanged location");
                 if (positionListener == null) {
                     return;
                 }
@@ -77,7 +69,7 @@ public class PositionManager {
 
                 LatLng position = new LatLng(locations.get(0).getLatitude(), locations.get(0).getLongitude());
                 positionListener.onPositionChanged(position);
-                //locationManager.removeUpdates(locationListener);
+                locationManager.removeUpdates(locationListener);
             }
 
             @Override
@@ -88,29 +80,9 @@ public class PositionManager {
     }
 
     @SuppressLint("MissingPermission")
-    public void requestCurrentLocation(Activity activity, PositionListener listener) {
+    public void requestCurrentLocation(PositionListener listener) {
         positionListener = listener;
-        /*
-        // TODO: CHECK HOW TO SET CURRENT USER MARKER WITH FusionLocationProvider
-        Task<Location> locationTask = fusedLocationProviderClient.getLastLocation();
-        locationTask.addOnSuccessListener(activity, location -> {
-           Timber.d("requestCurrentLocation location");
-           Timber.d("requestCurrentLocation location: %s", location);
-           if (location != null) {
-               Timber.d("Sending location...");
-               LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
-               positionListener.onPositionChanged(position);
-           }
-        });
 
-        locationTask.addOnFailureListener(e -> {
-            Timber.e("requestCurrentLocation error");
-            Timber.e(e);
-        });
-        */
-
-        // Both variations are called since sometimes GPS Provider is available but does not return a result
-        // TODO: Check callback methods of listener if GPS provider fails and only then call with network provider
         if (hasNetworkProvider()) {
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 200, 1, locationListener);
         }

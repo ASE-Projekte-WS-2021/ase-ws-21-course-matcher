@@ -1,7 +1,5 @@
 package com.example.cm.ui.settings.edit_account;
 
-import android.content.res.Resources;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -11,10 +9,9 @@ import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
-import com.example.cm.data.repositories.Callback;
+import com.example.cm.data.listener.Callback;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.utils.InputValidator;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 public class EditAccountViewModel extends ViewModel implements Callback {
     public MutableLiveData<Status> status = new MutableLiveData<>();
@@ -60,10 +57,9 @@ public class EditAccountViewModel extends ViewModel implements Callback {
     }
 
     @Override
-    public OnSuccessListener<? super Void> onSuccess(Object object) {
+    public void onSuccess(Object object) {
         status.postValue(new Status(StatusFlag.SUCCESS, R.string.edit_account_success_password_change));
         user = userRepository.getCurrentUser();
-        return null;
     }
 
     @Override
