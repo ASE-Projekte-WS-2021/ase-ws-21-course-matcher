@@ -267,5 +267,6 @@
     <string name="registrationTooLong">Der Registriervorgang hat zu lange gedauert. Starte erneut.</string>
     <string name="edit_profile_display_name_min_length">Anzeigename muss mindestens 2 Zeichen lang sein.</string>
     <string name="registerMultipleFieldsEmpty">Bitte fülle alle Felder aus.</string>
+    <string name="error_loading">Fehler beim Laden. Erneut versuchen.</string>
 
 </resources>

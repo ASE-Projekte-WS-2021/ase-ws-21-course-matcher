@@ -42,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
 
         initTimer();
         initViewModel();
+        initListeners();
         initTexts();
         initTemporaryAuth();
     }
@@ -104,14 +105,18 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     }
 
     private void initListeners() {
-        authViewModel.getUsernames(this);
         binding.registerUsernameEditText.inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 binding.registerRegisterBtn.setEnabled(false);
 
                 // check if username is in use already
+                if (usernames == null) {
+                    binding.usernameAlreadyExistsTv.setText(getResources().getText(R.string.error_loading));
+                    binding.usernameAlreadyExistsTv.setVisibility(View.VISIBLE);
+                }
                 if (usernames != null && usernames.contains(charSequence.toString())) {
+                    binding.usernameAlreadyExistsTv.setText(getResources().getText(R.string.registerUsernameAlreadyExists));
                     binding.usernameAlreadyExistsTv.setVisibility(View.VISIBLE);
                 } else {
                     binding.usernameAlreadyExistsTv.setVisibility(View.GONE);
@@ -172,6 +177,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
 
         binding.registerRegisterBtn.setEnabled(false);
         binding.registerRegisterBtn.setBackgroundColor(getResources().getColor(R.color.gray600));
+        binding.registerRegisterBtn.setText(getResources().getText(R.string.confirm_button_loading));
         goToCreateProfile(email, username, password);
     }
 
@@ -198,7 +204,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     public void onRegisterSuccess(User user) {
         if (user.getEmail().equals(Constants.TEMP_EMAIL)) {
             startTimer();
-            initListeners();
+            authViewModel.getUsernames(this);
         } else {
             Timber.d(Constants.UNEXPECTED_USER);
         }
