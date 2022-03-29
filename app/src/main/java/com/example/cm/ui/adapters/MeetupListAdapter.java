@@ -81,15 +81,24 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     }
 
     private void initTextViews(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {
+        Context context = holder.getContext();
         String address = meetup.getLocationName();
         holder.getTvLocation().setText(address);
         switch (meetup.getPhase()) {
             case MEETUP_UPCOMING:
                 holder.getTvTime().setText(meetup.getFormattedTime());
+                holder.getTvTime().setTextColor(context.getResources().getColor(R.color.orange400));
+                holder.getTvTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_upcoming));
                 break;
             case MEETUP_ACTIVE:
-                holder.getTvTime()
-                        .setText(holder.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                holder.getTvTime().setText(holder.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                holder.getTvTime().setTextColor(context.getResources().getColor(R.color.orange600));
+                holder.getTvTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_active));
+                break;
+            case MEETUP_ENDED:
+                holder.getTvTime().setText(R.string.meetup_ended_text);
+                holder.getTvTime().setTextColor(context.getResources().getColor(R.color.gray500));
+                holder.getTvTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_ended));
                 break;
         }
     }
