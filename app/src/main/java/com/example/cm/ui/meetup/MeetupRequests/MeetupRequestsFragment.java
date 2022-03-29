@@ -86,6 +86,13 @@ public class MeetupRequestsFragment extends Fragment implements
     }
 
     @Override
+    public void onUsernameClicked(String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_USER_ID, id);
+        navigator.getNavController().navigate(R.id.fromMeetupRequestToProfile, bundle);
+    }
+
+    @Override
     public void onItemDeleted(MeetupRequest request) {
         requestsViewModel.deleteMeetupRequest(request);
     }
