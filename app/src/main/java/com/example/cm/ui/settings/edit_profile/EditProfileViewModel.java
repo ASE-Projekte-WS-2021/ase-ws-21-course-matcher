@@ -54,7 +54,7 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
     }
 
     public void updateField(String field, String value) {
-        if (value.trim().isEmpty()) {
+        if (value.trim().isEmpty() && !field.equals("Bio")) {
             status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_field_not_empty));
             return;
         }

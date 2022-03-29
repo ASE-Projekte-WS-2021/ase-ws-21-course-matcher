@@ -98,7 +98,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
             binding.inputUsername.inputField.setText(user.getUsername());
             binding.inputFirstName.inputField.setText(user.getFirstName());
             binding.inputLastName.inputField.setText(user.getLastName());
-            binding.inputFieldBio.setText(user.getBio());
+            binding.inputBio.inputField.setText(user.getBio());
 
             String profileImageString = user.getProfileImageString();
             if (profileImageString != null && !profileImageString.isEmpty()) {
@@ -142,6 +142,9 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
 
         binding.inputLastName.textInputLayout.setHint(getString(R.string.input_label_last_name));
         binding.inputLastName.inputField.setFocusable(false);
+
+        binding.inputBio.textInputLayout.setHint(getString(R.string.input_label_bio));
+        binding.inputBio.inputField.setFocusable(false);
     }
 
     private void initListeners() {
@@ -156,8 +159,8 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         binding.inputLastName.inputField.setOnClickListener(v -> {
             openDialog(FieldType.TEXT_INPUT.toString(), getString(R.string.input_label_last_name), binding.inputLastName.inputField.getText().toString());
         });
-        binding.inputFieldBio.setOnClickListener(v -> {
-            openDialog(FieldType.TEXT_AREA.toString(), getString(R.string.input_label_bio), binding.inputFieldBio.getText().toString());
+        binding.inputBio.inputField.setOnClickListener(v -> {
+            openDialog(FieldType.TEXT_AREA.toString(), getString(R.string.input_label_bio), binding.inputBio.inputField.getText().toString());
         });
         binding.editProfileImageBtn.setOnClickListener(v -> {
             onEditProfileImageClicked();
