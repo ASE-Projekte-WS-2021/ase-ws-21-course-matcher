@@ -163,41 +163,49 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         if (!meetup.getRequestingUser().equals(currentUserId)) {
             binding.deleteButton.setVisibility(View.GONE);
         }
+    }
+
+
+    private void initListeners() {
+        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+        binding.ivLocation.setOnClickListener(v -> onMap());
 
         binding.deleteButton.setOnClickListener(v -> {
             closeFabMenu();
             onDelete();
         });
+
         binding.declineButton.setOnClickListener(v -> {
             closeFabMenu();
             meetupDetailedViewModel.onDecline();
         });
+
         binding.acceptButton.setOnClickListener(v -> {
             closeFabMenu();
             meetupDetailedViewModel.onJoin();
         });
+
         binding.locationButton.setOnClickListener(v -> {
             closeFabMenu();
             onMap();
         });
+
         binding.leaveButton.setOnClickListener(v -> {
             closeFabMenu();
             meetupDetailedViewModel.onLeave();
         });
+
         binding.lateButton.setOnClickListener(v -> {
             closeFabMenu();
             meetupDetailedViewModel.onLate(binding.lateButton.getLabelText().equals(getString(R.string.late)));
         });
+
+        binding.fabBackground.setOnClickListener(v -> closeFabMenu());
     }
 
     private void closeFabMenu() {
         binding.fabMenu.close(true);
         binding.fabBackground.setVisibility(View.INVISIBLE);
-    }
-
-    private void initListeners() {
-        binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
-        binding.ivLocation.setOnClickListener(v -> onMap());
     }
 
     private void onMap() {
