@@ -109,36 +109,39 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
         Context context = holder.binding.getRoot().getContext();
         MeetupRequest request = mRequests.get(position);
+
+        String user = String.format("@%s ", getFullName(Objects.requireNonNull(request).getSenderId()));
+        String date = request.getCreationTimeAgo();
+
+        boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
+
+        int content = 0;
+        switch (request.getType()) {
+            case MEETUP_REQUEST:
+                content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_description;
+                break;
+            case MEETUP_INFO_ACCEPTED:
+                isAccepted = true;
+                content = R.string.meetup_accepted_text;
+                break;
+            case MEETUP_INFO_DECLINED:
+                isAccepted = true;
+                content = R.string.meetup_declined_text;
+                break;
+        }
+
+        holder.getTvSender().setText(user);
+        holder.getTvDate().setText(date);
+        holder.getTvDescription().setText(content);
+        holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
+        holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
+
         Meetup meetup = getMeetup(request.getMeetupId());
 
-        if(meetup != null){
-            String user = String.format("@%s ", getFullName(Objects.requireNonNull(request).getSenderId()));
-            String date = request.getCreationTimeAgo();
+        if (meetup != null) {
             String location = meetup.getLocationName();
 
-            boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
-
-            int content = 0;
-            switch (request.getType()) {
-                case MEETUP_REQUEST:
-                    content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_description;
-                    break;
-                case MEETUP_INFO_ACCEPTED:
-                    isAccepted = true;
-                    content = R.string.meetup_accepted_text;
-                    break;
-                case MEETUP_INFO_DECLINED:
-                    isAccepted = true;
-                    content = R.string.meetup_declined_text;
-                    break;
-            }
-
             holder.getTvLocation().setText(location);
-            holder.getTvSender().setText(user);
-            holder.getTvDate().setText(date);
-            holder.getTvDescription().setText(content);
-            holder.getBtnAccept().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
-            holder.getBtnDecline().setVisibility(isAccepted ? View.GONE : View.VISIBLE);
 
             switch (meetup.getPhase()) {
                 case MEETUP_UPCOMING:
