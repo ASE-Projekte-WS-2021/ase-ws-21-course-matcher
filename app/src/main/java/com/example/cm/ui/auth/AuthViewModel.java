@@ -64,7 +64,6 @@ public class AuthViewModel extends ViewModel implements UserListener {
     }
 
     public void getUsernames(UserRepository.UsernamesRetrievedCallback callback) {
-        Log.e("GET USERNAMES", "view model");
         userRepository.getUsernames(callback);
     }
 

@@ -47,7 +47,10 @@ public class EditProfileViewModel extends ViewModel implements Callback, Storage
         byte[] imageBytes = outputStream.toByteArray();
         String imageBaseString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
-        userRepository.updateProfileImage(imageBaseString, Objects.requireNonNull(user.getValue()).getId());
+        User usr = user.getValue();
+        if (usr != null) {
+            userRepository.updateProfileImage(imageBaseString, usr.getId());
+        }
     }
 
     public void updateField(String field, String value) {
