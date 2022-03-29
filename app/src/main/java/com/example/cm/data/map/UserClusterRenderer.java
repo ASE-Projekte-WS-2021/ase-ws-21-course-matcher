@@ -23,12 +23,12 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 
-public class MarkerClusterRenderer extends DefaultClusterRenderer<MarkerClusterItem> {
+public class UserClusterRenderer extends DefaultClusterRenderer<MarkerClusterItem> {
     private final ImageView imageView;
     private final IconGenerator iconGenerator;
     private final Context context;
 
-    public MarkerClusterRenderer(Context context, GoogleMap googleMap, ClusterManager<MarkerClusterItem> clusterManager) {
+    public UserClusterRenderer(Context context, GoogleMap googleMap, ClusterManager<MarkerClusterItem> clusterManager) {
         super(context, googleMap, clusterManager);
         this.context = context;
         imageView = new ImageView(context);
