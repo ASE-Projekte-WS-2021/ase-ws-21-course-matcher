@@ -58,7 +58,7 @@ public class Constants {
     public static final int PENDING_TAB_INDEX = 2;
     public static final int ADD_MORE_TAB_INDEX = 3;
 
-    public static final int MAX_QUERY_LENGTH = 10;
+    public static final int MAX_QUERY_LENGTH = 5;
 
     // Firebase errors
     public static String WEAK_PASSWORD = "Dein Passwort muss mindestens 6 Zeichen lang sein.";

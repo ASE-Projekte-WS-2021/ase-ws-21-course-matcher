@@ -16,7 +16,6 @@ public class MeetupListViewModel extends ViewModel {
 
     private final MeetupRepository meetupRepository = new MeetupRepository();
     private final UserRepository userRepository = new UserRepository();
-
     private final MutableLiveData<List<Meetup>> meetupList;
     private final MutableLiveData<List<String>> userIds = new MutableLiveData<>();
     private final LiveData<List<User>> userLiveData = Transformations.switchMap(userIds, userRepository::getUsersByIds);

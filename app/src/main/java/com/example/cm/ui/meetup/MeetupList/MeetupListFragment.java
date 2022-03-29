@@ -42,8 +42,8 @@ public class MeetupListFragment extends Fragment {
         MeetupListViewModel meetupListViewModel = new ViewModelProvider(this).get(MeetupListViewModel.class);
         meetupListViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
             if (meetups.size() == 0) {
-                binding.noMeetupsWrapper.setVisibility(View.VISIBLE);
                 binding.meetupListRecyclerView.setVisibility(View.GONE);
+                binding.noMeetupsWrapper.setVisibility(View.VISIBLE);
                 return;
             }
 
@@ -51,7 +51,9 @@ public class MeetupListFragment extends Fragment {
             meetupListViewModel.setUserIds(userIds);
             meetupListViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
                 meetupListAdapter = new MeetupListAdapter(meetups, users);
+
                 binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
+                binding.loadingCircle.setVisibility(View.GONE);
                 binding.noMeetupsWrapper.setVisibility(View.GONE);
                 binding.meetupListRecyclerView.setVisibility(View.VISIBLE);
             });
