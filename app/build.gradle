@@ -77,6 +77,9 @@ dependencies {
     // Logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
+    // Konfetti for Meetup Success
+    implementation 'nl.dionsegijn:konfetti-xml:2.0.2'
+
     //Fab Menu
     implementation 'com.github.clans:fab:1.6.4'
 }
