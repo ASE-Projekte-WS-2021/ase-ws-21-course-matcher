@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        authViewModel.login(email, password);
+        authViewModel.login(email, password, null);
 
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

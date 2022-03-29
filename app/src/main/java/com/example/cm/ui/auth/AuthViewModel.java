@@ -13,9 +13,8 @@ import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.List;
 
-public class AuthViewModel extends ViewModel implements UserListener {
+public class AuthViewModel extends ViewModel {
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
     private final MutableLiveData<FirebaseUser> userLiveData;
@@ -28,13 +27,12 @@ public class AuthViewModel extends ViewModel implements UserListener {
         error = authRepository.getErrorLiveData();
     }
 
-    public void login(String email, String password) {
-        authRepository.login(email, password);
+    public void login(String email, String password, AuthRepository.LoginCallback callback) {
+        authRepository.login(email, password, callback);
     }
 
-    public void createTemporaryUser(AuthRepository.RegisterCallback callback) {
-        authRepository.register(Constants.TEMP_EMAIL, Constants.TEMP_PASSWORD,
-                "", "", "", "", callback);
+    public void logout() {
+        authRepository.logOut();
     }
 
     public void register(String email, String password, String userName, String displayName, String imgString, String bio, AuthRepository.RegisterCallback callback) {
@@ -43,12 +41,6 @@ public class AuthViewModel extends ViewModel implements UserListener {
 
     public void createUser(User user) {
         userRepository.createUser(user);
-    }
-
-    public void deleteCurrentAuth() {
-        if (authRepository.getCurrentUser() != null) {
-            authRepository.deleteUser(this);
-        }
     }
 
     public LiveData<User> getUser() {
@@ -65,13 +57,5 @@ public class AuthViewModel extends ViewModel implements UserListener {
 
     public void getUsernames(UserRepository.UsernamesRetrievedCallback callback) {
         userRepository.getUsernames(callback);
-    }
-
-    @Override
-    public void onUserSuccess(Object o) {
-    }
-
-    @Override
-    public void onUserError(Exception error) {
     }
 }

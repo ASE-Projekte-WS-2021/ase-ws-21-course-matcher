@@ -165,7 +165,6 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
             return;
         }
 
-        authViewModel.deleteCurrentAuth();
         authViewModel.register(email, password, username, displayName, imgString, bio, this);
         binding.createProfileBtn.setEnabled(false);
     }

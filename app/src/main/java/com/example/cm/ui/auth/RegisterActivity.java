@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.cm.AuthActivity;
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ActivityRegisterBinding;
@@ -22,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 import timber.log.Timber;
 
-public class RegisterActivity extends AppCompatActivity implements AuthRepository.RegisterCallback, UserRepository.UsernamesRetrievedCallback {
+public class RegisterActivity extends AppCompatActivity implements AuthRepository.LoginCallback, UserRepository.UsernamesRetrievedCallback {
 
     private AuthViewModel authViewModel;
     private ActivityRegisterBinding binding;
@@ -48,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     }
 
     private void initTemporaryAuth() {
-        authViewModel.createTemporaryUser(this);
+        authViewModel.login(Constants.TEMP_EMAIL, Constants.TEMP_PASSWORD, this);
     }
 
     private void initTimer() {
@@ -187,7 +186,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
 
     private void goToLogin(View view) {
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-        end();
+        endTemporaryAuth();
         finish();
     }
 
@@ -200,32 +199,32 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
         finish();
     }
 
-    @Override
-    public void onRegisterSuccess(User user) {
-        if (user.getEmail().equals(Constants.TEMP_EMAIL)) {
-            startTimer();
-            authViewModel.getUsernames(this);
-        } else {
-            Timber.d(Constants.UNEXPECTED_USER);
-        }
-    }
-
-    private void end() {
+    private void endTemporaryAuth() {
         if (authViewModel.getUserLiveData().getValue() != null
                 && authViewModel.getUserLiveData().getValue().getEmail().equals(Constants.TEMP_EMAIL)) {
-            authViewModel.deleteCurrentAuth();
+            authViewModel.logout();
         }
         handler.removeCallbacks(runnable);
     }
 
     @Override
     protected void onDestroy() {
-        end();
+        endTemporaryAuth();
         super.onDestroy();
     }
 
     @Override
     public void onUsernamesRetrieved(List<String> usernames) {
         this.usernames = usernames;
+    }
+
+    @Override
+    public void onLoginSuccess(String email) {
+        if (email.equals(Constants.TEMP_EMAIL)) {
+            startTimer();
+            authViewModel.getUsernames(this);
+        } else {
+            Timber.d(Constants.UNEXPECTED_USER);
+        }
     }
 }
