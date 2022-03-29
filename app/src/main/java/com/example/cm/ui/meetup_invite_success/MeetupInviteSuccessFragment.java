@@ -1,5 +1,18 @@
 package com.example.cm.ui.meetup_invite_success;
 
+import static com.example.cm.Constants.KOFFETTI_COUNT;
+import static com.example.cm.Constants.KOFFETTI_SIZE;
+import static com.example.cm.Constants.KONFEETI_MAX_SPEED;
+import static com.example.cm.Constants.KONFEETI_MIN_SPEED;
+import static com.example.cm.Constants.KONFETTI_ANGLE;
+import static com.example.cm.Constants.KONFETTI_DURATION;
+import static com.example.cm.Constants.KONFETTI_MASS;
+import static com.example.cm.Constants.KONFETTI_MASS_VARIANCE;
+import static com.example.cm.Constants.KONFETTI_MAX_POSITION;
+import static com.example.cm.Constants.KONFETTI_MIN_POSITION;
+import static com.example.cm.Constants.KONFETTI_SPREAD;
+import static com.example.cm.Constants.KONFETTI_TIME_TO_LIVE;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +26,12 @@ import com.example.cm.R;
 import com.example.cm.databinding.FragmentMeetupInviteSuccessBinding;
 import com.example.cm.utils.Navigator;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import nl.dionsegijn.konfetti.core.Party;
 import nl.dionsegijn.konfetti.core.PartyFactory;
-import nl.dionsegijn.konfetti.core.Position;
 import nl.dionsegijn.konfetti.core.emitter.Emitter;
 import nl.dionsegijn.konfetti.core.emitter.EmitterConfig;
-import nl.dionsegijn.konfetti.core.models.Shape;
 import nl.dionsegijn.konfetti.core.models.Size;
 
 
@@ -45,15 +55,15 @@ public class MeetupInviteSuccessFragment extends Fragment {
     }
 
     private void initKonefetti() {
-        EmitterConfig emitterConfig = new Emitter(5L, TimeUnit.SECONDS).perSecond(50);
-        Size sizes = new Size(12, 5f, 0.2f);
+        EmitterConfig emitterConfig = new Emitter(KONFETTI_DURATION, TimeUnit.SECONDS).perSecond(KOFFETTI_COUNT);
+        Size sizes = new Size(KOFFETTI_SIZE, KONFETTI_MASS, KONFETTI_MASS_VARIANCE);
         Party party = new PartyFactory(emitterConfig)
-                .angle(270)
-                .spread(90)
-                .setSpeedBetween(1f, 5f)
-                .timeToLive(2000L)
+                .angle(KONFETTI_ANGLE)
+                .spread(KONFETTI_SPREAD)
+                .setSpeedBetween(KONFEETI_MIN_SPEED, KONFEETI_MAX_SPEED)
+                .timeToLive(KONFETTI_TIME_TO_LIVE)
                 .sizes(sizes)
-                .position(0.0, 0.0, 1.0, 0.0)
+                .position(KONFETTI_MIN_POSITION, KONFETTI_MIN_POSITION, KONFETTI_MAX_POSITION, KONFETTI_MIN_POSITION)
                 .build();
         binding.konfettiView.start(party);
     }
