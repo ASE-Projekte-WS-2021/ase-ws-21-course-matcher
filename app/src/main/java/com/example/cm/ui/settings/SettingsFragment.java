@@ -16,8 +16,8 @@ import com.example.cm.data.listener.UserListener;
 import com.example.cm.databinding.FragmentSettingsBinding;
 import com.example.cm.ui.auth.LoginActivity;
 import com.example.cm.ui.dialogs.EditTextDialog;
-import com.example.cm.utils.Navigator;
 import com.example.cm.ui.dialogs.TextWithButtonDialog;
+import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -109,9 +109,9 @@ public class SettingsFragment extends Fragment {
 
                     @Override
                     public void onUserError(Exception error) {
-                        Snackbar.make(binding.getRoot(), R.string.edit_profile_general_error, Snackbar.LENGTH_LONG)
-                                .show();
+                        Snackbar.make(binding.getRoot(), R.string.edit_profile_general_error, Snackbar.LENGTH_LONG).show();
                         deleteAccountDialog.enableConfirmButton();
+                        deleteAccountDialog.show();
                     }
                 });
             }
@@ -122,6 +122,7 @@ public class SettingsFragment extends Fragment {
                     Snackbar.make(binding.getRoot(), error.getMessage(), Snackbar.LENGTH_SHORT).show();
                 }
                 deleteAccountDialog.enableConfirmButton();
+                deleteAccountDialog.show();
             }
         }));
         deleteAccountDialog

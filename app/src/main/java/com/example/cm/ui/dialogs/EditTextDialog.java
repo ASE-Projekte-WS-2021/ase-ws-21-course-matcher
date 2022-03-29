@@ -18,6 +18,8 @@ import com.example.cm.R;
 import com.example.cm.databinding.DialogEditTextBinding;
 import com.google.android.material.textfield.TextInputLayout;
 
+import timber.log.Timber;
+
 public class EditTextDialog extends Dialog {
     DialogEditTextBinding binding;
     OnSaveListener listener;
@@ -66,6 +68,7 @@ public class EditTextDialog extends Dialog {
     }
 
     public void enableConfirmButton() {
+        Timber.d("Enabling button");
         binding.btnConfirm.setEnabled(true);
         binding.btnConfirm.setText(confirmButtonText);
         Drawable buttonDrawable = DrawableCompat.wrap(binding.btnConfirm.getBackground());
