@@ -12,8 +12,6 @@ import androidx.annotation.NonNull;
 
 import com.example.cm.databinding.DialogTextWithButtonBinding;
 
-import timber.log.Timber;
-
 public class TextWithButtonDialog extends Dialog {
 
     DialogTextWithButtonBinding binding;
@@ -28,12 +26,14 @@ public class TextWithButtonDialog extends Dialog {
         initListeners();
     }
 
-    public void setTitle(String title) {
+    public TextWithButtonDialog setTitle(String title) {
         binding.dialogTitle.setText(title);
+        return this;
     }
 
-    public void setConfirmButtonText(String text) {
+    public TextWithButtonDialog setConfirmButtonText(String text) {
         binding.btnConfirm.setText(text);
+        return this;
     }
 
     private void initRootView() {
@@ -49,13 +49,8 @@ public class TextWithButtonDialog extends Dialog {
     private void initListeners() {
         binding.btnCancel.setOnClickListener(v -> dismiss());
         binding.btnConfirm.setOnClickListener(v -> {
-            Timber.d("on confirm clicked");
-            onConfirmButtonClicked();
+            listener.onConfirmClicked();
         });
-    }
-
-    private void onConfirmButtonClicked() {
-        listener.onConfirmClicked();
     }
 
     public interface OnConfirmListener {
