@@ -48,6 +48,9 @@
         <action
             android:id="@+id/navigateToMeetupDetailed"
             app:destination="@+id/navigation_meetup_detailed" />
+        <action
+            android:id="@+id/fromMeetupRequestToProfile"
+            app:destination="@id/navigation_other_profile" />
     </fragment>
 
     <fragment

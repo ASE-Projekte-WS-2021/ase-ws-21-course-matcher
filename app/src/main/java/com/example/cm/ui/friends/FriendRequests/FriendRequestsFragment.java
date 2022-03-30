@@ -58,8 +58,15 @@ public class FriendRequestsFragment extends Fragment implements
             requestsViewModel.setUserIds(userIds);
 
             requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-                initAdapter();
+                binding.loadingCircle.setVisibility(View.GONE);
+                if(users.size() == 0) {
+                    binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
+                    return;
+                }
+                binding.tvNoRequestsFound.setVisibility(View.GONE);
+                binding.notificationsRecyclerView.setVisibility(View.VISIBLE);
 
+                initAdapter();
                 requestsListAdapter.setRequests(requests, users);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
                 itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
