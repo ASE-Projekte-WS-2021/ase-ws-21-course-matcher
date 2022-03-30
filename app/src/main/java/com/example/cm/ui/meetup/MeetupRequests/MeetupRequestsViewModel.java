@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
@@ -23,17 +24,17 @@ public class MeetupRequestsViewModel extends ViewModel {
     private final UserRepository userRepository = new UserRepository();
     private final MutableLiveData<User> currentUser;
 
-    private final MeetupRepository meetupRepository;
+    private final MeetupRepository meetupRepository = new MeetupRepository();
     private final MeetupRequestRepository meetupRequestRepository;
     private final MutableLiveData<List<MeetupRequest>> requestList;
     private final MutableLiveData<List<String>> userIds = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> meetupIds = new MutableLiveData<>();
+    private final LiveData<List<Meetup>> meetupLiveData = Transformations.switchMap(meetupIds, meetupRepository::getMeetupsByIds);
     private final LiveData<List<User>> userLiveData = Transformations.switchMap(userIds,
             userRepository::getUsersByIds);
 
     public MeetupRequestsViewModel() {
         currentUser = userRepository.getCurrentUser();
-
-        meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
         requestList = meetupRequestRepository.getMeetupRequestsForUser();
     }
@@ -46,8 +47,16 @@ public class MeetupRequestsViewModel extends ViewModel {
         return userLiveData;
     }
 
+    public LiveData<List<Meetup>> getMeetups() {
+        return meetupLiveData;
+    }
+
     public void setUserIds(List<String> userIds) {
         this.userIds.setValue(userIds);
+    }
+
+    public void setMeetupIds(List<String> meetupIds) {
+        this.meetupIds.setValue(meetupIds);
     }
 
     public void deleteMeetupRequest(MeetupRequest request) {
@@ -68,9 +77,6 @@ public class MeetupRequestsViewModel extends ViewModel {
                 request.getMeetupId(),
                 currentUser.getValue().getId(),
                 request.getSenderId(),
-                request.getLocation(),
-                request.getMeetupAt(),
-                request.getImageUrl(),
                 MEETUP_INFO_ACCEPTED));
     }
 
@@ -84,9 +90,6 @@ public class MeetupRequestsViewModel extends ViewModel {
                 request.getMeetupId(),
                 currentUser.getValue().getId(),
                 request.getSenderId(),
-                request.getLocation(),
-                request.getMeetupAt(),
-                request.getImageUrl(),
                 MEETUP_INFO_DECLINED));
 
         request.setState(Request.RequestState.REQUEST_DECLINED);

@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 public class FriendRequestsFragment extends Fragment implements
         FriendRequestListAdapter.OnFriendRequestListener {
 
@@ -45,8 +44,10 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     private void initUI() {
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(Objects
+                .requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
         binding.notificationsRecyclerView.addItemDecoration(dividerItemDecoration);
         initAdapter();
     }
@@ -59,7 +60,7 @@ public class FriendRequestsFragment extends Fragment implements
 
             requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
                 binding.loadingCircle.setVisibility(View.GONE);
-                if(users.size() == 0) {
+                if (users.size() == 0) {
                     binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
                     return;
                 }
