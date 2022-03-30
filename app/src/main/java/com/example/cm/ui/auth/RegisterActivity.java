@@ -109,14 +109,11 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
 
                 // check if username is in use already
                 if (usernames == null) {
-                    binding.usernameAlreadyExistsTv.setText(getResources().getText(R.string.error_loading));
-                    binding.usernameAlreadyExistsTv.setVisibility(View.VISIBLE);
+                    binding.registerUsernameEditText.textInputLayout.setError(getString(R.string.error_loading));
                 }
                 if (usernames != null && usernames.contains(charSequence.toString())) {
-                    binding.usernameAlreadyExistsTv.setText(getResources().getText(R.string.registerUsernameAlreadyExists));
-                    binding.usernameAlreadyExistsTv.setVisibility(View.VISIBLE);
+                    binding.registerUsernameEditText.textInputLayout.setError(getString(R.string.registerUsernameAlreadyExists));
                 } else {
-                    binding.usernameAlreadyExistsTv.setVisibility(View.GONE);
                     binding.registerRegisterBtn.setEnabled(true);
                 }
             }
@@ -133,47 +130,41 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     }
 
     private void register(View view) {
+        boolean error = false;
         String email = binding.registerEmailEditText.inputField.getText().toString();
         String username = binding.registerUsernameEditText.inputField.getText().toString();
         String password = binding.registerPasswordEditText.inputField.getText().toString();
         String passwordRepeated = binding.registerPasswordRepeatEditText.inputField.getText().toString();
 
-        if (email.isEmpty() && username.isEmpty() ||
-                email.isEmpty() && password.isEmpty() ||
-                email.isEmpty() && passwordRepeated.isEmpty() ||
-                username.isEmpty() && password.isEmpty() ||
-                username.isEmpty() && passwordRepeated.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.registerMultipleFieldsEmpty, Snackbar.LENGTH_LONG).show();
-            return;
-        }
-
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Snackbar.make(binding.getRoot(), R.string.registerEmailEmpty, Snackbar.LENGTH_LONG).show();
-            return;
+            error = true;
+            binding.registerEmailEditText.textInputLayout.setError(getString(R.string.registerEmailEmpty));
         }
 
         if (username.isEmpty() || username.length() < Constants.MIN_USERNAME_LENGTH) {
-            Snackbar.make(binding.getRoot(), R.string.registerUsernameEmpty, Snackbar.LENGTH_LONG).show();
-            return;
+            error = true;
+            binding.registerUsernameEditText.textInputLayout.setError(getString(R.string.registerUsernameEmpty));
         }
 
         if (usernames != null && usernames.contains(username)) {
-            Snackbar.make(binding.getRoot(), R.string.registerUsernameAlreadyExists, Snackbar.LENGTH_LONG).show();
-            return;
+            error = true;
+            binding.registerUsernameEditText.textInputLayout.setError(getString(R.string.registerUsernameAlreadyExists));
         }
 
         if (password.isEmpty() || password.length() < Constants.MIN_PASSWORD_LENGTH) {
+            error = true;
             binding.registerPasswordEditText.textInputLayout.setError(getString(R.string.registerPasswordEmpty));
-            return;
         }
 
         if (!password.equals(passwordRepeated)) {
+            error = true;
             Snackbar.make(binding.getRoot(), R.string.registerPasswordRepeatNotEqual, Snackbar.LENGTH_LONG).show();
-            return;
         }
 
-        disableBtn();
-        goToCreateProfile(email, username, password);
+        if (!error) {
+            disableBtn();
+            goToCreateProfile(email, username, password);
+        }
     }
 
     private void disableBtn() {

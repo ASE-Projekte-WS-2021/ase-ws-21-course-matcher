@@ -168,12 +168,11 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         String bio = binding.inputBio.inputField.getText().toString();
 
         if (displayName.isEmpty() || displayName.length() < Constants.MIN_NAME_LENGTH) {
-            Snackbar.make(binding.getRoot(), R.string.registerDisplayNameEmpty, Snackbar.LENGTH_LONG).show();
-            return;
+            binding.registerDisplayNameEditText.textInputLayout.setError(getString(R.string.registerDisplayNameEmpty));
+        } else {
+            disableBtn();
+            authViewModel.register(email, password, username, displayName, imgString, bio, this);
         }
-
-        disableBtn();
-        authViewModel.register(email, password, username, displayName, imgString, bio, this);
     }
 
     private void disableBtn() {
