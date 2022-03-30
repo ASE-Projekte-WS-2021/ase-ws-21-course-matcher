@@ -12,7 +12,6 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
