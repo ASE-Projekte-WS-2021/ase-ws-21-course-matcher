@@ -50,23 +50,26 @@ public class MeetupRequestsFragment extends Fragment implements
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
         requestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), requests -> {
+            if (requests.isEmpty()){
+                binding.loadingCircle.setVisibility(View.GONE);
+                binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
+            }
             List<String> userIds = getUserIds(requests);
             List<String> meetupIds = getMeetupIds(requests);
             requestsViewModel.setUserIds(userIds);
 
             requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
                 requestsViewModel.setMeetupIds(meetupIds);
+                if (users.size() == 0) {
+                    binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
+                    return;
+                }
 
                 requestsViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
-                    initAdapter();
-                    if (users.size() == 0) {
-                        binding.loadingCircle.setVisibility(View.GONE);
-                        binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
-                        return;
-                    }
                     binding.loadingCircle.setVisibility(View.GONE);
                     binding.tvNoRequestsFound.setVisibility(View.GONE);
                     binding.notificationsRecyclerView.setVisibility(View.VISIBLE);
+                    initAdapter();
                     requestsListAdapter.setRequests(requests, users, meetups);
                     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
                     itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
