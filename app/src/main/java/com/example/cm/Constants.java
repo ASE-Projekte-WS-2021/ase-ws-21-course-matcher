@@ -51,6 +51,7 @@ public class Constants {
     public static final int MEETUP_DETAILED_USER_IMAGE_SIZE = 80;
     public static final int MEETUP_DETAILED_USER_IMAGE_PADDING = 5;
     public static final int MEETUP_DETAILED_USER_IMAGE_STROKE = 6;
+    public static final int MEETUP_DETAILED_MAX_USER = 3;
 
     // Shared Preferances Keys
     public static final String PREFS_SETTINGS_KEY = "settings";

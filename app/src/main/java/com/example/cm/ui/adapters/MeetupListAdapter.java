@@ -1,9 +1,11 @@
 package com.example.cm.ui.adapters;
 
+import static com.example.cm.Constants.MEETUP_DETAILED_MAX_USER;
 import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_PADDING;
 import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_SIZE;
 import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_STROKE;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -36,6 +38,7 @@ import java.util.Objects;
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
     List<Meetup> meetups;
     List<User> users;
+    private int userCounter = 0;
 
     public MeetupListAdapter(List<Meetup> meetups, List<User> users) {
         this.meetups = meetups;
@@ -116,36 +119,53 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         addUserImage(confirmedFriends, imgLayout, R.color.green);
         addUserImage(invitedFriends, imgLayout, R.color.orange);
         addUserImage(declinedFriends, imgLayout, R.color.red);
+
+        addRestUserCounter(imgLayout);
+        userCounter = 0;
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void addRestUserCounter(LinearLayout imgLayout) {
+        int rest = userCounter - MEETUP_DETAILED_MAX_USER;
+
+        if (rest > 0) {
+            TextView restOfUserTv = new TextView(imgLayout.getContext());
+            restOfUserTv.setText(" +" + rest);
+            imgLayout.addView(restOfUserTv);
+        }
     }
 
     public void addUserImage(List<String> friendIds, LinearLayout layout, int color) {
         if (friendIds != null) {
             for (String id : friendIds) {
-                ShapeableImageView imageRounded = new ShapeableImageView(
-                        new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
+                userCounter++;
+                if (userCounter <= MEETUP_DETAILED_MAX_USER) {
+                    ShapeableImageView imageRounded = new ShapeableImageView(
+                            new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
 
-                String imageUrl = getImageUrl(id);
-                if (imageUrl != null && !imageUrl.isEmpty()) {
-                    Bitmap img = Utils.convertBaseStringToBitmap(imageUrl);
-                    imageRounded.setImageBitmap(img);
-                } else {
-                    imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
+                    String imageUrl = getImageUrl(id);
+                    if (imageUrl != null && !imageUrl.isEmpty()) {
+                        Bitmap img = Utils.convertBaseStringToBitmap(imageUrl);
+                        imageRounded.setImageBitmap(img);
+                    } else {
+                        imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
+                    }
+
+                    imageRounded.setLayoutParams(
+                            new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE, MEETUP_DETAILED_USER_IMAGE_SIZE));
+                    imageRounded.setStrokeColorResource(color);
+                    imageRounded.setStrokeWidth(MEETUP_DETAILED_USER_IMAGE_STROKE);
+                    imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING,
+                            MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
+                    imageRounded.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    layout.addView(imageRounded);
                 }
-
-                imageRounded.setLayoutParams(
-                        new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE, MEETUP_DETAILED_USER_IMAGE_SIZE));
-                imageRounded.setStrokeColorResource(color);
-                imageRounded.setStrokeWidth(MEETUP_DETAILED_USER_IMAGE_STROKE);
-                imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING,
-                        MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
-                imageRounded.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                layout.addView(imageRounded);
             }
         }
     }
 
     private String getImageUrl(String id) {
-        if(users == null) {
+        if (users == null) {
             return null;
         }
 
