@@ -64,6 +64,8 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
         meetupDetailedFriendsListViewModel.getUsers().observe(getViewLifecycleOwner(), users -> meetupDetailedFriendsListViewModel.getLateUsers().observe(getViewLifecycleOwner(), lateUsers -> meetupDetailedFriendsListViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
             adapter = new MeetupDetailedFriendListAdapter(users, lateUsers, currentUser, this);
             binding.meetupDetailedFriendsList.setAdapter(adapter);
+            binding.loadingCircleMeetupDetailed.setVisibility(View.GONE);
+            binding.meetupDetailedFriendsList.setVisibility(View.VISIBLE);
         })));
     }
 
