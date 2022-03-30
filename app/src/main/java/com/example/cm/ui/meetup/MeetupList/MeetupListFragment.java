@@ -43,7 +43,7 @@ public class MeetupListFragment extends Fragment {
     private void initViewModel() {
         MeetupListViewModel meetupListViewModel = new ViewModelProvider(this).get(MeetupListViewModel.class);
         meetupListViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
-            if (meetups.size() == 0) {
+            if (meetups.isEmpty()) {
                 binding.loadingCircle.setVisibility(View.GONE);
                 binding.meetupListRecyclerView.setVisibility(View.GONE);
                 binding.noMeetupsWrapper.setVisibility(View.VISIBLE);
