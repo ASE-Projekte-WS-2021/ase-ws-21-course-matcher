@@ -134,6 +134,7 @@
     <string name="input_label_current_password">Aktuelles Passwort</string>
     <string name="input_label_new_password">Neues Passwort</string>
     <string name="input_label_new_password_confirm">Neues Passwort bestätigen</string>
+    <string name="no_requests_found">Keine Anfragen gefunden.</string>
 
     <string name="content_description_splash_screen_logo">Splash Screen Logo</string>
 
@@ -213,6 +214,7 @@
     <string name="dialog_delete_meetup_title">Meetup wirklich löschen?</string>
     <string name="dialog_delete_btn">Löschen</string>
     <string name="account_deleted_success">Dein Account wurde erfolgreich gelöscht.</string>
+    <string name="content_description_info_icon">Info Icon Über CourseMatcher</string>
 
     <!-- Meetup Location Fragment -->
     <string name="title_meetup_location">Meetup Treffpunkt</string>

@@ -315,7 +315,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                         addMarker(user, false);
                     }
                 }
-                addMarker(currentUser, true);
+
+                if (currentUser.getLocation() != null) {
+                    addMarker(currentUser, true);
+                }
 
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.cluster();
@@ -389,6 +392,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.addItem(markerClusterItem);
+                    userClusterManager.cluster();
                 });
             }
 
@@ -397,6 +401,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, placeholder, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.addItem(markerClusterItem);
+                    userClusterManager.cluster();
                 });
             }
         });
