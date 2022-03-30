@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,6 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     private EditProfileViewModel editProfileViewModel;
     private Navigator navigator;
     private Dialog dialog;
-    private Handler handler = new Handler();
 
     public EditProfileFragment() {
     }
@@ -99,7 +97,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         editProfileViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
             binding.inputUsername.inputField.setText(user.getUsername());
             binding.inputDisplayName.inputField.setText(user.getDisplayName());
-            binding.inputFieldBio.setText(user.getBio());
+            binding.inputBio.inputField.setText(user.getBio());
 
             String profileImageString = user.getProfileImageString();
             if (profileImageString != null && !profileImageString.isEmpty()) {
@@ -139,7 +137,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         binding.inputUsername.inputField.setFocusable(false);
         binding.inputUsername.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
 
-        binding.inputDisplayName.inputLabel.setText(getString(R.string.input_label_display_name));
+        binding.inputDisplayName.textInputLayout.setHint(R.string.input_label_display_name);
         binding.inputDisplayName.inputField.setFocusable(false);
         binding.inputDisplayName.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
 

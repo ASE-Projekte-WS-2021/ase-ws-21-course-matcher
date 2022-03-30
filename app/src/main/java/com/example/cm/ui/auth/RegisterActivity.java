@@ -90,19 +90,15 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     }
 
     private void initTexts() {
-        binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
-        binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
+        binding.registerUsernameEditText.textInputLayout.setHint(R.string.input_label_username);
         binding.registerUsernameEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
 
-        binding.registerEmailEditText.inputLabel.setText(R.string.registerEmailText);
-        binding.registerEmailEditText.inputField.setHint(R.string.userEmailHint);
+        binding.registerEmailEditText.textInputLayout.setHint(R.string.input_label_email);
 
-        binding.registerPasswordEditText.inputLabel.setText(R.string.registerPasswordText);
-        binding.registerPasswordEditText.inputField.setHint(R.string.userPasswordHint);
+        binding.registerPasswordEditText.textInputLayout.setHint(R.string.input_label_password);
         binding.registerPasswordEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
 
-        binding.registerPasswordRepeatEditText.inputLabel.setText(R.string.registerPasswordRepeatText);
-        binding.registerPasswordRepeatEditText.inputField.setHint(R.string.userPasswordHint);
+        binding.registerPasswordRepeatEditText.textInputLayout.setHint(R.string.input_label_repeat_password);
         binding.registerPasswordRepeatEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
     }
 

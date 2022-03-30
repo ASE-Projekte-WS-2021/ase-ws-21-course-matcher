@@ -73,9 +73,9 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     }
 
     private void initTexts() {
-        binding.registerDisplayNameEditText.inputLabel.setText(R.string.registerDisplaynameText);
-        binding.registerDisplayNameEditText.inputField.setHint(R.string.registerFirstNameHint);
+        binding.registerDisplayNameEditText.textInputLayout.setHint(R.string.registerDisplaynameText);
         binding.registerDisplayNameEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
+        binding.inputBio.textInputLayout.setHint(getString(R.string.input_label_bio));
     }
 
     private void initListeners() {
@@ -83,7 +83,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         binding.editProfileImageBtn.setOnClickListener(this::onEditImgClicked);
         binding.createProfileBtn.setOnClickListener(this::registerAndStart);
 
-        binding.inputFieldBio.addTextChangedListener(new TextWatcher() {
+        binding.inputBio.inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -96,7 +96,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > MAX_CHAR_COUNT) {
-                    binding.inputFieldBio.getText().delete(MAX_CHAR_COUNT, s.length());
+                    binding.inputBio.inputField.getText().delete(MAX_CHAR_COUNT, s.length());
                 }
             }
         });
@@ -166,7 +166,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
         String username = bundle.getString(Constants.KEY_USERNAME);
         String password = bundle.getString(Constants.KEY_PASSWORD);
         String displayName = binding.registerDisplayNameEditText.inputField.getText().toString();
-        String bio = binding.inputFieldBio.getText().toString();
+        String bio = binding.inputBio.inputField.getText().toString();
 
         if (displayName.isEmpty() || displayName.length() < Constants.MIN_NAME_LENGTH) {
             Snackbar.make(binding.getRoot(), R.string.registerDisplayNameEmpty, Snackbar.LENGTH_LONG).show();

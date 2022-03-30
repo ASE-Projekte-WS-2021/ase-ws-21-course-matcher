@@ -269,5 +269,7 @@
     <string name="edit_profile_display_name_min_length">Anzeigename muss mindestens 2 Zeichen lang sein.</string>
     <string name="registerMultipleFieldsEmpty">Bitte fülle alle Felder aus.</string>
     <string name="error_loading">Fehler beim Laden. Erneut versuchen.</string>
+    <string name="input_label_password">Passwort</string>
+    <string name="input_label_repeat_password">Passwort wiederholen</string>
 
 </resources>

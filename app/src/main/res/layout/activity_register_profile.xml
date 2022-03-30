@@ -66,14 +66,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="vertical"
             android:padding="@dimen/padding_big">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_big">
+                android:layout_marginBottom="@dimen/padding_medium">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profileImage"
@@ -102,21 +101,11 @@
                 layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/padding_big"/>
+                android:layout_marginVertical="@dimen/padding_medium"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toStartOf="@+id/bioCharacterCount"
-                    android:fontFamily="@font/readexpro_regular"
-                    android:includeFontPadding="false"
-                    android:text="@string/input_label_bio"
-                    android:textColor="@color/gray700"
-                    android:textSize="@dimen/text_size_small" />
 
                 <TextView
                     android:id="@+id/bioCharacterCount"
@@ -130,29 +119,17 @@
                     tools:text="50/125" />
             </RelativeLayout>
 
-            <EditText
-                android:id="@+id/inputFieldBio"
+            <include
+                android:id="@+id/inputBio"
+                layout="@layout/input_textarea_with_label"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_half"
-                android:background="@drawable/style_edittext"
-                android:gravity="top"
-                android:importantForAutofill="no"
-                android:inputType="textMultiLine|textNoSuggestions"
-                android:lines="3"
-                android:maxLength="125"
-                android:maxLines="3"
-                android:hint="@string/register_hint_bio"
-                android:paddingHorizontal="@dimen/padding_medium"
-                android:paddingVertical="@dimen/padding_small"
-                android:scrollbars="vertical"
-                tools:ignore="LabelFor" />
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/createProfileBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_big"
+                android:layout_marginTop="@dimen/padding_double"
                 android:gravity="center"
                 android:text="@string/createProfileBtn" />
 

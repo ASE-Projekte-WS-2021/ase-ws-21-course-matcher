@@ -25,6 +25,7 @@ public class EditTextDialog extends Dialog {
     String confirmButtonText;
 
     public EditTextDialog(@NonNull Context context, OnSaveListener listener) {
+        //todo: unique username check
         super(context);
         this.listener = listener;
         binding = DialogEditTextBinding.inflate(LayoutInflater.from(context));
