@@ -97,9 +97,9 @@
 
     <fragment
         android:id="@+id/navigation_invite_more_friends"
-        android:name="com.example.cm.ui.invite_friends.InviteMoreFriendsFragment"
+        android:name="com.example.cm.ui.meetup.MeetupTabsFragment"
         android:label="@string/invite_more_friends"
-        tools:layout="@layout/fragment_invite_more_friends">
+        tools:layout="@layout/fragment_meetup_tabs">
         <action
             android:id="@+id/action_navigation_invite_more_friends_to_navigation_other_profile"
             app:destination="@id/navigation_other_profile" />
@@ -162,7 +162,8 @@
     <fragment
         android:id="@+id/navigation_other_profile"
         android:name="com.example.cm.ui.other_profile.OtherProfileFragment"
-        android:label="@string/title_profile" />
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_other_profile"/>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.cm.ui.settings.SettingsFragment"

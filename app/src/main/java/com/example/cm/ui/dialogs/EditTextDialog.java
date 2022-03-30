@@ -29,6 +29,7 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
     String initialValue, fieldToUpdate;
     String confirmButtonText;
     List<String> usernames;
+    String ownUsername;
 
     public EditTextDialog(@NonNull Context context, OnSaveListener listener) {
         super(context);
@@ -131,15 +132,21 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
         binding.inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                boolean error = false;
                 binding.btnConfirm.setEnabled(false);
-
-                // check if username is in use already
+                if (ownUsername != null && ownUsername.equals(charSequence)) {
+                    error = true;
+                    binding.textInputLayout.setError(getContext().getString(R.string.same_as_current_username));
+                }
                 if (usernames == null) {
+                    error = true;
                     binding.textInputLayout.setError(getContext().getString(R.string.error_loading));
                 }
                 if (usernames != null && usernames.contains(charSequence.toString())) {
+                    error = true;
                     binding.textInputLayout.setError(getContext().getString(R.string.registerUsernameAlreadyExists));
-                } else {
+                }
+                if (!error) {
                     binding.textInputLayout.setErrorEnabled(false);
                     binding.btnConfirm.setEnabled(true);
                 }
@@ -171,8 +178,9 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
     }
 
     @Override
-    public void onUsernamesRetrieved(List<String> usernames) {
+    public void onUsernamesRetrieved(List<String> usernames, String ownUsername) {
         this.usernames = usernames;
+        this.ownUsername = ownUsername;
     }
 
     public interface OnSaveListener {

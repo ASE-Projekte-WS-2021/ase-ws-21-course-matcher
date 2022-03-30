@@ -523,7 +523,7 @@ public class UserRepository extends Repository {
                 for(User user : users) {
                     usernames.add(user.getUsername());
                 }
-                callback.onUsernamesRetrieved(usernames);
+                callback.onUsernamesRetrieved(usernames, getCurrentAuthUserId());
             }
         });
     }
@@ -646,6 +646,6 @@ public class UserRepository extends Repository {
     }
 
     public interface UsernamesRetrievedCallback {
-        void onUsernamesRetrieved(List<String> usernames);
+        void onUsernamesRetrieved(List<String> usernames, String currentAuthUserId);
     }
 }
