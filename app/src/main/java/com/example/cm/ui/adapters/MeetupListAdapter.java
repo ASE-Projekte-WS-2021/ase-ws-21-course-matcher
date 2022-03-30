@@ -145,11 +145,16 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     }
 
     private String getImageUrl(String id) {
+        if(users == null) {
+            return null;
+        }
+
         for (User user : users) {
             if (user.getId().equals(id)) {
                 return user.getProfileImageString();
             }
         }
+
         return null;
     }
 

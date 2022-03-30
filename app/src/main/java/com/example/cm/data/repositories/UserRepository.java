@@ -96,7 +96,7 @@ public class UserRepository extends Repository {
      */
     public MutableLiveData<User> getStaticCurrentUser() {
         if (auth.getCurrentUser() == null) {
-            return null;
+            return mutableUser;
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
@@ -380,7 +380,7 @@ public class UserRepository extends Repository {
 
         List<String> userIdsNoDuplicates = new ArrayList<>(new HashSet<>(userIds));
 
-        List<List<String>> subLists = Lists.partition(userIdsNoDuplicates, 10);
+        List<List<String>> subLists = Lists.partition(userIdsNoDuplicates, MAX_QUERY_LENGTH);
         for (List<String> subList : subLists) {
             userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
                     (value, error) -> {

@@ -62,8 +62,7 @@ public class Constants {
     public static final float CREATE_MEETUP_ZOOM_LEVEL = 15f;
     public static final int PENDING_TAB_INDEX = 2;
     public static final int ADD_MORE_TAB_INDEX = 3;
-
-    public static final int MAX_QUERY_LENGTH = 10;
+    public static final int MAX_QUERY_LENGTH = 5;
     public static final int MIN_NAME_LENGTH = 2;
     public static final int MIN_USERNAME_LENGTH = 4;
     public static final int MAX_CHARACTER_NAME = 30;
