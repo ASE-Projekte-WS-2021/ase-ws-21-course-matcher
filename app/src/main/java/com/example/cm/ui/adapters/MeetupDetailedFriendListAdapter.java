@@ -50,7 +50,7 @@ public class MeetupDetailedFriendListAdapter
 
             User friend = friends.get(position);
 
-            String fullName = Objects.requireNonNull(friend).getFullName();
+            String fullName = Objects.requireNonNull(friend).getDisplayName();
             String username = friend.getUsername();
             String profileImageString = friend.getProfileImageString();
             Availability availability = friend.getAvailability();

@@ -21,6 +21,7 @@ import com.example.cm.utils.InputValidator;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Objects;
 
 
 public class EditProfileViewModel extends ViewModel implements Callback {
@@ -38,6 +39,10 @@ public class EditProfileViewModel extends ViewModel implements Callback {
     }
 
     public void updateImage(Uri uri, Context context) throws FileNotFoundException {
+        if(user.getValue() == null) {
+            return;
+        }
+
         InputStream imageStream = context.getContentResolver().openInputStream(uri);
         Bitmap selectedImageBitmap = BitmapFactory.decodeStream(imageStream);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -45,11 +50,14 @@ public class EditProfileViewModel extends ViewModel implements Callback {
         byte[] imageBytes = outputStream.toByteArray();
         String imageBaseString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
 
-        userRepository.updateProfileImage(imageBaseString, user.getValue().getId());
+        User usr = user.getValue();
+        if (usr != null) {
+            userRepository.updateProfileImage(imageBaseString, usr.getId());
+        }
     }
 
     public void updateField(String field, String value) {
-        if (value.trim().isEmpty()) {
+        if (value.trim().isEmpty() && !field.equals("Bio")) {
             status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_field_not_empty));
             return;
         }
@@ -58,25 +66,18 @@ public class EditProfileViewModel extends ViewModel implements Callback {
 
         switch (field) {
             case "Benutzername":
-                if (!InputValidator.hasMinLength(trimmedValue, 4)) {
+                if (!InputValidator.hasMinLength(trimmedValue, Constants.MIN_USERNAME_LENGTH)) {
                     status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_username_min_length));
                     break;
                 }
                 userRepository.updateField("username", trimmedValue, this);
                 break;
             case "Vorname":
-                if (!InputValidator.hasMinLength(trimmedValue, 2)) {
-                    status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_first_name_min_length));
+                if (!InputValidator.hasMinLength(trimmedValue, Constants.MIN_NAME_LENGTH)) {
+                    status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_display_name_min_length));
                     break;
                 }
-                userRepository.updateField("firstName", trimmedValue, this);
-                break;
-            case "Nachname":
-                if (!InputValidator.hasMinLength(trimmedValue, 2)) {
-                    status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_last_name_min_length));
-                    break;
-                }
-                userRepository.updateField("lastName", trimmedValue, this);
+                userRepository.updateField("displayName", trimmedValue, this);
                 break;
             case "Bio":
                 userRepository.updateField("bio", trimmedValue, this);

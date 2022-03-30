@@ -136,6 +136,9 @@ public class MeetupRepository {
      * @return A LiveData list of meetups
      */
     public MutableLiveData<List<Meetup>> getMeetups() {
+        if(meetupListMLD.getValue() == null) {
+            meetupListMLD.postValue(new ArrayList<>());
+        }
         return meetupListMLD;
     }
 

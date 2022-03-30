@@ -110,7 +110,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         Context context = holder.binding.getRoot().getContext();
         MeetupRequest request = mRequests.get(position);
 
-        String user = String.format("@%s ", getFullName(Objects.requireNonNull(request).getSenderId()));
+        String user = String.format("@%s ", getUsername(Objects.requireNonNull(request).getSenderId()));
         String date = request.getCreationTimeAgo();
 
         boolean isAccepted = request.getState() == Request.RequestState.REQUEST_ACCEPTED;
@@ -170,10 +170,10 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
     }
 
-    private String getFullName(String userId) {
+    private String getUsername(String userId) {
         for (User user : users) {
             if (user.getId().equals(userId)) {
-                return user.getFirstName() + " " + user.getLastName();
+                return user.getUsername();
             }
         }
         return null;
@@ -198,6 +198,8 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     public interface OnMeetupRequestListener {
         void onItemClicked(String id);
+
+        void onUsernameClicked(String id);
 
         void onItemDeleted(MeetupRequest request);
 
@@ -238,6 +240,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
         private void setListeners() {
             binding.getRoot().setOnClickListener(view -> onItemClicked());
+            binding.meetupSenderTextView.setOnClickListener(view -> onUsernameClicked());
             binding.acceptButton.setOnClickListener(view -> onAccept());
             binding.declineButton.setOnClickListener(view -> onDecline());
         }
@@ -247,6 +250,14 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
             if (position == RecyclerView.NO_POSITION || listener == null)
                 return;
             listener.onItemClicked(mRequests.get(position).getMeetupId());
+        }
+
+        private void onUsernameClicked() {
+            int position = getAdapterPosition();
+            String senderId = mRequests.get(getAdapterPosition()).getSenderId();
+
+            if (position == RecyclerView.NO_POSITION || listener == null) return;
+            listener.onUsernameClicked(senderId);
         }
 
         private void onAccept() {

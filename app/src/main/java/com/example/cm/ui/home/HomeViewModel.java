@@ -3,11 +3,11 @@ package com.example.cm.ui.home;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.data.listener.Callback;
 import com.example.cm.data.listener.MeetupListener;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.User;
-import com.example.cm.data.listener.Callback;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.android.gms.maps.model.LatLng;
@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import timber.log.Timber;
 
 public class HomeViewModel extends ViewModel implements Callback {
     private final UserRepository userRepository;
@@ -44,7 +42,11 @@ public class HomeViewModel extends ViewModel implements Callback {
                 }
                 friends.addAll(users);
 
-                int currentUserFriendCount = currentUser.getValue().getFriends().size();
+                int currentUserFriendCount = 0;
+                if (currentUser.getValue().getFriends() != null) {
+                    currentUserFriendCount = currentUser.getValue().getFriends().size();
+                }
+
                 int friendsCount = friends.size();
                 if (friendsCount == currentUserFriendCount) {
                     Set<User> friendsSet = new HashSet<>(friends);

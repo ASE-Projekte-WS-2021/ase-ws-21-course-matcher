@@ -10,6 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvUserCards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 
     <ImageView
         android:id="@+id/location_btn_wrapper"
@@ -64,11 +69,5 @@
             android:visibility="gone"/>
 
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvUserCards"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

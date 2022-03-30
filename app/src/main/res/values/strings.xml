@@ -134,13 +134,13 @@
     <string name="input_label_current_password">Aktuelles Passwort</string>
     <string name="input_label_new_password">Neues Passwort</string>
     <string name="input_label_new_password_confirm">Neues Passwort bestätigen</string>
+    <string name="no_requests_found">Keine Anfragen gefunden.</string>
 
     <string name="content_description_splash_screen_logo">Splash Screen Logo</string>
 
     <string name="input_label_bio">Bio</string>
-    <string name="input_label_username">Benutzername</string>
-    <string name="input_label_first_name">Vorname</string>
-    <string name="input_label_last_name">Nachname</string>
+    <string name="input_label_username">Nutzername</string>
+    <string name="input_label_display_name">Anzeigename</string>
     <string name="edit_cancel">Abbrechen</string>
     <string name="edit_save">Speichern</string>
     <string name="edit_profile_success_message">Änderungen wurden gespeichert</string>
@@ -157,8 +157,6 @@
     <string name="edit_account_error_password_not_changed">Passwort konnte nicht geändert werden</string>
     <string name="edit_profile_field_not_empty">Feld darf nicht leer sein</string>
     <string name="edit_profile_username_min_length">Benutzername muss mindestens 4 Zeichen lang sein</string>
-    <string name="edit_profile_first_name_min_length">Vorname muss mindestens 2 Zeichen lang sein</string>
-    <string name="edit_profile_last_name_min_length">Nachname muss mindestens 2 Zeichen lang sein</string>
     <string name="edit_profile_success">Erfolgreich aktualisiert</string>
     <string name="edit_profile_general_error">Ein Fehler ist aufgetreten</string>
     <string name="title_meetups">Meetups</string>
@@ -203,15 +201,11 @@
     <string name="loginPasswordTxt">Passwort</string>
     <string name="registerTitleDesc">Erstelle einen Account um Treffen mit deinen Freunden am Campus zu vereinbaren!</string>
     <string name="registerUsernameText">Nutzername</string>
-    <string name="registerFirstnameText">Vorname</string>
-    <string name="registerLastnameText">Nachname</string>
     <string name="registerEmailText">E-Mail</string>
     <string name="registerPasswordText">Passwort</string>
-    <string name="registerUsernameEmpty">Bitte gib einen Nutzernamen ein.</string>
-    <string name="registerEmailEmpty">Bitte gib einen E-Mail Adresse ein.</string>
-    <string name="registerPasswordEmpty">Bitte gib ein Passwort mit 6 Zeichen ein.</string>
-    <string name="registerFirstnameEmpty">Bitte gib deinen Vornamen ein.</string>
-    <string name="registerLastnameEmpty">Bitte gib deinen Nachnamen ein.</string>
+    <string name="registerUsernameEmpty">Bitte gib einen Nutzernamen mit mindestens 4 Zeichen ein.</string>
+    <string name="registerEmailEmpty">Bitte gib eine valide E-Mail Adresse ein.</string>
+    <string name="registerPasswordEmpty">Bitte gib ein Passwort mit mindestens 6 Zeichen ein.</string>
     <string name="searchBarDesc">Searchbar for searching in your friendslist</string>
     <string name="moreThanNineParticipants">9+</string>
 
@@ -220,6 +214,7 @@
     <string name="dialog_delete_meetup_title">Meetup wirklich löschen?</string>
     <string name="dialog_delete_btn">Löschen</string>
     <string name="account_deleted_success">Dein Account wurde erfolgreich gelöscht.</string>
+    <string name="content_description_info_icon">Info Icon Über CourseMatcher</string>
 
     <!-- Meetup Location Fragment -->
     <string name="title_meetup_location">Meetup Treffpunkt</string>
@@ -243,6 +238,7 @@
     <string name="content_description_show_location_btn">Eigener Standort ist aktuell für Freunde sichtbar</string>
 
     <string name="location_hint">Treffpunkt</string>
+    <string name="location_hint_empty">Treffpunkt eingeben</string>
     <string name="delete_account_title">Account wirklich löschen?</string>
     <string name="delete_account_confirm_button">Löschen</string>
     <string name="delete_account_wrong_password">Das eingegebene Passwort ist falsch.</string>
@@ -262,5 +258,21 @@
     <string name="about_header">Über CourseMatcher</string>
 
     <string name="availability_dot_desc">Button for changing ones availability state.</string>
+    <string name="registerPasswordRepeatText">Passwort wiederholen</string>
+    <string name="createProfileTitle">Profil erstellen</string>
+    <string name="createProfileTitleDesc">Lege dein Profil an, damit deine Freunde dich finden können.</string>
+    <string name="createProfileBtn">Starten</string>
+    <string name="registerPasswordRepeatNotEqual">Passwörter stimmen nicht überein.</string>
+    <string name="registerDisplayNameEmpty">Bitte gib einen Anzeigenamen mit mindestens 2 Zeichen ein.</string>
+    <string name="registerUsernameAlreadyExists">Nutzername existiert bereits.</string>
+    <string name="registerDisplaynameText">Anzeigename*</string>
+    <string name="register_hint_bio">Miau! Sitze gern am Campus in der Sonne.</string>
+    <string name="registrationTooLong">Der Registriervorgang hat zu lange gedauert. Starte erneut.</string>
+    <string name="edit_profile_display_name_min_length">Anzeigename muss mindestens 2 Zeichen lang sein.</string>
+    <string name="registerMultipleFieldsEmpty">Bitte fülle alle Felder aus.</string>
+    <string name="error_loading">Fehler beim Laden. Erneut versuchen.</string>
+    <string name="input_label_password">Passwort</string>
+    <string name="input_label_repeat_password">Passwort wiederholen</string>
+    <string name="registerPasswordRepeatedEmpty">Bitte wiederhole dein Passwort.</string>
 
 </resources>

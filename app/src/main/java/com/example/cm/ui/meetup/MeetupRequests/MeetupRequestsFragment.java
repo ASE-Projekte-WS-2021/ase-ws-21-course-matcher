@@ -59,6 +59,13 @@ public class MeetupRequestsFragment extends Fragment implements
 
                 requestsViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
                     initAdapter();
+                    if (users.size() == 0) {
+                        binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
+                        return;
+                    }
+                    binding.loadingCircle.setVisibility(View.GONE);
+                    binding.tvNoRequestsFound.setVisibility(View.GONE);
+                    binding.notificationsRecyclerView.setVisibility(View.VISIBLE);
                     requestsListAdapter.setRequests(requests, users, meetups);
                     ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
                     itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
@@ -98,6 +105,13 @@ public class MeetupRequestsFragment extends Fragment implements
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_MEETUP_ID, id);
         navigator.getNavController().navigate(R.id.navigateToMeetupDetailed, bundle);
+    }
+
+    @Override
+    public void onUsernameClicked(String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_USER_ID, id);
+        navigator.getNavController().navigate(R.id.fromMeetupRequestToProfile, bundle);
     }
 
     @Override
