@@ -65,7 +65,7 @@ public class EditProfileViewModel extends ViewModel implements Callback {
         String trimmedValue = value.trim();
 
         switch (field) {
-            case "Benutzername":
+            case "Nutzername":
                 if (!InputValidator.hasMinLength(trimmedValue, Constants.MIN_USERNAME_LENGTH)) {
                     status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_username_min_length));
                     break;
