@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,37 +35,57 @@ public class MeetupRequestsFragment extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupRequestsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-        initUI();
+        initAdapter();
         initViewModel();
         return binding.getRoot();
     }
 
-    private void initUI() {
+    private void initAdapter() {
         requestsListAdapter = new MeetupRequestListAdapter(this);
+        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
         binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
-        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
     }
 
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
         requestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), requests -> {
+            if (requests.isEmpty()){
+                binding.loadingCircle.setVisibility(View.GONE);
+                binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
+            }
             List<String> userIds = getUserIds(requests);
+            List<String> meetupIds = getMeetupIds(requests);
             requestsViewModel.setUserIds(userIds);
 
             requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-                binding.loadingCircle.setVisibility(View.GONE);
-                if(users.size() == 0) {
+                requestsViewModel.setMeetupIds(meetupIds);
+                if (users.size() == 0) {
                     binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
                     return;
                 }
-                binding.tvNoRequestsFound.setVisibility(View.GONE);
-                binding.notificationsRecyclerView.setVisibility(View.VISIBLE);
-                requestsListAdapter.setRequests(requests, users);
-                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
-                itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
+
+                requestsViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
+                    binding.loadingCircle.setVisibility(View.GONE);
+                    binding.tvNoRequestsFound.setVisibility(View.GONE);
+                    binding.notificationsRecyclerView.setVisibility(View.VISIBLE);
+                    initAdapter();
+                    requestsListAdapter.setRequests(requests, users, meetups);
+                    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
+                    itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
+                });
             });
         });
+    }
+
+    private List<String> getMeetupIds(List<MeetupRequest> requests) {
+        List<String> ids = new ArrayList<>();
+        for (MeetupRequest request : requests) {
+            if (request != null) {
+                ids.add(request.getMeetupId());
+            }
+        }
+        return ids;
     }
 
     private List<String> getUserIds(List<MeetupRequest> requests) {

@@ -18,6 +18,10 @@
         app:destination="@+id/navigation_invite_friends" />
 
     <action
+        android:id="@+id/action_global_navigate_to_other_profile"
+        app:destination="@+id/navigation_other_profile" />
+
+    <action
         android:id="@+id/action_global_to_edit_profile"
         app:destination="@id/editProfileFragment" />
 
@@ -106,6 +110,8 @@
         <action
             android:id="@+id/action_navigation_invite_more_friends_to_navigation_other_profile"
             app:destination="@id/navigation_other_profile" />
+
+
     </fragment>
 
     <fragment
@@ -157,11 +163,13 @@
             android:id="@+id/fromSelectFriendsToProfile"
             app:destination="@id/navigation_other_profile" />
     </fragment>
+
     <fragment
         android:id="@+id/navigation_meetup_success"
         android:name="com.example.cm.ui.meetup_invite_success.MeetupInviteSuccessFragment"
         android:label="fragment_meetup_invite_success"
         tools:layout="@layout/fragment_meetup_invite_success" />
+
     <fragment
         android:id="@+id/navigation_other_profile"
         android:name="com.example.cm.ui.other_profile.OtherProfileFragment"

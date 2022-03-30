@@ -18,15 +18,19 @@ import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPOJO;
 import com.example.cm.data.models.MeetupPhase;
+import com.example.cm.data.models.User;
+import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import timber.log.Timber;
@@ -37,7 +41,8 @@ public class MeetupRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
 
-    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
+    private final MutableLiveData<List<Meetup>> meetupsForRequestsMLD = new MutableLiveData<>();
     private final MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
     private final MutableLiveData<List<String>> usersMLD = new MutableLiveData<>();
 
@@ -89,6 +94,40 @@ public class MeetupRepository {
                         meetupListMLD.postValue(meetups);
                     }
                 });
+    }
+
+    /**
+     * Get meetup list by list of meetupIds
+     *
+     * @param meetupIds IDs of meetups to retrieve
+     * @return MutableLiveData-List of mutable meetups with ids
+     */
+    public MutableLiveData<List<Meetup>> getMeetupsByIds(List<String> meetupIds) {
+        if (meetupIds == null || meetupIds.isEmpty()) {
+            meetupsForRequestsMLD.postValue(new ArrayList<>());
+            return meetupsForRequestsMLD;
+        }
+
+        List<String> userIdsNoDuplicates = new ArrayList<>(new HashSet<>(meetupIds));
+
+        List<List<String>> subLists = Lists.partition(userIdsNoDuplicates, 10);
+        for (List<String> subList : subLists) {
+            meetupCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
+                    (value, error) -> {
+                        if (error != null) {
+                            return;
+                        }
+                        if (value != null && !value.isEmpty()) {
+                            List<Meetup> meetups = new ArrayList<>();
+                            for (int i = 0; i < value.getDocuments().size(); i++) {
+                                Meetup meetup = snapshotToMeetup(value.getDocuments().get(i));
+                                meetups.add(meetup);
+                            }
+                            meetupsForRequestsMLD.postValue(meetups);
+                        }
+                    });
+        }
+        return meetupsForRequestsMLD;
     }
 
     /**

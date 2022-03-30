@@ -1,5 +1,7 @@
 package com.example.cm.ui.invite_friends;
 
+import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -12,8 +14,6 @@ import com.example.cm.data.repositories.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
 
 public class InviteMoreFriendsViewModel extends ViewModel {
 
@@ -68,9 +68,6 @@ public class InviteMoreFriendsViewModel extends ViewModel {
                         mtp.getId(),
                         userRepository.getFirebaseUser().getUid(),
                         invitedFriendId,
-                        mtp.getLocation().toString(),
-                        mtp.getTimestamp(),
-                        mtp.getLocationImageString(),
                         MEETUP_REQUEST);
                 meetupRequestRepository.addMeetupRequest(request);
             }

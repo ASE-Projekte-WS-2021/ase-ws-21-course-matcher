@@ -5,23 +5,15 @@ import android.annotation.SuppressLint;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.firestore.Exclude;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
 
 public class MeetupRequest extends Request {
 
     private String meetupId;
-    private String location;
-    private String imageUrl;
-    private Date meetupAt;
     private MeetupRequestType type;
-    private MeetupPhase phase;
 
-    private final Calendar calendarNow = GregorianCalendar.getInstance();
     private final Calendar calendarMeetup = GregorianCalendar.getInstance();
 
     public MeetupRequest(MeetupRequestType type) {
@@ -33,18 +25,13 @@ public class MeetupRequest extends Request {
     }
 
     public MeetupRequest(String meetupId, String senderId,
-            String receiverId, String location, Date meetupAt, String imageUrl, MeetupRequestType type) {
+                         String receiverId, MeetupRequestType type) {
         super(senderId, receiverId);
         this.meetupId = meetupId;
-        this.location = location;
-        this.meetupAt = meetupAt;
-        calendarMeetup.setTime(meetupAt);
-        this.imageUrl = imageUrl;
         this.type = type;
         if (type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED) {
             state = RequestState.REQUEST_ANSWERED;
         }
-        phase = getPhase();
     }
 
     public MeetupRequestType getType() {
@@ -63,23 +50,6 @@ public class MeetupRequest extends Request {
         this.meetupId = meetupId;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public Date getMeetupAt() {
-        return meetupAt;
-    }
-
-    public void setMeetupAt(Date meetupAt) {
-        this.meetupAt = meetupAt;
-        calendarMeetup.setTime(meetupAt);
-    }
-
     @SuppressLint("DefaultLocale")
     @Exclude
     public String getFormattedTime() {
@@ -87,33 +57,10 @@ public class MeetupRequest extends Request {
                 calendarMeetup.get(Calendar.MINUTE));
     }
 
-    public MeetupPhase getPhase() {
-        Date now = new Date();
-        calendarNow.setTime(now);
-        // is today?
-        if (calendarNow.get(Calendar.YEAR) == calendarMeetup.get(Calendar.YEAR)
-                && calendarNow.get(Calendar.MONTH) == calendarMeetup.get(Calendar.MONTH)
-                && calendarNow.get(Calendar.DAY_OF_MONTH) == calendarMeetup.get(Calendar.DAY_OF_MONTH)) {
-            // has started?
-            if (TimeUnit.MILLISECONDS.toSeconds(now.getTime() - meetupAt.getTime()) >= 0) {
-                phase = MeetupPhase.MEETUP_ACTIVE;
-            } else {
-                phase = MeetupPhase.MEETUP_UPCOMING;
-            }
-        } else {
-            phase = MeetupPhase.MEETUP_ENDED;
-        }
-        return phase;
-    }
-
-    public void setPhase(MeetupPhase phase) {
-        this.phase = phase;
-    }
-
     @NonNull
     @Override
     public String toString() {
-        String meetupString = "Treffen " + meetupAt + " Uhr - " + location;
+        String meetupString = "Treffen ";
         switch (type) {
             case MEETUP_REQUEST:
                 return meetupString + "?";
@@ -124,14 +71,6 @@ public class MeetupRequest extends Request {
             default:
                 return meetupString;
         }
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public enum MeetupRequestType {
