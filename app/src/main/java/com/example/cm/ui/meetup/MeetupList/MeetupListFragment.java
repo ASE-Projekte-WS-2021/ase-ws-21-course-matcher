@@ -18,6 +18,8 @@ import com.example.cm.ui.adapters.MeetupListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class MeetupListFragment extends Fragment {
 
     private FragmentMeetupListBinding binding;
@@ -41,9 +43,10 @@ public class MeetupListFragment extends Fragment {
     private void initViewModel() {
         MeetupListViewModel meetupListViewModel = new ViewModelProvider(this).get(MeetupListViewModel.class);
         meetupListViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
-            if (meetups.size() == 0) {
-                binding.noMeetupsWrapper.setVisibility(View.VISIBLE);
+            if (meetups.isEmpty()) {
+                binding.loadingCircle.setVisibility(View.GONE);
                 binding.meetupListRecyclerView.setVisibility(View.GONE);
+                binding.noMeetupsWrapper.setVisibility(View.VISIBLE);
                 return;
             }
 
@@ -51,7 +54,9 @@ public class MeetupListFragment extends Fragment {
             meetupListViewModel.setUserIds(userIds);
             meetupListViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
                 meetupListAdapter = new MeetupListAdapter(meetups, users);
+
                 binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
+                binding.loadingCircle.setVisibility(View.GONE);
                 binding.noMeetupsWrapper.setVisibility(View.GONE);
                 binding.meetupListRecyclerView.setVisibility(View.VISIBLE);
             });

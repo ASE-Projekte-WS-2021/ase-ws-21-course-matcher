@@ -27,26 +27,13 @@ import java.util.Objects;
 
 public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequestListAdapter.FriendRequestViewHolder> {
 
+    private final OnFriendRequestListener listener;
     private ViewGroup parent;
     private List<User> users;
     private List<FriendRequest> mRequests;
-    private final OnFriendRequestListener listener;
 
     public FriendRequestListAdapter(OnFriendRequestListener listener) {
         this.listener = listener;
-    }
-
-    public void setRequests(List<FriendRequest> newRequests, List<User> users) {
-        if (mRequests == null) {
-            mRequests = newRequests;
-            this.users = users;
-            notifyItemRangeInserted(0, newRequests.size());
-            return;
-        }
-
-        DiffUtil.DiffResult result = calculateDiffFriendRequests(mRequests, newRequests);
-        mRequests = newRequests;
-        result.dispatchUpdatesTo(this);
     }
 
     public static DiffUtil.DiffResult calculateDiffFriendRequests(List<FriendRequest> oldRequests,
@@ -77,6 +64,19 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
                         Objects.requireNonNull(oldRequest).getId());
             }
         });
+    }
+
+    public void setRequests(List<FriendRequest> newRequests, List<User> users) {
+        if (mRequests == null) {
+            mRequests = newRequests;
+            this.users = users;
+            notifyItemRangeInserted(0, newRequests.size());
+            return;
+        }
+
+        DiffUtil.DiffResult result = calculateDiffFriendRequests(mRequests, newRequests);
+        mRequests = newRequests;
+        result.dispatchUpdatesTo(this);
     }
 
     public void deleteItem(int position) {
@@ -125,7 +125,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     @SuppressLint("SetTextI18n")
     private void setSentRequests(FriendRequestViewHolder holder, FriendRequest request) {
-        String fullName = getFullName(request.getReceiverId());
+        String displayName = getDisplayName(request.getReceiverId());
         String userName = getUserName(request.getReceiverId());
 
         String profileImageString = getProfileImageString(request.getReceiverId());
@@ -143,7 +143,6 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         Resources resources = parent.getResources();
 
         if (requestState == Request.RequestState.REQUEST_PENDING) {
-
             requestDescription = resources.getString(R.string.friend_request_own_pending);
         } else if (requestState == Request.RequestState.REQUEST_ACCEPTED) {
             requestDescription = resources.getString(R.string.friend_request_own_accepted);
@@ -153,8 +152,8 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             requestDescription = resources.getString(R.string.friend_request_own_declined);
         }
 
-        if (fullName != null) {
-            holder.getTvSender().setText("An: " + fullName);
+        if (displayName != null) {
+            holder.getTvSender().setText("An: " + displayName);
         }
 
         if (userName != null) {
@@ -167,16 +166,25 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         holder.getBtnDecline().setVisibility(View.GONE);
     }
 
-    private String getFullName(String userId) {
+    private String getDisplayName(String userId) {
+        if (users == null) {
+            return null;
+        }
+
         for (User user : users) {
             if (user.getId().equals(userId)) {
-                return user.getFirstName() + " " + user.getLastName();
+                return user.getDisplayName();
             }
         }
+
         return null;
     }
 
     private String getUserName(String userId) {
+        if (users == null) {
+            return null;
+        }
+
         for (User user : users) {
             if (user.getId().equals(userId)) {
                 return user.getUsername();
@@ -186,7 +194,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     private void setReceivedRequests(FriendRequestViewHolder holder, FriendRequest request) {
-        String fullName = getFullName(request.getSenderId());
+        String displayName = getDisplayName(request.getSenderId());
         String userName = getUserName(request.getSenderId());
 
         String profileImageString = getProfileImageString(request.getSenderId());
@@ -202,8 +210,8 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             holder.getTvSenderUsername().setText(userName);
         }
 
-        if (fullName != null) {
-            holder.getTvSender().setText(fullName);
+        if (displayName != null) {
+            holder.getTvSender().setText(displayName);
         }
         holder.getTvSentDate().setText(date);
         holder.getTvDescription().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);
@@ -212,6 +220,10 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     private String getProfileImageString(String senderId) {
+        if (users == null) {
+            return null;
+        }
+
         for (User user : users) {
             if (user.getId().equals(senderId)) {
                 return user.getProfileImageString();
@@ -228,18 +240,6 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         return mRequests.size();
     }
 
-    public interface OnFriendRequestListener {
-        void onItemClicked(String id);
-
-        void onItemDeleted(FriendRequest request);
-
-        void onAccept(FriendRequest request);
-
-        void onDecline(FriendRequest request);
-
-        void onUndo(FriendRequest request, int position, Request.RequestState previousState);
-    }
-
     /**
      * Fix for the bug in the RecyclerView that caused it to show incorrect data
      * (e.g. image)
@@ -254,6 +254,18 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public interface OnFriendRequestListener {
+        void onItemClicked(String id);
+
+        void onItemDeleted(FriendRequest request);
+
+        void onAccept(FriendRequest request);
+
+        void onDecline(FriendRequest request);
+
+        void onUndo(FriendRequest request, int position, Request.RequestState previousState);
     }
 
     public class FriendRequestViewHolder extends RecyclerView.ViewHolder {

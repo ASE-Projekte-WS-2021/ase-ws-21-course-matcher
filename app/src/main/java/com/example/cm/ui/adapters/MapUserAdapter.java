@@ -1,6 +1,5 @@
 package com.example.cm.ui.adapters;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -28,8 +27,20 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
         this.listener = listener;
     }
 
-    public void addUser(User user) {
-        mUsers.add(user);
+    public void addUser(User newUser) {
+        if (mUsers.isEmpty()) {
+            mUsers.add(newUser);
+            return;
+        }
+
+        // Check if user already exists
+        for (int i = 0; i < mUsers.size(); i++) {
+            if (mUsers.get(i).getId().equals(newUser.getId())) {
+                return;
+            }
+        }
+
+        mUsers.add(newUser);
     }
 
     public void removeUsers() {
@@ -76,7 +87,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
         }
 
         String profileImageString = user.getProfileImageString();
-        String name = user.getFullName();
+        String name = user.getDisplayName();
         String username = user.getUsername();
         Availability availability = user.getAvailability();
 
@@ -88,7 +99,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
         holder.getTvUsername().setText(username);
 
 
-        if(availability != null){
+        if (availability != null) {
             switch (availability) {
                 case AVAILABLE:
                     holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
@@ -186,7 +197,8 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
         public TextView getTvUsername() {
             return binding.tvUsername;
         }
-        public ImageView getAvailabilityDot(){
+
+        public ImageView getAvailabilityDot() {
             return binding.dotAvailabilityIcon;
         }
     }

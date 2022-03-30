@@ -1,7 +1,5 @@
 package com.example.cm;
 
-import android.os.Environment;
-
 import com.google.android.gms.maps.model.LatLng;
 
 public class Constants {
@@ -10,8 +8,15 @@ public class Constants {
     public static final String KEY_MEETUP_LOCATION_LAT = "keyMeetupLocationLat";
     public static final String KEY_MEETUP_LOCATION_LNG = "keyMeetupLocationLng";
     public static final String KEY_CREATE_MEETUP_VM = "keyCreateMeetupViewModel";
+    public static final String KEY_EMAIL = "keyEmail";
+    public static final String KEY_USERNAME = "keyUsername";
+    public static final String KEY_PASSWORD = "keyPassword";
     public static final int MAX_CHAR_COUNT = 125;
     public static final int SPLASH_TIMER = 000;
+
+    public static final String TEMP_EMAIL = "course.matcher@temp.cm";
+    public static final String TEMP_PASSWORD = "temporaryUser";
+    public static final String ALLOWED_CHARS_FOR_USERNAME = "qwertzuiopasdfghjklyxcvbnm0123456789_-.";
 
     public static final String FIREBASE_STORAGE_FOLDER_PROFILE_IMAGES = "profile_images/";
     public static final String FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES = "meetup_images/";
@@ -57,13 +62,17 @@ public class Constants {
     public static final float CREATE_MEETUP_ZOOM_LEVEL = 15f;
     public static final int PENDING_TAB_INDEX = 2;
     public static final int ADD_MORE_TAB_INDEX = 3;
-
-    public static final int MAX_QUERY_LENGTH = 10;
+    public static final int MAX_QUERY_LENGTH = 5;
+    public static final int MIN_NAME_LENGTH = 2;
+    public static final int MIN_USERNAME_LENGTH = 4;
+    public static final int MAX_CHARACTER_NAME = 30;
 
     // Firebase errors
     public static String WEAK_PASSWORD = "Dein Passwort muss mindestens 6 Zeichen lang sein.";
     public static String INVALID_CREDENTIALS = "Die Email-Adresse und das Passwort stimmen nicht überein.";
     public static String USER_COLLISION = "Es existiert bereits ein User mit dieser Email-Adresse.";
+    public static final long MAX_REGISTRATION_TIME = 240000;
+    public static final Throwable UNEXPECTED_USER = new Throwable("This user is not expected here.");
     public static String DEFAULT_ERROR = "Etwas ist schief gegangen.";
 
     // Repository Field Names
@@ -84,6 +93,20 @@ public class Constants {
     public static final String FIELD_MEETUP_AT = "meetupAt";
     public static final String FIELD_MEETUP_ID = "meetupId";
     public static final String FIELD_ID = "id";
+
+    // Konfetti
+    public static final Long KONFETTI_DURATION = 5L;
+    public static final int KOFFETTI_COUNT = 50;
+    public static final int KOFFETTI_SIZE = 12;
+    public static final float KONFETTI_MASS = 5f;
+    public static final float KONFETTI_MASS_VARIANCE = 0.2f;
+    public static final int KONFETTI_ANGLE = 270;
+    public static final int KONFETTI_SPREAD = 90;
+    public static final float KONFEETI_MIN_SPEED = 1f;
+    public static final float KONFEETI_MAX_SPEED = 5f;
+    public static final Long KONFETTI_TIME_TO_LIVE = 2000L;
+    public static final double KONFETTI_MIN_POSITION = 0.0;
+    public static final double KONFETTI_MAX_POSITION = 1.0;
 
     public enum ImageType {
         PROFILE_IMAGE,

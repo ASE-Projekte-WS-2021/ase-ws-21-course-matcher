@@ -79,7 +79,7 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
         friendsViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
             binding.loadingCircle.setVisibility(View.GONE);
 
-            if (friends.isEmpty()) {
+            if (friends == null || friends.isEmpty()) {
                 binding.noFriendsWrapper.setVisibility(View.VISIBLE);
                 binding.rvUserList.setVisibility(View.GONE);
                 return;

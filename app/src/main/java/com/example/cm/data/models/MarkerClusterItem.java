@@ -39,7 +39,7 @@ public class MarkerClusterItem implements ClusterItem {
 
     @Override
     public String getTitle() {
-        return user.getFullName();
+        return user.getDisplayName();
     }
 
     @Override

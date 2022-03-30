@@ -48,6 +48,9 @@
         <action
             android:id="@+id/navigateToMeetupDetailed"
             app:destination="@+id/navigation_meetup_detailed" />
+        <action
+            android:id="@+id/fromMeetupRequestToProfile"
+            app:destination="@id/navigation_other_profile" />
     </fragment>
 
     <fragment
@@ -70,7 +73,7 @@
         android:id="@+id/navigation_meetup"
         android:name="com.example.cm.ui.meetup.CreateMeetup.CreateMeetupFragment"
         android:label="Meetup"
-        tools:layout="@layout/fragment_meetup">
+        tools:layout="@layout/fragment_create_meetup">
         <action
             android:id="@+id/navigateToInviteFriends"
             app:destination="@+id/navigation_invite_friends" />
@@ -181,6 +184,7 @@
             android:id="@+id/action_settingsFragment_to_aboutFragment"
             app:destination="@id/aboutFragment" />
     </fragment>
+
 
     <fragment
         android:id="@+id/aboutFragment"

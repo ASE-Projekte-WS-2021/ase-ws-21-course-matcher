@@ -37,7 +37,7 @@ public class MeetupRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
 
-    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
+    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
     private final MutableLiveData<List<String>> usersMLD = new MutableLiveData<>();
 
@@ -97,6 +97,9 @@ public class MeetupRepository {
      * @return A LiveData list of meetups
      */
     public MutableLiveData<List<Meetup>> getMeetups() {
+        if(meetupListMLD.getValue() == null) {
+            meetupListMLD.postValue(new ArrayList<>());
+        }
         return meetupListMLD;
     }
 
