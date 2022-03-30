@@ -7,9 +7,22 @@
     android:id="@+id/meetupDetailedFriendsListContainer"
     tools:context=".ui.meetup.MeetupDetailed.MeetupDetailedFriendsListFragment">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/meetupDetailedFriendsList" />
+        android:id="@+id/meetupDetailedFriendsList"
+        android:visibility="gone"/>
 
+    <ProgressBar
+        android:id="@+id/loadingCircleMeetupDetailed"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/gray500"
+        android:layout_centerInParent="true"/>
+    </RelativeLayout>
 </LinearLayout>
