@@ -48,6 +48,9 @@
         <action
             android:id="@+id/navigateToMeetupDetailed"
             app:destination="@+id/navigation_meetup_detailed" />
+        <action
+            android:id="@+id/fromMeetupRequestToProfile"
+            app:destination="@id/navigation_other_profile" />
     </fragment>
 
     <fragment
@@ -208,14 +211,5 @@
         android:id="@+id/meetupLocationFragment"
         android:name="com.example.cm.ui.meetup.MeetupLocation.MeetupLocationFragment"
         android:label="MeetupLocationFragment" />
-    <fragment
-        android:id="@+id/meetupRequestFragment"
-        android:name="com.example.cm.ui.meetup.MeetupRequests.MeetupRequestsFragment"
-        android:label="MeetupRequestsFragment"
-        tools:layout="@layout/fragment_meetup_requests">
-        <action
-            android:id="@+id/fromMeetupRequestToProfile"
-            app:destination="@id/navigation_other_profile" />
-    </fragment>
 
 </navigation>
