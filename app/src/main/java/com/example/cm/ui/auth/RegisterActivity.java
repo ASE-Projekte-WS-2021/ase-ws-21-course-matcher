@@ -102,6 +102,18 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     }
 
     private void initListeners() {
+        binding.registerEmailEditText.inputField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                binding.registerEmailEditText.textInputLayout.setErrorEnabled(false);
+            }
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
         binding.registerUsernameEditText.inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
@@ -114,10 +126,34 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
                 if (usernames != null && usernames.contains(charSequence.toString())) {
                     binding.registerUsernameEditText.textInputLayout.setError(getString(R.string.registerUsernameAlreadyExists));
                 } else {
+                    binding.registerUsernameEditText.textInputLayout.setErrorEnabled(false);
                     binding.registerRegisterBtn.setEnabled(true);
                 }
             }
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        binding.registerPasswordEditText.inputField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                binding.registerPasswordEditText.textInputLayout.setErrorEnabled(false);
+            }
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+
+        binding.registerPasswordRepeatEditText.inputField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                binding.registerPasswordRepeatEditText.textInputLayout.setErrorEnabled(false);
+            }
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
@@ -156,9 +192,15 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
             binding.registerPasswordEditText.textInputLayout.setError(getString(R.string.registerPasswordEmpty));
         }
 
+        if (passwordRepeated.isEmpty()) {
+            error = true;
+            binding.registerPasswordRepeatEditText.textInputLayout.setError(getString(R.string.registerPasswordRepeatedEmpty));
+        }
+
         if (!password.equals(passwordRepeated)) {
             error = true;
-            Snackbar.make(binding.getRoot(), R.string.registerPasswordRepeatNotEqual, Snackbar.LENGTH_LONG).show();
+            binding.registerPasswordEditText.textInputLayout.setError(getString(R.string.registerPasswordRepeatNotEqual));
+            binding.registerPasswordRepeatEditText.textInputLayout.setError(getString(R.string.registerPasswordRepeatNotEqual));
         }
 
         if (!error) {

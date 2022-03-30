@@ -271,5 +271,6 @@
     <string name="error_loading">Fehler beim Laden. Erneut versuchen.</string>
     <string name="input_label_password">Passwort</string>
     <string name="input_label_repeat_password">Passwort wiederholen</string>
+    <string name="registerPasswordRepeatedEmpty">Bitte wiederhole dein Passwort.</string>
 
 </resources>
