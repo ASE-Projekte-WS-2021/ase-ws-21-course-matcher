@@ -36,6 +36,7 @@ public class UserRepository extends Repository {
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
+    private MutableLiveData<List<String>> mutableUsernames = new MutableLiveData<>();
 
     public UserRepository() {
     }
@@ -72,7 +73,7 @@ public class UserRepository extends Repository {
      */
     public MutableLiveData<User> getCurrentUser() {
         if (auth.getCurrentUser() == null) {
-            return null;
+            return mutableUser;
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
@@ -248,7 +249,7 @@ public class UserRepository extends Repository {
 
                     boolean isCurrentUser = doc.getId().equals(currentUserId);
                     boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
-                    boolean isQueryInFullName = user.getFullName().toLowerCase().contains(query.toLowerCase());
+                    boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
 
                     if (isCurrentUser || (!isQueryInUsername && !isQueryInFullName)) {
                         continue;
@@ -501,7 +502,7 @@ public class UserRepository extends Repository {
 
                 for (User user : users) {
                     boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
-                    boolean isQueryInFullName = user.getFullName().toLowerCase().contains(query.toLowerCase());
+                    boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
 
                     if (isQueryInUsername || isQueryInFullName) {
                         filteredUsers.add(user);
@@ -511,6 +512,20 @@ public class UserRepository extends Repository {
             }
         });
         return mutableUsers;
+    }
+
+    public void getUsernames(UsernamesRetrievedCallback callback) {
+        List<String> usernames = new ArrayList<>();
+        userCollection.get().addOnCompleteListener(executorService, task -> {
+            if (task.isComplete() && FirebaseAuth.getInstance().getCurrentUser() != null) {
+                QuerySnapshot result = task.getResult();
+                List<User> users = snapshotToUserList(result);
+                for(User user : users) {
+                    usernames.add(user.getUsername());
+                }
+                callback.onUsernamesRetrieved(usernames);
+            }
+        });
     }
 
     /**
@@ -628,5 +643,9 @@ public class UserRepository extends Repository {
         userPOJO.setLocation((List<Double>) document.get(FIELD_LOCATION));
 
         return userPOJO.toObject();
+    }
+
+    public interface UsernamesRetrievedCallback {
+        void onUsernamesRetrieved(List<String> usernames);
     }
 }

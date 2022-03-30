@@ -59,7 +59,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         User user = mUsers.get(position);
 
         String profileImageString = Objects.requireNonNull(user).getProfileImageString();
-        String name = user.getFullName();
+        String name = user.getDisplayName();
         String username = user.getUsername();
         Availability availability = user.getAvailability();
 

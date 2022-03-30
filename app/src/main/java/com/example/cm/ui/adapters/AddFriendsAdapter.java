@@ -78,7 +78,7 @@ public class AddFriendsAdapter extends RecyclerView.Adapter<AddFriendsAdapter.Us
         User user = mUsers.get(position);
 
         String profileImageString = Objects.requireNonNull(user).getProfileImageString();
-        String name = user.getFullName();
+        String name = user.getDisplayName();
         String username = user.getUsername();
 
         if (profileImageString != null && !profileImageString.isEmpty()) {

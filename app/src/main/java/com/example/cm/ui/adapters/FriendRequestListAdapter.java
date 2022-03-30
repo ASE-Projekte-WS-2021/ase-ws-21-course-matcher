@@ -125,7 +125,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
 
     @SuppressLint("SetTextI18n")
     private void setSentRequests(FriendRequestViewHolder holder, FriendRequest request) {
-        String fullName = getFullName(request.getReceiverId());
+        String displayName = getDisplayName(request.getReceiverId());
         String userName = getUserName(request.getReceiverId());
 
         String profileImageString = getProfileImageString(request.getReceiverId());
@@ -143,7 +143,6 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         Resources resources = parent.getResources();
 
         if (requestState == Request.RequestState.REQUEST_PENDING) {
-
             requestDescription = resources.getString(R.string.friend_request_own_pending);
         } else if (requestState == Request.RequestState.REQUEST_ACCEPTED) {
             requestDescription = resources.getString(R.string.friend_request_own_accepted);
@@ -153,8 +152,8 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             requestDescription = resources.getString(R.string.friend_request_own_declined);
         }
 
-        if (fullName != null) {
-            holder.getTvSender().setText("An: " + fullName);
+        if (displayName != null) {
+            holder.getTvSender().setText("An: " + displayName);
         }
 
         if (userName != null) {
@@ -167,14 +166,30 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         holder.getBtnDecline().setVisibility(View.GONE);
     }
 
+
     private String getFullName(String userId) {
         if (users == null) {
             return null;
         }
+      
+      for (User user : users) {
+            if (user.getId().equals(userId)) {
+                return user.getFullName();
+            }
+        }
+      
+        return null;
+    }
 
+    private String getDisplayName(String userId) {
+      if (users == null) {
+        return null;
+      }
+      
+      
         for (User user : users) {
             if (user.getId().equals(userId)) {
-                return user.getFirstName() + " " + user.getLastName();
+                return user.getDisplayName();
             }
         }
         return null;
@@ -194,7 +209,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     private void setReceivedRequests(FriendRequestViewHolder holder, FriendRequest request) {
-        String fullName = getFullName(request.getSenderId());
+        String displayName = getDisplayName(request.getSenderId());
         String userName = getUserName(request.getSenderId());
 
         String profileImageString = getProfileImageString(request.getSenderId());
@@ -210,8 +225,8 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
             holder.getTvSenderUsername().setText(userName);
         }
 
-        if (fullName != null) {
-            holder.getTvSender().setText(fullName);
+        if (displayName != null) {
+            holder.getTvSender().setText(displayName);
         }
         holder.getTvSentDate().setText(date);
         holder.getTvDescription().setText(isAccepted ? R.string.friend_accepted_text : R.string.friend_request_text);

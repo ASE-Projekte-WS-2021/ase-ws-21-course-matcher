@@ -1,6 +1,5 @@
 package com.example.cm.data.repositories;
 
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.data.listener.Callback;
@@ -60,10 +59,13 @@ public class AuthRepository extends Repository {
      * @param email    Email of the user
      * @param password Password of the user
      */
-    public void login(String email, String password) {
+    public void login(String email, String password, LoginCallback callback) {
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 userLiveData.postValue(firebaseAuth.getCurrentUser());
+                if (callback != null) {
+                    callback.onLoginSuccess(email);
+                }
             } else {
                 if (task.getException() != null) {
                     error.postValue(FirebaseErrorTranslator.getErrorMessage(task.getException()));
@@ -77,19 +79,17 @@ public class AuthRepository extends Repository {
      *
      * @param email     Email of the user
      * @param password  Password of the user
-     * @param userName  Username of the user
-     * @param firstName First name of the user
-     * @param lastName  Last name of the user
+     * @param username  Username of the user
+     * @param displayName Display name of the user
      * @param callback  Callback when the user is registered or an error occurs
      */
-    public void register(String email, String password, String userName, String firstName, String lastName, RegisterCallback callback) {
+    public void register(String email, String password, String username, String displayName, String imgString, String bio, RegisterCallback callback) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 FirebaseUser authUser = getCurrentUser();
                 userLiveData.postValue(authUser);
-                User newUser = new User(authUser.getUid(), userName, firstName, lastName, email);
+                User newUser = new User(authUser.getUid(), username, displayName, email, imgString, bio);
                 callback.onRegisterSuccess(newUser);
-
             } else {
                 if (task.getException() != null) {
                     error.postValue(FirebaseErrorTranslator.getErrorMessage(task.getException()));
@@ -152,5 +152,9 @@ public class AuthRepository extends Repository {
 
     public interface RegisterCallback {
         void onRegisterSuccess(User user);
+    }
+
+    public interface LoginCallback {
+        void onLoginSuccess(String email);
     }
 }

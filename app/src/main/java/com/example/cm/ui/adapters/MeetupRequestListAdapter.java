@@ -107,7 +107,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         Context context = holder.binding.getRoot().getContext();
         MeetupRequest request = mRequests.get(position);
 
-        String user = String.format("@%s ", getFullName(Objects.requireNonNull(request).getSenderId()));
+        String user = String.format("@%s ", getDisplayName(Objects.requireNonNull(request).getSenderId()));
         String date = request.getCreationTimeAgo();
         String location = request.getLocation();
 
@@ -161,10 +161,10 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         }
     }
 
-    private String getFullName(String userId) {
+    private String getDisplayName(String userId) {
         for (User user : users) {
             if (user.getId().equals(userId)) {
-                return user.getFirstName() + " " + user.getLastName();
+                return user.getDisplayName();
             }
         }
         return null;

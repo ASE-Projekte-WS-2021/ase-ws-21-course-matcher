@@ -1,4 +1,4 @@
-package com.example.cm.utils;
+package com.example.cm.ui.dialogs;
 
 import static com.example.cm.Constants.MAX_CHAR_COUNT;
 
@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.cm.R;
 import com.example.cm.databinding.DialogTextareaBinding;
@@ -22,6 +24,7 @@ public class EditTextAreaDialog extends Dialog {
     DialogTextareaBinding binding;
     OnSaveListener listener;
     String initialValue, fieldToUpdate;
+    String confirmButtonText;
 
     public EditTextAreaDialog(@NonNull Context context, OnSaveListener listener) {
         super(context);
@@ -54,6 +57,24 @@ public class EditTextAreaDialog extends Dialog {
         return this;
     }
 
+    public EditTextAreaDialog setConfirmButtonText(String text) {
+        binding.btnSave.setText(text);
+        confirmButtonText = text;
+        return this;
+    }
+
+    public void setError(String error) {
+        binding.textInputLayout.setError(error);
+    }
+
+    public void enableConfirmButton() {
+        binding.btnSave.setEnabled(true);
+        binding.btnSave.setText(confirmButtonText);
+        Drawable buttonDrawable = DrawableCompat.wrap(binding.btnSave.getBackground());
+        DrawableCompat.setTint(buttonDrawable, getContext().getResources().getColor(R.color.orange500));
+        binding.btnSave.setBackground(buttonDrawable);
+    }
+
     private void initRootView() {
         Window window = this.getWindow();
         // Make root transparent so rounded border is visible
@@ -69,7 +90,7 @@ public class EditTextAreaDialog extends Dialog {
     }
 
     private void initListeners() {
-        binding.btnCancel.setOnClickListener(v -> dismiss());
+        binding.btnCancel.setOnClickListener(v -> onDismissClicked());
         binding.btnSave.setOnClickListener(v -> onSaveClicked());
 
         binding.inputField.addTextChangedListener(new TextWatcher() {
@@ -91,6 +112,12 @@ public class EditTextAreaDialog extends Dialog {
                 }
             }
         });
+    }
+
+    private void onDismissClicked() {
+        binding.textInputLayout.setErrorEnabled(false);
+        binding.inputField.setText(null);
+        dismiss();
     }
 
     private void onSaveClicked() {
