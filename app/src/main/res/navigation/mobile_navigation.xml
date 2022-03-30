@@ -182,6 +182,7 @@
             app:destination="@id/aboutFragment" />
     </fragment>
 
+
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.example.cm.ui.settings.AboutFragment"
