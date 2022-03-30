@@ -88,7 +88,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         positionManager = PositionManager.getInstance(requireActivity());
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        initRecyclerView();
         initLocationPermissionLauncher();
         initGoogleMap(savedInstanceState);
 
@@ -101,6 +100,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
         initPermissionCheck();
         initViewModel();
         initListeners();
+        initRecyclerView();
     }
 
     private void initListeners() {
@@ -162,13 +162,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     private void initRecyclerView() {
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         mapUserAdapter = new MapUserAdapter(this);
-
         binding.rvUserCards.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false));
         binding.rvUserCards.setHasFixedSize(true);
         binding.rvUserCards.setAdapter(mapUserAdapter);
         binding.rvUserCards.addOnScrollListener(new SnapPagerScrollListener(snapHelper, SnapPagerScrollListener.ON_SCROLL, false, this));
         snapHelper.attachToRecyclerView(binding.rvUserCards);
-        binding.rvUserCards.setAlpha(0f);
+        binding.rvUserCards.bringToFront();
+        binding.rvUserCards.setVisibility(View.VISIBLE);
+        binding.rvUserCards.setAlpha(1f);
         binding.rvUserCards.setTranslationY(binding.rvUserCards.getHeight());
     }
 
@@ -296,7 +297,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                 requireActivity().runOnUiThread(() -> {
                     userClusterManager.clearItems();
                     userClusterManager.cluster();
-                    mapUserAdapter.removeUsers();
 
                     // Set initial position of user cards offset of screen
                     if (binding != null) {
@@ -452,12 +452,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
             return;
         }
 
+
         // Have to differentiate here since card does not show up correctly on first click
         if (binding.rvUserCards.getAlpha() == INITIAL_CARD_ALPHA) {
             binding.rvUserCards.scrollToPosition(position);
         } else {
             binding.rvUserCards.smoothScrollToPosition(position);
         }
+
 
         binding.rvUserCards.animate().translationY(DEFAULT_CARD_OFFSET).alpha(FINAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
     }
