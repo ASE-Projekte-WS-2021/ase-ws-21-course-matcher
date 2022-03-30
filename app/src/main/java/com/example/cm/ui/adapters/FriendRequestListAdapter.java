@@ -166,32 +166,17 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         holder.getBtnDecline().setVisibility(View.GONE);
     }
 
-
-    private String getFullName(String userId) {
+    private String getDisplayName(String userId) {
         if (users == null) {
             return null;
         }
-      
-      for (User user : users) {
-            if (user.getId().equals(userId)) {
-                return user.getFullName();
-            }
-        }
-      
-        return null;
-    }
 
-    private String getDisplayName(String userId) {
-      if (users == null) {
-        return null;
-      }
-      
-      
         for (User user : users) {
             if (user.getId().equals(userId)) {
                 return user.getDisplayName();
             }
         }
+
         return null;
     }
 
@@ -235,7 +220,7 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
     }
 
     private String getProfileImageString(String senderId) {
-        if(users == null) {
+        if (users == null) {
             return null;
         }
 
