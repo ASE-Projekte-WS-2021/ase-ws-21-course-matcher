@@ -529,7 +529,7 @@ public class UserRepository extends Repository {
                 for(User user : users) {
                     usernames.add(user.getUsername());
                 }
-                callback.onUsernamesRetrieved(usernames, getCurrentAuthUserId());
+                callback.onUsernamesRetrieved(usernames, getCurrentUser().getValue().getUsername());
             }
         });
     }
