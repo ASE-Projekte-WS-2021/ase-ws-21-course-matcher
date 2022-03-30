@@ -68,7 +68,7 @@ public class OwnProfileFragment extends Fragment {
 
     private void initUi(User currentUser) {
         binding.btnEditProfile.setText(R.string.profile_btn_edit);
-        binding.tvName.setText(currentUser.getFullName());
+        binding.tvName.setText(currentUser.getDisplayName());
         binding.tvUsername.setText(currentUser.getUsername());
         binding.tvBioDescription.setText(currentUser.getBio());
         String profileImageString = currentUser.getProfileImageString();

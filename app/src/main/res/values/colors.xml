@@ -26,8 +26,11 @@
     <color name="outwhited">#C6FFFFFF</color>
     <color name="outgreyed">#73505971</color>
     <color name="orange400_alpha">#15E89654</color>
+    <color name="orange400_alpha_white">#60e7914b</color>
     <color name="orange600_alpha">#15B34A24</color>
+    <color name="orange600_alpha_white">#70e59b80</color>
     <color name="gray600_alpha">#15505971</color>
+    <color name="gray600_alpha_white">#70a5acc0</color>
 
     <!-- Legacy Colors -->
     <color name="orange">#FFF3AC41</color>
