@@ -137,15 +137,14 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
                 if (ownUsername != null && ownUsername.equals(charSequence)) {
                     error = true;
                     binding.textInputLayout.setError(getContext().getString(R.string.same_as_current_username));
-                }
-                if (usernames == null) {
+                } else if (usernames == null) {
                     error = true;
                     binding.textInputLayout.setError(getContext().getString(R.string.error_loading));
-                }
-                if (usernames != null && usernames.contains(charSequence.toString())) {
+                } else if (usernames.contains(charSequence.toString())) {
                     error = true;
                     binding.textInputLayout.setError(getContext().getString(R.string.registerUsernameAlreadyExists));
                 }
+
                 if (!error) {
                     binding.textInputLayout.setErrorEnabled(false);
                     binding.btnConfirm.setEnabled(true);
