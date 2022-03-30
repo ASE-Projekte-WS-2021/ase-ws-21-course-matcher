@@ -7,14 +7,11 @@ import androidx.annotation.NonNull;
 import com.google.firebase.firestore.Exclude;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class MeetupRequest extends Request {
 
     private String meetupId;
-    private String imageUrl;
-    private Date meetupAt;
     private MeetupRequestType type;
 
     private final Calendar calendarMeetup = GregorianCalendar.getInstance();
@@ -28,12 +25,9 @@ public class MeetupRequest extends Request {
     }
 
     public MeetupRequest(String meetupId, String senderId,
-                         String receiverId, Date meetupAt, String imageUrl, MeetupRequestType type) {
+                         String receiverId, MeetupRequestType type) {
         super(senderId, receiverId);
         this.meetupId = meetupId;
-        this.meetupAt = meetupAt;
-        calendarMeetup.setTime(meetupAt);
-        this.imageUrl = imageUrl;
         this.type = type;
         if (type == MeetupRequestType.MEETUP_INFO_ACCEPTED || type == MeetupRequestType.MEETUP_INFO_DECLINED) {
             state = RequestState.REQUEST_ANSWERED;
@@ -56,15 +50,6 @@ public class MeetupRequest extends Request {
         this.meetupId = meetupId;
     }
 
-    public Date getMeetupAt() {
-        return meetupAt;
-    }
-
-    public void setMeetupAt(Date meetupAt) {
-        this.meetupAt = meetupAt;
-        calendarMeetup.setTime(meetupAt);
-    }
-
     @SuppressLint("DefaultLocale")
     @Exclude
     public String getFormattedTime() {
@@ -75,7 +60,7 @@ public class MeetupRequest extends Request {
     @NonNull
     @Override
     public String toString() {
-        String meetupString = "Treffen " + meetupAt + " Uhr - ";
+        String meetupString = "Treffen ";
         switch (type) {
             case MEETUP_REQUEST:
                 return meetupString + "?";
@@ -86,14 +71,6 @@ public class MeetupRequest extends Request {
             default:
                 return meetupString;
         }
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public enum MeetupRequestType {

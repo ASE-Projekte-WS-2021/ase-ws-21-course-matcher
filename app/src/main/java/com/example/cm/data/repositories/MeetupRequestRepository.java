@@ -2,7 +2,6 @@ package com.example.cm.data.repositories;
 
 import static com.example.cm.Constants.FIELD_CREATED_AT;
 import static com.example.cm.Constants.FIELD_ID;
-import static com.example.cm.Constants.FIELD_MEETUP_AT;
 import static com.example.cm.Constants.FIELD_MEETUP_ID;
 import static com.example.cm.Constants.FIELD_RECEIVER_ID;
 import static com.example.cm.Constants.FIELD_SENDER_ID;
@@ -87,7 +86,6 @@ public class MeetupRequestRepository extends Repository {
         request.setCreatedAt(document.getDate(FIELD_CREATED_AT));
         request.setState(document.get(FIELD_STATE, Request.RequestState.class));
         request.setMeetupId(document.getString(FIELD_MEETUP_ID));
-        request.setMeetupAt(document.getDate(FIELD_MEETUP_AT));
 
         return request;
     }
