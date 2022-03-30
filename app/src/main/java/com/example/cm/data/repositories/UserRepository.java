@@ -96,7 +96,7 @@ public class UserRepository extends Repository {
      */
     public MutableLiveData<User> getStaticCurrentUser() {
         if (auth.getCurrentUser() == null) {
-            return null;
+            return mutableUser;
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
