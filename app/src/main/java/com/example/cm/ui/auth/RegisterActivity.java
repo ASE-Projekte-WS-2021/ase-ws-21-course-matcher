@@ -259,7 +259,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     }
 
     @Override
-    public void onUsernamesRetrieved(List<String> usernames) {
+    public void onUsernamesRetrieved(List<String> usernames, String currentAuthUserId) {
         this.usernames = usernames;
     }
 
