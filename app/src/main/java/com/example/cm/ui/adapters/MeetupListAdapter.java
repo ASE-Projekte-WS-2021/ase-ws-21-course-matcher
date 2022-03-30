@@ -76,8 +76,11 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     }
 
     private void initLocationImg(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {
-        Bitmap img = Utils.convertBaseStringToBitmap(meetup.getLocationImageString());
-        holder.getIvLocation().setImageBitmap(img);
+        String locationImageString = meetup.getLocationImageString();
+        if (locationImageString != null && !locationImageString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(meetup.getLocationImageString());
+            holder.getIvLocation().setImageBitmap(img);
+        }
     }
 
     private void initTextViews(MeetupListAdapter.MeetupListViewHolder holder, Meetup meetup) {

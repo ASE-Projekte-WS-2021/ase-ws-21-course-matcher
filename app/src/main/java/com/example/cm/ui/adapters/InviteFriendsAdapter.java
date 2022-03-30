@@ -82,8 +82,7 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
                 User newUser = newUsers.get(newItemPosition);
                 User oldUser = oldUsers.get(oldItemPosition);
                 return Objects.equals(newUser.getId(), oldUser.getId())
-                        && Objects.equals(newUser.getFirstName(), oldUser.getFirstName())
-                        && Objects.equals(newUser.getLastName(), oldUser.getLastName())
+                        && Objects.equals(newUser.getDisplayName(), oldUser.getDisplayName())
                         && Objects.equals(newUser.getUsername(), oldUser.getUsername());
             }
         });
@@ -103,7 +102,7 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
         String profileImageString = mUsers.get(position).getProfileImageString();
-        String name = mUsers.get(position).getFirstName() + " " + mUsers.get(position).getLastName();
+        String name = mUsers.get(position).getDisplayName();
         String username = mUsers.get(position).getUsername();
         Availability availability = mUsers.get(position).getAvailability();
 

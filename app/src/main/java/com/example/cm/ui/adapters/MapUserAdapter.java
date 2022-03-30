@@ -87,7 +87,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
         }
 
         String profileImageString = user.getProfileImageString();
-        String name = user.getFullName();
+        String name = user.getDisplayName();
         String username = user.getUsername();
         Availability availability = user.getAvailability();
 

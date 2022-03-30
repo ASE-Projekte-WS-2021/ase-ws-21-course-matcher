@@ -15,15 +15,13 @@
         android:background="@drawable/ic_header_orange"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/padding_big"
-        android:paddingVertical="@dimen/padding_medium"
+        android:paddingVertical="@dimen/padding_big"
         tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/loginTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/padding_double"
-            android:layout_marginBottom="@dimen/small_margin"
             android:gravity="start"
             android:text="@string/loginTitle"
             android:textColor="@color/white"

@@ -70,7 +70,7 @@ public class OtherProfileFragment extends Fragment {
             if (currentUser == null) {
                 return;
             }
-            binding.tvName.setText(currentUser.getFullName());
+            binding.tvName.setText(currentUser.getDisplayName());
             binding.tvUsername.setText(currentUser.getUsername());
             binding.tvBioDescription.setText(currentUser.getBio());
             String profileImageString = currentUser.getProfileImageString();
