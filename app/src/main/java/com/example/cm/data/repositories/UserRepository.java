@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import static com.example.cm.Constants.FIELD_FRIENDS;
 import static com.example.cm.Constants.FIELD_LOCATION;
 import static com.example.cm.Constants.FIELD_PROFILE_IMAGE_STRING;
@@ -27,6 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class UserRepository extends Repository {
 
@@ -386,6 +389,8 @@ public class UserRepository extends Repository {
 
         List<String> userIdsNoDuplicates = new ArrayList<>(new HashSet<>(userIds));
 
+        // todo: fix
+        List<User> staticUserList = new ArrayList<>();
         List<List<String>> subLists = Lists.partition(userIdsNoDuplicates, MAX_QUERY_LENGTH);
         for (List<String> subList : subLists) {
             userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
@@ -394,8 +399,13 @@ public class UserRepository extends Repository {
                             return;
                         }
                         if (value != null && !value.isEmpty()) {
+                            if (mutableUsers.getValue() != null) {
+                                staticUserList.addAll(mutableUsers.getValue());
+                            }
+
                             List<User> users = snapshotToMutableUserList(value);
-                            mutableUsers.postValue(users);
+                            staticUserList.addAll(users);
+                            mutableUsers.postValue(staticUserList);
                         }
                     });
         }
