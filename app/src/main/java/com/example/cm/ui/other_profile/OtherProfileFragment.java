@@ -1,11 +1,18 @@
 package com.example.cm.ui.other_profile;
 
+import static com.example.cm.data.models.Availability.AVAILABLE;
+import static com.example.cm.data.models.Availability.SOON_AVAILABLE;
+import static com.example.cm.data.models.Availability.UNAVAILABLE;
+
+import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -14,13 +21,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Availability;
 import com.example.cm.databinding.FragmentOtherProfileBinding;
 import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
-import com.squareup.picasso.Picasso;
+import com.google.android.material.snackbar.Snackbar;
 
-import timber.log.Timber;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class OtherProfileFragment extends Fragment {
 
@@ -30,6 +39,7 @@ public class OtherProfileFragment extends Fragment {
     private String profileId;
     private Navigator navigator;
     private Availability availability;
+    private PopupMenu popup;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentOtherProfileBinding.inflate(inflater, container, false);
@@ -43,6 +53,7 @@ public class OtherProfileFragment extends Fragment {
         navigator = new Navigator(getActivity());
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.btnAddRemoveFriend.setOnClickListener(view -> onBtnClick());
+        binding.dotAvailabilityIconMenu.setOnClickListener(v -> popup.show());
     }
 
     private void onBtnClick() {
@@ -81,6 +92,23 @@ public class OtherProfileFragment extends Fragment {
             }
 
             availability = currentUser.getAvailability();
+
+            if (availability != null) {
+                switch (availability) {
+                    case AVAILABLE:
+                        binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_dot_available);
+                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
+                        break;
+                    case SOON_AVAILABLE:
+                        binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_dot_soon_available);
+                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
+                        break;
+                    case UNAVAILABLE:
+                        binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_dot_unavailable);
+                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+                        break;
+                }
+            }
 
         });
     }
@@ -129,8 +157,11 @@ public class OtherProfileFragment extends Fragment {
         binding.btnAddRemoveFriend.setBackgroundTintList(btnBackground);
         binding.btnAddRemoveFriend.setTextColor(btnTextColor);
         binding.btnAddRemoveFriend.setText(R.string.profile_btn_edit);
+        binding.dotAvailabilityIconMenu.setVisibility(View.VISIBLE);
 
-        showAvailabilityDot();
+        //showAvailabilityDot();
+        initAvailabilityMenu();
+
     }
 
     private void onFriendRequestPending() {
@@ -172,7 +203,6 @@ public class OtherProfileFragment extends Fragment {
 
     private void showAvailabilityDot() {
 
-        Timber.d("ava %s", availability);
         if (availability != null) {
             switch (availability) {
                 case AVAILABLE:
@@ -187,6 +217,112 @@ public class OtherProfileFragment extends Fragment {
             }
         }
     }
+
+    @SuppressLint("NonConstantResourceId")
+    private void initAvailabilityMenu() {
+        binding.dotAvailabilityIcon.setVisibility(View.GONE);
+        popup = new PopupMenu(requireContext(), binding.dotAvailabilityIcon);
+        setForceShowIcon(popup);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_availability_state, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menuAvailable:
+                    onAvailable();
+                    break;
+                case R.id.menuSoonAvailable:
+                    onSoonAvailable();
+                    break;
+                case R.id.menuUnavailable:
+                    onUnavailable();
+                    break;
+            }
+            return true;
+        });
+    }
+
+    // https://stackoverflow.com/questions/20836385/popup-menu-with-icon-on-android
+    private void setForceShowIcon(PopupMenu popupMenu) {
+        try {
+            Field[] mFields = popupMenu.getClass().getDeclaredFields();
+            for (Field field : mFields) {
+                if ("mPopup".equals(field.getName())) {
+                    field.setAccessible(true);
+                    Object menuPopupHelper = field.get(popupMenu);
+                    Class<?> popupHelper = null;
+                    if (menuPopupHelper != null) {
+                        popupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                    }
+                    Method mMethods = null;
+                    if (popupHelper != null) {
+                        mMethods = popupHelper.getMethod("setForceShowIcon", boolean.class);
+                    }
+                    if (mMethods != null) {
+                        mMethods.invoke(menuPopupHelper, true);
+                    }
+                    break;
+                }
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void onSoonAvailable() {
+        otherProfileViewModel.updateAvailability(SOON_AVAILABLE, new UserListener<Availability>() {
+            @Override
+            public void onUserSuccess(Availability availability) {
+                setSoonAvailableUI();
+            }
+
+            @Override
+            public void onUserError(Exception error) {
+                Snackbar.make(binding.getRoot(), R.string.availavilityError, Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void onUnavailable() {
+        otherProfileViewModel.updateAvailability(UNAVAILABLE, new UserListener<Availability>() {
+            @Override
+            public void onUserSuccess(Availability availability) {
+                setUnavailableUI();
+            }
+
+            @Override
+            public void onUserError(Exception error) {
+                Snackbar.make(binding.getRoot(), R.string.availavilityError, Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void onAvailable() {
+        otherProfileViewModel.updateAvailability(AVAILABLE, new UserListener<Availability>() {
+            @Override
+            public void onUserSuccess(Availability availability) {
+                setAvailableUI();
+            }
+
+            @Override
+            public void onUserError(Exception error) {
+                Snackbar.make(binding.getRoot(), R.string.availavilityError, Snackbar.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void setAvailableUI() {
+        binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_available_button);
+    }
+
+    private void setUnavailableUI() {
+        binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_unavailable_button);
+    }
+
+    private void setSoonAvailableUI() {
+        binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_soon_button);
+    }
+
 
     @Override
     public void onDestroyView() {
