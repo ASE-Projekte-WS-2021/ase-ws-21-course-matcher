@@ -25,6 +25,7 @@ import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.config.FieldType;
 import com.example.cm.data.models.StatusFlag;
+import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.FragmentEditProfileBinding;
 import com.example.cm.ui.dialogs.EditTextAreaDialog;
 import com.example.cm.ui.dialogs.EditTextDialog;
@@ -169,6 +170,9 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         } else {
             dialog = new EditTextDialog(requireContext(), this);
             ((EditTextDialog) dialog).setFieldToUpdate(fieldToUpdate).setValueOfField(valueToEdit).show();
+            if (fieldToUpdate.equals(getContext().getString(R.string.input_label_username))) {
+                editProfileViewModel.getUsernames((UserRepository.UsernamesRetrievedCallback)dialog);
+            }
         }
     }
 

@@ -87,6 +87,10 @@ public class EditProfileViewModel extends ViewModel implements Callback {
         }
     }
 
+    public void getUsernames(UserRepository.UsernamesRetrievedCallback callback) {
+        userRepository.getUsernames(callback);
+    }
+
     @Override
     public void onSuccess(Object object) {
         status.postValue(new Status(StatusFlag.SUCCESS, R.string.edit_profile_success));

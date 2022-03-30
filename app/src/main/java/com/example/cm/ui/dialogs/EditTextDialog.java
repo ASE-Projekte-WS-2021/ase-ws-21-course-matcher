@@ -5,7 +5,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -15,14 +17,18 @@ import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import com.example.cm.R;
+import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.DialogEditTextBinding;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class EditTextDialog extends Dialog {
+import java.util.List;
+
+public class EditTextDialog extends Dialog implements UserRepository.UsernamesRetrievedCallback {
     DialogEditTextBinding binding;
     OnSaveListener listener;
     String initialValue, fieldToUpdate;
     String confirmButtonText;
+    List<String> usernames;
 
     public EditTextDialog(@NonNull Context context, OnSaveListener listener) {
         super(context);
@@ -90,6 +96,9 @@ public class EditTextDialog extends Dialog {
     public EditTextDialog setFieldToUpdate(String fieldToUpdate) {
         this.fieldToUpdate = fieldToUpdate;
         binding.dialogTitle.setText(fieldToUpdate + " bearbeiten");
+        if (fieldToUpdate.equals(getContext().getString(R.string.input_label_username))) {
+            initUniqueInputListener();
+        }
         return this;
     }
 
@@ -118,6 +127,31 @@ public class EditTextDialog extends Dialog {
         binding.btnConfirm.setOnClickListener(v -> onSaveClicked());
     }
 
+    private void initUniqueInputListener() {
+        binding.inputField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                binding.btnConfirm.setEnabled(false);
+
+                // check if username is in use already
+                if (usernames == null) {
+                    binding.textInputLayout.setError(getContext().getString(R.string.error_loading));
+                }
+                if (usernames != null && usernames.contains(charSequence.toString())) {
+                    binding.textInputLayout.setError(getContext().getString(R.string.registerUsernameAlreadyExists));
+                } else {
+                    binding.textInputLayout.setErrorEnabled(false);
+                    binding.btnConfirm.setEnabled(true);
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        });
+    }
+
     private void onDismissClicked() {
         binding.textInputLayout.setErrorEnabled(false);
         binding.inputField.setText(null);
@@ -134,6 +168,11 @@ public class EditTextDialog extends Dialog {
             listener.onTextInputSaved(fieldToUpdate, newValue);
         }
         disableConfirmButton();
+    }
+
+    @Override
+    public void onUsernamesRetrieved(List<String> usernames) {
+        this.usernames = usernames;
     }
 
     public interface OnSaveListener {
