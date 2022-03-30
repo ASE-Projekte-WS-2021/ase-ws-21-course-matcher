@@ -60,6 +60,7 @@ public class MeetupRequestsFragment extends Fragment implements
                 requestsViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
                     initAdapter();
                     if (users.size() == 0) {
+                        binding.loadingCircle.setVisibility(View.GONE);
                         binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
                         return;
                     }
