@@ -5,6 +5,8 @@ import static com.example.cm.utils.Utils.convertToAddress;
 import android.annotation.SuppressLint;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +18,7 @@ import androidx.navigation.Navigation;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.databinding.FragmentMeetupBinding;
+import com.example.cm.databinding.FragmentCreateMeetupBinding;
 import com.example.cm.utils.Navigator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +27,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.internal.TextWatcherAdapter;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
@@ -39,13 +42,13 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     private final Calendar calendarNow = Calendar.getInstance();
     int sMin, sHour;
     private CreateMeetupViewModel createMeetupViewModel;
-    private FragmentMeetupBinding binding;
+    private FragmentCreateMeetupBinding binding;
     private Navigator navigator;
     private GoogleMap map;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle bundle = this.getArguments();
-        binding = FragmentMeetupBinding.inflate(inflater, container, false);
+        binding = FragmentCreateMeetupBinding.inflate(inflater, container, false);
         binding.mapView.onCreate(savedInstanceState);
         binding.mapView.getMapAsync(this);
         binding.mapView.onResume();
@@ -96,6 +99,22 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
             }
         });
         binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
+        binding.locationMeetup.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.textInputLayout.setErrorEnabled(false);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @SuppressLint("DefaultLocale")
@@ -161,11 +180,16 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
             Snackbar.make(binding.getRoot(), R.string.meetup_time_in_past, Snackbar.LENGTH_LONG).show();
 
         } else {
-            onMeetupInfoBtnClicked();
+            onInviteFriendsClicked();
         }
     }
 
-    private void onMeetupInfoBtnClicked() {
+    private void onInviteFriendsClicked() {
+        if(binding.locationMeetup.getText().toString().isEmpty()) {
+            binding.textInputLayout.setError(getString(R.string.location_hint_empty));
+            return;
+        }
+
         map.snapshot(bitmap -> createMeetupViewModel.setMeetupImg(bitmap));
         createMeetupViewModel.setMeetupTimestamp(calendarMeetup.getTime());
 

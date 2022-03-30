@@ -56,22 +56,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void initTexts() {
-        binding.registerUsernameEditText.inputLabel.setText(R.string.registerUsernameText);
-        binding.registerUsernameEditText.inputField.setHint(R.string.registerUsernameHint);
-
-        binding.registerFirstNameEditText.inputLabel.setText(R.string.registerFirstnameText);
-        binding.registerFirstNameEditText.inputField.setHint(R.string.registerFirstNameHint);
-
-        binding.registerLastNameEditText.inputLabel.setText(R.string.registerLastnameText);
-        binding.registerLastNameEditText.inputField.setHint(R.string.registerLastNameHint);
-
-        binding.registerEmailEditText.inputLabel.setText(R.string.registerEmailText);
-        binding.registerEmailEditText.inputField.setHint(R.string.userEmailHint);
-
-        binding.registerPasswordEditText.inputLabel.setText(R.string.registerPasswordText);
-        binding.registerPasswordEditText.inputField.setHint(R.string.userPasswordHint);
+        binding.registerUsernameEditText.textInputLayout.setHint(R.string.registerUsernameText);
+        binding.registerFirstNameEditText.textInputLayout.setHint(R.string.registerFirstnameText);
+        binding.registerLastNameEditText.textInputLayout.setHint(R.string.registerLastnameText);
+        binding.registerEmailEditText.textInputLayout.setHint(R.string.registerEmailText);
+        binding.registerPasswordEditText.textInputLayout.setHint(R.string.registerPasswordText);
     }
-
 
     private void initListeners() {
         binding.registerRegisterBtn.setOnClickListener(this::register);
@@ -90,31 +80,37 @@ public class RegisterActivity extends AppCompatActivity {
         String firstName = binding.registerFirstNameEditText.inputField.getText().toString();
         String lastName = binding.registerLastNameEditText.inputField.getText().toString();
 
+        // Reset error fields
+        binding.registerUsernameEditText.textInputLayout.setErrorEnabled(false);
+        binding.registerEmailEditText.textInputLayout.setErrorEnabled(false);
+        binding.registerPasswordEditText.textInputLayout.setErrorEnabled(false);
+        binding.registerFirstNameEditText.textInputLayout.setErrorEnabled(false);
+        binding.registerLastNameEditText.textInputLayout.setErrorEnabled(false);
+
         if (userName.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.registerUsernameEmpty, Snackbar.LENGTH_LONG).show();
+            binding.registerUsernameEditText.textInputLayout.setError(getString(R.string.registerUsernameEmpty));
             return;
         }
 
         if (firstName.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.registerFirstnameEmpty, Snackbar.LENGTH_LONG).show();
+            binding.registerFirstNameEditText.textInputLayout.setError(getString(R.string.registerFirstnameEmpty));
             return;
         }
 
         if (lastName.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.registerLastnameEmpty, Snackbar.LENGTH_LONG).show();
+            binding.registerLastNameEditText.textInputLayout.setError(getString(R.string.registerLastnameEmpty));
             return;
         }
 
         if (email.isEmpty()) {
-            Snackbar.make(binding.getRoot(), R.string.registerEmailEmpty, Snackbar.LENGTH_LONG).show();
+            binding.registerEmailEditText.textInputLayout.setError(getString(R.string.registerEmailEmpty));
             return;
         }
 
         if (password.isEmpty() || password.length() < Constants.MIN_PASSWORD_LENGTH) {
-            Snackbar.make(binding.getRoot(), R.string.registerPasswordEmpty, Snackbar.LENGTH_LONG).show();
+            binding.registerPasswordEditText.textInputLayout.setError(getString(R.string.registerPasswordEmpty));
             return;
         }
-
 
         authViewModel.register(email, password, userName, firstName, lastName);
         registerBtn.setEnabled(false);

@@ -15,9 +15,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/style_edittext"
-            android:inputType="textNoSuggestions"
-            android:paddingHorizontal="@dimen/padding_big" />
-
+            android:inputType="textMultiLine"
+            android:lines="3"
+            android:maxLength="125"
+            android:maxLines="3"
+            android:paddingHorizontal="@dimen/padding_big"
+            android:scrollbars="vertical" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </layout>

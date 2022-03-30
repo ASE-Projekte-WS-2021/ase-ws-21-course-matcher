@@ -18,8 +18,8 @@ import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
-import com.example.cm.utils.DeleteDialog;
 import com.example.cm.utils.Navigator;
+import com.example.cm.ui.dialogs.TextWithButtonDialog;
 import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,7 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnDeleteListener, OnMapReadyCallback {
+public class MeetupDetailedFragment extends Fragment implements OnMapReadyCallback {
 
     private MeetupDetailedTabAdapter tabAdapter;
     private ViewPager2 viewPager;
@@ -38,7 +38,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     private FragmentMeetupDetailedBinding binding;
     private TabLayoutMediator tabLayoutMediator;
     private Navigator navigator;
-    private DeleteDialog deleteDialog;
+    private TextWithButtonDialog deleteDialog;
 
     private GoogleMap map;
     private String meetupId;
@@ -56,6 +56,7 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         binding = FragmentMeetupDetailedBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
         initUIAndViewModel();
+        initDeleteMeetupDialog();
         initListeners();
         return binding.getRoot();
     }
@@ -76,12 +77,18 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
             switch (meetup.getPhase()) {
                 case MEETUP_UPCOMING:
                     binding.meetupDetailedTime.setText(meetup.getFormattedTime());
+                    binding.meetupDetailedTime.setTextColor(getResources().getColor(R.color.orange400));
+                    binding.meetupDetailedTime.setBackground(getResources().getDrawable(R.drawable.label_rounded_upcoming_white));
                     break;
                 case MEETUP_ACTIVE:
                     binding.meetupDetailedTime.setText(getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                    binding.meetupDetailedTime.setTextColor(getResources().getColor(R.color.orange600));
+                    binding.meetupDetailedTime.setBackground(getResources().getDrawable(R.drawable.label_rounded_active_white));
                     break;
                 case MEETUP_ENDED:
                     binding.meetupDetailedTime.setText(R.string.meetup_ended_text);
+                    binding.meetupDetailedTime.setTextColor(getResources().getColor(R.color.gray500));
+                    binding.meetupDetailedTime.setBackground(getResources().getDrawable(R.drawable.label_rounded_ended_white));
                     break;
             }
             initMenu(meetup);
@@ -128,7 +135,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
     }
 
     private void initMenu(Meetup meetup) {
-
         String currentUserId = meetupDetailedViewModel.getCurrentUserId();
 
         binding.fabMenu.setClosedOnTouchOutside(true);
@@ -212,8 +218,19 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         navigator.getNavController().navigate(R.id.action_navigation_meetup_detailed_to_meetupLocationFragment, bundle);
     }
 
+    private void initDeleteMeetupDialog() {
+        deleteDialog = new TextWithButtonDialog(requireActivity(), () -> {
+            meetupDetailedViewModel.onDelete();
+            navigator.getNavController().navigate(R.id.action_global_navigate_to_meetups);
+            deleteDialog.dismiss();
+        });
+
+        deleteDialog
+                .setTitle(getString(R.string.dialog_delete_meetup_title))
+                .setConfirmButtonText(getString(R.string.dialog_delete_btn));
+    }
+
     private void onDelete() {
-        deleteDialog = new DeleteDialog(requireActivity(), this);
         deleteDialog.show();
     }
 
@@ -223,13 +240,6 @@ public class MeetupDetailedFragment extends Fragment implements DeleteDialog.OnD
         if (deleteDialog != null) {
             deleteDialog.dismiss();
         }
-    }
-
-    @Override
-    public void onDeleteApproved() {
-        meetupDetailedViewModel.onDelete();
-        navigator.getNavController().navigate(R.id.action_global_navigate_to_meetups);
-        deleteDialog.dismiss();
     }
 
     @Override
