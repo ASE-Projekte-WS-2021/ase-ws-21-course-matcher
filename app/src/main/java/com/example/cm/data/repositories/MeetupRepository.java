@@ -79,8 +79,8 @@ public class MeetupRepository {
                     if (error != null) {
                         return;
                     }
+                    List<Meetup> meetups = new ArrayList<>();
                     if (value != null && !value.isEmpty()) {
-                        List<Meetup> meetups = new ArrayList<>();
                         for (int i = 0; i < value.getDocuments().size(); i++) {
                             Meetup meetup = snapshotToMeetup(value.getDocuments().get(i));
                             MeetupPhase currentPhase = meetup.getPhase();
@@ -95,6 +95,7 @@ public class MeetupRepository {
                         }
                         meetupListMLD.postValue(meetups);
                     }
+                    meetupListMLD.postValue(meetups);
                 });
     }
 
@@ -143,9 +144,9 @@ public class MeetupRepository {
      * @return A LiveData list of meetups
      */
     public MutableLiveData<List<Meetup>> getMeetups() {
-        if(meetupListMLD.getValue() == null) {
+        /*if(meetupListMLD.getValue() == null) {
             meetupListMLD.postValue(new ArrayList<>());
-        }
+        }*/
         return meetupListMLD;
     }
 
