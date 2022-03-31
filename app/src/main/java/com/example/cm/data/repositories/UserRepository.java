@@ -29,7 +29,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class UserRepository extends Repository {
 
@@ -40,6 +39,8 @@ public class UserRepository extends Repository {
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
     private MutableLiveData<List<String>> mutableUsernames = new MutableLiveData<>();
+
+    private List<User> users = new ArrayList<>();
 
     public UserRepository() {
     }
@@ -387,10 +388,12 @@ public class UserRepository extends Repository {
             return mutableUsers;
         }
 
+        if(!users.isEmpty()){
+            users = new ArrayList<>();
+        }
+
         List<String> userIdsNoDuplicates = new ArrayList<>(new HashSet<>(userIds));
 
-        // todo: fix
-        List<User> staticUserList = new ArrayList<>();
         List<List<String>> subLists = Lists.partition(userIdsNoDuplicates, MAX_QUERY_LENGTH);
         for (List<String> subList : subLists) {
             userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
@@ -398,14 +401,10 @@ public class UserRepository extends Repository {
                         if (error != null) {
                             return;
                         }
-                        if (value != null && !value.isEmpty()) {
-                            if (mutableUsers.getValue() != null) {
-                                staticUserList.addAll(mutableUsers.getValue());
-                            }
 
-                            List<User> users = snapshotToMutableUserList(value);
-                            staticUserList.addAll(users);
-                            mutableUsers.postValue(staticUserList);
+                        if(value != null && !value.isEmpty()) {
+                            users.addAll(snapshotToMutableUserList(value));
+                            mutableUsers.postValue(users);
                         }
                     });
         }
@@ -508,15 +507,19 @@ public class UserRepository extends Repository {
      * matching name
      */
     public MutableLiveData<List<User>> getUsersByIdsAndName(List<String> userIds, String query) {
+        if(!users.isEmpty()){
+            users = new ArrayList<>();
+        }
+
         userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener((value, error) -> {
             if (error != null) {
                 return;
             }
             if (value != null && !value.isEmpty()) {
-                List<User> users = snapshotToUserList(value);
+                List<User> snapshotUsers = snapshotToUserList(value);
                 List<User> filteredUsers = new ArrayList<>();
 
-                for (User user : users) {
+                for (User user : snapshotUsers) {
                     boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
                     boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
 
@@ -524,7 +527,8 @@ public class UserRepository extends Repository {
                         filteredUsers.add(user);
                     }
                 }
-                mutableUsers.postValue(filteredUsers);
+                users.addAll(filteredUsers);
+                mutableUsers.postValue(users);
             }
         });
         return mutableUsers;
