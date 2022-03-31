@@ -18,7 +18,6 @@ import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPOJO;
 import com.example.cm.data.models.MeetupPhase;
-import com.example.cm.data.models.User;
 import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -144,9 +143,6 @@ public class MeetupRepository {
      * @return A LiveData list of meetups
      */
     public MutableLiveData<List<Meetup>> getMeetups() {
-        /*if(meetupListMLD.getValue() == null) {
-            meetupListMLD.postValue(new ArrayList<>());
-        }*/
         return meetupListMLD;
     }
 
