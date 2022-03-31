@@ -46,6 +46,8 @@ public class MeetupRepository {
     private final MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
     private final MutableLiveData<List<String>> usersMLD = new MutableLiveData<>();
 
+    private List<Meetup> meetups = new ArrayList<>();
+
     public MeetupRepository() {
         listenToMeetupListChanges();
     }
@@ -108,6 +110,10 @@ public class MeetupRepository {
             return meetupsForRequestsMLD;
         }
 
+        if (!meetups.isEmpty()) {
+            meetups = new ArrayList<>();
+        }
+
         List<String> userIdsNoDuplicates = new ArrayList<>(new HashSet<>(meetupIds));
 
         List<List<String>> subLists = Lists.partition(userIdsNoDuplicates, 10);
@@ -118,11 +124,12 @@ public class MeetupRepository {
                             return;
                         }
                         if (value != null && !value.isEmpty()) {
-                            List<Meetup> meetups = new ArrayList<>();
+                            List<Meetup> meetupList = new ArrayList<>();
                             for (int i = 0; i < value.getDocuments().size(); i++) {
                                 Meetup meetup = snapshotToMeetup(value.getDocuments().get(i));
-                                meetups.add(meetup);
+                                meetupList.add(meetup);
                             }
+                            meetups.addAll(meetupList);
                             meetupsForRequestsMLD.postValue(meetups);
                         }
                     });

@@ -1,5 +1,7 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import static com.example.cm.Constants.FIELD_FRIENDS;
 import static com.example.cm.Constants.FIELD_LOCATION;
 import static com.example.cm.Constants.FIELD_PROFILE_IMAGE_STRING;
@@ -37,6 +39,8 @@ public class UserRepository extends Repository {
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
     private MutableLiveData<List<String>> mutableUsernames = new MutableLiveData<>();
+
+    private List<User> users = new ArrayList<>();
 
     public UserRepository() {
     }
@@ -384,6 +388,10 @@ public class UserRepository extends Repository {
             return mutableUsers;
         }
 
+        if(!users.isEmpty()){
+            users = new ArrayList<>();
+        }
+
         List<String> userIdsNoDuplicates = new ArrayList<>(new HashSet<>(userIds));
 
         List<List<String>> subLists = Lists.partition(userIdsNoDuplicates, MAX_QUERY_LENGTH);
@@ -393,8 +401,9 @@ public class UserRepository extends Repository {
                         if (error != null) {
                             return;
                         }
-                        if (value != null && !value.isEmpty()) {
-                            List<User> users = snapshotToMutableUserList(value);
+
+                        if(value != null && !value.isEmpty()) {
+                            users.addAll(snapshotToMutableUserList(value));
                             mutableUsers.postValue(users);
                         }
                     });
@@ -498,15 +507,19 @@ public class UserRepository extends Repository {
      * matching name
      */
     public MutableLiveData<List<User>> getUsersByIdsAndName(List<String> userIds, String query) {
+        if(!users.isEmpty()){
+            users = new ArrayList<>();
+        }
+
         userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener((value, error) -> {
             if (error != null) {
                 return;
             }
             if (value != null && !value.isEmpty()) {
-                List<User> users = snapshotToUserList(value);
+                List<User> snapshotUsers = snapshotToUserList(value);
                 List<User> filteredUsers = new ArrayList<>();
 
-                for (User user : users) {
+                for (User user : snapshotUsers) {
                     boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
                     boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
 
@@ -514,7 +527,8 @@ public class UserRepository extends Repository {
                         filteredUsers.add(user);
                     }
                 }
-                mutableUsers.postValue(filteredUsers);
+                users.addAll(filteredUsers);
+                mutableUsers.postValue(users);
             }
         });
         return mutableUsers;
