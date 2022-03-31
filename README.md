@@ -1,6 +1,6 @@
 # Course Matcher - Meet me if you can!
 
-Lerne CourseMatcher anhand unseres kurzen Videos[Link] kennen!
+Lerne CourseMatcher anhand unseres [kurzen Videos](readme_resources/course-matcher-video.mp4) kennen!
 
 Während der Corona-Pandemie wurde der reguläre Vorlesungsbetrieb von Präsenz auf digitale Formate umgestellt. Dadurch gingen spontane Treffen, die sonst in den Räumlichkeiten der Universität, wie den Cafeterien, stattfanden, verloren. Mit dem jetzt wieder aufgenommenen Präsenzbetrieb werden Treffen nun wieder häufiger vereinbart. Oftmals werden hierzu aber bestehende Benachrichtigungsdienste wie WhatsApp oder Telegram verwendet, wodurch es notwendig ist, mehrere Nachrichten hin- und herzuschicken, um einen geeigneten Termin zu finden und einen Treffpunkt zu vereinbaren. Dies führt dazu, dass
 vorgeschlagene Treffen unter anderen Nachrichten leicht verloren gehen.
