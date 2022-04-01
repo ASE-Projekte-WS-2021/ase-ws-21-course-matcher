@@ -94,7 +94,8 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void updateListByQuery(String query) {
-        List<User> filteredUsers = addFriendsViewModel.getFilteredUsers(query);
+        addFriendsViewModel.setSearchQuery(query);
+        List<User> filteredUsers = addFriendsViewModel.getFilteredUsers();
         if (filteredUsers == null) {
             return;
         }
@@ -114,6 +115,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         observeSentFriendRequests();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void observeSentFriendRequests() {
         addFriendsViewModel.getSentFriendRequestsPending().observe(getViewLifecycleOwner(), sentFriendRequests -> {
             if (sentFriendRequests == null) {
@@ -165,7 +167,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
                 return;
             }
 
-            selectFriendsAdapter.setUsers(users);
+            selectFriendsAdapter.setUsers(addFriendsViewModel.getFilteredUsers());
             selectFriendsAdapter.notifyDataSetChanged();
             binding.noFriendsWrapper.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);

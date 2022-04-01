@@ -21,6 +21,7 @@ public class AddFriendsViewModel extends ViewModel {
     public MutableLiveData<List<FriendRequest>> receivedFriendRequests;
     public MutableLiveData<List<FriendRequest>> sentFriendRequestsPending;
     public MutableLiveData<List<FriendRequest>> receivedFriendRequestsPending;
+    public String query = "";
 
     public OnRequestSentListener listener;
 
@@ -36,6 +37,10 @@ public class AddFriendsViewModel extends ViewModel {
                 .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
         receivedFriendRequestsPending = requestRepository
                 .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
+    }
+
+    public void setSearchQuery(String searchQuery) {
+        query = searchQuery;
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -55,7 +60,7 @@ public class AddFriendsViewModel extends ViewModel {
     }
 
 
-    public List<User> getFilteredUsers(String query) {
+    public List<User> getFilteredUsers() {
         if(users.getValue() == null) {
             return null;
         }
