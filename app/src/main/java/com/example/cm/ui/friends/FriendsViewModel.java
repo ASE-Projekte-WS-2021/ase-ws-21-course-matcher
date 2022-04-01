@@ -16,10 +16,10 @@ public class FriendsViewModel extends ViewModel {
 
     public FriendsViewModel() {
         userRepository = new UserRepository();
-        friends = userRepository.getFriends();
     }
 
     public MutableLiveData<List<User>> getFriends() {
+        friends = userRepository.getFriends();
         return friends;
     }
 
