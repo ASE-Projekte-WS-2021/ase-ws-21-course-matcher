@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.cm.Constants;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupRequest;
-import com.example.cm.data.models.Status;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
@@ -147,11 +146,22 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
         }
     }
 
-    public void searchUsers(String query) {
-        if (users.getValue() != null) {
-            users.getValue().clear();
-            users = userRepository.getFriendsByUsername(query);
+    public List<User> getFilteredUsers(String query) {
+        if (users.getValue() == null) {
+            return null;
         }
+
+        List<User> filteredUsers = new ArrayList<>();
+        for (User user : users.getValue()) {
+            boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
+            boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
+
+            if (isQueryInUsername || isQueryInFullName) {
+                filteredUsers.add(user);
+            }
+        }
+
+        return filteredUsers;
     }
 
     public void clearSelectedUsers() {

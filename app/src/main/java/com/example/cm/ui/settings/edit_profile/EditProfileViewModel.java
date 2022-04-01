@@ -11,17 +11,16 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.listener.Callback;
 import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
-import com.example.cm.data.listener.Callback;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.utils.InputValidator;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Objects;
 
 
 public class EditProfileViewModel extends ViewModel implements Callback {
@@ -39,7 +38,7 @@ public class EditProfileViewModel extends ViewModel implements Callback {
     }
 
     public void updateImage(Uri uri, Context context) throws FileNotFoundException {
-        if(user.getValue() == null) {
+        if (user.getValue() == null) {
             return;
         }
 

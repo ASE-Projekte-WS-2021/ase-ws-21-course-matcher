@@ -1,7 +1,5 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
-
 import static com.example.cm.Constants.FIELD_FRIENDS;
 import static com.example.cm.Constants.FIELD_LOCATION;
 import static com.example.cm.Constants.FIELD_PROFILE_IMAGE_STRING;
@@ -388,7 +386,7 @@ public class UserRepository extends Repository {
             return mutableUsers;
         }
 
-        if(!users.isEmpty()){
+        if (!users.isEmpty()) {
             users = new ArrayList<>();
         }
 
@@ -402,7 +400,7 @@ public class UserRepository extends Repository {
                             return;
                         }
 
-                        if(value != null && !value.isEmpty()) {
+                        if (value != null && !value.isEmpty()) {
                             users.addAll(snapshotToMutableUserList(value));
                             mutableUsers.postValue(users);
                         }
@@ -435,104 +433,6 @@ public class UserRepository extends Repository {
         }
     }
 
-    /**
-     * Get list of friends of a user by their username
-     *
-     * @param query String to search for
-     * @return MutableLiveData-List of mutable friends with query matching username
-     */
-    public MutableLiveData<List<User>> getFriendsByUsername(String query) {
-        if (auth.getCurrentUser() == null) {
-            return mutableUsers;
-        }
-        String currentUserId = auth.getCurrentUser().getUid();
-
-        userCollection.document(currentUserId).addSnapshotListener((value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null && value.exists()) {
-                User user = snapshotToUser(value);
-                List<String> friends = user.getFriends();
-                if (friends == null || friends.isEmpty()) {
-                    return;
-                }
-                mutableUsers = getUsersByIdsAndName(friends, query);
-            }
-        });
-        return mutableUsers;
-    }
-
-    /**
-     * Get list of friends of a user by their username except friends with given ids
-     *
-     * @param query         String to search for
-     * @param userIdsExcept IDs of users you don't want to return
-     * @return MutableLiveData-List of mutable friends with query matching username
-     */
-    public MutableLiveData<List<User>> getFriendsByUsernameExcept(String query, List<String> userIdsExcept) {
-        if (auth.getCurrentUser() == null) {
-            return mutableUsers;
-        }
-
-        String currentUserId = auth.getCurrentUser().getUid();
-
-        userCollection.document(currentUserId).addSnapshotListener((value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null && value.exists()) {
-                User user = snapshotToUser(value);
-
-                List<String> friends = user.getFriends();
-                if (friends == null || friends.isEmpty()) {
-                    return;
-                }
-                if (userIdsExcept != null && !userIdsExcept.isEmpty()) {
-                    friends.removeAll(userIdsExcept);
-                }
-
-                mutableUsers = getUsersByIdsAndName(friends, query);
-            }
-        });
-        return mutableUsers;
-    }
-
-    /**
-     * Get users within given list with query matching name
-     *
-     * @param userIds list of users to search in
-     * @param query   String to search for
-     * @return MutableLiveData-List of mutable users within given list with query
-     * matching name
-     */
-    public MutableLiveData<List<User>> getUsersByIdsAndName(List<String> userIds, String query) {
-        if(!users.isEmpty()){
-            users = new ArrayList<>();
-        }
-
-        userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener((value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null && !value.isEmpty()) {
-                List<User> snapshotUsers = snapshotToUserList(value);
-                List<User> filteredUsers = new ArrayList<>();
-
-                for (User user : snapshotUsers) {
-                    boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
-                    boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
-
-                    if (isQueryInUsername || isQueryInFullName) {
-                        filteredUsers.add(user);
-                    }
-                }
-                users.addAll(filteredUsers);
-                mutableUsers.postValue(users);
-            }
-        });
-        return mutableUsers;
-    }
 
     public void getUsernames(UsernamesRetrievedCallback callback) {
         List<String> usernames = new ArrayList<>();
@@ -540,7 +440,7 @@ public class UserRepository extends Repository {
             if (task.isComplete() && FirebaseAuth.getInstance().getCurrentUser() != null) {
                 QuerySnapshot result = task.getResult();
                 List<User> users = snapshotToUserList(result);
-                for(User user : users) {
+                for (User user : users) {
                     usernames.add(user.getUsername());
                 }
                 callback.onUsernamesRetrieved(usernames, getCurrentUser().getValue().getUsername());

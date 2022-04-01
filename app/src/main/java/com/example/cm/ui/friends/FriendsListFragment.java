@@ -25,8 +25,6 @@ import com.example.cm.utils.Navigator;
 import java.util.List;
 import java.util.Objects;
 
-import timber.log.Timber;
-
 public class FriendsListFragment extends Fragment implements OnItemClickListener {
 
     private FriendsViewModel friendsViewModel;

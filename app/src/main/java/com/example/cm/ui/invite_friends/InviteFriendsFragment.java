@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
 import com.example.cm.utils.Navigator;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -111,18 +113,36 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
 
     private void onClearInputClicked() {
         binding.etUserSearch.setText("");
-        createMeetupViewModel.searchUsers("");
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
     private void onSearchTextChanged(CharSequence charSequence) {
         String query = charSequence.toString();
-        if (query.length() > 0) {
+        toggleClearButton(query);
+        updateListByQuery(query);
+    }
+
+    private void toggleClearButton(String query) {
+        if (!query.isEmpty()) {
             binding.ivClearInput.setVisibility(View.VISIBLE);
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
         }
-        createMeetupViewModel.searchUsers(query);
+    }
+
+    private void updateListByQuery(String query) {
+        List<User> filteredUsers = createMeetupViewModel.getFilteredUsers(query);
+        if (filteredUsers == null) {
+            return;
+        }
+        if (filteredUsers.isEmpty()) {
+            binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+            binding.rvUserList.setVisibility(View.GONE);
+            return;
+        }
+        binding.noFriendsWrapper.setVisibility(View.GONE);
+        binding.rvUserList.setVisibility(View.VISIBLE);
+        inviteFriendsListAdapter.setUsers(filteredUsers);
     }
 
 
