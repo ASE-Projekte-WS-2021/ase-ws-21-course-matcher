@@ -8,6 +8,7 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddFriendsViewModel extends ViewModel {
@@ -53,17 +54,23 @@ public class AddFriendsViewModel extends ViewModel {
         this.listener = listener;
     }
 
-    /**
-     * Search a user by their username
-     *
-     * @param query the username to search for
-     */
-    public void searchUsers(String query) {
-        if (query.isEmpty()) {
-            users = userRepository.getUsersNotFriends();
-            return;
+
+    public List<User> getFilteredUsers(String query) {
+        if(users.getValue() == null) {
+            return null;
         }
-        users = userRepository.getUsersNotFriendsByQuery(query);
+
+        List<User> filteredUsers = new ArrayList<>();
+        for(User user : users.getValue()) {
+            boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
+            boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
+
+            if(isQueryInUsername || isQueryInFullName) {
+                filteredUsers.add(user);
+            }
+        }
+
+        return filteredUsers;
     }
 
     /**
