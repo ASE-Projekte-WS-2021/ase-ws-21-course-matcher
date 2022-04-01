@@ -1,5 +1,6 @@
 package com.example.cm.ui.add_friends;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -152,6 +153,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         Snackbar.make(binding.getRoot(), R.string.snackbar_remove_request, Snackbar.LENGTH_LONG).show();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onFriendRequestsSet() {
         addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
@@ -164,6 +166,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             }
 
             selectFriendsAdapter.setUsers(users);
+            selectFriendsAdapter.notifyDataSetChanged();
             binding.noFriendsWrapper.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);
         });

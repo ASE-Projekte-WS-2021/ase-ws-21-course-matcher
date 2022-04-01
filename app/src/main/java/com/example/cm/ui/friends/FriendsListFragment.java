@@ -1,5 +1,6 @@
 package com.example.cm.ui.friends;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -75,6 +76,7 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void initViewModel() {
         friendsViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
         friendsViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
@@ -87,6 +89,7 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
             }
 
             friendsListAdapter.setFriends(friends);
+            friendsListAdapter.notifyDataSetChanged();
             binding.rvUserList.setVisibility(View.VISIBLE);
             binding.noFriendsWrapper.setVisibility(View.GONE);
         });

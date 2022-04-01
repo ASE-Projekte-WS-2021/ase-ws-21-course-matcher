@@ -24,16 +24,16 @@ public class FriendsViewModel extends ViewModel {
     }
 
     public List<User> getFilteredUsers(String query) {
-        if(friends.getValue() == null) {
+        if (friends.getValue() == null) {
             return null;
         }
 
         List<User> filteredUsers = new ArrayList<>();
-        for(User user : friends.getValue()) {
+        for (User user : friends.getValue()) {
             boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
             boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
 
-            if(isQueryInUsername || isQueryInFullName) {
+            if (isQueryInUsername || isQueryInFullName) {
                 filteredUsers.add(user);
             }
         }

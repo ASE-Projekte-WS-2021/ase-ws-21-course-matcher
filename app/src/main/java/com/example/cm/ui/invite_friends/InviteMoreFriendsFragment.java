@@ -1,5 +1,6 @@
 package com.example.cm.ui.invite_friends;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -81,6 +82,7 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void initViewModel() {
         inviteMoreFriendsViewModel = new ViewModelProvider(this, new InviteMoreFriendsFactory(meetupId)).get(InviteMoreFriendsViewModel.class);
         inviteMoreFriendsViewModel.getUsers(userIdsAlreadyInMeetup).observe(getViewLifecycleOwner(), users -> {
@@ -94,6 +96,7 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
             }
 
             inviteFriendsListAdapter.setUsers(users);
+            inviteFriendsListAdapter.notifyDataSetChanged();
             binding.rvUserList.setVisibility(View.VISIBLE);
             binding.noFriendsWrapper.setVisibility(View.GONE);
         });
