@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendsViewModel extends ViewModel {
@@ -22,10 +23,21 @@ public class FriendsViewModel extends ViewModel {
         return friends;
     }
 
-    public void searchUsers(String query) {
-        if (friends.getValue() != null) {
-            friends.getValue().clear();
-            friends = userRepository.getFriendsByUsername(query);
+    public List<User> getFilteredUsers(String query) {
+        if(friends.getValue() == null) {
+            return null;
         }
+
+        List<User> filteredUsers = new ArrayList<>();
+        for(User user : friends.getValue()) {
+            boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
+            boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
+
+            if(isQueryInUsername || isQueryInFullName) {
+                filteredUsers.add(user);
+            }
+        }
+
+        return filteredUsers;
     }
 }

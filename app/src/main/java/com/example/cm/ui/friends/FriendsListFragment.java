@@ -15,13 +15,17 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentFriendsListBinding;
 import com.example.cm.ui.adapters.FriendsListAdapter;
 import com.example.cm.ui.adapters.FriendsListAdapter.OnItemClickListener;
 import com.example.cm.utils.LinearLayoutManagerWrapper;
 import com.example.cm.utils.Navigator;
 
+import java.util.List;
 import java.util.Objects;
+
+import timber.log.Timber;
 
 public class FriendsListFragment extends Fragment implements OnItemClickListener {
 
@@ -70,7 +74,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
 
     private void onClearInputClicked() {
         binding.etUserSearch.setText("");
-        friendsViewModel.searchUsers("");
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
@@ -93,13 +96,31 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
 
     private void onSearchTextChanged(CharSequence charSequence) {
         String query = charSequence.toString();
-        if (query.length() > 0) {
+        toggleClearButton(query);
+        updateListByQuery(query);
+    }
+
+    private void toggleClearButton(String query) {
+        if (!query.isEmpty()) {
             binding.ivClearInput.setVisibility(View.VISIBLE);
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
         }
+    }
 
-        friendsViewModel.searchUsers(charSequence.toString());
+    private void updateListByQuery(String query) {
+        List<User> filteredUsers = friendsViewModel.getFilteredUsers(query);
+        if (filteredUsers == null) {
+            return;
+        }
+        if (filteredUsers.isEmpty()) {
+            binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+            binding.rvUserList.setVisibility(View.GONE);
+            return;
+        }
+        binding.noFriendsWrapper.setVisibility(View.GONE);
+        binding.rvUserList.setVisibility(View.VISIBLE);
+        friendsListAdapter.setFriends(filteredUsers);
     }
 
     @Override
