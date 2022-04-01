@@ -32,11 +32,6 @@ public class AddFriendsViewModel extends ViewModel {
 
         requestRepository = new FriendRequestRepository();
         receivedFriendRequests = requestRepository.getFriendRequestsForUser();
-
-        sentFriendRequestsPending = requestRepository
-                .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
-        receivedFriendRequestsPending = requestRepository
-                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
     }
 
     public void setSearchQuery(String searchQuery) {
@@ -48,10 +43,12 @@ public class AddFriendsViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<FriendRequest>> getSentFriendRequestsPending() {
+        sentFriendRequestsPending = requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
         return sentFriendRequestsPending;
     }
 
     public MutableLiveData<List<FriendRequest>> getReceivedFriendRequestsPending() {
+        receivedFriendRequestsPending = requestRepository.getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
         return receivedFriendRequestsPending;
     }
 
@@ -61,16 +58,16 @@ public class AddFriendsViewModel extends ViewModel {
 
 
     public List<User> getFilteredUsers() {
-        if(users.getValue() == null) {
+        if (users.getValue() == null) {
             return null;
         }
 
         List<User> filteredUsers = new ArrayList<>();
-        for(User user : users.getValue()) {
+        for (User user : users.getValue()) {
             boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
             boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
 
-            if(isQueryInUsername || isQueryInFullName) {
+            if (isQueryInUsername || isQueryInFullName) {
                 filteredUsers.add(user);
             }
         }
@@ -128,7 +125,7 @@ public class AddFriendsViewModel extends ViewModel {
      * @param receiverId id of the friend to check if has received friend request of current
      * @return has current user sent an friend request to user with given id
      */
-  
+
     private boolean hasReceivedFriendRequest(List<FriendRequest> requests, String receiverId) {
         for (FriendRequest request : requests) {
             if (request.getReceiverId().equals(receiverId)

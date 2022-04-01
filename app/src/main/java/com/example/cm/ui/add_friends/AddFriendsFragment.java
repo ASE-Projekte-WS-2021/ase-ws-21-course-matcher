@@ -115,7 +115,6 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         observeSentFriendRequests();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void observeSentFriendRequests() {
         addFriendsViewModel.getSentFriendRequestsPending().observe(getViewLifecycleOwner(), sentFriendRequests -> {
             if (sentFriendRequests == null) {

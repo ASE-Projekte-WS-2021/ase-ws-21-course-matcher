@@ -95,8 +95,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
                 return;
             }
 
-            Timber.d("Getting friends...: %s", friends.size());
-
             friendsListAdapter.setFriends(friends);
             friendsListAdapter.notifyDataSetChanged();
             binding.rvUserList.setVisibility(View.VISIBLE);

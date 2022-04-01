@@ -300,6 +300,8 @@ public class UserRepository extends Repository {
      * @return MutableLiveData-List of mutable friends
      */
     public MutableLiveData<List<User>> getFriends() {
+        mutableUsers.postValue(new ArrayList<>());
+
         if (auth.getCurrentUser() == null) {
             return mutableUsers;
         }
@@ -436,13 +438,20 @@ public class UserRepository extends Repository {
 
     public void getUsernames(UsernamesRetrievedCallback callback) {
         List<String> usernames = new ArrayList<>();
+
         userCollection.get().addOnCompleteListener(executorService, task -> {
             if (task.isComplete() && FirebaseAuth.getInstance().getCurrentUser() != null) {
                 QuerySnapshot result = task.getResult();
                 List<User> users = snapshotToUserList(result);
+
                 for (User user : users) {
                     usernames.add(user.getUsername());
                 }
+
+                if (getCurrentUser().getValue() == null) {
+                    return;
+                }
+
                 callback.onUsernamesRetrieved(usernames, getCurrentUser().getValue().getUsername());
             }
         });
