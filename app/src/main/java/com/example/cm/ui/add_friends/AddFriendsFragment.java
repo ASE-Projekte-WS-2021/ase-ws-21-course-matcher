@@ -32,7 +32,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     private AddFriendsViewModel addFriendsViewModel;
     private FragmentAddFriendsBinding binding;
-    private AddFriendsAdapter selectFriendsAdapter;
+    private AddFriendsAdapter addFriendsAdapter;
     private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,13 +45,13 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void initUI() {
-        selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
+        addFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
         dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.rvUserList.setHasFixedSize(true);
-        binding.rvUserList.setAdapter(selectFriendsAdapter);
+        binding.rvUserList.setAdapter(addFriendsAdapter);
         binding.btnBack.bringToFront();
     }
 
@@ -106,7 +106,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         }
         binding.noFriendsWrapper.setVisibility(View.GONE);
         binding.rvUserList.setVisibility(View.VISIBLE);
-        selectFriendsAdapter.setUsers(filteredUsers);
+        addFriendsAdapter.setUsers(filteredUsers);
     }
 
     private void initViewModel() {
@@ -122,7 +122,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
                 return;
             }
             addFriendsViewModel.getReceivedFriendRequestsPending().observe(getViewLifecycleOwner(), receivedFriendRequests -> {
-                selectFriendsAdapter.setFriendRequests(sentFriendRequests, receivedFriendRequests);
+                addFriendsAdapter.setFriendRequests(sentFriendRequests, receivedFriendRequests);
             });
         });
     }
@@ -167,8 +167,8 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
                 return;
             }
 
-            selectFriendsAdapter.setUsers(addFriendsViewModel.getFilteredUsers());
-            selectFriendsAdapter.notifyDataSetChanged();
+            addFriendsAdapter.setUsers(addFriendsViewModel.getFilteredUsers());
+            addFriendsAdapter.notifyDataSetChanged();
             binding.noFriendsWrapper.setVisibility(View.GONE);
             binding.rvUserList.setVisibility(View.VISIBLE);
         });
