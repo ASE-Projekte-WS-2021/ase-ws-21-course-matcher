@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentInviteMoreFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.utils.Navigator;
@@ -86,8 +87,7 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
             binding.loadingCircle.setVisibility(View.GONE);
 
             if (users.isEmpty()) {
-                int text = filtered ? R.string.find_friends_no_friends_found : R.string.friendslist_tv_no_friends_not_in_meetup;
-                binding.tvNoFriendsFound.setText(text);
+                binding.tvNoFriendsFound.setText(R.string.friendslist_tv_no_friends_not_in_meetup);
                 binding.noFriendsWrapper.setVisibility(View.VISIBLE);
                 binding.rvUserList.setVisibility(View.GONE);
                 return;
@@ -115,20 +115,37 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
 
     private void onClearInputClicked() {
         binding.etUserSearch.setText("");
-        inviteMoreFriendsViewModel.searchUsers("", userIdsAlreadyInMeetup);
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
     private void onSearchTextChanged(CharSequence charSequence) {
         String query = charSequence.toString();
-        if (query.length() > 0) {
+        toggleClearButton(query);
+        updateListByQuery(query);
+    }
+
+    private void toggleClearButton(String query) {
+        if (!query.isEmpty()) {
             binding.ivClearInput.setVisibility(View.VISIBLE);
-            filtered = true;
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
-            filtered = false;
         }
-        inviteMoreFriendsViewModel.searchUsers(query, userIdsAlreadyInMeetup);
+    }
+
+    private void updateListByQuery(String query) {
+        List<User> filteredUsers = inviteMoreFriendsViewModel.getFilteredUsers(query);
+        if (filteredUsers == null) {
+            return;
+        }
+        if (filteredUsers.isEmpty()) {
+            binding.tvNoFriendsFound.setText(R.string.find_friends_no_friends_found);
+            binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+            binding.rvUserList.setVisibility(View.GONE);
+            return;
+        }
+        binding.noFriendsWrapper.setVisibility(View.GONE);
+        binding.rvUserList.setVisibility(View.VISIBLE);
+        inviteFriendsListAdapter.setUsers(filteredUsers);
     }
 
 
