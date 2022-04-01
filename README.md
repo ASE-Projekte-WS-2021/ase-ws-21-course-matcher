@@ -1,3 +1,5 @@
+<img src="./readme_resources/course-matcher-logo.png" width="120"/>
+
 # Course Matcher - Meet me if you can!
 
 Lerne CourseMatcher anhand unseres [kurzen Videos](readme_resources/course-matcher-video.mp4) kennen!
