@@ -169,7 +169,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
         snapHelper.attachToRecyclerView(binding.rvUserCards);
         binding.rvUserCards.bringToFront();
         binding.rvUserCards.setVisibility(View.VISIBLE);
-        binding.rvUserCards.setAlpha(1f);
+        binding.rvUserCards.setAlpha(FINAL_CARD_ALPHA);
         binding.rvUserCards.setTranslationY(binding.rvUserCards.getHeight());
     }
 
@@ -481,7 +481,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
         super.onResume();
         if (mapView != null) {
             mapView.onResume();
-            //initPermissionCheck();
             observeMeetups();
             observeCurrentUser();
         }
