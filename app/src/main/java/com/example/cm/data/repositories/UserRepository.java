@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class UserRepository extends Repository {
 
     private static UserRepository instance;
@@ -535,9 +537,8 @@ public class UserRepository extends Repository {
                     usernames.add(user.getUsername());
                 }
 
-                if (getCurrentUser().getValue() != null) {
-                    callback.onUsernamesRetrieved(usernames, getCurrentUser().getValue().getUsername());
-                }
+                String currentUsername = getCurrentUser().getValue() != null ? getCurrentUser().getValue().getUsername() : null;
+                callback.onUsernamesRetrieved(usernames, currentUsername);
             }
         });
     }
