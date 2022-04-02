@@ -27,7 +27,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.internal.TextWatcherAdapter;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
@@ -40,7 +39,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
     private final Calendar calendarMeetup = Calendar.getInstance();
     private final Calendar calendarNow = Calendar.getInstance();
-    int sMin, sHour;
+    private int sMin, sHour;
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentCreateMeetupBinding binding;
     private Navigator navigator;
@@ -48,12 +47,13 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle bundle = this.getArguments();
+        navigator = new Navigator(requireActivity());
         binding = FragmentCreateMeetupBinding.inflate(inflater, container, false);
+
         binding.mapView.onCreate(savedInstanceState);
         binding.mapView.getMapAsync(this);
         binding.mapView.onResume();
 
-        navigator = new Navigator(requireActivity());
         setTodaysDate();
         initUI();
         initViewModel();
@@ -89,8 +89,13 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     private void initListener() {
         binding.meetupTimeText.setOnClickListener(v -> onTimePickerDialogClicked());
         binding.meetupInfoBtn.setOnClickListener(v -> {
-            checkTime();
+            if (binding.locationMeetup.getText() == null) {
+                return;
+            }
+
             String inputAddress = binding.locationMeetup.getText().toString();
+
+            checkTime();
             if (!inputAddress.isEmpty()) {
                 createMeetupViewModel.setMeetupLocation(inputAddress);
                 createMeetupViewModel.setMeetupLocationName(inputAddress);
@@ -124,7 +129,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
 
         String formattedMin = String.format("%02d", localMin);
         String formattedHour = String.format("%02d", localHour);
-        String currentTime = formattedHour + ":" + formattedMin;
+        String currentTime = requireContext().getString(R.string.meetup_formatted_time, formattedHour, formattedMin);
 
         binding.meetupTimeText.setText(currentTime);
     }
@@ -185,7 +190,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void onInviteFriendsClicked() {
-        if(binding.locationMeetup.getText().toString().isEmpty()) {
+        if (binding.locationMeetup.getText().toString().isEmpty()) {
             binding.textInputLayout.setError(getString(R.string.location_hint_empty));
             return;
         }

@@ -24,6 +24,7 @@
     <string name="invitation_success_title">"Meetup versendet!"</string>
     <string name="invitation_success_close_dialog">"OK"</string>
     <string name="content_description_edit_button">meetup edit button</string>
+    <string name="meetup_formatted_time">%1$s:%2$s</string>
 
     <string name="title_notifications">Benachrichtigungen</string>
     <string name="title_profile">Profil</string>

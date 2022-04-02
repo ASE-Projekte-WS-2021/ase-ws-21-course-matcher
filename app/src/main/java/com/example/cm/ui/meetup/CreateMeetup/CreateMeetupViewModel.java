@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModel;
 import com.example.cm.Constants;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupRequest;
-import com.example.cm.data.models.Status;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
@@ -45,11 +44,11 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
 
     public CreateMeetupViewModel() {
         userRepository = new UserRepository();
-        currentUser = userRepository.getCurrentUser();
-        users = userRepository.getFriends();
-
         meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
+
+        currentUser = userRepository.getCurrentUser();
+        users = userRepository.getFriends();
     }
 
     public MutableLiveData<User> getCurrentUser() {
