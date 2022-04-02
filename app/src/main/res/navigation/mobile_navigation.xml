@@ -181,9 +181,6 @@
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings">
         <action
-            android:id="@+id/action_settingsFragment_to_editNotificationsFragment"
-            app:destination="@id/editNotificationsFragment" />
-        <action
             android:id="@+id/action_settingsFragment_to_editAccountFragment"
             app:destination="@id/editAccountFragment" />
         <action
@@ -211,11 +208,6 @@
         android:name="com.example.cm.ui.settings.edit_account.EditAccountFragment"
         android:label="fragment_edit_account"
         tools:layout="@layout/fragment_edit_account" />
-    <fragment
-        android:id="@+id/editNotificationsFragment"
-        android:name="com.example.cm.ui.settings.edit_notifications.EditNotificationsFragment"
-        android:label="fragment_edit_notifications"
-        tools:layout="@layout/fragment_edit_notifications" />
     <fragment
         android:id="@+id/meetupLocationFragment"
         android:name="com.example.cm.ui.meetup.MeetupLocation.MeetupLocationFragment"

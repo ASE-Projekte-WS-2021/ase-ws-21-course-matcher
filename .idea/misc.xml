@@ -110,8 +110,10 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.296195652173913" />
         <entry key="app/src/main/res/layout/activity_onboarding.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/dialog_logout.xml" value="0.2368659420289855" />
+        <entry key="app/src/main/res/layout/dialog_textarea.xml" value="0.15260416666666668" />
         <entry key="app/src/main/res/layout/fragment_add_friends.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.37604166666666666" />
+        <entry key="app/src/main/res/layout/fragment_edit_notifications.xml" value="0.25679347826086957" />
         <entry key="app/src/main/res/layout/fragment_friends.xml" value="0.1765625" />
         <entry key="app/src/main/res/layout/fragment_friends_list.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3416666666666667" />
@@ -119,6 +121,7 @@
         <entry key="app/src/main/res/layout/fragment_invite_more_friends.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/fragment_meetup.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.1765625" />
+        <entry key="app/src/main/res/layout/fragment_other_profile.xml" value="0.25679347826086957" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.14177703857421872" />
         <entry key="app/src/main/res/layout/fragment_select_friends.xml" value="0.32019927536231885" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.2368659420289855" />

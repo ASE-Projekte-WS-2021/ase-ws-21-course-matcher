@@ -86,6 +86,14 @@ public class Constants {
     public static final String FIELD_ID = "id";
     public static final String FIELD_IS_SHARING_LOCATION = "isSharingLocation";
     public static final String FIELD_AVAILABILITY = "availability";
+    public static final String FIELD_USERNAME = "username";
+    public static final String FIELD_DISPLAY_NAME ="displayName";
+    public static final String FIELD_BIO = "bio";
+
+    // Input labels
+    public static final String LABEL_USERNAME = "Nutzername";
+    public static final String LABEL_DISPLAY_NAME = "Anzeigename";
+    public static final String LABEL_BIO = "Bio";
 
     // Konfetti
     public static final Long KONFETTI_DURATION = 5L;

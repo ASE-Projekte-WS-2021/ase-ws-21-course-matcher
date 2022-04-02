@@ -115,7 +115,7 @@ public class EditTextAreaDialog extends Dialog {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int currCharCount = s.length();
-                String charCountString = getContext().getString(R.string.edit_profile_bio_char_count, 0, currCharCount);
+                String charCountString = getContext().getString(R.string.edit_profile_bio_char_count, currCharCount, MAX_CHAR_COUNT);
 
                 binding.bioCharacterCount.setText(charCountString);
             }
