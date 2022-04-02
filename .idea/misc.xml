@@ -102,16 +102,21 @@
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/item_friend_request.xml" value="0.36367753623188404" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup.xml" value="0.33" />
         <entry key="..\:/Users/trinnovative/Documents/ase-ws-21-course-matcher/app/src/main/res/layout/item_meetup_friend.xml" value="0.23550724637681159" />
+        <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/ic_logo_white.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.2355" />
         <entry key="app/src/main/res/drawable/ic_round_search_24.xml" value="0.2355" />
         <entry key="app/src/main/res/layout/action_bar_with_back_button.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.296195652173913" />
+        <entry key="app/src/main/res/layout/activity_onboarding.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/dialog_logout.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/fragment_add_friends.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/fragment_friends.xml" value="0.1765625" />
         <entry key="app/src/main/res/layout/fragment_friends_list.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3416666666666667" />
+        <entry key="app/src/main/res/layout/fragment_invite_friends.xml" value="0.19479166666666667" />
+        <entry key="app/src/main/res/layout/fragment_invite_more_friends.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/fragment_meetup.xml" value="0.2368659420289855" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.1765625" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.14177703857421872" />
@@ -123,6 +128,7 @@
         <entry key="app/src/main/res/layout/user_list_item.xml" value="0.29224141438802087" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.3645833333333333" />
         <entry key="app/src/main/res/menu/menu_fragment_friends.xml" value="0.17552083333333332" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.16709600830078125" />
       </map>
     </option>
   </component>
