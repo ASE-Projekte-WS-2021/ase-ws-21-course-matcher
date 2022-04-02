@@ -46,6 +46,8 @@ public class Constants {
     // Shared Preferances Keys
     public static final String PREFS_SETTINGS_KEY = "settings";
     public static final String PREFS_SHARE_LOCATION_KEY = "shareLocation";
+    public static final String PREFS_ONBOARDING_KEY = "onBoarding";
+    public static final String PREFS_FIRST_TIME_KEY = "firstTime";
 
     // Tabbar
     public static final float PENDING_HEADER_WEIGHT = 0.7f;

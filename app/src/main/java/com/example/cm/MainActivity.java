@@ -60,21 +60,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setProfileImage(User user) {
-        if (user.getProfileImageString() != null) {
-            Bitmap img = Utils.convertBaseStringToBitmap(user.getProfileImageString());
-            Glide.with(this).load(img).placeholder(R.drawable.ic_profile).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
-                @Override
-                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                    binding.navView.setItemIconTintList(null);
-                    binding.navView.getMenu().findItem(R.id.navigation_profile).setIcon(resource);
-                }
-
-                @Override
-                public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                }
-            });
+        if (user.getProfileImageString() == null) {
+            return;
         }
+
+        Bitmap img = Utils.convertBaseStringToBitmap(user.getProfileImageString());
+        Glide.with(this).load(img).placeholder(R.drawable.ic_profile).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                binding.navView.setItemIconTintList(null);
+                binding.navView.getMenu().findItem(R.id.navigation_profile).setIcon(resource);
+            }
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) {
+
+            }
+        });
     }
 
     private void setupBottomNavigationBar() {
