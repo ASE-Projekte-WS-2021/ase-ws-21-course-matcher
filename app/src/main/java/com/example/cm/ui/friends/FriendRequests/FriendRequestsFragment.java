@@ -77,7 +77,7 @@ public class FriendRequestsFragment extends Fragment implements FriendRequestLis
     private void initAdapter() {
         requestsListAdapter = new FriendRequestListAdapter(this);
         binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
-        binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
     }
 

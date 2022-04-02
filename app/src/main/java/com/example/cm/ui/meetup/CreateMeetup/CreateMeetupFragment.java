@@ -145,7 +145,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
             calendarMeetup.set(Calendar.MINUTE, sMin);
         };
 
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), onTimeSetListener, sHour, sMin, true);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(requireActivity(), onTimeSetListener, sHour, sMin, true);
         timePickerDialog.updateTime(sHour, sMin);
         timePickerDialog.show();
     }

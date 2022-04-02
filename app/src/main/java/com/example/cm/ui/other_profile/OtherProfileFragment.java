@@ -50,7 +50,7 @@ public class OtherProfileFragment extends Fragment {
     }
 
     private void initListener() {
-        navigator = new Navigator(getActivity());
+        navigator = new Navigator(requireActivity());
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.btnAddRemoveFriend.setOnClickListener(view -> onBtnClick());
         binding.dotAvailabilityIconMenu.setOnClickListener(v -> popup.show());

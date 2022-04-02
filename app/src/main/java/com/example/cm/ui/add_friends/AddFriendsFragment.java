@@ -46,7 +46,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
         dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
-        binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvUserList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(selectFriendsAdapter);
         binding.btnBack.bringToFront();

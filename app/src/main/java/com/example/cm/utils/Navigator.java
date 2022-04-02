@@ -7,7 +7,7 @@ import com.example.cm.R;
 
 public class Navigator {
 
-    private NavController navController;
+    private final NavController navController;
 
     public Navigator(FragmentActivity activity) {
         this.navController = Utils.findNavController(activity);
