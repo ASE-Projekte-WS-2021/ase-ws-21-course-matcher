@@ -21,10 +21,13 @@ import com.example.cm.databinding.DialogTextareaBinding;
 
 
 public class EditTextAreaDialog extends Dialog {
-    DialogTextareaBinding binding;
-    OnSaveListener listener;
-    String initialValue, fieldToUpdate;
-    String confirmButtonText;
+    private final DialogTextareaBinding binding;
+    private final OnSaveListener listener;
+    private final int MAX_LINES = 3;
+    private int beforeCursorPosition = 0;
+    private String fieldToUpdate;
+    private String confirmButtonText;
+    private String text;
 
     public EditTextAreaDialog(@NonNull Context context, OnSaveListener listener) {
         super(context);
@@ -55,7 +58,6 @@ public class EditTextAreaDialog extends Dialog {
 
     public EditTextAreaDialog setValueOfField(String value) {
         binding.inputField.setText(value);
-        initialValue = value;
         return this;
     }
 
@@ -109,7 +111,8 @@ public class EditTextAreaDialog extends Dialog {
         binding.inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                text = s.toString();
+                beforeCursorPosition = after;
             }
 
             @Override
@@ -122,7 +125,14 @@ public class EditTextAreaDialog extends Dialog {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (binding.inputField.getText() != null && s.length() > 125) {
+                // Limit text to max lines
+                // Inspired by: https://stackoverflow.com/a/16365996
+                if (binding.inputField.getLineCount() > MAX_LINES) {
+                    binding.inputField.setText(text);
+                    binding.inputField.setSelection(beforeCursorPosition);
+                }
+
+                if (binding.inputField.getText() != null && s.length() > MAX_CHAR_COUNT) {
                     binding.inputField.getText().delete(MAX_CHAR_COUNT, s.length());
                 }
             }
@@ -136,7 +146,7 @@ public class EditTextAreaDialog extends Dialog {
     }
 
     private void onSaveClicked() {
-        if(binding.inputField.getText() == null) {
+        if (binding.inputField.getText() == null) {
             return;
         }
 
