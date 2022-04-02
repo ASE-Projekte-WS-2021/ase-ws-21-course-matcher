@@ -22,17 +22,15 @@ import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.utils.Navigator;
 
 import java.util.List;
-import java.util.Objects;
 
 
-public class InviteMoreFriendsFragment extends Fragment implements AdapterView.OnItemClickListener,
-        InviteFriendsAdapter.OnItemClickListener {
+public class InviteMoreFriendsFragment extends Fragment implements AdapterView.OnItemClickListener, InviteFriendsAdapter.OnItemClickListener {
 
+    private final String meetupId;
+    private final List<String> userIdsAlreadyInMeetup;
     private InviteMoreFriendsViewModel inviteMoreFriendsViewModel;
     private FragmentInviteMoreFriendsBinding binding;
     private InviteFriendsAdapter inviteFriendsListAdapter;
-    private String meetupId;
-    private List<String> userIdsAlreadyInMeetup;
     private Navigator navigator;
     private boolean filtered = false;
 
@@ -44,19 +42,24 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInviteMoreFriendsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-        View root = binding.getRoot();
+
         initUI();
         initViewModel();
         initListener();
-        return root;
+
+        return binding.getRoot();
     }
 
     private void initUI() {
         inviteFriendsListAdapter = new InviteFriendsAdapter(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+
+        if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
+            dividerItemDecoration.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+        }
+
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
-        binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvUserList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(inviteFriendsListAdapter);
     }
@@ -115,7 +118,7 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
 
     private void onClearInputClicked() {
         binding.etUserSearch.setText("");
-        inviteMoreFriendsViewModel.searchUsers("", userIdsAlreadyInMeetup);
+        inviteMoreFriendsViewModel.searchUsers(requireContext().getString(R.string.empty_string), userIdsAlreadyInMeetup);
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
