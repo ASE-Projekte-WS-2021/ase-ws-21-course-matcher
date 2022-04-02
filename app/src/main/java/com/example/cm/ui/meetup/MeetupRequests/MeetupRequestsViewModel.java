@@ -17,25 +17,23 @@ import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MeetupRequestsViewModel extends ViewModel {
 
     private final UserRepository userRepository = new UserRepository();
     private final MutableLiveData<User> currentUser;
-
     private final MeetupRepository meetupRepository = new MeetupRepository();
     private final MeetupRequestRepository meetupRequestRepository;
     private final MutableLiveData<List<MeetupRequest>> requestList;
     private final MutableLiveData<List<String>> userIds = new MutableLiveData<>();
     private final MutableLiveData<List<String>> meetupIds = new MutableLiveData<>();
     private final LiveData<List<Meetup>> meetupLiveData = Transformations.switchMap(meetupIds, meetupRepository::getMeetupsByIds);
-    private final LiveData<List<User>> userLiveData = Transformations.switchMap(userIds,
-            userRepository::getUsersByIds);
+    private final LiveData<List<User>> userLiveData = Transformations.switchMap(userIds, userRepository::getUsersByIds);
 
     public MeetupRequestsViewModel() {
-        currentUser = userRepository.getCurrentUser();
         meetupRequestRepository = new MeetupRequestRepository();
+
+        currentUser = userRepository.getCurrentUser();
         requestList = meetupRequestRepository.getMeetupRequestsForUser();
     }
 
@@ -94,19 +92,28 @@ public class MeetupRequestsViewModel extends ViewModel {
 
         request.setState(Request.RequestState.REQUEST_DECLINED);
         meetupRequestRepository.decline(request);
-        Objects.requireNonNull(requestList.getValue()).remove(request);
+
+        if (requestList.getValue() != null) {
+            requestList.getValue().remove(request);
+        }
     }
 
     public void undoDeclineMeetupRequest(MeetupRequest request, int position) {
         request.setState(Request.RequestState.REQUEST_PENDING);
         meetupRepository.addPending(request.getMeetupId(), request.getReceiverId());
         meetupRequestRepository.undoDecline(request);
-        Objects.requireNonNull(requestList.getValue()).add(position, request);
+
+        if (requestList.getValue() != null) {
+            requestList.getValue().add(position, request);
+        }
     }
 
     public void undoDeleteMeetupRequest(MeetupRequest request, int position, Request.RequestState previousState) {
         request.setState(previousState);
         meetupRequestRepository.addMeetupRequest(request);
-        Objects.requireNonNull(requestList.getValue()).add(position, request);
+
+        if (requestList.getValue() != null) {
+            requestList.getValue().add(position, request);
+        }
     }
 }

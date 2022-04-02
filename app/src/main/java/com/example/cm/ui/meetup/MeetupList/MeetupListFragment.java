@@ -28,13 +28,15 @@ public class MeetupListFragment extends Fragment {
     @SuppressLint("NotifyDataSetChanged")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupListBinding.inflate(inflater, container, false);
+
         initUi();
         initViewModel();
+
         return binding.getRoot();
     }
 
     private void initUi() {
-        GridLayoutManager gridLayout = new GridLayoutManager(getContext(), 2);
+        GridLayoutManager gridLayout = new GridLayoutManager(requireContext(), 2);
         binding.meetupListRecyclerView.setLayoutManager(gridLayout);
         binding.meetupListRecyclerView.setHasFixedSize(true);
     }
@@ -65,6 +67,7 @@ public class MeetupListFragment extends Fragment {
 
     private List<String> getUserIds(List<Meetup> meetups) {
         List<String> ids = new ArrayList<>();
+
         for (Meetup meetup : meetups) {
             if (meetup != null) {
                 List<String> confirmedFriends = meetup.getConfirmedFriends();
