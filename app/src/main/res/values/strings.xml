@@ -146,8 +146,9 @@
     <string name="edit_save">Speichern</string>
     <string name="edit_profile_success_message">Änderungen wurden gespeichert</string>
     <string name="edit_profile_error_message">Ein Fehler ist aufgetreten. Versuche es erneut.</string>
-    <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
-    <string name="dialog_title_field">{field} bearbeiten</string>
+    <string name="edit_profile_error_min_length">%1$s muss mindestens %2$s Zeichen lang sein</string>
+    <string name="edit_profile_bio_char_count">%1$d/%2$d</string>
+    <string name="dialog_title_field">%1$s bearbeiten</string>
     <string name="edit_account_email">Die E-Mail Adresse ist mit deinem RZ-Account verknüpft und kann deshalb nicht nachträglich angepasst werden.</string>
     <string name="edit_account_password">Passwort ändern</string>
     <string name="edit_account_error_password_not_empty">Passwort-Felder dürfen nicht leer sein</string>

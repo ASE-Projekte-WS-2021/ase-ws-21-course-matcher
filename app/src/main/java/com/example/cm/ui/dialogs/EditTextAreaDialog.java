@@ -40,13 +40,15 @@ public class EditTextAreaDialog extends Dialog {
     public void show() {
         super.show();
         binding.inputField.requestFocus();
-        binding.inputField.setSelection(binding.inputField.getText().length());
+
+        if (binding.inputField.getText() != null) {
+            binding.inputField.setSelection(binding.inputField.getText().length());
+        }
     }
 
     public EditTextAreaDialog setFieldToUpdate(String fieldToUpdate) {
         this.fieldToUpdate = fieldToUpdate;
-        String title = getContext().getResources().getString(R.string.dialog_title_field);
-        title = title.replace("{field}", fieldToUpdate);
+        String title = getContext().getString(R.string.dialog_title_field, fieldToUpdate);
         binding.dialogTitle.setText(title);
         return this;
     }
@@ -67,11 +69,21 @@ public class EditTextAreaDialog extends Dialog {
         binding.textInputLayout.setError(error);
     }
 
+    public void disableConfirmButton() {
+        Drawable buttonDrawable = DrawableCompat.wrap(binding.btnSave.getBackground());
+        DrawableCompat.setTint(buttonDrawable, getContext().getResources().getColor(R.color.gray600));
+
+        binding.btnSave.setEnabled(false);
+        binding.btnSave.setText(R.string.confirm_button_loading);
+        binding.btnSave.setBackground(buttonDrawable);
+    }
+
     public void enableConfirmButton() {
-        binding.btnSave.setEnabled(true);
-        binding.btnSave.setText(confirmButtonText);
         Drawable buttonDrawable = DrawableCompat.wrap(binding.btnSave.getBackground());
         DrawableCompat.setTint(buttonDrawable, getContext().getResources().getColor(R.color.orange500));
+
+        binding.btnSave.setEnabled(true);
+        binding.btnSave.setText(confirmButtonText);
         binding.btnSave.setBackground(buttonDrawable);
     }
 
@@ -86,7 +98,8 @@ public class EditTextAreaDialog extends Dialog {
     }
 
     private void initUI() {
-        binding.bioCharacterCount.setText(String.format("%d/%d", 0, MAX_CHAR_COUNT));
+        String charCountString = getContext().getString(R.string.edit_profile_bio_char_count, 0, MAX_CHAR_COUNT);
+        binding.bioCharacterCount.setText(charCountString);
     }
 
     private void initListeners() {
@@ -102,12 +115,14 @@ public class EditTextAreaDialog extends Dialog {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int currCharCount = s.length();
-                binding.bioCharacterCount.setText(String.format("%d/%d", currCharCount, MAX_CHAR_COUNT));
+                String charCountString = getContext().getString(R.string.edit_profile_bio_char_count, 0, currCharCount);
+
+                binding.bioCharacterCount.setText(charCountString);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 125) {
+                if (binding.inputField.getText() != null && s.length() > 125) {
                     binding.inputField.getText().delete(MAX_CHAR_COUNT, s.length());
                 }
             }
@@ -121,10 +136,15 @@ public class EditTextAreaDialog extends Dialog {
     }
 
     private void onSaveClicked() {
+        if(binding.inputField.getText() == null) {
+            return;
+        }
+
         String newValue = binding.inputField.getText().toString();
         if (listener != null) {
             listener.onTextAreaSaved(fieldToUpdate, newValue);
         }
+        disableConfirmButton();
     }
 
     public interface OnSaveListener {
