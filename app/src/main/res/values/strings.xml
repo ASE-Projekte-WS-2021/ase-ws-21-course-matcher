@@ -69,6 +69,7 @@
 
     <string name="searchbar_text_find_friends">Freunde finden…</string>
     <string name="search_button_decription">Suchbutton</string>
+    <string name="empty_string">""</string>
 
     <string name="add_friends">add friends</string>
     <string name="friends_tabs_list">Deine Freunde</string>
@@ -99,7 +100,7 @@
     <string name="meetup_declined_text">kommt leider nicht.</string>
 
     <string name="decline_snackbar_text">Anfrage abgelehnt.</string>
-    <string name="undo_snackbar_text">UNDO</string>
+    <string name="undo_snackbar_text">Rückgängig</string>
 
     <string name="friend_request_text">möchte mit dir befreundet sein.</string>
     <string name="friend_accepted_text">ist jetzt auf deiner Freundesliste.</string>
@@ -229,6 +230,7 @@
     <string name="friend_request_own_accepted">hat angenommen.</string>
     <string name="friend_request_own_answered">hat akzeptiert.</string>
     <string name="friend_request_own_declined">hat abgelehnt.</string>
+    <string name="friend_request_receiver">An: %1$s</string>
 
     <string name="profile_btn_edit">Profil bearbeiten</string>
     <string name="title_profile_other">other profile navigation</string>
@@ -253,7 +255,7 @@
 
     <string name="snackbar_share_location">Dein Standort ist jetzt für deine Freunde sichtbar!</string>
     <string name="snackbar_hide_location">Dein Standort ist nicht länger für deine Freunde sichtbar!</string>
-    <string name="confirm_button_loading">Lädt...</string>
+    <string name="confirm_button_loading">Lädt…</string>
 
     <string name="about_header">Über CourseMatcher</string>
 
