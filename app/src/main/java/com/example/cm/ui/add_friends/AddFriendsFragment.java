@@ -42,8 +42,8 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void initUI() {
-        selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
         dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
         binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -72,14 +72,14 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void onClearInputClicked() {
-        binding.etUserSearch.setText("");
-        addFriendsViewModel.searchUsers("");
+        binding.etUserSearch.setText(requireActivity().getString(R.string.empty_string));
+        addFriendsViewModel.searchUsers(requireActivity().getString(R.string.empty_string));
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
     private void onSearchTextChanged(CharSequence charSequence) {
         String query = charSequence.toString();
-        if (query.length() > 0) {
+        if (!query.isEmpty()) {
             binding.ivClearInput.setVisibility(View.VISIBLE);
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
@@ -138,7 +138,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             binding.loadingCircle.setVisibility(View.GONE);
 
-            if (users == null || users.size() == 0) {
+            if (users == null || users.isEmpty()) {
                 binding.noFriendsWrapper.setVisibility(View.VISIBLE);
                 binding.rvUserList.setVisibility(View.GONE);
                 return;
