@@ -19,7 +19,6 @@ import com.example.cm.ui.adapters.MeetupDetailedFriendListAdapter;
 import com.example.cm.utils.Navigator;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MeetupDetailedFriendsListFragment extends Fragment implements MeetupDetailedFriendListAdapter.OnItemClickListener {
 
@@ -37,9 +36,12 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
 
     private void initUI() {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+
+        if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
+            dividerItemDecoration.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+        }
         binding.meetupDetailedFriendsList.addItemDecoration(dividerItemDecoration);
-        binding.meetupDetailedFriendsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.meetupDetailedFriendsList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.meetupDetailedFriendsList.setHasFixedSize(true);
     }
 
