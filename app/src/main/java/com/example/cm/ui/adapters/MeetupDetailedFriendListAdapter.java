@@ -19,8 +19,7 @@ import com.example.cm.utils.Utils;
 import java.util.List;
 import java.util.Objects;
 
-public class MeetupDetailedFriendListAdapter
-        extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
+public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
 
     private final List<User> friends;
     private final List<String> lateFriends;
