@@ -85,6 +85,7 @@ public class Constants {
     public static final String FIELD_MEETUP_ID = "meetupId";
     public static final String FIELD_ID = "id";
     public static final String FIELD_IS_SHARING_LOCATION = "isSharingLocation";
+    public static final String FIELD_AVAILABILITY = "availability";
 
     // Konfetti
     public static final Long KONFETTI_DURATION = 5L;

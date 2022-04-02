@@ -81,33 +81,34 @@ public class OtherProfileFragment extends Fragment {
             if (currentUser == null) {
                 return;
             }
+
+            String profileImageString = currentUser.getProfileImageString();
+            availability = currentUser.getAvailability();
+
             binding.tvName.setText(currentUser.getDisplayName());
             binding.tvUsername.setText(currentUser.getUsername());
             binding.tvBioDescription.setText(currentUser.getBio());
-            String profileImageString = currentUser.getProfileImageString();
+
             if (profileImageString != null && !profileImageString.isEmpty()) {
-                binding.ivProfileImage.setImageTintMode(null);
                 Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+
+                binding.ivProfileImage.setImageTintMode(null);
                 binding.ivProfileImage.setImageBitmap(img);
             }
 
-            availability = currentUser.getAvailability();
-
-            if (availability != null) {
-                switch (availability) {
-                    case AVAILABLE:
-                        binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_dot_available);
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
-                        break;
-                    case SOON_AVAILABLE:
-                        binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_dot_soon_available);
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
-                        break;
-                    case UNAVAILABLE:
-                        binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_dot_unavailable);
-                        binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
-                        break;
-                }
+            switch (availability) {
+                case AVAILABLE:
+                    binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_dot_available);
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
+                    break;
+                case SOON_AVAILABLE:
+                    binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_dot_soon_available);
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
+                    break;
+                case UNAVAILABLE:
+                    binding.dotAvailabilityIconMenu.setImageResource(R.drawable.ic_dot_unavailable);
+                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+                    break;
             }
 
         });
@@ -159,7 +160,6 @@ public class OtherProfileFragment extends Fragment {
         binding.btnAddRemoveFriend.setText(R.string.profile_btn_edit);
         binding.dotAvailabilityIconMenu.setVisibility(View.VISIBLE);
 
-        //showAvailabilityDot();
         initAvailabilityMenu();
 
     }
@@ -202,29 +202,30 @@ public class OtherProfileFragment extends Fragment {
     }
 
     private void showAvailabilityDot() {
-
-        if (availability != null) {
-            switch (availability) {
-                case AVAILABLE:
-                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
-                    break;
-                case SOON_AVAILABLE:
-                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
-                    break;
-                case UNAVAILABLE:
-                    binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
-                    break;
-            }
+        if (availability == null) {
+            return;
+        }
+        switch (availability) {
+            case AVAILABLE:
+                binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_available);
+                break;
+            case SOON_AVAILABLE:
+                binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_soon_available);
+                break;
+            case UNAVAILABLE:
+                binding.dotAvailabilityIcon.setImageResource(R.drawable.ic_dot_unavailable);
+                break;
         }
     }
 
     @SuppressLint("NonConstantResourceId")
     private void initAvailabilityMenu() {
-        binding.dotAvailabilityIcon.setVisibility(View.GONE);
         popup = new PopupMenu(requireContext(), binding.dotAvailabilityIcon);
-        setForceShowIcon(popup);
         MenuInflater inflater = popup.getMenuInflater();
+
+        binding.dotAvailabilityIcon.setVisibility(View.GONE);
         inflater.inflate(R.menu.menu_availability_state, popup.getMenu());
+        setForceShowIcon(popup);
 
         popup.setOnMenuItemClickListener(item -> {
             switch (item.getItemId()) {
