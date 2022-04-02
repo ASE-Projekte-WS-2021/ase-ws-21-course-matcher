@@ -21,8 +21,6 @@ import com.example.cm.ui.adapters.FriendsListAdapter.OnItemClickListener;
 import com.example.cm.utils.LinearLayoutManagerWrapper;
 import com.example.cm.utils.Navigator;
 
-import java.util.Objects;
-
 public class FriendsListFragment extends Fragment implements OnItemClickListener {
 
     private FriendsViewModel friendsViewModel;
@@ -33,19 +31,22 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFriendsListBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
+
         initUI();
         initListener();
         initViewModel();
+
         return binding.getRoot();
     }
 
     private void initUI() {
-        setHasOptionsMenu(true);
-        friendsListAdapter = new FriendsListAdapter(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        friendsListAdapter = new FriendsListAdapter(this);
+        if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
+            dividerItemDecoration.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+        }
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
-        binding.rvUserList.setLayoutManager(new LinearLayoutManagerWrapper(getContext()));
+        binding.rvUserList.setLayoutManager(new LinearLayoutManagerWrapper(requireContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(friendsListAdapter);
     }
@@ -69,8 +70,8 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     }
 
     private void onClearInputClicked() {
-        binding.etUserSearch.setText("");
-        friendsViewModel.searchUsers("");
+        binding.etUserSearch.setText(requireContext().getString(R.string.empty_string));
+        friendsViewModel.searchUsers(requireContext().getString(R.string.empty_string));
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
@@ -93,7 +94,7 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
 
     private void onSearchTextChanged(CharSequence charSequence) {
         String query = charSequence.toString();
-        if (query.length() > 0) {
+        if (!query.isEmpty()) {
             binding.ivClearInput.setVisibility(View.VISIBLE);
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
