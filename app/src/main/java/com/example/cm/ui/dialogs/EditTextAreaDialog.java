@@ -146,14 +146,12 @@ public class EditTextAreaDialog extends Dialog {
     }
 
     private void onSaveClicked() {
-        if (binding.inputField.getText() == null) {
+        if (binding.inputField.getText() == null || listener == null) {
             return;
         }
 
         String newValue = binding.inputField.getText().toString();
-        if (listener != null) {
-            listener.onTextAreaSaved(fieldToUpdate, newValue);
-        }
+        listener.onTextAreaSaved(fieldToUpdate, newValue);
         disableConfirmButton();
     }
 
