@@ -1,5 +1,7 @@
 package com.example.cm.ui.meetup.MeetupList;
 
+import static com.example.cm.Constants.MEETUP_LIST_COLUMN_COUNT;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,7 +38,7 @@ public class MeetupListFragment extends Fragment {
     }
 
     private void initUi() {
-        GridLayoutManager gridLayout = new GridLayoutManager(requireContext(), 2);
+        GridLayoutManager gridLayout = new GridLayoutManager(requireContext(), MEETUP_LIST_COLUMN_COUNT);
         binding.meetupListRecyclerView.setLayoutManager(gridLayout);
         binding.meetupListRecyclerView.setHasFixedSize(true);
     }

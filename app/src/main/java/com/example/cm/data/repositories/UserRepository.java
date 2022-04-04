@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import timber.log.Timber;
-
 public class UserRepository extends Repository {
 
     private static UserRepository instance;

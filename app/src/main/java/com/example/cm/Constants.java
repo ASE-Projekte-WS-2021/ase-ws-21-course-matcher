@@ -116,4 +116,5 @@ public class Constants {
     public static final int OFFSET_TOP = 0;
     public static final int OFFSET_RIGHT = 0;
     public static final int OFFSET_BOTTOM = 0;
+    public static final int MEETUP_LIST_COLUMN_COUNT = 2;
 }
