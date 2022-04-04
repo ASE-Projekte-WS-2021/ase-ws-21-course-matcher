@@ -23,11 +23,8 @@ import com.example.cm.databinding.DialogTextareaBinding;
 public class EditTextAreaDialog extends Dialog {
     private final DialogTextareaBinding binding;
     private final OnSaveListener listener;
-    private final int MAX_LINES = 3;
-    private int beforeCursorPosition = 0;
     private String fieldToUpdate;
     private String confirmButtonText;
-    private String text;
 
     public EditTextAreaDialog(@NonNull Context context, OnSaveListener listener) {
         super(context);
@@ -111,8 +108,6 @@ public class EditTextAreaDialog extends Dialog {
         binding.inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                text = s.toString();
-                beforeCursorPosition = after;
             }
 
             @Override
@@ -124,12 +119,17 @@ public class EditTextAreaDialog extends Dialog {
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Limit text to contain only 3 new line symbols
-                if (binding.inputField.getText() != null && countLines(s.toString()) > MAX_LINES) {
+                if (binding.inputField.getText() == null) {
+                    return;
+                }
+
+                // Prevent entering new line characters
+                if (!s.toString().isEmpty() && s.toString().substring(s.length() - 1).equals("\n")) {
                     binding.inputField.getText().delete(s.length() - 1, s.length());
                 }
 
-                if (binding.inputField.getText() != null && s.length() > MAX_CHAR_COUNT) {
+                // Limit bio length to MAX_CHAR_COUNT
+                if (s.length() > MAX_CHAR_COUNT) {
                     binding.inputField.getText().delete(MAX_CHAR_COUNT, s.length());
                 }
             }
@@ -150,24 +150,6 @@ public class EditTextAreaDialog extends Dialog {
         String newValue = binding.inputField.getText().toString();
         listener.onTextAreaSaved(fieldToUpdate, newValue);
         disableConfirmButton();
-    }
-
-    /**
-     * Counts the number of new line symbols in the given string
-     *
-     * @param str String to count new line symbols in
-     * @return Number of new line symbols
-     */
-    private int countLines(String str) {
-        if (str == null || str.isEmpty()) {
-            return 0;
-        }
-        int lines = 0;
-        int pos = 0;
-        while ((pos = str.indexOf("\n", pos) + 1) != 0) {
-            lines++;
-        }
-        return lines;
     }
 
     public interface OnSaveListener {
