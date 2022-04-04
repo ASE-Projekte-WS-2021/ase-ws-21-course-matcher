@@ -23,11 +23,8 @@ import com.example.cm.databinding.DialogTextareaBinding;
 public class EditTextAreaDialog extends Dialog {
     private final DialogTextareaBinding binding;
     private final OnSaveListener listener;
-    private final int MAX_LINES = 3;
-    private int beforeCursorPosition = 0;
     private String fieldToUpdate;
     private String confirmButtonText;
-    private String text;
 
     public EditTextAreaDialog(@NonNull Context context, OnSaveListener listener) {
         super(context);
@@ -111,28 +108,28 @@ public class EditTextAreaDialog extends Dialog {
         binding.inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                text = s.toString();
-                beforeCursorPosition = after;
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int currCharCount = s.length();
                 String charCountString = getContext().getString(R.string.edit_profile_bio_char_count, currCharCount, MAX_CHAR_COUNT);
-
                 binding.bioCharacterCount.setText(charCountString);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Limit text to max lines
-                // Inspired by: https://stackoverflow.com/a/16365996
-                if (binding.inputField.getLineCount() > MAX_LINES) {
-                    binding.inputField.setText(text);
-                    binding.inputField.setSelection(beforeCursorPosition);
+                if (binding.inputField.getText() == null) {
+                    return;
                 }
 
-                if (binding.inputField.getText() != null && s.length() > MAX_CHAR_COUNT) {
+                // Prevent entering new line characters
+                if (!s.toString().isEmpty() && s.toString().substring(s.length() - 1).equals("\n")) {
+                    binding.inputField.getText().delete(s.length() - 1, s.length());
+                }
+
+                // Limit bio length to MAX_CHAR_COUNT
+                if (s.length() > MAX_CHAR_COUNT) {
                     binding.inputField.getText().delete(MAX_CHAR_COUNT, s.length());
                 }
             }
