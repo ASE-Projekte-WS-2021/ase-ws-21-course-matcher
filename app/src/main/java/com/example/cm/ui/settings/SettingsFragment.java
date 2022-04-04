@@ -97,7 +97,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void initDeleteAccountDialog() {
-        deleteAccountDialog = new EditTextDialog(requireActivity(), (fieldToUpdate, updatedValue) -> settingsViewModel.reauthenticate(requireContext(), updatedValue, new UserListener<Boolean>() {
+        deleteAccountDialog = new EditTextDialog(requireActivity(), (fieldToUpdate, updatedValue) -> settingsViewModel.reAuthenticate(requireContext(), updatedValue, new UserListener<Boolean>() {
             @Override
             public void onUserSuccess(Boolean aBoolean) {
                 settingsViewModel.deleteAccount(new UserListener<Boolean>() {

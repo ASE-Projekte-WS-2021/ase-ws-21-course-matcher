@@ -7,23 +7,22 @@ import com.example.cm.data.models.Meetup;
 import com.example.cm.data.repositories.MeetupRepository;
 import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MeetupDetailedViewModel extends ViewModel {
 
-    private String meetupId, currentUserId;
-    private MutableLiveData<Meetup> meetup;
-    private UserRepository userRepository;
-    private MeetupRepository meetupRepository;
-    private MeetupRequestRepository meetupRequestRepository;
+    private final String meetupId;
+    private final String currentUserId;
+    private final MutableLiveData<Meetup> meetup;
+    private final UserRepository userRepository;
+    private final MeetupRepository meetupRepository;
+    private final MeetupRequestRepository meetupRequestRepository;
 
     public MeetupDetailedViewModel(String meetupId) {
         userRepository = new UserRepository();
         meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
+
         meetup = meetupRepository.getMeetup(meetupId);
         currentUserId = userRepository.getCurrentAuthUserId();
         this.meetupId = meetupId;

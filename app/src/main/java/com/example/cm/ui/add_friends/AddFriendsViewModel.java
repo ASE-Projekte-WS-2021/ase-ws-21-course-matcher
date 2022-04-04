@@ -36,6 +36,10 @@ public class AddFriendsViewModel extends ViewModel {
 
     public void setSearchQuery(String searchQuery) {
         query = searchQuery;
+        sentFriendRequestsPending = requestRepository
+                .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
+        receivedFriendRequestsPending = requestRepository
+                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -43,19 +47,20 @@ public class AddFriendsViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<FriendRequest>> getSentFriendRequestsPending() {
-        sentFriendRequestsPending = requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
+        sentFriendRequestsPending = requestRepository
+                .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
         return sentFriendRequestsPending;
     }
 
     public MutableLiveData<List<FriendRequest>> getReceivedFriendRequestsPending() {
-        receivedFriendRequestsPending = requestRepository.getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
+        receivedFriendRequestsPending = requestRepository
+                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
         return receivedFriendRequestsPending;
     }
 
     public void setOnRequestSentListener(OnRequestSentListener listener) {
         this.listener = listener;
     }
-
 
     public List<User> getFilteredUsers() {
         if (users.getValue() == null) {
@@ -122,7 +127,8 @@ public class AddFriendsViewModel extends ViewModel {
      * checks whether current user sent an friend request to user with given id
      *
      * @param requests   list of friend requests
-     * @param receiverId id of the friend to check if has received friend request of current
+     * @param receiverId id of the friend to check if has received friend request of
+     *                   current
      * @return has current user sent an friend request to user with given id
      */
 

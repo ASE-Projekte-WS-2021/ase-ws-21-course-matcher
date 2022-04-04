@@ -44,11 +44,11 @@ public class CreateMeetupViewModel extends ViewModel implements Serializable {
 
     public CreateMeetupViewModel() {
         userRepository = new UserRepository();
-        currentUser = userRepository.getCurrentUser();
-        users = userRepository.getFriends();
-
         meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
+
+        currentUser = userRepository.getCurrentUser();
+        users = userRepository.getFriends();
     }
 
     public MutableLiveData<User> getCurrentUser() {

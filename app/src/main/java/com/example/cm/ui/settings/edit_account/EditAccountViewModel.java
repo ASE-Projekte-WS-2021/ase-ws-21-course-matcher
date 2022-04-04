@@ -5,23 +5,24 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.listener.Callback;
 import com.example.cm.data.models.Status;
 import com.example.cm.data.models.StatusFlag;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.AuthRepository;
-import com.example.cm.data.listener.Callback;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.utils.InputValidator;
 
 public class EditAccountViewModel extends ViewModel implements Callback {
+    private final UserRepository userRepository;
+    private final AuthRepository authRepository;
     public MutableLiveData<Status> status = new MutableLiveData<>();
-    private UserRepository userRepository;
-    private AuthRepository authRepository;
     private MutableLiveData<User> user;
 
     public EditAccountViewModel() {
         userRepository = new UserRepository();
         authRepository = new AuthRepository();
+
         user = userRepository.getCurrentUser();
     }
 

@@ -1,5 +1,12 @@
 package com.example.cm.ui.settings.edit_profile;
 
+import static com.example.cm.Constants.FIELD_BIO;
+import static com.example.cm.Constants.FIELD_DISPLAY_NAME;
+import static com.example.cm.Constants.FIELD_USERNAME;
+import static com.example.cm.Constants.LABEL_BIO;
+import static com.example.cm.Constants.LABEL_DISPLAY_NAME;
+import static com.example.cm.Constants.LABEL_USERNAME;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -55,8 +62,8 @@ public class EditProfileViewModel extends ViewModel implements Callback {
         }
     }
 
-    public void updateField(String field, String value) {
-        if (value.trim().isEmpty() && !field.equals("Bio")) {
+    public void updateField(Context context, String field, String value) {
+        if (value.trim().isEmpty() && !field.equals(context.getString(R.string.input_label_bio))) {
             status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_field_not_empty));
             return;
         }
@@ -64,22 +71,22 @@ public class EditProfileViewModel extends ViewModel implements Callback {
         String trimmedValue = value.trim();
 
         switch (field) {
-            case "Nutzername":
+            case LABEL_USERNAME:
                 if (!InputValidator.hasMinLength(trimmedValue, Constants.MIN_USERNAME_LENGTH)) {
                     status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_username_min_length));
                     break;
                 }
-                userRepository.updateField("username", trimmedValue, this);
+                userRepository.updateField(FIELD_USERNAME, trimmedValue, this);
                 break;
-            case "Vorname":
+            case LABEL_DISPLAY_NAME:
                 if (!InputValidator.hasMinLength(trimmedValue, Constants.MIN_NAME_LENGTH)) {
                     status.postValue(new Status(StatusFlag.ERROR, R.string.edit_profile_display_name_min_length));
                     break;
                 }
-                userRepository.updateField("displayName", trimmedValue, this);
+                userRepository.updateField(FIELD_DISPLAY_NAME, trimmedValue, this);
                 break;
-            case "Bio":
-                userRepository.updateField("bio", trimmedValue, this);
+            case LABEL_BIO:
+                userRepository.updateField(FIELD_BIO, trimmedValue, this);
                 break;
             default:
                 break;

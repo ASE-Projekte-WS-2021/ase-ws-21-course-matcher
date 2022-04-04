@@ -23,7 +23,7 @@ public class InviteMoreFriendsViewModel extends ViewModel {
     private final MeetupRequestRepository meetupRequestRepository;
     public MutableLiveData<List<User>> users = new MutableLiveData<>();
     public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
-    public MutableLiveData<Meetup> meetup = new MutableLiveData<>();
+    public MutableLiveData<Meetup> meetup;
 
     public InviteMoreFriendsViewModel(String meetupId) {
         userRepository = new UserRepository();
@@ -63,13 +63,16 @@ public class InviteMoreFriendsViewModel extends ViewModel {
         if (selectedUsers.getValue() != null && currentUser.getValue() != null) {
             Meetup mtp = meetup.getValue();
             for (String invitedFriendId : selectedUsers.getValue()) {
-                meetupRepository.addInvited(mtp.getId(), invitedFriendId);
-                MeetupRequest request = new MeetupRequest(
-                        mtp.getId(),
-                        userRepository.getFirebaseUser().getUid(),
-                        invitedFriendId,
-                        MEETUP_REQUEST);
-                meetupRequestRepository.addMeetupRequest(request);
+                if (mtp != null) {
+                    meetupRepository.addInvited(mtp.getId(), invitedFriendId);
+                    MeetupRequest request = new MeetupRequest(
+                            mtp.getId(),
+                            userRepository.getFirebaseUser().getUid(),
+                            invitedFriendId,
+                            MEETUP_REQUEST);
+                    meetupRequestRepository.addMeetupRequest(request);
+                }
+
             }
             selectedUsers.getValue().clear();
         }

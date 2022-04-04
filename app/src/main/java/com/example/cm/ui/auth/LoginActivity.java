@@ -8,16 +8,17 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cm.Constants;
 import com.example.cm.MainActivity;
 import com.example.cm.R;
+import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.databinding.ActivityLoginBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements AuthRepository.LoginCallback {
 
     private AuthViewModel authViewModel;
-    private Button loginBtn;
     private ActivityLoginBinding binding;
 
     @Override
@@ -26,11 +27,7 @@ public class LoginActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-
-        setContentView(R.layout.activity_login);
-        loginBtn = findViewById(R.id.loginLoginBtn);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
-
         setContentView(binding.getRoot());
 
         initViewModel();
@@ -42,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(LoginActivity.this).get(AuthViewModel.class);
         authViewModel.getErrorLiveData().observe(this, errorMsg -> {
             Snackbar.make(findViewById(R.id.loginLayout), errorMsg, Snackbar.LENGTH_LONG).show();
-            loginBtn.setEnabled(true);
+            binding.loginLoginBtn.setEnabled(true);
         });
     }
 
@@ -57,8 +54,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        String email = binding.loginEmailEditText.inputField.getText().toString();
-        String password = binding.loginPasswordEditText.inputField.getText().toString();
+        if(binding.loginEmailEditText.inputField.getText() == null || binding.loginPasswordEditText.inputField.getText() == null) {
+            return;
+        }
+
+        String email = binding.loginEmailEditText.inputField.getText().toString().trim();
+        String password = binding.loginPasswordEditText.inputField.getText().toString().trim();
 
         // Reset error fields
         binding.loginEmailEditText.textInputLayout.setErrorEnabled(false);
@@ -74,21 +75,29 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        if (email.equals(Constants.TEMP_EMAIL)) {
+            binding.loginEmailEditText.textInputLayout.setError(getString(R.string.loginEmailUnexpected));
+            return;
+        }
+
         if (password.isEmpty()) {
             binding.loginPasswordEditText.textInputLayout.setError(getString(R.string.loginPasswordNeeded));
             return;
         }
 
-        authViewModel.login(email, password, null);
-
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        authViewModel.login(email, password, this);
     }
 
     public void goToRegister(View view) {
         Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onLoginSuccess(String email) {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }

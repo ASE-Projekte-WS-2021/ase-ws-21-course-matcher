@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,28 +25,14 @@ import java.util.Objects;
 
 public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequestListAdapter.MeetupRequestViewHolder> {
 
+    private final OnMeetupRequestListener listener;
     private ViewGroup parent;
     private List<MeetupRequest> mRequests;
     private List<User> users;
     private List<Meetup> meetups;
-    private final OnMeetupRequestListener listener;
 
     public MeetupRequestListAdapter(OnMeetupRequestListener listener) {
         this.listener = listener;
-    }
-
-    public void setRequests(List<MeetupRequest> newRequests, List<User> users, List<Meetup> meetups) {
-        if (mRequests == null) {
-            mRequests = newRequests;
-            this.users = users;
-            this.meetups = meetups;
-            notifyItemRangeInserted(0, newRequests.size());
-            return;
-        }
-
-        DiffUtil.DiffResult result = calculateDiffMeetupRequests(mRequests, newRequests);
-        mRequests = newRequests;
-        result.dispatchUpdatesTo(this);
     }
 
     public static DiffUtil.DiffResult calculateDiffMeetupRequests(List<MeetupRequest> oldRequests,
@@ -78,6 +65,20 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         });
     }
 
+    public void setRequests(List<MeetupRequest> newRequests, List<User> users, List<Meetup> meetups) {
+        if (mRequests == null) {
+            mRequests = newRequests;
+            this.users = users;
+            this.meetups = meetups;
+            notifyItemRangeInserted(0, newRequests.size());
+            return;
+        }
+
+        DiffUtil.DiffResult result = calculateDiffMeetupRequests(mRequests, newRequests);
+        mRequests = newRequests;
+        result.dispatchUpdatesTo(this);
+    }
+
     public void deleteItem(int position) {
         MeetupRequest request = mRequests.get(position);
         Request.RequestState previousState = Objects.requireNonNull(request).getState();
@@ -97,11 +98,9 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     @NonNull
     @Override
-    public MeetupRequestListAdapter.MeetupRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent,
-                                                                               int viewType) {
+    public MeetupRequestListAdapter.MeetupRequestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         this.parent = parent;
-        ItemMeetupRequestBinding binding = ItemMeetupRequestBinding.inflate(LayoutInflater.from(parent.getContext()),
-                parent, false);
+        ItemMeetupRequestBinding binding = ItemMeetupRequestBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new MeetupRequestListAdapter.MeetupRequestViewHolder(binding);
     }
 
@@ -138,35 +137,36 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
         Meetup meetup = getMeetup(request.getMeetupId());
 
-        if (meetup != null) {
-            String location = meetup.getLocationName();
+        if (meetup == null) {
+            return;
+        }
+        String location = meetup.getLocationName();
 
-            holder.getTvLocation().setText(location);
+        holder.getTvLocation().setText(location);
 
-            switch (meetup.getPhase()) {
-                case MEETUP_UPCOMING:
-                    holder.getTvMeetupTime().setText(meetup.getFormattedTime());
-                    holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.orange400));
-                    holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_upcoming));
-                    break;
-                case MEETUP_ACTIVE:
-                    holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, meetup.getFormattedTime()));
-                    holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.orange600));
-                    holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_active));
-                    break;
-                case MEETUP_ENDED:
-                    holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
-                    holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.gray500));
-                    holder.getTvMeetupTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_ended));
+        switch (meetup.getPhase()) {
+            case MEETUP_UPCOMING:
+                holder.getTvMeetupTime().setText(meetup.getFormattedTime());
+                holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.orange400));
+                holder.getTvMeetupTime().setBackground(AppCompatResources.getDrawable(context, R.drawable.label_rounded_upcoming));
+                break;
+            case MEETUP_ACTIVE:
+                holder.getTvMeetupTime().setText(context.getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.orange600));
+                holder.getTvMeetupTime().setBackground(AppCompatResources.getDrawable(context, R.drawable.label_rounded_active));
+                break;
+            case MEETUP_ENDED:
+                holder.getTvMeetupTime().setText(R.string.meetup_ended_text);
+                holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.gray500));
+                holder.getTvMeetupTime().setBackground(AppCompatResources.getDrawable(context, R.drawable.label_rounded_ended));
 
-                    int color = context.getResources().getColor(R.color.outgreyed);
-                    holder.getTvLocation().setTextColor(color);
-                    holder.getTvSender().setTextColor(color);
-                    holder.getTvDescription().setTextColor(color);
-                    holder.getBtnAccept().setVisibility(View.GONE);
-                    holder.getBtnDecline().setVisibility(View.GONE);
-                    break;
-            }
+                int color = context.getResources().getColor(R.color.outgreyed);
+                holder.getTvLocation().setTextColor(color);
+                holder.getTvSender().setTextColor(color);
+                holder.getTvDescription().setTextColor(color);
+                holder.getBtnAccept().setVisibility(View.GONE);
+                holder.getBtnDecline().setVisibility(View.GONE);
+                break;
         }
     }
 
@@ -196,22 +196,6 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         return mRequests.size();
     }
 
-    public interface OnMeetupRequestListener {
-        void onItemClicked(String id);
-
-        void onUsernameClicked(String id);
-
-        void onItemDeleted(MeetupRequest request);
-
-        void onAccept(MeetupRequest request);
-
-        void onDecline(MeetupRequest request);
-
-        void onUndoDecline(MeetupRequest request, int position);
-
-        void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState);
-    }
-
     /**
      * Fix for the bug in the RecyclerView that caused it to show incorrect data
      * (e.g. image)
@@ -226,6 +210,22 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public interface OnMeetupRequestListener {
+        void onItemClicked(String id);
+
+        void onUsernameClicked(String id);
+
+        void onItemDeleted(MeetupRequest request);
+
+        void onAccept(MeetupRequest request);
+
+        void onDecline(MeetupRequest request);
+
+        void onUndoDecline(MeetupRequest request, int position);
+
+        void onUndoDelete(MeetupRequest request, int position, Request.RequestState previousState);
     }
 
     public class MeetupRequestViewHolder extends RecyclerView.ViewHolder {

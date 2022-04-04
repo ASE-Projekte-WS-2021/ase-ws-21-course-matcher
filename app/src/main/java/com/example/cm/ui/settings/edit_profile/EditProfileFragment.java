@@ -49,6 +49,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEditProfileBinding.inflate(inflater, container, false);
+
         initPermissionRequest();
         initImagePicker();
         initUI();
@@ -136,26 +137,40 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
 
         binding.inputUsername.textInputLayout.setHint(R.string.input_label_username);
         binding.inputUsername.inputField.setFocusable(false);
-        binding.inputUsername.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
+        binding.inputUsername.inputField.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME)});
 
         binding.inputDisplayName.textInputLayout.setHint(R.string.input_label_display_name);
         binding.inputDisplayName.inputField.setFocusable(false);
-        binding.inputDisplayName.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
+        binding.inputDisplayName.inputField.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME)});
 
         binding.inputBio.textInputLayout.setHint(getString(R.string.input_label_bio));
         binding.inputBio.inputField.setFocusable(false);
     }
 
     private void initListeners() {
+        boolean isUsernameNull = binding.inputUsername.inputField.getText() == null;
+        boolean isDisplayNameNull = binding.inputDisplayName.inputField.getText() == null;
+        boolean isBioNull = binding.inputBio.inputField.getText() == null;
+
         navigator = new Navigator(requireActivity());
         binding.actionBar.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.inputUsername.inputField.setOnClickListener(v -> {
+            if (isUsernameNull) {
+                return;
+            }
             openDialog(FieldType.TEXT_INPUT.toString(), getString(R.string.input_label_username), binding.inputUsername.inputField.getText().toString());
         });
         binding.inputDisplayName.inputField.setOnClickListener(v -> {
+            if (isDisplayNameNull) {
+                return;
+            }
             openDialog(FieldType.TEXT_INPUT.toString(), getString(R.string.input_label_display_name), binding.inputDisplayName.inputField.getText().toString());
         });
         binding.inputBio.inputField.setOnClickListener(v -> {
+            if (isBioNull) {
+                return;
+
+            }
             openDialog(FieldType.TEXT_AREA.toString(), getString(R.string.input_label_bio), binding.inputBio.inputField.getText().toString());
         });
         binding.editProfileImageBtn.setOnClickListener(v -> {
@@ -170,8 +185,8 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
         } else {
             dialog = new EditTextDialog(requireContext(), this);
             ((EditTextDialog) dialog).setFieldToUpdate(fieldToUpdate).setValueOfField(valueToEdit).show();
-            if (fieldToUpdate.equals(getContext().getString(R.string.input_label_username))) {
-                editProfileViewModel.getUsernames((UserRepository.UsernamesRetrievedCallback)dialog);
+            if (fieldToUpdate.equals(requireContext().getString(R.string.input_label_username))) {
+                editProfileViewModel.getUsernames((UserRepository.UsernamesRetrievedCallback) dialog);
             }
         }
     }
@@ -188,7 +203,7 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
 
     @Override
     public void onTextAreaSaved(String fieldToUpdate, String updatedValue) {
-        editProfileViewModel.updateField(fieldToUpdate, updatedValue);
+        editProfileViewModel.updateField(requireContext(), fieldToUpdate, updatedValue);
     }
 
     @Override
@@ -199,6 +214,6 @@ public class EditProfileFragment extends Fragment implements EditTextDialog.OnSa
 
     @Override
     public void onTextInputSaved(String fieldToUpdate, String updatedValue) {
-        editProfileViewModel.updateField(fieldToUpdate, updatedValue);
+        editProfileViewModel.updateField(requireContext(), fieldToUpdate, updatedValue);
     }
 }

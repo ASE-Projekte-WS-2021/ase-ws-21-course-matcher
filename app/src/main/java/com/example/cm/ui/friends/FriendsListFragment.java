@@ -38,19 +38,24 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFriendsListBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
+
         initUI();
         initListener();
         initViewModel();
+
         return binding.getRoot();
     }
 
     private void initUI() {
-        setHasOptionsMenu(true);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
         friendsListAdapter = new FriendsListAdapter(this);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
+            dividerItemDecoration
+                    .setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+        }
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
-        binding.rvUserList.setLayoutManager(new LinearLayoutManagerWrapper(getContext()));
+        binding.rvUserList.setLayoutManager(new LinearLayoutManagerWrapper(requireContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(friendsListAdapter);
     }
@@ -77,7 +82,6 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
         binding.etUserSearch.setText("");
         binding.ivClearInput.setVisibility(View.GONE);
     }
-
 
     private void initViewModel() {
         friendsViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
@@ -144,11 +148,10 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
         navigator.getNavController().navigate(R.id.fromFriendsToProfile, bundle);
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-        if(friendsViewModel != null) {
+        if (friendsViewModel != null) {
             observeFriends();
         }
     }

@@ -43,6 +43,7 @@ public class MeetupInviteSuccessFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupInviteSuccessBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
+
         initListener();
 
         return binding.getRoot();
@@ -65,6 +66,7 @@ public class MeetupInviteSuccessFragment extends Fragment {
                 .sizes(sizes)
                 .position(KONFETTI_MIN_POSITION, KONFETTI_MIN_POSITION, KONFETTI_MAX_POSITION, KONFETTI_MIN_POSITION)
                 .build();
+
         binding.konfettiView.start(party);
     }
 

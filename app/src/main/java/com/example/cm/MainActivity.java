@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         super.onCreate(savedInstanceState);
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -60,21 +62,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setProfileImage(User user) {
-        if (user.getProfileImageString() != null) {
-            Bitmap img = Utils.convertBaseStringToBitmap(user.getProfileImageString());
-            Glide.with(this).load(img).placeholder(R.drawable.ic_profile).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
-                @Override
-                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                    binding.navView.setItemIconTintList(null);
-                    binding.navView.getMenu().findItem(R.id.navigation_profile).setIcon(resource);
-                }
-
-                @Override
-                public void onLoadCleared(@Nullable Drawable placeholder) {
-
-                }
-            });
+        if (user.getProfileImageString() == null) {
+            return;
         }
+
+        Bitmap img = Utils.convertBaseStringToBitmap(user.getProfileImageString());
+        Glide.with(this).load(img).placeholder(R.drawable.ic_profile).transform(new CircleCrop()).into(new CustomTarget<Drawable>() {
+            @Override
+            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                binding.navView.setItemIconTintList(null);
+                binding.navView.getMenu().findItem(R.id.navigation_profile).setIcon(resource);
+            }
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) {
+
+            }
+        });
     }
 
     private void setupBottomNavigationBar() {

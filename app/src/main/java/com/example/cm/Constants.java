@@ -17,21 +17,12 @@ public class Constants {
     public static final String TEMP_EMAIL = "course.matcher@temp.cm";
     public static final String TEMP_PASSWORD = "temporaryUser";
     public static final String ALLOWED_CHARS_FOR_USERNAME = "qwertzuiopasdfghjklyxcvbnm0123456789_-.";
-
-    public static final String FIREBASE_STORAGE_FOLDER_PROFILE_IMAGES = "profile_images/";
-    public static final String FIREBASE_STORAGE_FOLDER_MEETUP_IMAGES = "meetup_images/";
-    public static final String FIREBASE_STORAGE_TITLE_PROFILE_IMAGES = "Profile Image";
-    public static final String FIREBASE_STORAGE_TITLE_MEETUP_IMAGES = "Meetup Image";
-    public static final String IMAGE_EXTENSION_JPG = ".jpg";
-    public static final String IMAGE_EXTENSION_PNG = ".png";
     public static final int QUALITY_PROFILE_IMG = 80;
     public static final int QUALITY_MEETUP_IMG = 100;
-    public static final int PROFILE_IMAGE_MAX_WIDTH = 800;
     public static final String KEY_IS_OWN_USER = "keyIsOwnUser";
     public static final int MIN_PASSWORD_LENGTH = 6;
     public static final int TRASH_ICON_MARGIN = 15;
     public static final int TRASH_ICON_SIZE = 175;
-    public static final int HALVING_FACTOR = 2;
     public static final LatLng DEFAULT_LOCATION = new LatLng(48.992162698, 12.090332972);
     public static final int MARKER_PADDING = 25;
     public static final float DEFAULT_MAP_ZOOM = 10f;
@@ -56,6 +47,8 @@ public class Constants {
     // Shared Preferances Keys
     public static final String PREFS_SETTINGS_KEY = "settings";
     public static final String PREFS_SHARE_LOCATION_KEY = "shareLocation";
+    public static final String PREFS_ONBOARDING_KEY = "onBoarding";
+    public static final String PREFS_FIRST_TIME_KEY = "firstTime";
 
     // Tabbar
     public static final float PENDING_HEADER_WEIGHT = 0.7f;
@@ -70,7 +63,8 @@ public class Constants {
 
     // Firebase errors
     public static String WEAK_PASSWORD = "Dein Passwort muss mindestens 6 Zeichen lang sein.";
-    public static String INVALID_CREDENTIALS = "Die Email-Adresse und das Passwort stimmen nicht überein.";
+    public static String INVALID_CREDENTIALS = "Keine valide Email-Adresse.";
+    public static String NO_USER = "Kein User mit diesen Anmeldedaten vorhanden.";
     public static String USER_COLLISION = "Es existiert bereits ein User mit dieser Email-Adresse.";
     public static final long MAX_REGISTRATION_TIME = 240000;
     public static final Throwable UNEXPECTED_USER = new Throwable("This user is not expected here.");
@@ -94,6 +88,16 @@ public class Constants {
     public static final String FIELD_MEETUP_AT = "meetupAt";
     public static final String FIELD_MEETUP_ID = "meetupId";
     public static final String FIELD_ID = "id";
+    public static final String FIELD_IS_SHARING_LOCATION = "isSharingLocation";
+    public static final String FIELD_AVAILABILITY = "availability";
+    public static final String FIELD_USERNAME = "username";
+    public static final String FIELD_DISPLAY_NAME ="displayName";
+    public static final String FIELD_BIO = "bio";
+
+    // Input labels
+    public static final String LABEL_USERNAME = "Nutzername";
+    public static final String LABEL_DISPLAY_NAME = "Anzeigename";
+    public static final String LABEL_BIO = "Bio";
 
     // Konfetti
     public static final Long KONFETTI_DURATION = 5L;
@@ -109,8 +113,10 @@ public class Constants {
     public static final double KONFETTI_MIN_POSITION = 0.0;
     public static final double KONFETTI_MAX_POSITION = 1.0;
 
-    public enum ImageType {
-        PROFILE_IMAGE,
-        MEETUP_IMAGE
-    }
+    // Meetup Cards
+    public static final int OFFSET_LEFT = -3;
+    public static final int OFFSET_TOP = 0;
+    public static final int OFFSET_RIGHT = 0;
+    public static final int OFFSET_BOTTOM = 0;
+    public static final int MEETUP_LIST_COLUMN_COUNT = 2;
 }

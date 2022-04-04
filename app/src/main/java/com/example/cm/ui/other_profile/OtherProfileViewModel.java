@@ -1,5 +1,7 @@
 package com.example.cm.ui.other_profile;
 
+import static com.example.cm.Constants.FIELD_AVAILABILITY;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -10,8 +12,6 @@ import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
-
-import java.util.Objects;
 
 
 public class OtherProfileViewModel extends ViewModel {
@@ -37,14 +37,12 @@ public class OtherProfileViewModel extends ViewModel {
         return userRepository.isUserBefriended(friendId);
     }
 
-
-    // TODO Verknüpfen
     public MutableLiveData<Boolean> isFriendRequestPending(String userIdToCheck) {
         return friendRequestRepository.isFriendRequestPendingFor(userIdToCheck);
     }
 
     public void sendFriendRequestTo(String userIdToAdd) {
-        if (!isFriendRequestPending(userIdToAdd).getValue()) {
+        if (Boolean.FALSE.equals(isFriendRequestPending(userIdToAdd).getValue())) {
             FriendRequest friendRequest = new FriendRequest(
                     userRepository.getCurrentAuthUserId(),
                     userIdToAdd
@@ -59,7 +57,7 @@ public class OtherProfileViewModel extends ViewModel {
 
 
     public void updateAvailability(Availability availabilityState, UserListener<Availability> listener) {
-        userRepository.updateField("availability", availabilityState, new Callback() {
+        userRepository.updateField(FIELD_AVAILABILITY, availabilityState, new Callback() {
             @Override
             public void onSuccess(Object object) {
                 listener.onUserSuccess(availabilityState);

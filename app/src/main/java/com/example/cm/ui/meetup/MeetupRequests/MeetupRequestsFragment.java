@@ -23,8 +23,7 @@ import com.example.cm.utils.Navigator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MeetupRequestsFragment extends Fragment implements
-        MeetupRequestListAdapter.OnMeetupRequestListener {
+public class MeetupRequestsFragment extends Fragment implements MeetupRequestListAdapter.OnMeetupRequestListener {
 
     private MeetupRequestsViewModel requestsViewModel;
     private MeetupRequestListAdapter requestsListAdapter;
@@ -35,22 +34,24 @@ public class MeetupRequestsFragment extends Fragment implements
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupRequestsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
+
         initAdapter();
         initViewModel();
+
         return binding.getRoot();
     }
 
     private void initAdapter() {
         requestsListAdapter = new MeetupRequestListAdapter(this);
         binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
-        binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.notificationsRecyclerView.setHasFixedSize(true);
     }
 
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(MeetupRequestsViewModel.class);
         requestsViewModel.getMeetupRequests().observe(getViewLifecycleOwner(), requests -> {
-            if (requests.isEmpty()){
+            if (requests.isEmpty()) {
                 binding.loadingCircle.setVisibility(View.GONE);
                 binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
             }
@@ -60,7 +61,7 @@ public class MeetupRequestsFragment extends Fragment implements
 
             requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
                 requestsViewModel.setMeetupIds(meetupIds);
-                if (users.size() == 0) {
+                if (users.isEmpty()) {
                     binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
                     return;
                 }
@@ -90,11 +91,13 @@ public class MeetupRequestsFragment extends Fragment implements
 
     private List<String> getUserIds(List<MeetupRequest> requests) {
         List<String> ids = new ArrayList<>();
+
         for (MeetupRequest request : requests) {
             if (request != null) {
                 ids.add(request.getSenderId());
             }
         }
+
         return ids;
     }
 

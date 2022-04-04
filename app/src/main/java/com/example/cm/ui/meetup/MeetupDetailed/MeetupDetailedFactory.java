@@ -6,15 +6,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class MeetupDetailedFactory implements ViewModelProvider.Factory {
 
-    private final String mParam;
+    private final String meetupId;
 
-    public MeetupDetailedFactory(String param) {
-        mParam = param;
+    public MeetupDetailedFactory(String meetupId) {
+        this.meetupId = meetupId;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        return (T) new MeetupDetailedViewModel(mParam);
+        return (T) new MeetupDetailedViewModel(meetupId);
     }
 }

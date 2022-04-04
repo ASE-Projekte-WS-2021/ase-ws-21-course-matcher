@@ -1,5 +1,8 @@
 package com.example.cm.ui.home;
 
+import static com.example.cm.Constants.FIELD_IS_SHARING_LOCATION;
+import static com.example.cm.Constants.FIELD_LOCATION;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -87,15 +90,15 @@ public class HomeViewModel extends ViewModel implements Callback {
         location.add(latLng.latitude);
         location.add(latLng.longitude);
 
-        userRepository.updateField("location", location, this);
+        userRepository.updateField(FIELD_LOCATION, location, this);
     }
 
     public void updateLocationSharing(boolean enabled) {
-        userRepository.updateField("isSharingLocation", enabled, this);
+        userRepository.updateField(FIELD_IS_SHARING_LOCATION, enabled, this);
     }
 
     public void updateLocationSharing(boolean enabled, UserListener<Boolean> listener) {
-        userRepository.updateField("isSharingLocation", enabled, new Callback() {
+        userRepository.updateField(FIELD_IS_SHARING_LOCATION, enabled, new Callback() {
             @Override
             public void onSuccess(Object object) {
                 listener.onUserSuccess(enabled);

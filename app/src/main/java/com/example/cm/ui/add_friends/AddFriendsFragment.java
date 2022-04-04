@@ -46,10 +46,12 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     private void initUI() {
         addFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(Objects
+                .requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
-        binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvUserList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(addFriendsAdapter);
         binding.btnBack.bringToFront();
@@ -120,9 +122,10 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
             if (sentFriendRequests == null) {
                 return;
             }
-            addFriendsViewModel.getReceivedFriendRequestsPending().observe(getViewLifecycleOwner(), receivedFriendRequests -> {
-                addFriendsAdapter.setFriendRequests(sentFriendRequests, receivedFriendRequests);
-            });
+            addFriendsViewModel.getReceivedFriendRequestsPending().observe(getViewLifecycleOwner(),
+                    receivedFriendRequests -> {
+                        addFriendsAdapter.setFriendRequests(sentFriendRequests, receivedFriendRequests);
+                    });
         });
     }
 
@@ -160,7 +163,7 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             binding.loadingCircle.setVisibility(View.GONE);
 
-            if (users == null || users.size() == 0) {
+            if (users == null || users.isEmpty()) {
                 binding.noFriendsWrapper.setVisibility(View.VISIBLE);
                 binding.rvUserList.setVisibility(View.GONE);
                 return;

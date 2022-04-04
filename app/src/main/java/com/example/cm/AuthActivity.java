@@ -16,17 +16,15 @@ public class AuthActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
         binding = ActivityAuthBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
         initListeners();
+
+        setContentView(binding.getRoot());
     }
 
     private void initListeners() {

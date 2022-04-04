@@ -4,6 +4,10 @@ import static com.example.cm.Constants.MEETUP_DETAILED_MAX_USER;
 import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_PADDING;
 import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_SIZE;
 import static com.example.cm.Constants.MEETUP_DETAILED_USER_IMAGE_STROKE;
+import static com.example.cm.Constants.OFFSET_BOTTOM;
+import static com.example.cm.Constants.OFFSET_LEFT;
+import static com.example.cm.Constants.OFFSET_RIGHT;
+import static com.example.cm.Constants.OFFSET_TOP;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,8 +41,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.MeetupListViewHolder> {
-    List<Meetup> meetups;
-    List<User> users;
+    private List<Meetup> meetups;
+    private List<User> users;
     private int userCounter = 0;
 
     public MeetupListAdapter(List<Meetup> meetups, List<User> users) {
@@ -90,21 +95,26 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         Context context = holder.getContext();
         String address = meetup.getLocationName();
         holder.getTvLocation().setText(address);
+
         switch (meetup.getPhase()) {
             case MEETUP_UPCOMING:
                 holder.getTvTime().setText(meetup.getFormattedTime());
                 holder.getTvTime().setTextColor(context.getResources().getColor(R.color.orange400));
-                holder.getTvTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_upcoming));
+                holder.getTvTime()
+                        .setBackground(AppCompatResources.getDrawable(context, R.drawable.label_rounded_upcoming));
                 break;
             case MEETUP_ACTIVE:
-                holder.getTvTime().setText(holder.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
+                holder.getTvTime()
+                        .setText(holder.getContext().getString(R.string.meetup_active_text, meetup.getFormattedTime()));
                 holder.getTvTime().setTextColor(context.getResources().getColor(R.color.orange600));
-                holder.getTvTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_active));
+                holder.getTvTime()
+                        .setBackground(AppCompatResources.getDrawable(context, R.drawable.label_rounded_active));
                 break;
             case MEETUP_ENDED:
                 holder.getTvTime().setText(R.string.meetup_ended_text);
                 holder.getTvTime().setTextColor(context.getResources().getColor(R.color.gray500));
-                holder.getTvTime().setBackground(context.getResources().getDrawable(R.drawable.label_rounded_ended));
+                holder.getTvTime()
+                        .setBackground(AppCompatResources.getDrawable(context, R.drawable.label_rounded_ended));
                 break;
         }
     }
@@ -114,7 +124,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         List<String> invitedFriends = meetup.getInvitedFriends();
         List<String> declinedFriends = meetup.getDeclinedFriends();
 
-        imgLayout.setPadding(-3, 0, 0, 0);
+        imgLayout.setPadding(OFFSET_LEFT, OFFSET_TOP, OFFSET_RIGHT, OFFSET_BOTTOM);
 
         addUserImage(confirmedFriends, imgLayout, R.color.green);
         addUserImage(invitedFriends, imgLayout, R.color.orange);
@@ -136,6 +146,9 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
     }
 
     public void addUserImage(List<String> friendIds, LinearLayout layout, int color) {
+        if (friendIds == null) {
+            return;
+        }
         if (friendIds != null) {
             for (String id : friendIds) {
                 userCounter++;
@@ -152,7 +165,8 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
                     }
 
                     imageRounded.setLayoutParams(
-                            new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE, MEETUP_DETAILED_USER_IMAGE_SIZE));
+                            new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE,
+                                    MEETUP_DETAILED_USER_IMAGE_SIZE));
                     imageRounded.setStrokeColorResource(color);
                     imageRounded.setStrokeWidth(MEETUP_DETAILED_USER_IMAGE_STROKE);
                     imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING,

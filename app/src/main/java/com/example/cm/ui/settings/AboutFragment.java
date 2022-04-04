@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.cm.R;
@@ -26,20 +27,20 @@ public class AboutFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentSettingsAboutBinding.inflate(inflater, container, false);
+
         initUI();
         initListeners();
+
         return binding.getRoot();
     }
 
     @SuppressLint("SetTextI18n")
     private void initUI() {
         binding.actionBar.tvTitle.setText(R.string.about_header);
-
         binding.linkPrivacyPolicy.linkText.setText(getString(R.string.link_label_privacy_policy));
         binding.linkImprint.linkText.setText(getString(R.string.link_label_imprint));
-
         binding.linkPrivacyPolicy.linkIcon.setImageResource(R.drawable.ic_privacy_policy);
         binding.linkImprint.linkIcon.setImageResource(R.drawable.ic_imprint);
 
@@ -47,7 +48,7 @@ public class AboutFragment extends Fragment {
         try {
             PackageInfo packageInfo = requireActivity().getPackageManager()
                     .getPackageInfo(requireActivity().getPackageName(), 0);
-            binding.tvVersionNumber.setText(getString(R.string.app_version_prefix) + " " + packageInfo.versionName);
+            binding.tvVersionNumber.setText(getString(R.string.app_version_string, packageInfo.versionName));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

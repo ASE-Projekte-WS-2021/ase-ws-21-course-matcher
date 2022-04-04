@@ -26,9 +26,7 @@ import com.example.cm.utils.Navigator;
 import java.util.List;
 import java.util.Objects;
 
-
-public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener,
-        InviteFriendsAdapter.OnItemClickListener {
+public class InviteFriendsFragment extends Fragment implements InviteFriendsAdapter.OnItemClickListener {
 
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentInviteFriendsBinding binding;
@@ -40,19 +38,26 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
         bundle = getArguments();
-        View root = binding.getRoot();
+
         initUI();
         initViewModel();
         initListener();
-        return root;
+
+        return binding.getRoot();
     }
 
     private void initUI() {
         inviteFriendsListAdapter = new InviteFriendsAdapter(this);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
+
+        if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
+            dividerItemDecoration
+                    .setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+        }
+
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
-        binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvUserList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(inviteFriendsListAdapter);
         binding.btnBack.bringToFront();
@@ -104,14 +109,9 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
                 return;
             }
 
-            showInvitationButton(selectedUsers.size() > 0);
+            showInvitationButton(!selectedUsers.isEmpty());
             inviteFriendsListAdapter.setSelectedUsers(selectedUsers);
         });
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
     }
 
     private void onClearInputClicked() {
@@ -148,7 +148,6 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         inviteFriendsListAdapter.setUsers(filteredUsers);
     }
 
-
     private void showInvitationButton(boolean showButton) {
         if (showButton) {
             binding.btnSendInvite.setVisibility(View.VISIBLE);
@@ -173,6 +172,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_USER_ID, id);
-        navigator.getNavController().navigate(R.id.action_navigation_invite_friends_to_navigation_other_profile, bundle);
+        navigator.getNavController().navigate(R.id.action_navigation_invite_friends_to_navigation_other_profile,
+                bundle);
     }
 }

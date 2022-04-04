@@ -6,15 +6,12 @@ import android.text.Html;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.cm.R;
-import com.example.cm.databinding.ActivityLoginBinding;
 import com.example.cm.databinding.ActivityOnboardingBinding;
 import com.example.cm.ui.adapters.OnboardingAdapter;
 import com.example.cm.ui.auth.LoginActivity;
@@ -22,10 +19,9 @@ import com.example.cm.ui.auth.RegisterActivity;
 
 public class OnboardingActivity extends AppCompatActivity {
 
-    private int currentPos;
+    private static final int FINAL_PAGE = 3;
     private ActivityOnboardingBinding binding;
-
-    ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
+    private final ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         }
@@ -33,8 +29,8 @@ public class OnboardingActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int position) {
             addDots(position);
-            currentPos = position;
-            if (position == 3) {
+
+            if (position == FINAL_PAGE) {
                 Animation btnAnimation = AnimationUtils.loadAnimation(OnboardingActivity.this, R.anim.bottom_anim);
                 binding.onboardingBtnRegister.setAnimation(btnAnimation);
                 binding.onboardingBtnRegister.setVisibility(View.VISIBLE);
@@ -53,29 +49,27 @@ public class OnboardingActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-
-        binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
-
         super.onCreate(savedInstanceState);
+        binding = ActivityOnboardingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        initUI();
+        initListeners();
+    }
 
+    private void initUI() {
         OnboardingAdapter onboardingAdapter = new OnboardingAdapter(this);
-
         binding.onboardingViewpager.setAdapter(onboardingAdapter);
-        addDots(0);
         binding.onboardingViewpager.addOnPageChangeListener(onPageChangeListener);
+        addDots(0);
     }
 
-    public void skipOB(View view) {
-        startActivity(new Intent(this, LoginActivity.class));
-        finish();
-    }
-
-    public void toRegister(View view) {
-        if (currentPos == 3) {
-            startActivity(new Intent(this, RegisterActivity.class));
-            finish();
-        }
+    private void initListeners() {
+        binding.onboardingToLoginBtn.setOnClickListener(v -> {
+            onLoginClicked();
+        });
+        binding.onboardingBtnRegister.setOnClickListener(v -> {
+            onRegisterClicked();
+        });
     }
 
     private void addDots(int position) {
@@ -89,5 +83,15 @@ public class OnboardingActivity extends AppCompatActivity {
             binding.layoutOnboardingIndicator.addView(dots[i]);
         }
         dots[position].setTextColor(getResources().getColor(R.color.orange500));
+    }
+
+    public void onLoginClicked() {
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
+    }
+
+    public void onRegisterClicked() {
+        startActivity(new Intent(this, RegisterActivity.class));
+        finish();
     }
 }

@@ -16,12 +16,9 @@ import java.util.Objects;
 
 public class FriendRequestsViewModel extends ViewModel {
 
-
     private final UserRepository userRepository = new UserRepository();
     private final MutableLiveData<List<FriendRequest>> receivedRequests;
-
     private final FriendRequestRepository friendRequestRepository;
-
     private final MutableLiveData<List<String>> userIds = new MutableLiveData<>();
     private final LiveData<List<User>> userLiveData = Transformations.switchMap(userIds, userRepository::getUsersByIds);
 
@@ -48,7 +45,11 @@ public class FriendRequestsViewModel extends ViewModel {
     public void undoFriendRequest(FriendRequest request, int position, Request.RequestState previousState) {
         request.setState(previousState);
         friendRequestRepository.addFriendRequest(request);
-        Objects.requireNonNull(receivedRequests.getValue()).add(position, request);
+
+        if(receivedRequests.getValue() == null) {
+            return;
+        }
+        receivedRequests.getValue().add(position, request);
     }
 
     public LiveData<List<User>> getUsers() {
