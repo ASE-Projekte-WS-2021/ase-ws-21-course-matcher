@@ -265,7 +265,7 @@
     <string name="registerPasswordRepeatText">Passwort wiederholen</string>
     <string name="createProfileTitle">Profil erstellen</string>
     <string name="createProfileTitleDesc">Lege dein Profil an, damit deine Freunde dich finden können.</string>
-    <string name="createProfileBtn">Starten</string>
+    <string name="createProfileBtn">Los geht\'s!</string>
     <string name="registerPasswordRepeatNotEqual">Passwörter stimmen nicht überein.</string>
     <string name="registerDisplayNameEmpty">Bitte gib einen Anzeigenamen mit mindestens 2 Zeichen ein.</string>
     <string name="registerUsernameAlreadyExists">Nutzername existiert bereits.</string>
