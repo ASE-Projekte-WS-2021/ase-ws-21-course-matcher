@@ -1,12 +1,16 @@
 package com.example.cm.data.repositories;
 
+import android.util.Log;
+
 import static com.example.cm.Constants.FIELD_CREATED_AT;
 import static com.example.cm.Constants.FIELD_ID;
 import static com.example.cm.Constants.FIELD_MEETUP_ID;
+import static com.example.cm.Constants.FIELD_PHASE;
 import static com.example.cm.Constants.FIELD_RECEIVER_ID;
 import static com.example.cm.Constants.FIELD_SENDER_ID;
 import static com.example.cm.Constants.FIELD_STATE;
 import static com.example.cm.Constants.FIELD_TYPE;
+import static com.example.cm.data.models.Request.RequestState.REQUEST_ANSWERED;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
@@ -14,6 +18,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.listener.UserListener;
+import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,14 +27,17 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MeetupRequestRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());
+    private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
     private final MutableLiveData<List<MeetupRequest>> receivedRequests = new MutableLiveData<>();
 
     public MeetupRequestRepository() {
@@ -56,18 +64,36 @@ public class MeetupRequestRepository extends Repository {
                     if (value != null && value.isEmpty()) {
                         receivedRequests.postValue(new ArrayList<>());
                     }
+
                     if (value != null && !value.isEmpty()) {
                         List<MeetupRequest> requestsToReturn = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
+                            MeetupRequest request = snapshotToMeetupRequest(snapshot);
+                            String meetupId = request.getMeetupId();
                             Request.RequestState currentState = snapshot.get(FIELD_STATE, Request.RequestState.class);
+
+                            if (currentState == REQUEST_PENDING) {
+                                updateStateDependingOnMeetupPhase(meetupId, request.getId());
+                            }
                             if (currentState != REQUEST_DECLINED) {
-                                requestsToReturn.add(snapshotToMeetupRequest(snapshot));
+                                requestsToReturn.add(request);
                             }
                         }
                         receivedRequests.postValue(requestsToReturn);
                     }
                 });
         return receivedRequests;
+    }
+
+    private void updateStateDependingOnMeetupPhase(String meetupId, String requestId) {
+        meetupCollection.document(meetupId).get().addOnCompleteListener(executorService, task -> {
+           if (task.isSuccessful()) {
+               DocumentSnapshot result = task.getResult();
+               if (Objects.equals(result.get(FIELD_PHASE), MeetupPhase.MEETUP_ENDED.toString())) {
+                   meetupRequestCollection.document(requestId).update(FIELD_STATE, REQUEST_ANSWERED);
+               }
+           }
+        });
     }
 
     /**

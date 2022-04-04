@@ -18,7 +18,6 @@ import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPOJO;
 import com.example.cm.data.models.MeetupPhase;
-import com.example.cm.data.models.User;
 import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -81,7 +80,7 @@ public class MeetupRepository {
                         List<Meetup> meetups = new ArrayList<>();
                         for (int i = 0; i < value.getDocuments().size(); i++) {
                             Meetup meetup = snapshotToMeetup(value.getDocuments().get(i));
-                            MeetupPhase currentPhase = meetup.getPhase();
+                            MeetupPhase currentPhase = meetup.getPhaseCalculated();
                             MeetupPhase phaseInFirestore = value.getDocuments().get(i).get(FIELD_PHASE, MeetupPhase.class);
 
                             if (phaseInFirestore != MEETUP_ENDED) {
