@@ -1,5 +1,7 @@
 package com.example.cm.ui.adapters;
 
+import static com.example.cm.utils.Utils.calculateDiff;
+
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -49,43 +51,6 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
         DiffUtil.DiffResult result = calculateDiff(mUsers, newUsers);
         mUsers = newUsers;
         result.dispatchUpdatesTo(this);
-    }
-
-    /**
-     * Calculate the difference between two lists and return the result
-     * Also used to animate the changes
-     * From https://stackoverflow.com/questions/49588377/how-to-set-adapter-in-mvvm-using-databinding
-     *
-     * @param oldUsers The old list of users
-     * @param newUsers The new list of users
-     * @return The result of the calculation
-     */
-    private DiffUtil.DiffResult calculateDiff(List<User> oldUsers, List<User> newUsers) {
-        return DiffUtil.calculateDiff(new DiffUtil.Callback() {
-            @Override
-            public int getOldListSize() {
-                return oldUsers.size();
-            }
-
-            @Override
-            public int getNewListSize() {
-                return newUsers.size();
-            }
-
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(oldUsers.get(oldItemPosition).getId(), newUsers.get(newItemPosition).getId());
-            }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                User newUser = newUsers.get(newItemPosition);
-                User oldUser = oldUsers.get(oldItemPosition);
-                return Objects.equals(newUser.getId(), oldUser.getId())
-                        && Objects.equals(newUser.getDisplayName(), oldUser.getDisplayName())
-                        && Objects.equals(newUser.getUsername(), oldUser.getUsername());
-            }
-        });
     }
 
     // Create new views (invoked by the layout manager)

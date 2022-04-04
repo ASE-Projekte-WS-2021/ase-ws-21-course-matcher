@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -45,7 +44,10 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
     public void show() {
         super.show();
         binding.inputField.requestFocus();
-        binding.inputField.setSelection(binding.inputField.getText().length());
+
+        if (binding.inputField.getText() != null) {
+            binding.inputField.setSelection(binding.inputField.getText().length());
+        }
     }
 
     public EditTextDialog setTitle(String title) {
@@ -66,18 +68,20 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
     }
 
     public void disableConfirmButton() {
-        binding.btnConfirm.setEnabled(false);
-        binding.btnConfirm.setText(R.string.confirm_button_loading);
         Drawable buttonDrawable = DrawableCompat.wrap(binding.btnConfirm.getBackground());
         DrawableCompat.setTint(buttonDrawable, getContext().getResources().getColor(R.color.gray600));
+
+        binding.btnConfirm.setEnabled(false);
+        binding.btnConfirm.setText(R.string.confirm_button_loading);
         binding.btnConfirm.setBackground(buttonDrawable);
     }
 
     public void enableConfirmButton() {
-        binding.btnConfirm.setEnabled(true);
-        binding.btnConfirm.setText(confirmButtonText);
         Drawable buttonDrawable = DrawableCompat.wrap(binding.btnConfirm.getBackground());
         DrawableCompat.setTint(buttonDrawable, getContext().getResources().getColor(R.color.orange500));
+
+        binding.btnConfirm.setEnabled(true);
+        binding.btnConfirm.setText(confirmButtonText);
         binding.btnConfirm.setBackground(buttonDrawable);
     }
 
@@ -97,7 +101,9 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
 
     public EditTextDialog setFieldToUpdate(String fieldToUpdate) {
         this.fieldToUpdate = fieldToUpdate;
-        binding.dialogTitle.setText(fieldToUpdate + " bearbeiten");
+        String title = getContext().getString(R.string.dialog_title_field, fieldToUpdate);
+        binding.dialogTitle.setText(title);
+
         if (fieldToUpdate.equals(getContext().getString(R.string.input_label_username))) {
             initUniqueInputListener();
         }
@@ -135,6 +141,7 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 boolean error = false;
                 binding.btnConfirm.setEnabled(false);
+
                 if (ownUsername != null && ownUsername.equals(charSequence.toString())) {
                     error = true;
                     binding.textInputLayout.setError(getContext().getString(R.string.same_as_current_username));
@@ -153,11 +160,14 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
                     binding.btnConfirm.setEnabled(true);
                 }
             }
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
         });
     }
 

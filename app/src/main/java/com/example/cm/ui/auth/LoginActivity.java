@@ -17,7 +17,6 @@ import com.google.android.material.snackbar.Snackbar;
 public class LoginActivity extends AppCompatActivity {
 
     private AuthViewModel authViewModel;
-    private Button loginBtn;
     private ActivityLoginBinding binding;
 
     @Override
@@ -26,11 +25,7 @@ public class LoginActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-
-        setContentView(R.layout.activity_login);
-        loginBtn = findViewById(R.id.loginLoginBtn);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
-
         setContentView(binding.getRoot());
 
         initViewModel();
@@ -42,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         authViewModel = new ViewModelProvider(LoginActivity.this).get(AuthViewModel.class);
         authViewModel.getErrorLiveData().observe(this, errorMsg -> {
             Snackbar.make(findViewById(R.id.loginLayout), errorMsg, Snackbar.LENGTH_LONG).show();
-            loginBtn.setEnabled(true);
+            binding.loginLoginBtn.setEnabled(true);
         });
     }
 
@@ -57,8 +52,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login(View view) {
-        String email = binding.loginEmailEditText.inputField.getText().toString();
-        String password = binding.loginPasswordEditText.inputField.getText().toString();
+        if(binding.loginEmailEditText.inputField.getText() == null || binding.loginPasswordEditText.inputField.getText() == null) {
+            return;
+        }
+
+        String email = binding.loginEmailEditText.inputField.getText().toString().trim();
+        String password = binding.loginPasswordEditText.inputField.getText().toString().trim();
 
         // Reset error fields
         binding.loginEmailEditText.textInputLayout.setErrorEnabled(false);

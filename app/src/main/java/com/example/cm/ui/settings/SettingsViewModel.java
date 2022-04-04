@@ -19,6 +19,7 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SettingsViewModel extends ViewModel {
+
     private final AuthRepository authRepository;
     private final UserRepository userRepository;
     private final MeetupRepository meetupRepository;
@@ -33,12 +34,11 @@ public class SettingsViewModel extends ViewModel {
         friendRequestRepository = new FriendRequestRepository();
     }
 
-
     public MutableLiveData<User> getUser() {
         return userRepository.getCurrentUser();
     }
 
-    public void reauthenticate(Context context, String password, UserListener<Boolean> listener) {
+    public void reAuthenticate(Context context, String password, UserListener<Boolean> listener) {
         if (password.isEmpty() || password.length() < Constants.MIN_PASSWORD_LENGTH) {
             listener.onUserError(new Exception(context.getString(R.string.edit_account_error_password_min_length)));
             return;

@@ -24,6 +24,7 @@
     <string name="invitation_success_title">"Meetup versendet!"</string>
     <string name="invitation_success_close_dialog">"OK"</string>
     <string name="content_description_edit_button">meetup edit button</string>
+    <string name="meetup_formatted_time">%1$s:%2$s</string>
 
     <string name="title_notifications">Benachrichtigungen</string>
     <string name="title_profile">Profil</string>
@@ -69,6 +70,7 @@
 
     <string name="searchbar_text_find_friends">Freunde finden…</string>
     <string name="search_button_decription">Suchbutton</string>
+    <string name="empty_string">""</string>
 
     <string name="add_friends">add friends</string>
     <string name="friends_tabs_list">Deine Freunde</string>
@@ -99,7 +101,7 @@
     <string name="meetup_declined_text">kommt leider nicht.</string>
 
     <string name="decline_snackbar_text">Anfrage abgelehnt.</string>
-    <string name="undo_snackbar_text">UNDO</string>
+    <string name="undo_snackbar_text">Rückgängig</string>
 
     <string name="friend_request_text">möchte mit dir befreundet sein.</string>
     <string name="friend_accepted_text">ist jetzt auf deiner Freundesliste.</string>
@@ -117,7 +119,7 @@
     <string name="content_description_profile_settings">Navigate to Profile Settings</string>
     <string name="content_description_divider">Divider</string>
     <string name="title_settings">Einstellungen</string>
-    <string name="app_version_prefix">App-Version:</string>
+    <string name="app_version_string">App-Version: %1$s</string>
     <string name="link_label_edit_profile">Profil bearbeiten</string>
     <string name="link_label_edit_account">Account bearbeiten</string>
     <string name="link_label_edit_notifications">Benachrichtigungen</string>
@@ -145,8 +147,9 @@
     <string name="edit_save">Speichern</string>
     <string name="edit_profile_success_message">Änderungen wurden gespeichert</string>
     <string name="edit_profile_error_message">Ein Fehler ist aufgetreten. Versuche es erneut.</string>
-    <string name="edit_profile_error_min_length">{field} muss mindestens {length} Zeichen lang sein</string>
-    <string name="dialog_title_field">{field} bearbeiten</string>
+    <string name="edit_profile_error_min_length">%1$s muss mindestens %2$s Zeichen lang sein</string>
+    <string name="edit_profile_bio_char_count">%1$d/%2$d</string>
+    <string name="dialog_title_field">%1$s bearbeiten</string>
     <string name="edit_account_email">Die E-Mail Adresse ist mit deinem RZ-Account verknüpft und kann deshalb nicht nachträglich angepasst werden.</string>
     <string name="edit_account_password">Passwort ändern</string>
     <string name="edit_account_error_password_not_empty">Passwort-Felder dürfen nicht leer sein</string>
@@ -229,6 +232,7 @@
     <string name="friend_request_own_accepted">hat angenommen.</string>
     <string name="friend_request_own_answered">hat akzeptiert.</string>
     <string name="friend_request_own_declined">hat abgelehnt.</string>
+    <string name="friend_request_receiver">An: %1$s</string>
 
     <string name="profile_btn_edit">Profil bearbeiten</string>
     <string name="title_profile_other">other profile navigation</string>
@@ -253,7 +257,7 @@
 
     <string name="snackbar_share_location">Dein Standort ist jetzt für deine Freunde sichtbar!</string>
     <string name="snackbar_hide_location">Dein Standort ist nicht länger für deine Freunde sichtbar!</string>
-    <string name="confirm_button_loading">Lädt...</string>
+    <string name="confirm_button_loading">Lädt…</string>
 
     <string name="about_header">Über CourseMatcher</string>
 

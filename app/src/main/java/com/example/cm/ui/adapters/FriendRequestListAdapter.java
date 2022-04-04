@@ -153,7 +153,8 @@ public class FriendRequestListAdapter extends RecyclerView.Adapter<FriendRequest
         }
 
         if (displayName != null) {
-            holder.getTvSender().setText("An: " + displayName);
+            String titleOfReceiver = holder.getTvSender().getContext().getString(R.string.friend_request_receiver, displayName);
+            holder.getTvSender().setText(titleOfReceiver);
         }
 
         if (userName != null) {

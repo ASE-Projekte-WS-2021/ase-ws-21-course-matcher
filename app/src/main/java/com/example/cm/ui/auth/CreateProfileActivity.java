@@ -1,6 +1,9 @@
 package com.example.cm.ui.auth;
 
+import static com.example.cm.Constants.MAX_CHAR_COUNT;
+
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -33,8 +36,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-
-import static com.example.cm.Constants.MAX_CHAR_COUNT;
+import java.util.Objects;
 
 public class CreateProfileActivity extends AppCompatActivity implements AuthRepository.RegisterCallback {
 
@@ -73,7 +75,7 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
 
     private void initTexts() {
         binding.registerDisplayNameEditText.textInputLayout.setHint(R.string.registerDisplaynameText);
-        binding.registerDisplayNameEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
+        binding.registerDisplayNameEditText.inputField.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME)});
         binding.inputBio.textInputLayout.setHint(getString(R.string.input_label_bio));
     }
 
@@ -87,16 +89,22 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 binding.registerDisplayNameEditText.textInputLayout.setErrorEnabled(false);
             }
+
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         binding.inputBio.inputField.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
+            @SuppressLint("DefaultLocale")
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int currCharCount = s.length();
@@ -106,7 +114,9 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > MAX_CHAR_COUNT) {
-                    binding.inputBio.inputField.getText().delete(MAX_CHAR_COUNT, s.length());
+                    if (binding.inputBio.inputField.getText() != null) {
+                        binding.inputBio.inputField.getText().delete(MAX_CHAR_COUNT, s.length());
+                    }
                 }
             }
         });
@@ -172,11 +182,15 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
     }
 
     public void registerAndStart(View view) {
+        if (binding.registerDisplayNameEditText.inputField.getText() == null || binding.inputBio.inputField.getText() == null) {
+            return;
+        }
+
         String email = bundle.getString(Constants.KEY_EMAIL);
         String username = bundle.getString(Constants.KEY_USERNAME);
         String password = bundle.getString(Constants.KEY_PASSWORD);
-        String displayName = binding.registerDisplayNameEditText.inputField.getText().toString();
-        String bio = binding.inputBio.inputField.getText().toString();
+        String displayName = binding.registerDisplayNameEditText.inputField.getText().toString().trim();
+        String bio = binding.inputBio.inputField.getText().toString().trim();
 
         if (displayName.isEmpty() || displayName.length() < Constants.MIN_NAME_LENGTH) {
             binding.registerDisplayNameEditText.textInputLayout.setError(getString(R.string.registerDisplayNameEmpty));
@@ -206,8 +220,12 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
 
     @Override
     protected void onDestroy() {
-        if (authViewModel.getUserLiveData().getValue() != null
-                && authViewModel.getUserLiveData().getValue().getEmail().equals(Constants.TEMP_EMAIL)) {
+        if (authViewModel.getUserLiveData().getValue() == null) {
+            return;
+        }
+        String userEmail = authViewModel.getUserLiveData().getValue().getEmail();
+
+        if (Objects.equals(userEmail, Constants.TEMP_EMAIL)) {
             authViewModel.logout();
         }
         super.onDestroy();

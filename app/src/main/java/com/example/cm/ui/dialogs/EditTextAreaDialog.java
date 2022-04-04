@@ -21,10 +21,13 @@ import com.example.cm.databinding.DialogTextareaBinding;
 
 
 public class EditTextAreaDialog extends Dialog {
-    DialogTextareaBinding binding;
-    OnSaveListener listener;
-    String initialValue, fieldToUpdate;
-    String confirmButtonText;
+    private final DialogTextareaBinding binding;
+    private final OnSaveListener listener;
+    private final int MAX_LINES = 3;
+    private int beforeCursorPosition = 0;
+    private String fieldToUpdate;
+    private String confirmButtonText;
+    private String text;
 
     public EditTextAreaDialog(@NonNull Context context, OnSaveListener listener) {
         super(context);
@@ -40,20 +43,21 @@ public class EditTextAreaDialog extends Dialog {
     public void show() {
         super.show();
         binding.inputField.requestFocus();
-        binding.inputField.setSelection(binding.inputField.getText().length());
+
+        if (binding.inputField.getText() != null) {
+            binding.inputField.setSelection(binding.inputField.getText().length());
+        }
     }
 
     public EditTextAreaDialog setFieldToUpdate(String fieldToUpdate) {
         this.fieldToUpdate = fieldToUpdate;
-        String title = getContext().getResources().getString(R.string.dialog_title_field);
-        title = title.replace("{field}", fieldToUpdate);
+        String title = getContext().getString(R.string.dialog_title_field, fieldToUpdate);
         binding.dialogTitle.setText(title);
         return this;
     }
 
     public EditTextAreaDialog setValueOfField(String value) {
         binding.inputField.setText(value);
-        initialValue = value;
         return this;
     }
 
@@ -67,11 +71,21 @@ public class EditTextAreaDialog extends Dialog {
         binding.textInputLayout.setError(error);
     }
 
+    public void disableConfirmButton() {
+        Drawable buttonDrawable = DrawableCompat.wrap(binding.btnSave.getBackground());
+        DrawableCompat.setTint(buttonDrawable, getContext().getResources().getColor(R.color.gray600));
+
+        binding.btnSave.setEnabled(false);
+        binding.btnSave.setText(R.string.confirm_button_loading);
+        binding.btnSave.setBackground(buttonDrawable);
+    }
+
     public void enableConfirmButton() {
-        binding.btnSave.setEnabled(true);
-        binding.btnSave.setText(confirmButtonText);
         Drawable buttonDrawable = DrawableCompat.wrap(binding.btnSave.getBackground());
         DrawableCompat.setTint(buttonDrawable, getContext().getResources().getColor(R.color.orange500));
+
+        binding.btnSave.setEnabled(true);
+        binding.btnSave.setText(confirmButtonText);
         binding.btnSave.setBackground(buttonDrawable);
     }
 
@@ -86,7 +100,8 @@ public class EditTextAreaDialog extends Dialog {
     }
 
     private void initUI() {
-        binding.bioCharacterCount.setText(String.format("%d/%d", 0, MAX_CHAR_COUNT));
+        String charCountString = getContext().getString(R.string.edit_profile_bio_char_count, 0, MAX_CHAR_COUNT);
+        binding.bioCharacterCount.setText(charCountString);
     }
 
     private void initListeners() {
@@ -96,18 +111,28 @@ public class EditTextAreaDialog extends Dialog {
         binding.inputField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                text = s.toString();
+                beforeCursorPosition = after;
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int currCharCount = s.length();
-                binding.bioCharacterCount.setText(String.format("%d/%d", currCharCount, MAX_CHAR_COUNT));
+                String charCountString = getContext().getString(R.string.edit_profile_bio_char_count, currCharCount, MAX_CHAR_COUNT);
+
+                binding.bioCharacterCount.setText(charCountString);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 125) {
+                // Limit text to max lines
+                // Inspired by: https://stackoverflow.com/a/16365996
+                if (binding.inputField.getLineCount() > MAX_LINES) {
+                    binding.inputField.setText(text);
+                    binding.inputField.setSelection(beforeCursorPosition);
+                }
+
+                if (binding.inputField.getText() != null && s.length() > MAX_CHAR_COUNT) {
                     binding.inputField.getText().delete(MAX_CHAR_COUNT, s.length());
                 }
             }
@@ -121,10 +146,13 @@ public class EditTextAreaDialog extends Dialog {
     }
 
     private void onSaveClicked() {
-        String newValue = binding.inputField.getText().toString();
-        if (listener != null) {
-            listener.onTextAreaSaved(fieldToUpdate, newValue);
+        if (binding.inputField.getText() == null || listener == null) {
+            return;
         }
+
+        String newValue = binding.inputField.getText().toString();
+        listener.onTextAreaSaved(fieldToUpdate, newValue);
+        disableConfirmButton();
     }
 
     public interface OnSaveListener {

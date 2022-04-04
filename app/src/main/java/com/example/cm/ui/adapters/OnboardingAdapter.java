@@ -54,8 +54,6 @@ public class OnboardingAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.item_onboarding, container, false);
-
-
         ImageView slideTitleImage = view.findViewById(R.id.onboarding_image);
         TextView slideTitle = view.findViewById(R.id.onboarding_title);
         TextView slideDesc = view.findViewById(R.id.onboarding_desc);
@@ -70,7 +68,6 @@ public class OnboardingAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-
         container.removeView((LinearLayout) object);
     }
 }

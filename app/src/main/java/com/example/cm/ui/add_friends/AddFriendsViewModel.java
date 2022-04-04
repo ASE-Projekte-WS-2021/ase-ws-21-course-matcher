@@ -31,10 +31,8 @@ public class AddFriendsViewModel extends ViewModel {
         requestRepository = new FriendRequestRepository();
         receivedFriendRequests = requestRepository.getFriendRequestsForUser();
 
-        sentFriendRequestsPending = requestRepository
-                .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
-        receivedFriendRequestsPending = requestRepository
-                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
+        sentFriendRequestsPending = requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
+        receivedFriendRequestsPending = requestRepository.getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -116,11 +114,10 @@ public class AddFriendsViewModel extends ViewModel {
      * @param receiverId id of the friend to check if has received friend request of current
      * @return has current user sent an friend request to user with given id
      */
-  
+
     private boolean hasReceivedFriendRequest(List<FriendRequest> requests, String receiverId) {
         for (FriendRequest request : requests) {
-            if (request.getReceiverId().equals(receiverId)
-                    && request.getSenderId().equals(userRepository.getFirebaseUser().getUid())) {
+            if (request.getReceiverId().equals(receiverId) && request.getSenderId().equals(userRepository.getFirebaseUser().getUid())) {
                 return true;
             }
         }

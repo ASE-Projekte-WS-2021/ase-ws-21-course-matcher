@@ -498,6 +498,10 @@ public class UserRepository extends Repository {
      * matching name
      */
     public MutableLiveData<List<User>> getUsersByIdsAndName(List<String> userIds, String query) {
+        if (userIds == null || userIds.isEmpty()) {
+            return mutableUsers;
+        }
+
         userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener((value, error) -> {
             if (error != null) {
                 return;
@@ -526,10 +530,13 @@ public class UserRepository extends Repository {
             if (task.isComplete() && FirebaseAuth.getInstance().getCurrentUser() != null) {
                 QuerySnapshot result = task.getResult();
                 List<User> users = snapshotToUserList(result);
-                for(User user : users) {
+
+                for (User user : users) {
                     usernames.add(user.getUsername());
                 }
-                callback.onUsernamesRetrieved(usernames, getCurrentUser().getValue().getUsername());
+
+                String currentUsername = getCurrentUser().getValue() != null ? getCurrentUser().getValue().getUsername() : null;
+                callback.onUsernamesRetrieved(usernames, currentUsername);
             }
         });
     }

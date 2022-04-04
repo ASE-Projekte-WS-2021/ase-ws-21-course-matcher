@@ -8,7 +8,9 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -21,6 +23,8 @@ import com.example.cm.databinding.ActivityRegisterBinding;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
+import java.util.Objects;
+
 import timber.log.Timber;
 
 public class RegisterActivity extends AppCompatActivity implements AuthRepository.LoginCallback, UserRepository.UsernamesRetrievedCallback {
@@ -54,9 +58,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
 
     private void initTimer() {
         handler = new Handler();
-        runnable = () -> {
-            closeActivityOnTimeout();
-        };
+        runnable = this::closeActivityOnTimeout;
     }
 
     private void closeActivityOnTimeout() {
@@ -90,15 +92,15 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
 
     private void initTexts() {
         binding.registerUsernameEditText.textInputLayout.setHint(R.string.input_label_username);
-        binding.registerUsernameEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
+        binding.registerUsernameEditText.inputField.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME)});
 
         binding.registerEmailEditText.textInputLayout.setHint(R.string.input_label_email);
 
         binding.registerPasswordEditText.textInputLayout.setHint(R.string.input_label_password);
-        binding.registerPasswordEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
+        binding.registerPasswordEditText.inputField.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME)});
 
         binding.registerPasswordRepeatEditText.textInputLayout.setHint(R.string.input_label_repeat_password);
-        binding.registerPasswordRepeatEditText.inputField.setFilters(new InputFilter[] { new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME) });
+        binding.registerPasswordRepeatEditText.inputField.setFilters(new InputFilter[]{new InputFilter.LengthFilter(Constants.MAX_CHARACTER_NAME)});
     }
 
     private void initListeners() {
@@ -107,11 +109,14 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 binding.registerEmailEditText.textInputLayout.setErrorEnabled(false);
             }
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
         });
 
         binding.registerUsernameEditText.inputField.addTextChangedListener(new TextWatcher() {
@@ -123,18 +128,21 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
                 if (usernames == null) {
                     binding.registerUsernameEditText.textInputLayout.setError(getString(R.string.error_loading));
                 }
-                if (usernames != null && usernames.contains(charSequence.toString())) {
+                if (usernames != null && usernames.contains(charSequence.toString().trim())) {
                     binding.registerUsernameEditText.textInputLayout.setError(getString(R.string.registerUsernameAlreadyExists));
                 } else {
                     binding.registerUsernameEditText.textInputLayout.setErrorEnabled(false);
                     binding.registerRegisterBtn.setEnabled(true);
                 }
             }
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
         });
 
         binding.registerPasswordEditText.inputField.addTextChangedListener(new TextWatcher() {
@@ -142,11 +150,14 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 binding.registerPasswordEditText.textInputLayout.setErrorEnabled(false);
             }
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
         });
 
         binding.registerPasswordRepeatEditText.inputField.addTextChangedListener(new TextWatcher() {
@@ -154,11 +165,14 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 binding.registerPasswordRepeatEditText.textInputLayout.setErrorEnabled(false);
             }
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void afterTextChanged(Editable editable) {}
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
         });
 
         binding.registerLoginBtn.setOnClickListener(this::goToLogin);
@@ -167,10 +181,19 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
 
     private void register(View view) {
         boolean error = false;
-        String email = binding.registerEmailEditText.inputField.getText().toString();
-        String username = binding.registerUsernameEditText.inputField.getText().toString();
-        String password = binding.registerPasswordEditText.inputField.getText().toString();
-        String passwordRepeated = binding.registerPasswordRepeatEditText.inputField.getText().toString();
+        boolean isEmailNull = binding.registerEmailEditText.inputField.getText() == null;
+        boolean isUsernameNull = binding.registerUsernameEditText.inputField.getText() == null;
+        boolean isPasswordNull = binding.registerPasswordEditText.inputField.getText() == null;
+        boolean isPasswordRepeatNull = binding.registerPasswordRepeatEditText.inputField.getText() == null;
+
+        if (isEmailNull || isUsernameNull || isPasswordNull || isPasswordRepeatNull) {
+            return;
+        }
+
+        String email = binding.registerEmailEditText.inputField.getText().toString().trim();
+        String username = binding.registerUsernameEditText.inputField.getText().toString().trim();
+        String password = binding.registerPasswordEditText.inputField.getText().toString().trim();
+        String passwordRepeated = binding.registerPasswordRepeatEditText.inputField.getText().toString().trim();
 
         if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             error = true;
@@ -237,10 +260,14 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     }
 
     private void endTemporaryAuth() {
-        if (authViewModel.getUserLiveData().getValue() != null
-                && authViewModel.getUserLiveData().getValue().getEmail().equals(Constants.TEMP_EMAIL)) {
+        if (authViewModel.getUserLiveData().getValue() == null) {
+            return;
+        }
+
+        if (Objects.equals(authViewModel.getUserLiveData().getValue().getEmail(), Constants.TEMP_EMAIL)) {
             authViewModel.logout();
         }
+
         handler.removeCallbacks(runnable);
     }
 
@@ -255,7 +282,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
         super.onResume();
         binding.registerRegisterBtn.setEnabled(true);
         binding.registerRegisterBtn.setText(getResources().getText(R.string.registerRegisterBtn));
-        binding.registerRegisterBtn.setBackground(getDrawable(R.drawable.btn_rounded));
+        binding.registerRegisterBtn.setBackground(AppCompatResources.getDrawable(this, R.drawable.btn_rounded));
     }
 
     @Override

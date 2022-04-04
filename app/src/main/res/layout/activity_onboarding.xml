@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/small_margin"
         android:background="@color/onbarding_background"
-        android:onClick="skipOB"
         android:text="@string/skiptoLogin"
         android:textColor="@color/gray700"
         android:textSize="@dimen/text_size_medium"
@@ -35,7 +34,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="invisible"
-        android:onClick="toRegister"
         />
 
     <androidx.viewpager.widget.ViewPager

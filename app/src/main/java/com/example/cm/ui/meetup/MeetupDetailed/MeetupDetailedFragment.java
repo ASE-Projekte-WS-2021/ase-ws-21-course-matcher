@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -18,8 +19,8 @@ import com.example.cm.R;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupDetailedBinding;
 import com.example.cm.ui.adapters.MeetupDetailedTabAdapter;
-import com.example.cm.utils.Navigator;
 import com.example.cm.ui.dialogs.TextWithButtonDialog;
+import com.example.cm.utils.Navigator;
 import com.example.cm.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,9 +56,11 @@ public class MeetupDetailedFragment extends Fragment implements OnMapReadyCallba
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupDetailedBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
+
         initUIAndViewModel();
         initDeleteMeetupDialog();
         initListeners();
+
         return binding.getRoot();
     }
 
@@ -78,17 +81,17 @@ public class MeetupDetailedFragment extends Fragment implements OnMapReadyCallba
                 case MEETUP_UPCOMING:
                     binding.meetupDetailedTime.setText(meetup.getFormattedTime());
                     binding.meetupDetailedTime.setTextColor(getResources().getColor(R.color.orange400));
-                    binding.meetupDetailedTime.setBackground(getResources().getDrawable(R.drawable.label_rounded_upcoming_white));
+                    binding.meetupDetailedTime.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.label_rounded_upcoming_white));
                     break;
                 case MEETUP_ACTIVE:
                     binding.meetupDetailedTime.setText(getString(R.string.meetup_active_text, meetup.getFormattedTime()));
                     binding.meetupDetailedTime.setTextColor(getResources().getColor(R.color.orange600));
-                    binding.meetupDetailedTime.setBackground(getResources().getDrawable(R.drawable.label_rounded_active_white));
+                    binding.meetupDetailedTime.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.label_rounded_active_white));
                     break;
                 case MEETUP_ENDED:
                     binding.meetupDetailedTime.setText(R.string.meetup_ended_text);
                     binding.meetupDetailedTime.setTextColor(getResources().getColor(R.color.gray500));
-                    binding.meetupDetailedTime.setBackground(getResources().getDrawable(R.drawable.label_rounded_ended_white));
+                    binding.meetupDetailedTime.setBackground(AppCompatResources.getDrawable(requireContext(), R.drawable.label_rounded_ended_white));
                     break;
             }
             initMenu(meetup);
@@ -122,16 +125,15 @@ public class MeetupDetailedFragment extends Fragment implements OnMapReadyCallba
         tabLayoutMediator.attach();
 
         ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
+        View pendingTab = slidingTabStrip.getChildAt(Constants.PENDING_TAB_INDEX);
+        LinearLayout.LayoutParams pendingTabLayoutParams = (LinearLayout.LayoutParams) pendingTab.getLayoutParams();
+        pendingTabLayoutParams.weight = Constants.PENDING_HEADER_WEIGHT;
+        pendingTab.setLayoutParams(pendingTabLayoutParams);
 
-        View tab2 = slidingTabStrip.getChildAt(Constants.PENDING_TAB_INDEX);
-        LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) tab2.getLayoutParams();
-        layoutParams2.weight = Constants.PENDING_HEADER_WEIGHT;
-        tab2.setLayoutParams(layoutParams2);
-
-        View tab3 = slidingTabStrip.getChildAt(Constants.ADD_MORE_TAB_INDEX);
-        LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) tab3.getLayoutParams();
-        layoutParams3.weight = Constants.ADD_HEADER_WEIGHT;
-        tab3.setLayoutParams(layoutParams3);
+        View addMoreTab = slidingTabStrip.getChildAt(Constants.ADD_MORE_TAB_INDEX);
+        LinearLayout.LayoutParams addMoreTabLayoutParams = (LinearLayout.LayoutParams) addMoreTab.getLayoutParams();
+        addMoreTabLayoutParams.weight = Constants.ADD_HEADER_WEIGHT;
+        addMoreTab.setLayoutParams(addMoreTabLayoutParams);
     }
 
     private void initMenu(Meetup meetup) {
