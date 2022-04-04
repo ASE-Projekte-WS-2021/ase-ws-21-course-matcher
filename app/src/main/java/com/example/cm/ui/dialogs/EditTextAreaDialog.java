@@ -119,17 +119,14 @@ public class EditTextAreaDialog extends Dialog {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int currCharCount = s.length();
                 String charCountString = getContext().getString(R.string.edit_profile_bio_char_count, currCharCount, MAX_CHAR_COUNT);
-
                 binding.bioCharacterCount.setText(charCountString);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Limit text to max lines
-                // Inspired by: https://stackoverflow.com/a/16365996
-                if (binding.inputField.getLineCount() > MAX_LINES) {
-                    binding.inputField.setText(text);
-                    binding.inputField.setSelection(beforeCursorPosition);
+                // Limit text to contain only 3 new line symbols
+                if (binding.inputField.getText() != null && countLines(s.toString()) > MAX_LINES) {
+                    binding.inputField.getText().delete(s.length() - 1, s.length());
                 }
 
                 if (binding.inputField.getText() != null && s.length() > MAX_CHAR_COUNT) {
@@ -153,6 +150,24 @@ public class EditTextAreaDialog extends Dialog {
         String newValue = binding.inputField.getText().toString();
         listener.onTextAreaSaved(fieldToUpdate, newValue);
         disableConfirmButton();
+    }
+
+    /**
+     * Counts the number of new line symbols in the given string
+     *
+     * @param str String to count new line symbols in
+     * @return Number of new line symbols
+     */
+    private int countLines(String str) {
+        if (str == null || str.isEmpty()) {
+            return 0;
+        }
+        int lines = 0;
+        int pos = 0;
+        while ((pos = str.indexOf("\n", pos) + 1) != 0) {
+            lines++;
+        }
+        return lines;
     }
 
     public interface OnSaveListener {
