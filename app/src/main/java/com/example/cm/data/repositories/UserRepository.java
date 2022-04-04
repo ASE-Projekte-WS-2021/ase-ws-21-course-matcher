@@ -21,12 +21,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 public class UserRepository extends Repository {
 
@@ -37,6 +40,7 @@ public class UserRepository extends Repository {
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
     private MutableLiveData<List<String>> mutableUsernames = new MutableLiveData<>();
+    private HashMap<String, ListenerRegistration> registrations = new HashMap<>();
 
     private List<User> users = new ArrayList<>();
 
@@ -396,7 +400,8 @@ public class UserRepository extends Repository {
 
         List<List<String>> subLists = Lists.partition(userIdsNoDuplicates, MAX_QUERY_LENGTH);
         for (List<String> subList : subLists) {
-            userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
+            String uuid = UUID.randomUUID().toString();
+            ListenerRegistration registration = userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
                     (value, error) -> {
                         if (error != null) {
                             return;
@@ -406,9 +411,19 @@ public class UserRepository extends Repository {
                             users.addAll(snapshotToMutableUserList(value));
                             mutableUsers.postValue(users);
                         }
+                        removeListener(uuid);
                     });
+            registrations.put(uuid, registration);
         }
         return mutableUsers;
+    }
+
+    private void removeListener(String uuid) {
+        ListenerRegistration registration = registrations.get(uuid);
+        if (registration != null) {
+            registration.remove();
+            registrations.remove(uuid);
+        }
     }
 
     /**
@@ -504,7 +519,7 @@ public class UserRepository extends Repository {
      * @param userIds list of users to search in
      * @param query   String to search for
      * @return MutableLiveData-List of mutable users within given list with query
-     *         matching name
+     * matching name
      */
     public MutableLiveData<List<User>> getUsersByIdsAndName(List<String> userIds, String query) {
         if (userIds == null || userIds.isEmpty()) {
