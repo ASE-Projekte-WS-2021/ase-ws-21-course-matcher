@@ -121,19 +121,15 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     }
 
     private void updateListByQuery(String query) {
-        Timber.d("updateListByQuery: %s", query);
         List<User> filteredUsers = friendsViewModel.getFilteredUsers(query);
         if (filteredUsers == null) {
-            Timber.d("updateListByQuery: filteredUsers is null");
             return;
         }
         if (filteredUsers.isEmpty()) {
-            Timber.d("updateListByQuery: filteredUsers is empty");
             binding.noFriendsWrapper.setVisibility(View.VISIBLE);
             binding.rvUserList.setVisibility(View.GONE);
             return;
         }
-        Timber.d("updateListByQuery: filteredUsers is not empty");
         binding.noFriendsWrapper.setVisibility(View.GONE);
         binding.rvUserList.setVisibility(View.VISIBLE);
         friendsListAdapter.setFriends(filteredUsers);
