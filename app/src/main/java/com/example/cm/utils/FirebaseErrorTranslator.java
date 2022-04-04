@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 public class FirebaseErrorTranslator {
     public static String getErrorMessage(Exception exception) {
-        String errorMessage = "";
+        String errorMessage;
         try {
             throw exception;
         } catch (FirebaseAuthWeakPasswordException e) {
@@ -18,7 +18,7 @@ public class FirebaseErrorTranslator {
         } catch (FirebaseAuthUserCollisionException e) {
             errorMessage = Constants.USER_COLLISION;
         } catch (FirebaseAuthInvalidUserException e) {
-            errorMessage = Constants.INVALID_CREDENTIALS;
+            errorMessage = Constants.NO_USER;
         } catch (Exception e) {
             errorMessage = Constants.DEFAULT_ERROR;
         }
