@@ -62,7 +62,7 @@ public class Constants {
 
     // Firebase errors
     public static String WEAK_PASSWORD = "Dein Passwort muss mindestens 6 Zeichen lang sein.";
-    public static String INVALID_CREDENTIALS = "Keine valide Email-Adresse.";
+    public static String INVALID_CREDENTIALS = "Falsche Anmeldedaten.";
     public static String NO_USER = "Kein User mit diesen Anmeldedaten vorhanden.";
     public static String USER_COLLISION = "Es existiert bereits ein User mit dieser Email-Adresse.";
     public static final long MAX_REGISTRATION_TIME = 240000;
