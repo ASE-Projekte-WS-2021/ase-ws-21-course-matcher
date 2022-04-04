@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,8 +33,6 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     private AuthViewModel authViewModel;
     private ActivityRegisterBinding binding;
     private List<String> usernames;
-    private Handler handler;
-    private Runnable runnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,6 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        initTimer();
         initViewModel();
         initListeners();
         initTexts();
@@ -54,32 +52,6 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
 
     private void initTemporaryAuth() {
         authViewModel.login(Constants.TEMP_EMAIL, Constants.TEMP_PASSWORD, this);
-    }
-
-    private void initTimer() {
-        handler = new Handler();
-        runnable = this::closeActivityOnTimeout;
-    }
-
-    private void closeActivityOnTimeout() {
-        binding.registerRegisterBtn.setEnabled(false);
-        Snackbar snackbar = Snackbar.make(binding.getRoot(), R.string.registrationTooLong, Snackbar.LENGTH_LONG);
-        snackbar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
-                    Intent intent = new Intent(RegisterActivity.this, AuthActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-
-            @Override
-            public void onShown(Snackbar snackbar) {
-            }
-        });
-        snackbar.show();
     }
 
     private void initViewModel() {
@@ -241,10 +213,6 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
         binding.registerRegisterBtn.setBackground(buttonDrawable);
     }
 
-    private void startTimer() {
-        handler.postDelayed(runnable, Constants.MAX_REGISTRATION_TIME);
-    }
-
     private void goToLogin(View view) {
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         endTemporaryAuth();
@@ -267,8 +235,6 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
         if (Objects.equals(authViewModel.getUserLiveData().getValue().getEmail(), Constants.TEMP_EMAIL)) {
             authViewModel.logout();
         }
-
-        handler.removeCallbacks(runnable);
     }
 
     @Override
@@ -293,7 +259,6 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
     @Override
     public void onLoginSuccess(String email) {
         if (email.equals(Constants.TEMP_EMAIL)) {
-            startTimer();
             authViewModel.getUsernames(this);
         } else {
             Timber.d(Constants.UNEXPECTED_USER);

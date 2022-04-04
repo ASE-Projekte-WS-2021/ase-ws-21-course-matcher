@@ -17,6 +17,8 @@ import com.example.cm.ui.onboarding.OnboardingActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 @SuppressLint("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
     private ActivitySplashScreenBinding binding;
@@ -39,7 +41,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void initAuthentication() {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
-            isAuthenticated = true;
+            if (Objects.equals(firebaseUser.getEmail(), Constants.TEMP_EMAIL)) {
+                FirebaseAuth.getInstance().signOut();
+                isAuthenticated = false;
+            } else {
+                isAuthenticated = true;
+            }
         }
     }
 
