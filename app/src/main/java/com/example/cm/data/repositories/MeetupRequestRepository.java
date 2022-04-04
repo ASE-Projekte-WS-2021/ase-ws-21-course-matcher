@@ -1,7 +1,5 @@
 package com.example.cm.data.repositories;
 
-import android.util.Log;
-
 import static com.example.cm.Constants.FIELD_CREATED_AT;
 import static com.example.cm.Constants.FIELD_ID;
 import static com.example.cm.Constants.FIELD_MEETUP_ID;
@@ -27,7 +25,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;

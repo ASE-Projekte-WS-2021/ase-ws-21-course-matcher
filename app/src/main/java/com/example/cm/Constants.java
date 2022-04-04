@@ -65,7 +65,6 @@ public class Constants {
     public static String INVALID_CREDENTIALS = "Falsche Anmeldedaten.";
     public static String NO_USER = "Kein User mit diesen Anmeldedaten vorhanden.";
     public static String USER_COLLISION = "Es existiert bereits ein User mit dieser Email-Adresse.";
-    public static final long MAX_REGISTRATION_TIME = 240000;
     public static final Throwable UNEXPECTED_USER = new Throwable("This user is not expected here.");
     public static String DEFAULT_ERROR = "Etwas ist schief gegangen.";
 
