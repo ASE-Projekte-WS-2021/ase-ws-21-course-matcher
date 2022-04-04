@@ -17,8 +17,10 @@ import android.view.inputmethod.InputMethodManager;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.example.cm.R;
@@ -57,7 +59,11 @@ public class Utils {
      * @return NavController for the fragment
      */
     public static NavController findNavController(FragmentActivity activity) {
-        return Navigation.findNavController(activity, R.id.nav_host_fragment_activity_main);
+        NavHostFragment navHostFragment = (NavHostFragment) activity.getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+        if (navHostFragment != null) {
+            return navHostFragment.getNavController();
+        }
+        return null;
     }
 
     /**
