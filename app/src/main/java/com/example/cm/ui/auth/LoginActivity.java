@@ -8,6 +8,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.cm.Constants;
 import com.example.cm.MainActivity;
 import com.example.cm.R;
 import com.example.cm.databinding.ActivityLoginBinding;
@@ -70,6 +71,11 @@ public class LoginActivity extends AppCompatActivity {
 
         if (email.isEmpty()) {
             binding.loginEmailEditText.textInputLayout.setError(getString(R.string.loginEmailNeeded));
+            return;
+        }
+
+        if (email.equals(Constants.TEMP_EMAIL)) {
+            binding.loginEmailEditText.textInputLayout.setError(getString(R.string.loginEmailUnexpected));
             return;
         }
 

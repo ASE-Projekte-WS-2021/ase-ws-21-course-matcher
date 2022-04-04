@@ -279,5 +279,6 @@
     <string name="input_label_repeat_password">Passwort wiederholen</string>
     <string name="registerPasswordRepeatedEmpty">Bitte wiederhole dein Passwort.</string>
     <string name="same_as_current_username">Neuer Nutzername entspricht dem aktuellen.</string>
+    <string name="loginEmailUnexpected">Diese E-Mail ist nicht zulässig.</string>
 
 </resources>
