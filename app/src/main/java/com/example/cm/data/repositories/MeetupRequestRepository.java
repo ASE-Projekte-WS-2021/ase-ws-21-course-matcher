@@ -8,7 +8,7 @@ import static com.example.cm.Constants.FIELD_RECEIVER_ID;
 import static com.example.cm.Constants.FIELD_SENDER_ID;
 import static com.example.cm.Constants.FIELD_STATE;
 import static com.example.cm.Constants.FIELD_TYPE;
-import static com.example.cm.data.models.Request.RequestState.REQUEST_ANSWERED;
+import static com.example.cm.data.models.Request.RequestState.ENDED;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
@@ -87,7 +87,7 @@ public class MeetupRequestRepository extends Repository {
            if (task.isSuccessful()) {
                DocumentSnapshot result = task.getResult();
                if (Objects.equals(result.get(FIELD_PHASE), MeetupPhase.MEETUP_ENDED.toString())) {
-                   meetupRequestCollection.document(requestId).update(FIELD_STATE, REQUEST_ANSWERED);
+                   meetupRequestCollection.document(requestId).update(FIELD_STATE, ENDED);
                }
            }
         });
