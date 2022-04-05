@@ -1,14 +1,5 @@
 package com.example.cm.data.repositories;
 
-import static com.example.cm.Constants.FIELD_CONFIRMED_FRIENDS;
-import static com.example.cm.Constants.FIELD_DECLINED_FRIENDS;
-import static com.example.cm.Constants.FIELD_INVITED_FRIENDS;
-import static com.example.cm.Constants.FIELD_LATE_FRIENDS;
-import static com.example.cm.Constants.FIELD_TIMESTAMP;
-import static com.example.cm.data.models.MeetupPhase.MEETUP_ACTIVE;
-import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
-import static com.example.cm.data.repositories.Repository.executorService;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -32,6 +23,15 @@ import java.util.HashSet;
 import java.util.List;
 
 import timber.log.Timber;
+
+import static com.example.cm.Constants.FIELD_CONFIRMED_FRIENDS;
+import static com.example.cm.Constants.FIELD_DECLINED_FRIENDS;
+import static com.example.cm.Constants.FIELD_INVITED_FRIENDS;
+import static com.example.cm.Constants.FIELD_LATE_FRIENDS;
+import static com.example.cm.Constants.FIELD_TIMESTAMP;
+import static com.example.cm.data.models.MeetupPhase.MEETUP_ACTIVE;
+import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
+import static com.example.cm.data.repositories.Repository.executorService;
 
 public class MeetupRepository {
     private static MeetupRepository instance;
@@ -160,11 +160,11 @@ public class MeetupRepository {
                     for (QueryDocumentSnapshot document : value) {
                         MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
                         meetupPOJO.setId(document.getId());
+                        Meetup meetup = meetupPOJO.toObject();
 
-                        //todo
-                        // if (meetupPOJO.getPhase() == MEETUP_ACTIVE) {
-                        // meetups.add(meetupPOJO.toObject());
-                        // }
+                        if (meetup.calculateMeetupPhase() == MEETUP_ACTIVE) {
+                            meetups.add(meetupPOJO.toObject());
+                        }
                     }
                     listener.onMeetupSuccess(meetups);
                 });
