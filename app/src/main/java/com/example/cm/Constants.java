@@ -79,7 +79,6 @@ public class Constants {
     public static final String FIELD_INVITED_FRIENDS = "invitedFriends";
     public static final String FIELD_LATE_FRIENDS = "lateFriends";
     public static final String FIELD_TIMESTAMP = "timestamp";
-    public static final String FIELD_PHASE = "phase";
     public static final String FIELD_SENDER_ID = "senderId";
     public static final String FIELD_RECEIVER_ID = "receiverId";
     public static final String FIELD_STATE = "state";

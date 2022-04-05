@@ -96,7 +96,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         String address = meetup.getLocationName();
         holder.getTvLocation().setText(address);
 
-        switch (meetup.getPhase()) {
+        switch (meetup.calculateMeetupPhase()) {
             case MEETUP_UPCOMING:
                 holder.getTvTime().setText(meetup.getFormattedTime());
                 holder.getTvTime().setTextColor(context.getResources().getColor(R.color.orange400));

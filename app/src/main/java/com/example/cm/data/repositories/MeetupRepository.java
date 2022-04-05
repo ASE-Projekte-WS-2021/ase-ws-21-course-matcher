@@ -4,7 +4,6 @@ import static com.example.cm.Constants.FIELD_CONFIRMED_FRIENDS;
 import static com.example.cm.Constants.FIELD_DECLINED_FRIENDS;
 import static com.example.cm.Constants.FIELD_INVITED_FRIENDS;
 import static com.example.cm.Constants.FIELD_LATE_FRIENDS;
-import static com.example.cm.Constants.FIELD_PHASE;
 import static com.example.cm.Constants.FIELD_TIMESTAMP;
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ACTIVE;
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
@@ -80,21 +79,17 @@ public class MeetupRepository {
                     }
                     List<Meetup> meetups = new ArrayList<>();
                     if (value != null && !value.isEmpty()) {
-                        for (int i = 0; i < value.getDocuments().size(); i++) {
-                            Meetup meetup = snapshotToMeetup(value.getDocuments().get(i));
-                            MeetupPhase currentPhase = meetup.getPhase();
-                            MeetupPhase phaseInFirestore = value.getDocuments().get(i).get(FIELD_PHASE, MeetupPhase.class);
 
-                            if (phaseInFirestore != MEETUP_ENDED) {
-                                if (currentPhase != MEETUP_ENDED) {
-                                    meetups.add(meetup);
-                                }
-                                value.getDocuments().get(i).getReference().update(FIELD_PHASE, currentPhase);
+                        for (DocumentSnapshot snapshot : value.getDocuments()) {
+                            Meetup meetup = snapshotToMeetup(snapshot);
+                            MeetupPhase currentPhase = meetup.calculateMeetupPhase();
+
+                            if (currentPhase != MEETUP_ENDED && (!meetup.getInvitedFriends().isEmpty() || !meetup.getConfirmedFriends().isEmpty())) {
+                                meetups.add(meetup);
                             }
                         }
                         meetupListMLD.postValue(meetups);
                     }
-                    meetupListMLD.postValue(meetups);
                 });
     }
 
@@ -166,9 +161,10 @@ public class MeetupRepository {
                         MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
                         meetupPOJO.setId(document.getId());
 
-                        if (meetupPOJO.getPhase() == MEETUP_ACTIVE) {
-                            meetups.add(meetupPOJO.toObject());
-                        }
+                        //todo
+                        // if (meetupPOJO.getPhase() == MEETUP_ACTIVE) {
+                        // meetups.add(meetupPOJO.toObject());
+                        // }
                     }
                     listener.onMeetupSuccess(meetups);
                 });
@@ -293,18 +289,6 @@ public class MeetupRepository {
         meetupCollection.document(meetupId).update(FIELD_CONFIRMED_FRIENDS, FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update(FIELD_LATE_FRIENDS, FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update(FIELD_DECLINED_FRIENDS, FieldValue.arrayRemove(participantId));
-        meetupCollection.document(meetupId)
-                .addSnapshotListener(executorService, (value, error) -> {
-                    if (error != null) {
-                        return;
-                    }
-                    if (value != null && value.exists()) {
-                        Meetup meetup = snapshotToMeetup(value);
-                        if (meetup.getInvitedFriends().isEmpty() && meetup.getConfirmedFriends().isEmpty()) {
-                            meetupCollection.document(meetupId).update(FIELD_PHASE, MEETUP_ENDED);
-                        }
-                    }
-                });
     }
 
     /**
