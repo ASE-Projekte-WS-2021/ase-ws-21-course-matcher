@@ -50,7 +50,7 @@ public class FriendRequestRepository extends Repository {
                     if (error != null) {
                         return;
                     }
-                    if(value != null && value.isEmpty()) {
+                    if (value != null && value.isEmpty()) {
                         mutableRequestList.postValue(new ArrayList<>());
                     }
                     if (value != null && !value.isEmpty()) {

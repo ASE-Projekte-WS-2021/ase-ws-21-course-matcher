@@ -14,26 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class SnapPagerScrollListener extends RecyclerView.OnScrollListener {
 
-    // Constants
     public static final int ON_SCROLL = 0;
     public static final int ON_SETTLED = 1;
 
-    @IntDef({ON_SCROLL, ON_SETTLED})
-    public @interface Type {
-    }
-
-    public interface OnChangeListener {
-        void onSnapped(int position);
-    }
-
-    // Properties
     private final PagerSnapHelper snapHelper;
     private final int type;
     private final boolean notifyOnInit;
     private final OnChangeListener listener;
     private int snapPosition;
 
-    // Constructor
     public SnapPagerScrollListener(PagerSnapHelper snapHelper, @Type int type, boolean notifyOnInit, OnChangeListener listener) {
         this.snapHelper = snapHelper;
         this.type = type;
@@ -42,7 +31,6 @@ public class SnapPagerScrollListener extends RecyclerView.OnScrollListener {
         this.snapPosition = RecyclerView.NO_POSITION;
     }
 
-    // Methods
     @Override
     public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
@@ -87,5 +75,13 @@ public class SnapPagerScrollListener extends RecyclerView.OnScrollListener {
 
     private boolean hasItemPosition() {
         return snapPosition != RecyclerView.NO_POSITION;
+    }
+
+    @IntDef({ON_SCROLL, ON_SETTLED})
+    public @interface Type {
+    }
+
+    public interface OnChangeListener {
+        void onSnapped(int position);
     }
 }
