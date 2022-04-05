@@ -8,6 +8,7 @@ import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPOJO;
 import com.example.cm.data.models.MeetupPhase;
+import com.example.cm.utils.Utils;
 import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -82,7 +83,7 @@ public class MeetupRepository {
 
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Meetup meetup = snapshotToMeetup(snapshot);
-                            MeetupPhase currentPhase = meetup.calculateMeetupPhase();
+                            MeetupPhase currentPhase = Utils.getPhaseByTimestamp(meetup.getTimestamp());
 
                             if (currentPhase != MEETUP_ENDED && (!meetup.getInvitedFriends().isEmpty() || !meetup.getConfirmedFriends().isEmpty())) {
                                 meetups.add(meetup);
@@ -162,7 +163,7 @@ public class MeetupRepository {
                         meetupPOJO.setId(document.getId());
                         Meetup meetup = meetupPOJO.toObject();
 
-                        if (meetup.calculateMeetupPhase() == MEETUP_ACTIVE) {
+                        if (Utils.getPhaseByTimestamp(meetup.getTimestamp()) == MEETUP_ACTIVE) {
                             meetups.add(meetupPOJO.toObject());
                         }
                     }
