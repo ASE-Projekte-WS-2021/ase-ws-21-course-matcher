@@ -39,7 +39,6 @@ public class UserRepository extends Repository {
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
-    private MutableLiveData<List<String>> mutableUsernames = new MutableLiveData<>();
     private HashMap<String, ListenerRegistration> registrations = new HashMap<>();
 
     private List<User> users = new ArrayList<>();
