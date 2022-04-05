@@ -106,8 +106,15 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     @Override
     public void onBindViewHolder(@NonNull MeetupRequestListAdapter.MeetupRequestViewHolder holder, int position) {
+        if (position == RecyclerView.NO_POSITION) {
+            return;
+        }
         Context context = holder.binding.getRoot().getContext();
         MeetupRequest request = mRequests.get(position);
+
+        if (request == null) {
+            return;
+        }
 
         String user = String.format("@%s ", getUsername(Objects.requireNonNull(request).getSenderId()));
         String date = request.getCreationTimeAgo();

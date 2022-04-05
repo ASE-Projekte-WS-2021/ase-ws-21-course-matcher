@@ -78,12 +78,24 @@ public class InviteMoreFriendsViewModel extends ViewModel {
         }
     }
 
-    public void searchUsers(String query, List<String> usersAlreadyInMeetup) {
-        if (users.getValue() != null) {
-            users.getValue().clear();
-            users = userRepository.getFriendsByUsernameExcept(query, usersAlreadyInMeetup);
+    public List<User> getFilteredUsers(String query) {
+        if(users.getValue() == null) {
+            return null;
         }
+
+        List<User> filteredUsers = new ArrayList<>();
+        for(User user : users.getValue()) {
+            boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
+            boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
+
+            if(isQueryInUsername || isQueryInFullName) {
+                filteredUsers.add(user);
+            }
+        }
+
+        return filteredUsers;
     }
+
 
     public void clearSelectedUsers() {
         if (selectedUsers.getValue() != null) {

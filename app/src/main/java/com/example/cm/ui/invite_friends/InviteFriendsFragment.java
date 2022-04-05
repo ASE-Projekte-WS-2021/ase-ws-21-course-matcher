@@ -1,5 +1,6 @@
 package com.example.cm.ui.invite_friends;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,11 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
 import com.example.cm.utils.Navigator;
 
+import java.util.List;
+import java.util.Objects;
 
 public class InviteFriendsFragment extends Fragment implements InviteFriendsAdapter.OnItemClickListener {
 
@@ -44,10 +48,12 @@ public class InviteFriendsFragment extends Fragment implements InviteFriendsAdap
 
     private void initUI() {
         inviteFriendsListAdapter = new InviteFriendsAdapter(this);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
 
         if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
-            dividerItemDecoration.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+            dividerItemDecoration
+                    .setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
         }
 
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
@@ -80,6 +86,7 @@ public class InviteFriendsFragment extends Fragment implements InviteFriendsAdap
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void initViewModel() {
         createMeetupViewModel = (CreateMeetupViewModel) bundle.getSerializable(Constants.KEY_CREATE_MEETUP_VM);
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
@@ -92,6 +99,7 @@ public class InviteFriendsFragment extends Fragment implements InviteFriendsAdap
             }
 
             inviteFriendsListAdapter.setUsers(users);
+            inviteFriendsListAdapter.notifyDataSetChanged();
             binding.rvUserList.setVisibility(View.VISIBLE);
             binding.noFriendsWrapper.setVisibility(View.GONE);
         });
@@ -107,19 +115,37 @@ public class InviteFriendsFragment extends Fragment implements InviteFriendsAdap
     }
 
     private void onClearInputClicked() {
-        binding.etUserSearch.setText(requireContext().getString(R.string.empty_string));
-        createMeetupViewModel.searchUsers(requireContext().getString(R.string.empty_string));
+        binding.etUserSearch.setText("");
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
     private void onSearchTextChanged(CharSequence charSequence) {
         String query = charSequence.toString();
+        toggleClearButton(query);
+        updateListByQuery(query);
+    }
+
+    private void toggleClearButton(String query) {
         if (!query.isEmpty()) {
             binding.ivClearInput.setVisibility(View.VISIBLE);
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
         }
-        createMeetupViewModel.searchUsers(query);
+    }
+
+    private void updateListByQuery(String query) {
+        List<User> filteredUsers = createMeetupViewModel.getFilteredUsers(query);
+        if (filteredUsers == null) {
+            return;
+        }
+        if (filteredUsers.isEmpty()) {
+            binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+            binding.rvUserList.setVisibility(View.GONE);
+            return;
+        }
+        binding.noFriendsWrapper.setVisibility(View.GONE);
+        binding.rvUserList.setVisibility(View.VISIBLE);
+        inviteFriendsListAdapter.setUsers(filteredUsers);
     }
 
     private void showInvitationButton(boolean showButton) {
@@ -146,6 +172,7 @@ public class InviteFriendsFragment extends Fragment implements InviteFriendsAdap
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_USER_ID, id);
-        navigator.getNavController().navigate(R.id.action_navigation_invite_friends_to_navigation_other_profile, bundle);
+        navigator.getNavController().navigate(R.id.action_navigation_invite_friends_to_navigation_other_profile,
+                bundle);
     }
 }

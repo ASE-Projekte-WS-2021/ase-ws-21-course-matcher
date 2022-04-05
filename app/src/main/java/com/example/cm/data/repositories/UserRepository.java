@@ -21,12 +21,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 public class UserRepository extends Repository {
 
@@ -37,6 +40,9 @@ public class UserRepository extends Repository {
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
     private MutableLiveData<List<String>> mutableUsernames = new MutableLiveData<>();
+    private HashMap<String, ListenerRegistration> registrations = new HashMap<>();
+
+    private List<User> users = new ArrayList<>();
 
     public UserRepository() {
     }
@@ -298,6 +304,8 @@ public class UserRepository extends Repository {
      * @return MutableLiveData-List of mutable friends
      */
     public MutableLiveData<List<User>> getFriends() {
+        mutableUsers.postValue(new ArrayList<>());
+
         if (auth.getCurrentUser() == null) {
             return mutableUsers;
         }
@@ -384,22 +392,38 @@ public class UserRepository extends Repository {
             return mutableUsers;
         }
 
+        if (!users.isEmpty()) {
+            users = new ArrayList<>();
+        }
+
         List<String> userIdsNoDuplicates = new ArrayList<>(new HashSet<>(userIds));
 
         List<List<String>> subLists = Lists.partition(userIdsNoDuplicates, MAX_QUERY_LENGTH);
         for (List<String> subList : subLists) {
-            userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
+            String uuid = UUID.randomUUID().toString();
+            ListenerRegistration registration = userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
                     (value, error) -> {
                         if (error != null) {
                             return;
                         }
+
                         if (value != null && !value.isEmpty()) {
-                            List<User> users = snapshotToMutableUserList(value);
+                            users.addAll(snapshotToMutableUserList(value));
                             mutableUsers.postValue(users);
                         }
+                        removeListener(uuid);
                     });
+            registrations.put(uuid, registration);
         }
         return mutableUsers;
+    }
+
+    private void removeListener(String uuid) {
+        ListenerRegistration registration = registrations.get(uuid);
+        if (registration != null) {
+            registration.remove();
+            registrations.remove(uuid);
+        }
     }
 
     /**
@@ -526,6 +550,7 @@ public class UserRepository extends Repository {
 
     public void getUsernames(UsernamesRetrievedCallback callback) {
         List<String> usernames = new ArrayList<>();
+
         userCollection.get().addOnCompleteListener(executorService, task -> {
             if (task.isComplete() && FirebaseAuth.getInstance().getCurrentUser() != null) {
                 QuerySnapshot result = task.getResult();
@@ -535,7 +560,8 @@ public class UserRepository extends Repository {
                     usernames.add(user.getUsername());
                 }
 
-                String currentUsername = getCurrentUser().getValue() != null ? getCurrentUser().getValue().getUsername() : null;
+                String currentUsername = getCurrentUser().getValue() != null ? getCurrentUser().getValue().getUsername()
+                        : null;
                 callback.onUsernamesRetrieved(usernames, currentUsername);
             }
         });

@@ -20,8 +20,6 @@ import com.example.cm.ui.adapters.MeetupListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
-
 public class MeetupListFragment extends Fragment {
 
     private FragmentMeetupListBinding binding;
