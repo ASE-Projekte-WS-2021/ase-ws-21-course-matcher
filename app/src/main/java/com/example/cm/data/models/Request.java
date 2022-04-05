@@ -94,6 +94,7 @@ public class Request {
         REQUEST_ACCEPTED,
         REQUEST_DECLINED,
         REQUEST_PENDING,
-        REQUEST_ANSWERED
+        REQUEST_ANSWERED,
+        ENDED
     }
 }

@@ -90,6 +90,10 @@ public class Meetup {
     }
 
     public MeetupPhase getPhase() {
+        return phase;
+    }
+
+    public MeetupPhase getPhaseCalculated() {
         Date now = new Date();
         calendarNow.setTime(now);
         // is today?

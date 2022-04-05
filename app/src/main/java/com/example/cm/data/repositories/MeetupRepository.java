@@ -82,7 +82,7 @@ public class MeetupRepository {
                     if (value != null && !value.isEmpty()) {
                         for (int i = 0; i < value.getDocuments().size(); i++) {
                             Meetup meetup = snapshotToMeetup(value.getDocuments().get(i));
-                            MeetupPhase currentPhase = meetup.getPhase();
+                            MeetupPhase currentPhase = meetup.getPhaseCalculated();
                             MeetupPhase phaseInFirestore = value.getDocuments().get(i).get(FIELD_PHASE, MeetupPhase.class);
 
                             if (phaseInFirestore != MEETUP_ENDED) {
