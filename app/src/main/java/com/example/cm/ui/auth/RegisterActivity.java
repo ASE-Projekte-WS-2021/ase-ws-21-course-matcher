@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -114,6 +115,15 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
 
             @Override
             public void afterTextChanged(Editable editable) {
+                if (binding.registerUsernameEditText.inputField.getText() == null) {
+                    return;
+                }
+
+                // Replace all spaces with underscores
+                if (editable.toString().contains(" ")) {
+                    Editable replacedString = new SpannableStringBuilder(editable.toString().replace(" ", "_"));
+                    editable.replace(0, editable.length(), replacedString);
+                }
             }
         });
 

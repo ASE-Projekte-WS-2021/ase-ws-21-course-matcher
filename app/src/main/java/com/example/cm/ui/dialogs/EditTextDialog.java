@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -167,6 +168,15 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
 
             @Override
             public void afterTextChanged(Editable editable) {
+                if (binding.inputField.getText() == null) {
+                    return;
+                }
+
+                // Replace all spaces with underscores
+                if (editable.toString().contains(" ")) {
+                    Editable replacedString = new SpannableStringBuilder(editable.toString().replace(" ", "_"));
+                    editable.replace(0, editable.length(), replacedString);
+                }
             }
         });
     }
