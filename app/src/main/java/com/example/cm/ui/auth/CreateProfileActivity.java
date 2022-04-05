@@ -113,10 +113,18 @@ public class CreateProfileActivity extends AppCompatActivity implements AuthRepo
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (binding.inputBio.inputField.getText() == null) {
+                    return;
+                }
+
+                // Prevent entering new line characters
+                if (!s.toString().isEmpty() && s.toString().substring(s.length() - 1).equals("\n")) {
+                    binding.inputBio.inputField.getText().delete(s.length() - 1, s.length());
+                }
+
+                // Limit bio length to MAX_CHAR_COUNT
                 if (s.length() > MAX_CHAR_COUNT) {
-                    if (binding.inputBio.inputField.getText() != null) {
-                        binding.inputBio.inputField.getText().delete(MAX_CHAR_COUNT, s.length());
-                    }
+                    binding.inputBio.inputField.getText().delete(MAX_CHAR_COUNT, s.length());
                 }
             }
         });
