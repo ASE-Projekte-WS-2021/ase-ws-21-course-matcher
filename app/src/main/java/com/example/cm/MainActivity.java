@@ -83,7 +83,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupBottomNavigationBar() {
         binding.navView.setOnItemReselectedListener(item -> {
-            // Prevents reselection of the current item and thus unwanted re-rendering of the fragment
+            if (item.getTitle().equals(getString(R.string.title_home))) {
+                // Do nothing to prevent unwanted re-rendering of the fragment
+                return;
+            }
+            navController.navigate(item.getItemId());
         });
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
