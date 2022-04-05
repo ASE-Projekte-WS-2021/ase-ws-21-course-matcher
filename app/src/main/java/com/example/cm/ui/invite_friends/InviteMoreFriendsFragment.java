@@ -1,5 +1,6 @@
 package com.example.cm.ui.invite_friends;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,14 +18,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentInviteMoreFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.utils.Navigator;
 
 import java.util.List;
 
-
-public class InviteMoreFriendsFragment extends Fragment implements AdapterView.OnItemClickListener, InviteFriendsAdapter.OnItemClickListener {
+public class InviteMoreFriendsFragment extends Fragment
+        implements AdapterView.OnItemClickListener, InviteFriendsAdapter.OnItemClickListener {
 
     private final String meetupId;
     private final List<String> userIdsAlreadyInMeetup;
@@ -52,10 +54,12 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
 
     private void initUI() {
         inviteFriendsListAdapter = new InviteFriendsAdapter(this);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
 
         if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
-            dividerItemDecoration.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+            dividerItemDecoration
+                    .setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
         }
 
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
@@ -83,20 +87,22 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void initViewModel() {
-        inviteMoreFriendsViewModel = new ViewModelProvider(this, new InviteMoreFriendsFactory(meetupId)).get(InviteMoreFriendsViewModel.class);
+        inviteMoreFriendsViewModel = new ViewModelProvider(this, new InviteMoreFriendsFactory(meetupId))
+                .get(InviteMoreFriendsViewModel.class);
         inviteMoreFriendsViewModel.getUsers(userIdsAlreadyInMeetup).observe(getViewLifecycleOwner(), users -> {
             binding.loadingCircle.setVisibility(View.GONE);
 
             if (users.isEmpty()) {
-                int text = filtered ? R.string.find_friends_no_friends_found : R.string.friendslist_tv_no_friends_not_in_meetup;
-                binding.tvNoFriendsFound.setText(text);
+                binding.tvNoFriendsFound.setText(R.string.friendslist_tv_no_friends_not_in_meetup);
                 binding.noFriendsWrapper.setVisibility(View.VISIBLE);
                 binding.rvUserList.setVisibility(View.GONE);
                 return;
             }
 
             inviteFriendsListAdapter.setUsers(users);
+            inviteFriendsListAdapter.notifyDataSetChanged();
             binding.rvUserList.setVisibility(View.VISIBLE);
             binding.noFriendsWrapper.setVisibility(View.GONE);
         });
@@ -118,22 +124,38 @@ public class InviteMoreFriendsFragment extends Fragment implements AdapterView.O
 
     private void onClearInputClicked() {
         binding.etUserSearch.setText("");
-        inviteMoreFriendsViewModel.searchUsers(requireContext().getString(R.string.empty_string), userIdsAlreadyInMeetup);
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
     private void onSearchTextChanged(CharSequence charSequence) {
         String query = charSequence.toString();
-        if (query.length() > 0) {
-            binding.ivClearInput.setVisibility(View.VISIBLE);
-            filtered = true;
-        } else {
-            binding.ivClearInput.setVisibility(View.GONE);
-            filtered = false;
-        }
-        inviteMoreFriendsViewModel.searchUsers(query, userIdsAlreadyInMeetup);
+        toggleClearButton(query);
+        updateListByQuery(query);
     }
 
+    private void toggleClearButton(String query) {
+        if (!query.isEmpty()) {
+            binding.ivClearInput.setVisibility(View.VISIBLE);
+        } else {
+            binding.ivClearInput.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateListByQuery(String query) {
+        List<User> filteredUsers = inviteMoreFriendsViewModel.getFilteredUsers(query);
+        if (filteredUsers == null) {
+            return;
+        }
+        if (filteredUsers.isEmpty()) {
+            binding.tvNoFriendsFound.setText(R.string.find_friends_no_friends_found);
+            binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+            binding.rvUserList.setVisibility(View.GONE);
+            return;
+        }
+        binding.noFriendsWrapper.setVisibility(View.GONE);
+        binding.rvUserList.setVisibility(View.VISIBLE);
+        inviteFriendsListAdapter.setUsers(filteredUsers);
+    }
 
     private void showInvitationButton(boolean showButton) {
         if (showButton) {

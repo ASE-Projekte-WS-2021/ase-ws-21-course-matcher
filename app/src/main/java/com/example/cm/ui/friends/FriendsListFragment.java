@@ -1,5 +1,6 @@
 package com.example.cm.ui.friends;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,11 +16,17 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentFriendsListBinding;
 import com.example.cm.ui.adapters.FriendsListAdapter;
 import com.example.cm.ui.adapters.FriendsListAdapter.OnItemClickListener;
 import com.example.cm.utils.LinearLayoutManagerWrapper;
 import com.example.cm.utils.Navigator;
+
+import java.util.List;
+import java.util.Objects;
+
+import timber.log.Timber;
 
 public class FriendsListFragment extends Fragment implements OnItemClickListener {
 
@@ -40,10 +47,12 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     }
 
     private void initUI() {
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
         friendsListAdapter = new FriendsListAdapter(this);
         if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
-            dividerItemDecoration.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+            dividerItemDecoration
+                    .setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
         }
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
         binding.rvUserList.setLayoutManager(new LinearLayoutManagerWrapper(requireContext()));
@@ -70,13 +79,17 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
     }
 
     private void onClearInputClicked() {
-        binding.etUserSearch.setText(requireContext().getString(R.string.empty_string));
-        friendsViewModel.searchUsers(requireContext().getString(R.string.empty_string));
+        binding.etUserSearch.setText("");
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
     private void initViewModel() {
         friendsViewModel = new ViewModelProvider(this).get(FriendsViewModel.class);
+        observeFriends();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void observeFriends() {
         friendsViewModel.getFriends().observe(getViewLifecycleOwner(), friends -> {
             binding.loadingCircle.setVisibility(View.GONE);
 
@@ -87,6 +100,7 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
             }
 
             friendsListAdapter.setFriends(friends);
+            friendsListAdapter.notifyDataSetChanged();
             binding.rvUserList.setVisibility(View.VISIBLE);
             binding.noFriendsWrapper.setVisibility(View.GONE);
         });
@@ -94,13 +108,31 @@ public class FriendsListFragment extends Fragment implements OnItemClickListener
 
     private void onSearchTextChanged(CharSequence charSequence) {
         String query = charSequence.toString();
+        toggleClearButton(query);
+        updateListByQuery(query);
+    }
+
+    private void toggleClearButton(String query) {
         if (!query.isEmpty()) {
             binding.ivClearInput.setVisibility(View.VISIBLE);
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
         }
+    }
 
-        friendsViewModel.searchUsers(charSequence.toString());
+    private void updateListByQuery(String query) {
+        List<User> filteredUsers = friendsViewModel.getFilteredUsers(query);
+        if (filteredUsers == null) {
+            return;
+        }
+        if (filteredUsers.isEmpty()) {
+            binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+            binding.rvUserList.setVisibility(View.GONE);
+            return;
+        }
+        binding.noFriendsWrapper.setVisibility(View.GONE);
+        binding.rvUserList.setVisibility(View.VISIBLE);
+        friendsListAdapter.setFriends(filteredUsers);
     }
 
     @Override

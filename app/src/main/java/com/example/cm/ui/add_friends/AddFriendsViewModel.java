@@ -8,6 +8,7 @@ import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AddFriendsViewModel extends ViewModel {
@@ -20,6 +21,7 @@ public class AddFriendsViewModel extends ViewModel {
     public MutableLiveData<List<FriendRequest>> receivedFriendRequests;
     public MutableLiveData<List<FriendRequest>> sentFriendRequestsPending;
     public MutableLiveData<List<FriendRequest>> receivedFriendRequestsPending;
+    public String query = "";
 
     public OnRequestSentListener listener;
 
@@ -30,9 +32,14 @@ public class AddFriendsViewModel extends ViewModel {
 
         requestRepository = new FriendRequestRepository();
         receivedFriendRequests = requestRepository.getFriendRequestsForUser();
+    }
 
-        sentFriendRequestsPending = requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
-        receivedFriendRequestsPending = requestRepository.getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
+    public void setSearchQuery(String searchQuery) {
+        query = searchQuery;
+        sentFriendRequestsPending = requestRepository
+                .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
+        receivedFriendRequestsPending = requestRepository
+                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
     }
 
     public MutableLiveData<List<User>> getUsers() {
@@ -40,10 +47,14 @@ public class AddFriendsViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<FriendRequest>> getSentFriendRequestsPending() {
+        sentFriendRequestsPending = requestRepository
+                .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
         return sentFriendRequestsPending;
     }
 
     public MutableLiveData<List<FriendRequest>> getReceivedFriendRequestsPending() {
+        receivedFriendRequestsPending = requestRepository
+                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
         return receivedFriendRequestsPending;
     }
 
@@ -51,17 +62,22 @@ public class AddFriendsViewModel extends ViewModel {
         this.listener = listener;
     }
 
-    /**
-     * Search a user by their username
-     *
-     * @param query the username to search for
-     */
-    public void searchUsers(String query) {
-        if (query.isEmpty()) {
-            users = userRepository.getUsersNotFriends();
-            return;
+    public List<User> getFilteredUsers() {
+        if (users.getValue() == null) {
+            return null;
         }
-        users = userRepository.getUsersNotFriendsByQuery(query);
+
+        List<User> filteredUsers = new ArrayList<>();
+        for (User user : users.getValue()) {
+            boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
+            boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
+
+            if (isQueryInUsername || isQueryInFullName) {
+                filteredUsers.add(user);
+            }
+        }
+
+        return filteredUsers;
     }
 
     /**
@@ -111,13 +127,15 @@ public class AddFriendsViewModel extends ViewModel {
      * checks whether current user sent an friend request to user with given id
      *
      * @param requests   list of friend requests
-     * @param receiverId id of the friend to check if has received friend request of current
+     * @param receiverId id of the friend to check if has received friend request of
+     *                   current
      * @return has current user sent an friend request to user with given id
      */
 
     private boolean hasReceivedFriendRequest(List<FriendRequest> requests, String receiverId) {
         for (FriendRequest request : requests) {
-            if (request.getReceiverId().equals(receiverId) && request.getSenderId().equals(userRepository.getFirebaseUser().getUid())) {
+            if (request.getReceiverId().equals(receiverId)
+                    && request.getSenderId().equals(userRepository.getFirebaseUser().getUid())) {
                 return true;
             }
         }
