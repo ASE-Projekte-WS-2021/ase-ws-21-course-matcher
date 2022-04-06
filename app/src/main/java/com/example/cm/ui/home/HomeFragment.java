@@ -44,9 +44,9 @@ import com.example.cm.Constants;
 import com.example.cm.R;
 import com.example.cm.data.listener.MeetupListener;
 import com.example.cm.data.listener.UserListener;
-import com.example.cm.data.map.UserClusterRenderer;
 import com.example.cm.data.map.MeetupClusterRenderer;
 import com.example.cm.data.map.SnapPagerScrollListener;
+import com.example.cm.data.map.UserClusterRenderer;
 import com.example.cm.data.models.MarkerClusterItem;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupClusterItem;
@@ -295,12 +295,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                 }
 
                 requireActivity().runOnUiThread(() -> {
-                    userClusterManager.clearItems();
-                    userClusterManager.cluster();
+                    if (isAdded()) {
+                        userClusterManager.clearItems();
+                        userClusterManager.cluster();
 
-                    // Set initial position of user cards offset of screen
-                    if (binding != null) {
-                        binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
+                        // Set initial position of user cards offset of screen
+                        if (binding != null) {
+                            binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
+                        }
                     }
                 });
 
