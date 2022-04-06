@@ -294,8 +294,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                     return;
                 }
 
-                requireActivity().runOnUiThread(() -> {
-                    if (isAdded()) {
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
                         userClusterManager.clearItems();
                         userClusterManager.cluster();
 
@@ -303,8 +303,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                         if (binding != null) {
                             binding.rvUserCards.animate().translationY(binding.rvUserCards.getHeight()).alpha(INITIAL_CARD_ALPHA).setDuration(MAP_CARD_ANIMATION_DURATION);
                         }
-                    }
-                });
+                    });
+                }
 
                 for (int i = 0; i < users.size(); i++) {
                     User user = users.get(i);
@@ -322,11 +322,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                     addMarker(currentUser, true);
                 }
 
-                requireActivity().runOnUiThread(() -> {
-                    if (isAdded()) {
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
                         userClusterManager.cluster();
-                    }
-                });
+                    });
+                }
             }
 
             @Override
@@ -383,12 +383,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     private void addMarker(User user, boolean isCurrentUser) {
         if (user.getProfileImageString() == null || user.getProfileImageString().isEmpty()) {
             MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
-            requireActivity().runOnUiThread(() -> {
-                if (isAdded()) {
+            if (isAdded()) {
+                requireActivity().runOnUiThread(() -> {
                     userClusterManager.addItem(markerClusterItem);
                     userClusterManager.cluster();
-                }
-            });
+                });
+            }
             return;
         }
         Bitmap img = Utils.convertBaseStringToBitmap(user.getProfileImageString());
@@ -396,23 +396,23 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
             @Override
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource, isCurrentUser);
-                requireActivity().runOnUiThread(() -> {
-                    if (isAdded()) {
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
                         userClusterManager.addItem(markerClusterItem);
                         userClusterManager.cluster();
-                    }
-                });
+                    });
+                }
             }
 
             @Override
             public void onLoadCleared(@Nullable Drawable placeholder) {
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, placeholder, isCurrentUser);
-                requireActivity().runOnUiThread(() -> {
-                    if (isAdded()) {
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
                         userClusterManager.addItem(markerClusterItem);
                         userClusterManager.cluster();
-                    }
-                });
+                    });
+                }
             }
         });
     }
