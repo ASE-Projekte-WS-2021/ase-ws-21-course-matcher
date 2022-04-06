@@ -82,7 +82,7 @@ public class FriendRequestRepository extends Repository {
                         return;
                     }
                     if (value != null && value.isEmpty()) {
-                        mutableRequestList.postValue(new ArrayList<>());
+                        listener.onRequestSuccess(new ArrayList<>());
                     }
                     if (value != null && !value.isEmpty()) {
                         List<FriendRequest> requests = new ArrayList<>();
@@ -107,6 +107,9 @@ public class FriendRequestRepository extends Repository {
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
                         return;
+                    }
+                    if(value != null && value.isEmpty()) {
+                        listener.onRequestSuccess(new ArrayList<>());
                     }
                     if (value != null && !value.isEmpty()) {
                         List<FriendRequest> requests = new ArrayList<>();
