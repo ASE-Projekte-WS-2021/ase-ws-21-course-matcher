@@ -149,7 +149,7 @@
     <string name="edit_profile_error_min_length">%1$s muss mindestens %2$s Zeichen lang sein</string>
     <string name="edit_profile_bio_char_count">%1$d/%2$d</string>
     <string name="dialog_title_field">%1$s bearbeiten</string>
-    <string name="edit_account_email">Die E-Mail Adresse ist mit deinem RZ-Account verknüpft und kann deshalb nicht nachträglich angepasst werden.</string>
+    <string name="edit_account_email">Dein Account ist mit dieser Mail-Adresse verknüpft. Du brauchst sie, damit du dich einloggen kannst. Deshalb kann sie nicht nachträglich angepasst werden.</string>
     <string name="edit_account_password">Passwort ändern</string>
     <string name="edit_account_error_password_not_empty">Passwort-Felder dürfen nicht leer sein</string>
     <string name="edit_account_error_password_min_length">Passwort muss mindestens 6 Zeichen lang sein</string>
