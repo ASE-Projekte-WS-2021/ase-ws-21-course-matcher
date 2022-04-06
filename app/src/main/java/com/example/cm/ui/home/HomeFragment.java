@@ -381,6 +381,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     }
 
     private void addMarker(User user, boolean isCurrentUser) {
+        if (!isAdded()) {
+            return;
+        }
         if (user.getProfileImageString() == null || user.getProfileImageString().isEmpty()) {
             MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
             if (isAdded()) {
