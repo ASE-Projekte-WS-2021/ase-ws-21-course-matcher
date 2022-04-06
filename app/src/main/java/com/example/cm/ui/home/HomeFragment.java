@@ -323,7 +323,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                 }
 
                 requireActivity().runOnUiThread(() -> {
-                    userClusterManager.cluster();
+                    if (isAdded()) {
+                        userClusterManager.cluster();
+                    }
                 });
             }
 
@@ -382,8 +384,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
         if (user.getProfileImageString() == null || user.getProfileImageString().isEmpty()) {
             MarkerClusterItem markerClusterItem = getDefaultMarker(user, isCurrentUser);
             requireActivity().runOnUiThread(() -> {
-                userClusterManager.addItem(markerClusterItem);
-                userClusterManager.cluster();
+                if (isAdded()) {
+                    userClusterManager.addItem(markerClusterItem);
+                    userClusterManager.cluster();
+                }
             });
             return;
         }
@@ -393,8 +397,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, resource, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
-                    userClusterManager.addItem(markerClusterItem);
-                    userClusterManager.cluster();
+                    if (isAdded()) {
+                        userClusterManager.addItem(markerClusterItem);
+                        userClusterManager.cluster();
+                    }
                 });
             }
 
@@ -402,8 +408,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
             public void onLoadCleared(@Nullable Drawable placeholder) {
                 MarkerClusterItem markerClusterItem = new MarkerClusterItem(user, placeholder, isCurrentUser);
                 requireActivity().runOnUiThread(() -> {
-                    userClusterManager.addItem(markerClusterItem);
-                    userClusterManager.cluster();
+                    if (isAdded()) {
+                        userClusterManager.addItem(markerClusterItem);
+                        userClusterManager.cluster();
+                    }
                 });
             }
         });
