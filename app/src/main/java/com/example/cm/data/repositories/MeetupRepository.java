@@ -76,11 +76,11 @@ public class MeetupRepository {
                 .orderBy(FIELD_TIMESTAMP, Query.Direction.DESCENDING)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
+                        meetupListMLD.postValue(new ArrayList<>());
                         return;
                     }
                     List<Meetup> meetups = new ArrayList<>();
                     if (value != null && !value.isEmpty()) {
-
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Meetup meetup = snapshotToMeetup(snapshot);
                             MeetupPhase currentPhase = Utils.getPhaseByTimestamp(meetup.getTimestamp());

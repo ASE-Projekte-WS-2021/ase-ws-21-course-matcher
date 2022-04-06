@@ -402,6 +402,7 @@ public class UserRepository extends Repository {
             ListenerRegistration registration = userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
                     (value, error) -> {
                         if (error != null) {
+                            mutableUsers.postValue(new ArrayList<>());
                             return;
                         }
 
