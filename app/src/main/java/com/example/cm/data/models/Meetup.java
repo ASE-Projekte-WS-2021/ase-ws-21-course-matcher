@@ -79,6 +79,7 @@ public class Meetup {
     @Exclude
     public String getFormattedTime(){
         Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(timestamp);
         return String.format("%02d:%02d Uhr", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
     }
 
