@@ -66,6 +66,9 @@ public class OtherProfileFragment extends Fragment {
         if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_add_friend)) {
             otherProfileViewModel.sendFriendRequestTo(profileId);
             binding.btnAddRemoveFriend.setText(getResources().getString(R.string.btn_send_friend_request_pending));
+        } else if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.btn_send_friend_request_pending)) {
+            binding.btnAddRemoveFriend.setText(getResources().getString(R.string.profile_btn_add_friend));
+            otherProfileViewModel.removeFriendRequest(profileId);
         } else if (binding.btnAddRemoveFriend.getText() == getResources().getString(R.string.profile_btn_remove_friend)) {
             otherProfileViewModel.unfriend(profileId);
             binding.btnAddRemoveFriend.setText(getResources().getString(R.string.profile_btn_add_friend));
