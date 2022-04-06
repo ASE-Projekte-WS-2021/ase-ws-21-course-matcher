@@ -43,19 +43,6 @@ public class Utils {
     private static final Calendar calendarMeetup = GregorianCalendar.getInstance();
 
     /**
-     * Hides the keyboard
-     *
-     * @param context Context of the activity
-     * @param view    View to hide the keyboard from
-     */
-    public static void hideKeyboard(Context context, View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    /**
      * Find the NavController for a given fragment
      *
      * @param activity Host activity of the fragment
