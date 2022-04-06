@@ -1,5 +1,7 @@
 package com.example.cm.ui.dialogs;
 
+import static com.example.cm.utils.Utils.replaceIn;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -172,11 +174,7 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
                     return;
                 }
 
-                // Replace all spaces with underscores
-                if (editable.toString().contains(" ")) {
-                    Editable replacedString = new SpannableStringBuilder(editable.toString().replace(" ", "_"));
-                    editable.replace(0, editable.length(), replacedString);
-                }
+                replaceIn(editable, " ", "_");
             }
         });
     }

@@ -1,5 +1,7 @@
 package com.example.cm.ui.auth;
 
+import static com.example.cm.utils.Utils.replaceIn;
+
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import com.example.cm.R;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ActivityRegisterBinding;
+import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -119,11 +122,7 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
                     return;
                 }
 
-                // Replace all spaces with underscores
-                if (editable.toString().contains(" ")) {
-                    Editable replacedString = new SpannableStringBuilder(editable.toString().replace(" ", "_"));
-                    editable.replace(0, editable.length(), replacedString);
-                }
+                replaceIn(editable, " ", "_");
             }
         });
 

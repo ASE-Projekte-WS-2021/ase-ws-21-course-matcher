@@ -10,6 +10,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Geocoder;
+import android.text.Editable;
+import android.text.SpannableStringBuilder;
 import android.util.Base64;
 
 import androidx.core.content.ContextCompat;
@@ -193,6 +195,19 @@ public class Utils {
     public static Bitmap convertBaseStringToBitmap(String imageString) {
         byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    /**
+     * Replaces a given string with another string
+     * @param editable Editable to replace the string in
+     * @param toReplace The string to replace
+     * @param replacement String that replaces the toReplace string
+     */
+    public static void replaceIn(Editable editable, String toReplace, String replacement) {
+        if (editable.toString().contains(toReplace)) {
+            Editable replacedString = new SpannableStringBuilder(editable.toString().replace(toReplace, replacement));
+            editable.replace(0, editable.length(), replacedString);
+        }
     }
 }
 
