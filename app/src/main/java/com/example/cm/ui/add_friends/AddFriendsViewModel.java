@@ -11,6 +11,8 @@ import com.example.cm.data.repositories.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 public class AddFriendsViewModel extends ViewModel {
 
     private final UserRepository userRepository;
@@ -32,6 +34,11 @@ public class AddFriendsViewModel extends ViewModel {
 
         requestRepository = new FriendRequestRepository();
         receivedFriendRequests = requestRepository.getFriendRequestsForUser();
+
+        sentFriendRequestsPending = requestRepository
+                .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
+        receivedFriendRequestsPending = requestRepository
+                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
     }
 
     public void setSearchQuery(String searchQuery) {
@@ -47,14 +54,10 @@ public class AddFriendsViewModel extends ViewModel {
     }
 
     public MutableLiveData<List<FriendRequest>> getSentFriendRequestsPending() {
-        sentFriendRequestsPending = requestRepository
-                .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
         return sentFriendRequestsPending;
     }
 
     public MutableLiveData<List<FriendRequest>> getReceivedFriendRequestsPending() {
-        receivedFriendRequestsPending = requestRepository
-                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
         return receivedFriendRequestsPending;
     }
 
