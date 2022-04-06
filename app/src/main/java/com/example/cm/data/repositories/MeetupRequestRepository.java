@@ -10,7 +10,6 @@ import static com.example.cm.Constants.FIELD_TIMESTAMP;
 import static com.example.cm.Constants.FIELD_TYPE;
 import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
 import static com.example.cm.data.models.Request.RequestState.ENDED;
-import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 import androidx.lifecycle.MutableLiveData;
@@ -28,7 +27,9 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MeetupRequestRepository extends Repository {
@@ -53,7 +54,7 @@ public class MeetupRequestRepository extends Repository {
         String currentUserId = auth.getCurrentUser().getUid();
 
         meetupRequestCollection.whereEqualTo(FIELD_RECEIVER_ID, currentUserId)
-                .orderBy(FIELD_STATE, Query.Direction.DESCENDING)
+                //.orderBy(FIELD_STATE, Query.Direction.DESCENDING)
                 .orderBy(FIELD_CREATED_AT, Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
@@ -64,18 +65,28 @@ public class MeetupRequestRepository extends Repository {
                     }
 
                     if (value != null && !value.isEmpty()) {
+
+                        List<MeetupRequest> pendingRequests = new ArrayList<>();
+                        List<MeetupRequest> endedRequests = new ArrayList<>();
+                        List<MeetupRequest> otherRequests = new ArrayList<>();
+
                         List<MeetupRequest> requestsToReturn = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             MeetupRequest request = snapshotToMeetupRequest(snapshot);
                             String meetupId = request.getMeetupId();
                             Request.RequestState currentState = snapshot.get(FIELD_STATE, Request.RequestState.class);
 
-                            if (currentState == REQUEST_PENDING) {
-                                updateStateDependingOnMeetupPhase(meetupId, request.getId());
+                            if (!isToday(request)) {
+                                endedRequests.add(request);
+                            } else if (currentState == REQUEST_PENDING) {
+                                pendingRequests.add(request);
+                            } else {
+                                otherRequests.add(request);
                             }
-                            if (currentState != REQUEST_DECLINED) {
-                                requestsToReturn.add(request);
-                            }
+
+                            requestsToReturn.addAll(pendingRequests);
+                            requestsToReturn.addAll(otherRequests);
+                            requestsToReturn.addAll(endedRequests);
                         }
                         receivedRequests.postValue(requestsToReturn);
                     }
@@ -83,16 +94,19 @@ public class MeetupRequestRepository extends Repository {
         return receivedRequests;
     }
 
-    private void updateStateDependingOnMeetupPhase(String meetupId, String requestId) {
-        meetupCollection.document(meetupId).get().addOnCompleteListener(executorService, task -> {
-           if (task.isSuccessful()) {
-               DocumentSnapshot result = task.getResult();
+    private boolean isToday(MeetupRequest request) {
+        Calendar calendarNow = GregorianCalendar.getInstance();
+        Calendar calendarMeetup = GregorianCalendar.getInstance();
 
-               if (Utils.getPhaseByTimestamp(result.get(FIELD_TIMESTAMP, Date.class)) == MEETUP_ENDED) {
-                   meetupRequestCollection.document(requestId).update(FIELD_STATE, ENDED);
-               }
-           }
-        });
+        Date creationTime = request.getCreatedAt();
+        Date now = new Date();
+
+        calendarNow.setTime(now);
+        calendarMeetup.setTime(creationTime);
+
+        return (calendarNow.get(Calendar.YEAR) == calendarMeetup.get(Calendar.YEAR)
+                && calendarNow.get(Calendar.MONTH) == calendarMeetup.get(Calendar.MONTH)
+                && calendarNow.get(Calendar.DAY_OF_MONTH) == calendarMeetup.get(Calendar.DAY_OF_MONTH));
     }
 
     /**
