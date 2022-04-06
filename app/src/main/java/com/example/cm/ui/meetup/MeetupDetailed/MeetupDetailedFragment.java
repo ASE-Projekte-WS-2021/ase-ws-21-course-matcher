@@ -77,7 +77,7 @@ public class MeetupDetailedFragment extends Fragment implements OnMapReadyCallba
             String address = meetup.getLocationName();
             binding.meetupDetailedLocation.setText(address);
 
-            switch (meetup.getPhase()) {
+            switch (Utils.getPhaseByTimestamp(meetup.getTimestamp())) {
                 case MEETUP_UPCOMING:
                     binding.meetupDetailedTime.setText(meetup.getFormattedTime());
                     binding.meetupDetailedTime.setTextColor(getResources().getColor(R.color.orange400));

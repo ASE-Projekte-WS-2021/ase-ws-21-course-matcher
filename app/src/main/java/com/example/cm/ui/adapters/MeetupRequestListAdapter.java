@@ -18,6 +18,7 @@ import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemMeetupRequestBinding;
+import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -151,7 +152,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
         holder.getTvLocation().setText(location);
 
-        switch (meetup.getPhase()) {
+        switch (Utils.getPhaseByTimestamp(meetup.getTimestamp())) {
             case MEETUP_UPCOMING:
                 holder.getTvMeetupTime().setText(meetup.getFormattedTime());
                 holder.getTvMeetupTime().setTextColor(context.getResources().getColor(R.color.orange400));

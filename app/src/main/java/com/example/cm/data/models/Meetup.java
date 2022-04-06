@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Meetup {
 
@@ -27,11 +26,7 @@ public class Meetup {
     private List<String> confirmedFriends;
     private List<String> declinedFriends;
     private List<String> lateFriends;
-    private MeetupPhase phase;
     private String locationName;
-
-    private final Calendar calendarNow = GregorianCalendar.getInstance();
-    private final Calendar calendarMeetup = GregorianCalendar.getInstance();
 
     public Meetup() {
     }
@@ -42,12 +37,10 @@ public class Meetup {
         this.location = location;
         this.locationName = locationName;
         this.timestamp = timestamp;
-        calendarMeetup.setTime(timestamp);
         this.isPrivate = isPrivate;
         this.invitedFriends = invitedFriends;
         this.locationImageString = locationImageString;
         confirmedFriends = Collections.singletonList(requestingUser);
-        phase = getPhase();
     }
 
     @DocumentId
@@ -80,40 +73,13 @@ public class Meetup {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
-        calendarMeetup.setTime(timestamp);
     }
 
     @SuppressLint("DefaultLocale")
     @Exclude
     public String getFormattedTime(){
-        return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
-    }
-
-    public MeetupPhase getPhase() {
-        return phase;
-    }
-
-    public MeetupPhase getPhaseCalculated() {
-        Date now = new Date();
-        calendarNow.setTime(now);
-        // is today?
-        if (calendarNow.get(Calendar.YEAR) == calendarMeetup.get(Calendar.YEAR)
-                && calendarNow.get(Calendar.MONTH) == calendarMeetup.get(Calendar.MONTH)
-                && calendarNow.get(Calendar.DAY_OF_MONTH) == calendarMeetup.get(Calendar.DAY_OF_MONTH)) {
-            // has started?
-            if (TimeUnit.MILLISECONDS.toSeconds(now.getTime() - timestamp.getTime()) >= 0) {
-                phase = MeetupPhase.MEETUP_ACTIVE;
-            } else {
-                phase = MeetupPhase.MEETUP_UPCOMING;
-            }
-        } else {
-            phase = MeetupPhase.MEETUP_ENDED;
-        }
-        return phase;
-    }
-
-    public void setPhase(MeetupPhase phase) {
-        this.phase = phase;
+        Calendar calendar = GregorianCalendar.getInstance();
+        return String.format("%02d:%02d Uhr", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
     }
 
     public LatLng getLocation() {

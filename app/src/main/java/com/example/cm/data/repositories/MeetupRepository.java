@@ -1,15 +1,5 @@
 package com.example.cm.data.repositories;
 
-import static com.example.cm.Constants.FIELD_CONFIRMED_FRIENDS;
-import static com.example.cm.Constants.FIELD_DECLINED_FRIENDS;
-import static com.example.cm.Constants.FIELD_INVITED_FRIENDS;
-import static com.example.cm.Constants.FIELD_LATE_FRIENDS;
-import static com.example.cm.Constants.FIELD_PHASE;
-import static com.example.cm.Constants.FIELD_TIMESTAMP;
-import static com.example.cm.data.models.MeetupPhase.MEETUP_ACTIVE;
-import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
-import static com.example.cm.data.repositories.Repository.executorService;
-
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
@@ -18,6 +8,7 @@ import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.Meetup;
 import com.example.cm.data.models.MeetupPOJO;
 import com.example.cm.data.models.MeetupPhase;
+import com.example.cm.utils.Utils;
 import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -34,13 +25,22 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static com.example.cm.Constants.FIELD_CONFIRMED_FRIENDS;
+import static com.example.cm.Constants.FIELD_DECLINED_FRIENDS;
+import static com.example.cm.Constants.FIELD_INVITED_FRIENDS;
+import static com.example.cm.Constants.FIELD_LATE_FRIENDS;
+import static com.example.cm.Constants.FIELD_TIMESTAMP;
+import static com.example.cm.data.models.MeetupPhase.MEETUP_ACTIVE;
+import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
+import static com.example.cm.data.repositories.Repository.executorService;
+
 public class MeetupRepository {
     private static MeetupRepository instance;
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
 
-    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
+    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<Meetup>> meetupsForRequestsMLD = new MutableLiveData<>();
     private final MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
     private final MutableLiveData<List<String>> usersMLD = new MutableLiveData<>();
@@ -80,21 +80,17 @@ public class MeetupRepository {
                     }
                     List<Meetup> meetups = new ArrayList<>();
                     if (value != null && !value.isEmpty()) {
-                        for (int i = 0; i < value.getDocuments().size(); i++) {
-                            Meetup meetup = snapshotToMeetup(value.getDocuments().get(i));
-                            MeetupPhase currentPhase = meetup.getPhaseCalculated();
-                            MeetupPhase phaseInFirestore = value.getDocuments().get(i).get(FIELD_PHASE, MeetupPhase.class);
 
-                            if (phaseInFirestore != MEETUP_ENDED) {
-                                if (currentPhase != MEETUP_ENDED) {
-                                    meetups.add(meetup);
-                                }
-                                value.getDocuments().get(i).getReference().update(FIELD_PHASE, currentPhase);
+                        for (DocumentSnapshot snapshot : value.getDocuments()) {
+                            Meetup meetup = snapshotToMeetup(snapshot);
+                            MeetupPhase currentPhase = Utils.getPhaseByTimestamp(meetup.getTimestamp());
+
+                            if (currentPhase != MEETUP_ENDED && (!meetup.getInvitedFriends().isEmpty() || !meetup.getConfirmedFriends().isEmpty())) {
+                                meetups.add(meetup);
                             }
                         }
                         meetupListMLD.postValue(meetups);
                     }
-                    meetupListMLD.postValue(meetups);
                 });
     }
 
@@ -165,8 +161,9 @@ public class MeetupRepository {
                     for (QueryDocumentSnapshot document : value) {
                         MeetupPOJO meetupPOJO = document.toObject(MeetupPOJO.class);
                         meetupPOJO.setId(document.getId());
+                        Meetup meetup = meetupPOJO.toObject();
 
-                        if (meetupPOJO.getPhase() == MEETUP_ACTIVE) {
+                        if (Utils.getPhaseByTimestamp(meetup.getTimestamp()) == MEETUP_ACTIVE) {
                             meetups.add(meetupPOJO.toObject());
                         }
                     }
@@ -293,18 +290,6 @@ public class MeetupRepository {
         meetupCollection.document(meetupId).update(FIELD_CONFIRMED_FRIENDS, FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update(FIELD_LATE_FRIENDS, FieldValue.arrayRemove(participantId));
         meetupCollection.document(meetupId).update(FIELD_DECLINED_FRIENDS, FieldValue.arrayRemove(participantId));
-        meetupCollection.document(meetupId)
-                .addSnapshotListener(executorService, (value, error) -> {
-                    if (error != null) {
-                        return;
-                    }
-                    if (value != null && value.exists()) {
-                        Meetup meetup = snapshotToMeetup(value);
-                        if (meetup.getInvitedFriends().isEmpty() && meetup.getConfirmedFriends().isEmpty()) {
-                            meetupCollection.document(meetupId).update(FIELD_PHASE, MEETUP_ENDED);
-                        }
-                    }
-                });
     }
 
     /**

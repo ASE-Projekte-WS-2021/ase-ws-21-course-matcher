@@ -3,11 +3,12 @@ package com.example.cm.data.repositories;
 import static com.example.cm.Constants.FIELD_CREATED_AT;
 import static com.example.cm.Constants.FIELD_ID;
 import static com.example.cm.Constants.FIELD_MEETUP_ID;
-import static com.example.cm.Constants.FIELD_PHASE;
 import static com.example.cm.Constants.FIELD_RECEIVER_ID;
 import static com.example.cm.Constants.FIELD_SENDER_ID;
 import static com.example.cm.Constants.FIELD_STATE;
+import static com.example.cm.Constants.FIELD_TIMESTAMP;
 import static com.example.cm.Constants.FIELD_TYPE;
+import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
 import static com.example.cm.data.models.Request.RequestState.ENDED;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_DECLINED;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
@@ -16,9 +17,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.listener.UserListener;
-import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
+import com.example.cm.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -27,8 +28,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 public class MeetupRequestRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -86,7 +87,8 @@ public class MeetupRequestRepository extends Repository {
         meetupCollection.document(meetupId).get().addOnCompleteListener(executorService, task -> {
            if (task.isSuccessful()) {
                DocumentSnapshot result = task.getResult();
-               if (Objects.equals(result.get(FIELD_PHASE), MeetupPhase.MEETUP_ENDED.toString())) {
+
+               if (Utils.getPhaseByTimestamp(result.get(FIELD_TIMESTAMP, Date.class)) == MEETUP_ENDED) {
                    meetupRequestCollection.document(requestId).update(FIELD_STATE, ENDED);
                }
            }

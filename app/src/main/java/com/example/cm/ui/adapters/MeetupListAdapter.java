@@ -96,7 +96,7 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         String address = meetup.getLocationName();
         holder.getTvLocation().setText(address);
 
-        switch (meetup.getPhase()) {
+        switch (Utils.getPhaseByTimestamp(meetup.getTimestamp())) {
             case MEETUP_UPCOMING:
                 holder.getTvTime().setText(meetup.getFormattedTime());
                 holder.getTvTime().setTextColor(context.getResources().getColor(R.color.orange400));
@@ -149,31 +149,30 @@ public class MeetupListAdapter extends RecyclerView.Adapter<MeetupListAdapter.Me
         if (friendIds == null) {
             return;
         }
-        if (friendIds != null) {
-            for (String id : friendIds) {
-                userCounter++;
-                if (userCounter <= MEETUP_DETAILED_MAX_USER) {
-                    ShapeableImageView imageRounded = new ShapeableImageView(
-                            new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
 
-                    String imageUrl = getImageUrl(id);
-                    if (imageUrl != null && !imageUrl.isEmpty()) {
-                        Bitmap img = Utils.convertBaseStringToBitmap(imageUrl);
-                        imageRounded.setImageBitmap(img);
-                    } else {
-                        imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
-                    }
+        for (String id : friendIds) {
+            userCounter++;
+            if (userCounter <= MEETUP_DETAILED_MAX_USER) {
+                ShapeableImageView imageRounded = new ShapeableImageView(
+                        new ContextThemeWrapper(layout.getContext(), R.style.ShapeAppearance_App_CircleImageView));
 
-                    imageRounded.setLayoutParams(
-                            new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE,
-                                    MEETUP_DETAILED_USER_IMAGE_SIZE));
-                    imageRounded.setStrokeColorResource(color);
-                    imageRounded.setStrokeWidth(MEETUP_DETAILED_USER_IMAGE_STROKE);
-                    imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING,
-                            MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
-                    imageRounded.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    layout.addView(imageRounded);
+                String imageUrl = getImageUrl(id);
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    Bitmap img = Utils.convertBaseStringToBitmap(imageUrl);
+                    imageRounded.setImageBitmap(img);
+                } else {
+                    imageRounded.setBackgroundResource(R.drawable.ic_baseline_person_24);
                 }
+
+                imageRounded.setLayoutParams(
+                        new ViewGroup.LayoutParams(MEETUP_DETAILED_USER_IMAGE_SIZE,
+                                MEETUP_DETAILED_USER_IMAGE_SIZE));
+                imageRounded.setStrokeColorResource(color);
+                imageRounded.setStrokeWidth(MEETUP_DETAILED_USER_IMAGE_STROKE);
+                imageRounded.setPadding(MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING,
+                        MEETUP_DETAILED_USER_IMAGE_PADDING, MEETUP_DETAILED_USER_IMAGE_PADDING);
+                imageRounded.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                layout.addView(imageRounded);
             }
         }
     }
