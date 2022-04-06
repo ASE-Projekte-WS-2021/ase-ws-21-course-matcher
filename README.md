@@ -60,7 +60,7 @@ Lerne jeden User anhand des Profils besser kennen! Bearbeite dein Profil und än
 <img src="./readme_resources/10.gif" width="320"/>
 
 ## Her damit
-Lade dir die aktuelle Release-Version hier herunter und lade die APK-Datei auf dein Telefon. Erlaube die Installation von Anwendungen von unbekannten Entwicklern auf deinem Smartphone und öffne dort die Datei zur Installation. Jetzt musst du dir nur noch einen Account erstellen und ein Profil anlegen und schon gehts los!
+Lade dir die aktuelle Release-Version [hier](https://github.com/ASE-Projekte-WS-2021/ase-ws-21-course-matcher/releases/download/16/CourseMatcher-Release.apk) herunter und lade die APK-Datei auf dein Telefon. Erlaube die Installation von Anwendungen von unbekannten Entwicklern auf deinem Smartphone und öffne dort die Datei zur Installation. Jetzt musst du dir nur noch einen Account erstellen und ein Profil anlegen und schon gehts los!
 
 # Course Matcher - Das Team
 Klare Aufgabenteilung gab es nicht. Jeder packt an, wo es gerade hakt und ordnet sich selbstständig Tickets zu, bevor diese fürs Review an die anderen weitergegeben werden.
