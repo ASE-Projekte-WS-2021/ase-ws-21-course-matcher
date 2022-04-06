@@ -32,7 +32,6 @@ public class MeetupRequestRepository extends Repository {
     private final FirebaseAuth auth = FirebaseAuth.getInstance();
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupRequestCollection = firestore.collection(CollectionConfig.MEETUP_REQUESTS.toString());
-    private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
     private final MutableLiveData<List<MeetupRequest>> receivedRequests = new MutableLiveData<>();
 
     public MeetupRequestRepository() {

@@ -25,7 +25,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import timber.log.Timber;
 
 public class FriendRequestRepository extends Repository {
 
