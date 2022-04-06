@@ -38,10 +38,8 @@ public class UserRepository extends Repository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
+    private final HashMap<String, ListenerRegistration> registrations = new HashMap<>();
     private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
-    private MutableLiveData<List<String>> mutableUsernames = new MutableLiveData<>();
-    private HashMap<String, ListenerRegistration> registrations = new HashMap<>();
-
     private List<User> users = new ArrayList<>();
 
     public UserRepository() {
@@ -157,6 +155,8 @@ public class UserRepository extends Repository {
 
     /**
      * Get a MutableLiveData-List of all mutable users
+     *
+     * @return MutableLiveData-List of all mutable users
      */
     public MutableLiveData<List<User>> getUsers() {
         userCollection.addSnapshotListener(executorService, ((value, error) -> {
@@ -419,6 +419,11 @@ public class UserRepository extends Repository {
         return mutableUsers;
     }
 
+    /**
+     * Removes listener with given uuid
+     *
+     * @param uuid uuid of listener to be removed
+     */
     private void removeListener(String uuid) {
         ListenerRegistration registration = registrations.get(uuid);
         if (registration != null) {
@@ -451,6 +456,11 @@ public class UserRepository extends Repository {
         }
     }
 
+    /**
+     * Get a list of all usernames
+     *
+     * @param callback Callback to return list of usernames
+     */
     public void getUsernames(UsernamesRetrievedCallback callback) {
         List<String> usernames = new ArrayList<>();
 

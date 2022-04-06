@@ -34,7 +34,6 @@ public class InviteMoreFriendsFragment extends Fragment
     private FragmentInviteMoreFriendsBinding binding;
     private InviteFriendsAdapter inviteFriendsListAdapter;
     private Navigator navigator;
-    private boolean filtered = false;
 
     public InviteMoreFriendsFragment(String meetupId, List<String> userIdsAlreadyInMeetup) {
         this.meetupId = meetupId;

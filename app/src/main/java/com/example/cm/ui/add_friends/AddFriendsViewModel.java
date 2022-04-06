@@ -3,6 +3,7 @@ package com.example.cm.ui.add_friends;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.cm.data.listener.RequestListener;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.User;
 import com.example.cm.data.repositories.FriendRequestRepository;
@@ -19,8 +20,8 @@ public class AddFriendsViewModel extends ViewModel {
     public MutableLiveData<List<User>> users;
     public MutableLiveData<User> currentUser;
     public MutableLiveData<List<FriendRequest>> receivedFriendRequests;
-    public MutableLiveData<List<FriendRequest>> sentFriendRequestsPending;
-    public MutableLiveData<List<FriendRequest>> receivedFriendRequestsPending;
+    public List<FriendRequest> sentFriendRequestsPending;
+    public List<FriendRequest> receivedFriendRequestsPending;
     public String query = "";
 
     public OnRequestSentListener listener;
@@ -36,26 +37,41 @@ public class AddFriendsViewModel extends ViewModel {
 
     public void setSearchQuery(String searchQuery) {
         query = searchQuery;
-        sentFriendRequestsPending = requestRepository
-                .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
-        receivedFriendRequestsPending = requestRepository
-                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
     }
 
     public MutableLiveData<List<User>> getUsers() {
         return users;
     }
 
-    public MutableLiveData<List<FriendRequest>> getSentFriendRequestsPending() {
-        sentFriendRequestsPending = requestRepository
-                .getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid());
-        return sentFriendRequestsPending;
+    public void getSentFriendRequestsPending(RequestListener<List<FriendRequest>> listener) {
+        requestRepository.getFriendRequestsSentBy(userRepository.getFirebaseUser().getUid(), new RequestListener<List<FriendRequest>>() {
+            @Override
+            public void onRequestSuccess(List<FriendRequest> friendRequests) {
+                listener.onRequestSuccess(friendRequests);
+                sentFriendRequestsPending = friendRequests;
+            }
+
+            @Override
+            public void onRequestError(Exception error) {
+
+            }
+        });
     }
 
-    public MutableLiveData<List<FriendRequest>> getReceivedFriendRequestsPending() {
-        receivedFriendRequestsPending = requestRepository
-                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid());
-        return receivedFriendRequestsPending;
+    public void getReceivedFriendRequestsPending(RequestListener<List<FriendRequest>> listener) {
+        requestRepository
+                .getFriendRequestsReceived(userRepository.getFirebaseUser().getUid(), new RequestListener<List<FriendRequest>>() {
+                    @Override
+                    public void onRequestSuccess(List<FriendRequest> friendRequests) {
+                        listener.onRequestSuccess(friendRequests);
+                        receivedFriendRequestsPending = friendRequests;
+                    }
+
+                    @Override
+                    public void onRequestError(Exception error) {
+
+                    }
+                });
     }
 
     public void setOnRequestSentListener(OnRequestSentListener listener) {
@@ -87,11 +103,11 @@ public class AddFriendsViewModel extends ViewModel {
      * @param receiverId the id of the receiver
      */
     public void sendOrDeleteFriendRequest(String receiverId) {
-        if (sentFriendRequestsPending.getValue() == null) {
+        if (sentFriendRequestsPending == null) {
             return;
         }
 
-        if (hasReceivedFriendRequest(sentFriendRequestsPending.getValue(), receiverId)) {
+        if (hasReceivedFriendRequest(sentFriendRequestsPending, receiverId)) {
             onFriendRequestExists(receiverId);
         } else {
             onFriendRequestDoesNotExist(receiverId);

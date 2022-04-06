@@ -12,9 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_small"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/etUserSearch"
@@ -47,22 +47,34 @@
         android:id="@+id/rvUserList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/searchBarWrapper"
-        app:layout_constraintBottom_toTopOf="@+id/btnSendInvite"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btnSendInvite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="@dimen/padding_small"
-        android:text="@string/btn_meetup_send_invite"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/padding_ultra"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@+id/searchBarWrapper" />
+
+    <LinearLayout
+        android:id="@+id/buttonWrapper"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingBottom="@dimen/padding_big"
+        android:paddingHorizontal="@dimen/padding_big"
+        >
+
+        <Button
+            android:id="@+id/btnSendInvite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_small"
+            android:text="@string/btn_meetup_send_invite"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/noFriendsWrapper"
@@ -73,14 +85,16 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="@dimen/padding_big"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:visibility="gone">
+        app:layout_constraintTop_toTopOf="parent">
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/tv_no_friends_found"
                 android:layout_width="match_parent"
@@ -101,10 +115,10 @@
         android:layout_centerInParent="true"
         android:indeterminate="true"
         android:indeterminateTint="@color/gray500"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

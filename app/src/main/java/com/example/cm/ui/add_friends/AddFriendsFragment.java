@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.listener.RequestListener;
+import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentAddFriendsBinding;
 import com.example.cm.ui.adapters.AddFriendsAdapter;
@@ -118,14 +120,26 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void observeSentFriendRequests() {
-        addFriendsViewModel.getSentFriendRequestsPending().observe(getViewLifecycleOwner(), sentFriendRequests -> {
-            if (sentFriendRequests == null) {
-                return;
-            }
-            addFriendsViewModel.getReceivedFriendRequestsPending().observe(getViewLifecycleOwner(),
-                    receivedFriendRequests -> {
+        addFriendsViewModel.getSentFriendRequestsPending(new RequestListener<List<FriendRequest>>() {
+            @Override
+            public void onRequestSuccess(List<FriendRequest> sentFriendRequests) {
+                addFriendsViewModel.getReceivedFriendRequestsPending(new RequestListener<List<FriendRequest>>() {
+                    @Override
+                    public void onRequestSuccess(List<FriendRequest> receivedFriendRequests) {
                         addFriendsAdapter.setFriendRequests(sentFriendRequests, receivedFriendRequests);
-                    });
+                    }
+
+                    @Override
+                    public void onRequestError(Exception error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onRequestError(Exception error) {
+
+            }
         });
     }
 
@@ -160,19 +174,25 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onFriendRequestsSet() {
-        addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-            binding.loadingCircle.setVisibility(View.GONE);
+        if (!isAdded()) {
+            return;
+        }
 
-            if (users == null || users.isEmpty()) {
-                binding.noFriendsWrapper.setVisibility(View.VISIBLE);
-                binding.rvUserList.setVisibility(View.GONE);
-                return;
-            }
+        requireActivity().runOnUiThread(() -> {
+            addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+                binding.loadingCircle.setVisibility(View.GONE);
 
-            addFriendsAdapter.setUsers(addFriendsViewModel.getFilteredUsers());
-            addFriendsAdapter.notifyDataSetChanged();
-            binding.noFriendsWrapper.setVisibility(View.GONE);
-            binding.rvUserList.setVisibility(View.VISIBLE);
+                if (users == null || users.isEmpty()) {
+                    binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+                    binding.rvUserList.setVisibility(View.GONE);
+                    return;
+                }
+
+                addFriendsAdapter.setUsers(addFriendsViewModel.getFilteredUsers());
+                addFriendsAdapter.notifyDataSetChanged();
+                binding.noFriendsWrapper.setVisibility(View.GONE);
+                binding.rvUserList.setVisibility(View.VISIBLE);
+            });
         });
     }
 }

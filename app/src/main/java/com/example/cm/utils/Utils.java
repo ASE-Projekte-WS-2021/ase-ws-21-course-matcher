@@ -5,10 +5,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Geocoder;
-import android.os.Build;
+import android.text.Editable;
+import android.text.SpannableStringBuilder;
 import android.util.Base64;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -42,19 +41,6 @@ public class Utils {
 
     private static final Calendar calendarNow = GregorianCalendar.getInstance();
     private static final Calendar calendarMeetup = GregorianCalendar.getInstance();
-
-    /**
-     * Hides the keyboard
-     *
-     * @param context Context of the activity
-     * @param view    View to hide the keyboard from
-     */
-    public static void hideKeyboard(Context context, View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
 
     /**
      * Find the NavController for a given fragment
@@ -149,21 +135,6 @@ public class Utils {
     }
 
     /**
-     * Returns the current date
-     *
-     * @return The current date
-     */
-    public static Date getCurrentDay() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        return calendar.getTime();
-    }
-
-
-    /**
      * Displays a badge in the Requests tab when open requests are available
      *
      * @param tab          The tab to display the badge in
@@ -243,9 +214,28 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Convert a base64 string to a bitmap
+     *
+     * @param imageString The base64 string
+     * @return The converted bitmap
+     */
     public static Bitmap convertBaseStringToBitmap(String imageString) {
         byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    /**
+     * Replaces a given string with another string
+     * @param editable Editable to replace the string in
+     * @param toReplace The string to replace
+     * @param replacement String that replaces the toReplace string
+     */
+    public static void replaceIn(Editable editable, String toReplace, String replacement) {
+        if (editable.toString().contains(toReplace)) {
+            Editable replacedString = new SpannableStringBuilder(editable.toString().replace(toReplace, replacement));
+            editable.replace(0, editable.length(), replacedString);
+        }
     }
 }
 

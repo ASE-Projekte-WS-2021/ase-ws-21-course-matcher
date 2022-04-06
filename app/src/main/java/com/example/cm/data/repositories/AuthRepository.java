@@ -17,9 +17,9 @@ public class AuthRepository extends Repository {
     private final MutableLiveData<String> error;
 
     public AuthRepository() {
-        this.firebaseAuth = FirebaseAuth.getInstance();
-        this.userLiveData = new MutableLiveData<>();
-        this.error = new MutableLiveData<>();
+        firebaseAuth = FirebaseAuth.getInstance();
+        userLiveData = new MutableLiveData<>();
+        error = new MutableLiveData<>();
 
         if (firebaseAuth.getCurrentUser() != null) {
             userLiveData.postValue(firebaseAuth.getCurrentUser());
@@ -77,11 +77,11 @@ public class AuthRepository extends Repository {
     /**
      * Register a new user
      *
-     * @param email     Email of the user
-     * @param password  Password of the user
-     * @param username  Username of the user
+     * @param email       Email of the user
+     * @param password    Password of the user
+     * @param username    Username of the user
      * @param displayName Display name of the user
-     * @param callback  Callback when the user is registered or an error occurs
+     * @param callback    Callback when the user is registered or an error occurs
      */
     public void register(String email, String password, String username, String displayName, String imgString, String bio, RegisterCallback callback) {
         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {

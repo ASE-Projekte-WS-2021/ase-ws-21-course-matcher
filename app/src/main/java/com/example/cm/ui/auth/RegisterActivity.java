@@ -1,11 +1,14 @@
 package com.example.cm.ui.auth;
 
+import static com.example.cm.utils.Utils.replaceIn;
+
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +24,7 @@ import com.example.cm.R;
 import com.example.cm.data.repositories.AuthRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.example.cm.databinding.ActivityRegisterBinding;
+import com.example.cm.utils.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
@@ -114,6 +118,11 @@ public class RegisterActivity extends AppCompatActivity implements AuthRepositor
 
             @Override
             public void afterTextChanged(Editable editable) {
+                if (binding.registerUsernameEditText.inputField.getText() == null) {
+                    return;
+                }
+
+                replaceIn(editable, " ", "_");
             }
         });
 
