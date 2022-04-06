@@ -125,11 +125,11 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
         int content = 0;
         switch (request.getType()) {
             case MEETUP_REQUEST:
-                content = isAccepted ? R.string.meetup_accepted_text : R.string.meetup_request_description;
+                content = isAccepted ? R.string.meetup_accepted_text_own : R.string.meetup_request_description;
                 break;
             case MEETUP_INFO_ACCEPTED:
                 isAccepted = true;
-                content = R.string.meetup_accepted_text;
+                content = R.string.meetup_accepted_text_other;
                 break;
             case MEETUP_INFO_DECLINED:
                 isAccepted = true;

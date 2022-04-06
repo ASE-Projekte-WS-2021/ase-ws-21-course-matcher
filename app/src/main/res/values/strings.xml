@@ -96,7 +96,8 @@
 
     <!-- Requests -->
     <string name="meetup_request_description">lädt dich ein.</string>
-    <string name="meetup_accepted_text">rechnet mit dir.</string>
+    <string name="meetup_accepted_text_own">rechnet mit dir.</string>
+    <string name="meetup_accepted_text_other">kommt auch.</string>
     <string name="meetup_declined_text">kommt leider nicht.</string>
 
     <string name="decline_snackbar_text">Anfrage abgelehnt.</string>
