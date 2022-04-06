@@ -304,8 +304,6 @@ public class UserRepository extends Repository {
      * @return MutableLiveData-List of mutable friends
      */
     public MutableLiveData<List<User>> getFriends() {
-        mutableUsers.postValue(new ArrayList<>());
-
         if (auth.getCurrentUser() == null) {
             return mutableUsers;
         }
@@ -404,12 +402,15 @@ public class UserRepository extends Repository {
             ListenerRegistration registration = userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
                     (value, error) -> {
                         if (error != null) {
+                            mutableUsers.postValue(new ArrayList<>());
                             return;
                         }
 
                         if (value != null && !value.isEmpty()) {
                             users.addAll(snapshotToMutableUserList(value));
                             mutableUsers.postValue(users);
+                        }else{
+                            mutableUsers.postValue(new ArrayList<>());
                         }
                         removeListener(uuid);
                     });

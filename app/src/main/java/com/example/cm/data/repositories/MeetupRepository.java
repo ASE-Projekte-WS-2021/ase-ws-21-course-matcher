@@ -40,7 +40,7 @@ public class MeetupRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference meetupCollection = firestore.collection(CollectionConfig.MEETUPS.toString());
 
-    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<Meetup>> meetupListMLD = new MutableLiveData<>();
     private final MutableLiveData<List<Meetup>> meetupsForRequestsMLD = new MutableLiveData<>();
     private final MutableLiveData<Meetup> meetupMLD = new MutableLiveData<>();
     private final MutableLiveData<List<String>> usersMLD = new MutableLiveData<>();
@@ -76,11 +76,11 @@ public class MeetupRepository {
                 .orderBy(FIELD_TIMESTAMP, Query.Direction.DESCENDING)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
+                        meetupListMLD.postValue(new ArrayList<>());
                         return;
                     }
                     List<Meetup> meetups = new ArrayList<>();
                     if (value != null && !value.isEmpty()) {
-
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             Meetup meetup = snapshotToMeetup(snapshot);
                             MeetupPhase currentPhase = Utils.getPhaseByTimestamp(meetup.getTimestamp());
@@ -89,8 +89,8 @@ public class MeetupRepository {
                                 meetups.add(meetup);
                             }
                         }
-                        meetupListMLD.postValue(meetups);
                     }
+                    meetupListMLD.postValue(meetups);
                 });
     }
 
