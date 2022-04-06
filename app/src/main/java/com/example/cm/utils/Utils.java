@@ -1,10 +1,5 @@
 package com.example.cm.utils;
 
-import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -16,13 +11,12 @@ import android.util.Base64;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.example.cm.R;
+import com.example.cm.data.models.MeetupPhase;
 import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.google.android.gms.maps.model.LatLng;
@@ -30,11 +24,37 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 public class Utils {
+
+    private static final Calendar calendarNow = GregorianCalendar.getInstance();
+    private static final Calendar calendarMeetup = GregorianCalendar.getInstance();
+
+    /**
+     * Hides the keyboard
+     *
+     * @param context Context of the activity
+     * @param view    View to hide the keyboard from
+     */
+    public static void hideKeyboard(Context context, View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
     /**
      * Find the NavController for a given fragment
      *
@@ -168,6 +188,27 @@ public class Utils {
             }
         }
         return openRequests;
+    }
+
+    public static MeetupPhase getPhaseByTimestamp(Date timestamp) {
+        MeetupPhase phase;
+        Date now = new Date();
+        calendarNow.setTime(now);
+        calendarMeetup.setTime(timestamp);
+        // is today?
+        if (calendarNow.get(Calendar.YEAR) == calendarMeetup.get(Calendar.YEAR)
+                && calendarNow.get(Calendar.MONTH) == calendarMeetup.get(Calendar.MONTH)
+                && calendarNow.get(Calendar.DAY_OF_MONTH) == calendarMeetup.get(Calendar.DAY_OF_MONTH)) {
+            // has started?
+            if (TimeUnit.MILLISECONDS.toSeconds(now.getTime() - timestamp.getTime()) >= 0) {
+                phase = MeetupPhase.MEETUP_ACTIVE;
+            } else {
+                phase = MeetupPhase.MEETUP_UPCOMING;
+            }
+        } else {
+            phase = MeetupPhase.MEETUP_ENDED;
+        }
+        return phase;
     }
 
     /**

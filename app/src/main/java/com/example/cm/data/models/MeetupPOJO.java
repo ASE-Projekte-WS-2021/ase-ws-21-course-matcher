@@ -20,7 +20,6 @@ public class MeetupPOJO {
     private Availability availability;
 
     private List<String> lateFriends;
-    private MeetupPhase phase;
 
     public MeetupPOJO() {
         // Required empty constructor
@@ -34,7 +33,6 @@ public class MeetupPOJO {
         this.confirmedFriends = meetup.getConfirmedFriends();
         this.declinedFriends = meetup.getDeclinedFriends();
         this.lateFriends = meetup.getLateFriends();
-        this.phase = meetup.getPhase();
         this.timestamp = meetup.getTimestamp();
         this.locationImageString = meetup.getLocationImageString();
 
@@ -132,14 +130,6 @@ public class MeetupPOJO {
         this.lateFriends = lateFriends;
     }
 
-    public MeetupPhase getPhase() {
-        return phase;
-    }
-
-    public void setPhase(MeetupPhase phase) {
-        this.phase = phase;
-    }
-
     public Meetup toObject() {
         Meetup meetup = new Meetup();
         meetup.setId(this.id);
@@ -149,7 +139,6 @@ public class MeetupPOJO {
         meetup.setConfirmedFriends(this.confirmedFriends);
         meetup.setDeclinedFriends(this.declinedFriends);
         meetup.setLateFriends(this.lateFriends);
-        meetup.setPhase(this.phase);
         meetup.setTimestamp(this.timestamp);
         meetup.setLocationImageString(this.locationImageString);
         meetup.setLocationName(this.locationName);
