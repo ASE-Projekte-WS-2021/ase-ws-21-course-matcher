@@ -11,6 +11,7 @@ import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.listener.RequestListener;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.FriendRequest;
 import com.example.cm.data.models.Request;
@@ -23,6 +24,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import timber.log.Timber;
 
 public class FriendRequestRepository extends Repository {
 
@@ -71,9 +74,8 @@ public class FriendRequestRepository extends Repository {
      * Get all sent requests for sender
      *
      * @param senderId Id of the sender
-     * @return mutable list of sent friend requests
      */
-    public MutableLiveData<List<FriendRequest>> getFriendRequestsSentBy(String senderId) {
+    public void getFriendRequestsSentBy(String senderId, RequestListener<List<FriendRequest>> listener) {
         friendRequestCollection.whereEqualTo(FIELD_SENDER_ID, senderId)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
@@ -90,19 +92,17 @@ public class FriendRequestRepository extends Repository {
                                 requests.add(snapshotToFriendRequest(snapshot));
                             }
                         }
-                        mutableRequestList.postValue(requests);
+                        listener.onRequestSuccess(requests);
                     }
                 });
-        return mutableRequestList;
     }
 
     /**
      * Get all received friend requests for receiver
      *
      * @param receiverId Id of the receiver
-     * @return mutable list of received friend requests
      */
-    public MutableLiveData<List<FriendRequest>> getFriendRequestsReceived(String receiverId) {
+    public void getFriendRequestsReceived(String receiverId, RequestListener<List<FriendRequest>> listener) {
         friendRequestCollection.whereEqualTo(FIELD_RECEIVER_ID, receiverId)
                 .addSnapshotListener(executorService, (value, error) -> {
                     if (error != null) {
@@ -116,10 +116,9 @@ public class FriendRequestRepository extends Repository {
                                 requests.add(snapshotToFriendRequest(snapshot));
                             }
                         }
-                        mutableRequestList.postValue(requests);
+                        listener.onRequestSuccess(requests);
                     }
                 });
-        return mutableRequestList;
     }
 
     /**
