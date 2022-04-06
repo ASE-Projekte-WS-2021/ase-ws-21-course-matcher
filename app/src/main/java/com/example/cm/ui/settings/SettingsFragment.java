@@ -103,10 +103,12 @@ public class SettingsFragment extends Fragment {
                 settingsViewModel.deleteAccount(new UserListener<Boolean>() {
                     @Override
                     public void onUserSuccess(Boolean aBoolean) {
-                        Snackbar.make(binding.getRoot(), R.string.account_deleted_success, Snackbar.LENGTH_LONG)
-                                .show();
-                        deleteAccountDialog.dismiss();
-                        goToLoginScreen();
+                        requireActivity().runOnUiThread(() -> {
+                            Snackbar.make(binding.getRoot(), R.string.account_deleted_success, Snackbar.LENGTH_LONG)
+                                    .show();
+                            deleteAccountDialog.dismiss();
+                            goToLoginScreen();
+                        });
                     }
 
                     @Override

@@ -212,8 +212,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
     private void updateShareLocationButton(User currentUser) {
         if (currentUser.getIsSharingLocation()) {
             binding.btnShowLocation.setVisibility(View.VISIBLE);
+            binding.btnHideLocation.setVisibility(View.GONE);
         } else {
             binding.btnHideLocation.setVisibility(View.VISIBLE);
+            binding.btnShowLocation.setVisibility(View.GONE);
         }
     }
 
