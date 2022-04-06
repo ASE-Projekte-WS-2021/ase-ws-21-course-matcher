@@ -1,5 +1,6 @@
 package com.example.cm.ui.adapters;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -8,9 +9,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemMapUserBinding;
-import com.squareup.picasso.Picasso;
+import com.example.cm.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +27,24 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
         this.listener = listener;
     }
 
-    public void addUser(User user) {
-        mUsers.add(user);
+    public void addUser(User newUser) {
+        if (mUsers.isEmpty()) {
+            mUsers.add(newUser);
+            return;
+        }
+
+        // Check if user already exists
+        for (int i = 0; i < mUsers.size(); i++) {
+            if (mUsers.get(i).getId().equals(newUser.getId())) {
+                return;
+            }
+        }
+
+        mUsers.add(newUser);
+    }
+
+    public void removeUsers() {
+        mUsers.clear();
     }
 
     public void setUsers(List<User> users) {
@@ -35,7 +54,7 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
     }
 
     public User getUserAt(int position) {
-        if (position >= mUsers.size()) {
+        if (position >= mUsers.size() || position == RecyclerView.NO_POSITION) {
             return null;
         }
         return mUsers.get(position);
@@ -67,24 +86,37 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
             return;
         }
 
-        String profileImageUrl = user.getProfileImageUrl();
-        String name = user.getFullName();
+        String profileImageString = user.getProfileImageString();
+        String name = user.getDisplayName();
         String username = user.getUsername();
+        Availability availability = user.getAvailability();
 
-        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-            holder.getProfileImage().setImageTintMode(null);
-            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+        if (profileImageString != null && !profileImageString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            holder.getProfileImage().setImageBitmap(img);
         }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
+
+
+        if (availability != null) {
+            switch (availability) {
+                case AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
+                    break;
+                case SOON_AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_soon_available);
+                    break;
+                case UNAVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_unavailable);
+                    break;
+            }
+        }
     }
 
     // Return the size of the list
     @Override
     public int getItemCount() {
-        if (mUsers == null) {
-            return 0;
-        }
         return mUsers.size();
     }
 
@@ -164,6 +196,10 @@ public class MapUserAdapter extends RecyclerView.Adapter<MapUserAdapter.UserView
 
         public TextView getTvUsername() {
             return binding.tvUsername;
+        }
+
+        public ImageView getAvailabilityDot() {
+            return binding.dotAvailabilityIcon;
         }
     }
 }

@@ -8,20 +8,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
-import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentMeetupDetailedFriendsListBinding;
 import com.example.cm.ui.adapters.MeetupDetailedFriendListAdapter;
 import com.example.cm.utils.Navigator;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MeetupDetailedFriendsListFragment extends Fragment implements MeetupDetailedFriendListAdapter.OnItemClickListener {
 
@@ -30,6 +27,7 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
     private FragmentMeetupDetailedFriendsListBinding binding;
     private MeetupDetailedFriendsListViewModel meetupDetailedFriendsListViewModel;
     private Navigator navigator;
+    private MeetupDetailedFriendListAdapter adapter;
 
     public MeetupDetailedFriendsListFragment(List<String> friends, String meetupId) {
         this.friends = friends;
@@ -38,9 +36,12 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
 
     private void initUI() {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+
+        if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
+            dividerItemDecoration.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+        }
         binding.meetupDetailedFriendsList.addItemDecoration(dividerItemDecoration);
-        binding.meetupDetailedFriendsList.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.meetupDetailedFriendsList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.meetupDetailedFriendsList.setHasFixedSize(true);
     }
 
@@ -50,8 +51,7 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupDetailedFriendsListBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
 
@@ -63,12 +63,12 @@ public class MeetupDetailedFriendsListFragment extends Fragment implements Meetu
 
     private void initViewModel() {
         meetupDetailedFriendsListViewModel = new ViewModelProvider(this, new MeetupDetailedFriendsListFactory(friends, meetupId)).get(MeetupDetailedFriendsListViewModel.class);
-        meetupDetailedFriendsListViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-            meetupDetailedFriendsListViewModel.getLateUsers().observe(getViewLifecycleOwner(), lateUsers -> {
-                MeetupDetailedFriendListAdapter adapter = new MeetupDetailedFriendListAdapter(users, lateUsers,this);
-                binding.meetupDetailedFriendsList.setAdapter(adapter);
-            });
-        });
+        meetupDetailedFriendsListViewModel.getUsers().observe(getViewLifecycleOwner(), users -> meetupDetailedFriendsListViewModel.getLateUsers().observe(getViewLifecycleOwner(), lateUsers -> meetupDetailedFriendsListViewModel.getCurrentUser().observe(getViewLifecycleOwner(), currentUser -> {
+            adapter = new MeetupDetailedFriendListAdapter(users, lateUsers, currentUser, this);
+            binding.meetupDetailedFriendsList.setAdapter(adapter);
+            binding.loadingCircleMeetupDetailed.setVisibility(View.GONE);
+            binding.meetupDetailedFriendsList.setVisibility(View.VISIBLE);
+        })));
     }
 
     @Override

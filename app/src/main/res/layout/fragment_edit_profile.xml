@@ -30,12 +30,12 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp">
+                android:layout_marginBottom="@dimen/padding_double">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/profileImage"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="@dimen/edit_profile_img_size"
+                    android:layout_height="@dimen/edit_profile_img_size"
                     android:layout_gravity="center"
                     android:background="@color/gray500"
                     android:scaleType="centerCrop"
@@ -47,8 +47,8 @@
 
                 <ImageView
                     android:id="@+id/editProfileImageBtn"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/btn_size"
+                    android:layout_height="@dimen/btn_size"
                     android:src="@drawable/ic_edit_button_round"
                     app:layout_constraintBottom_toBottomOf="@+id/profileImage"
                     app:layout_constraintEnd_toEndOf="@+id/profileImage"
@@ -66,69 +66,19 @@
                 android:layout_marginBottom="@dimen/padding_big" />
 
             <include
-                android:id="@+id/inputFirstName"
+                android:id="@+id/inputDisplayName"
                 layout="@layout/input_text_with_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/padding_big" />
 
             <include
-                android:id="@+id/inputLastName"
-                layout="@layout/input_text_with_label"
+                android:id="@+id/inputBio"
+                layout="@layout/input_textarea_with_label"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/padding_big" />
+                android:layout_height="wrap_content" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_toStartOf="@+id/bioCharacterCount"
-                        android:fontFamily="@font/readexpro_regular"
-                        android:includeFontPadding="false"
-                        android:text="@string/input_label_bio"
-                        android:textColor="@color/gray700"
-                        android:textSize="@dimen/text_size_small" />
-
-                    <TextView
-                        android:id="@+id/bioCharacterCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:fontFamily="@font/readexpro_regular"
-                        android:includeFontPadding="false"
-                        android:textColor="@color/gray600"
-                        android:textSize="@dimen/text_size_small"
-                        tools:text="50/125" />
-
-                </RelativeLayout>
-
-                <EditText
-                    android:id="@+id/inputFieldBio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_half"
-                    android:background="@drawable/style_edittext"
-                    android:focusable="false"
-                    android:gravity="top"
-                    android:importantForAutofill="no"
-                    android:inputType="textMultiLine|textNoSuggestions"
-                    android:lines="3"
-                    android:maxLength="125"
-                    android:maxLines="3"
-                    android:paddingHorizontal="@dimen/padding_medium"
-                    android:paddingVertical="@dimen/padding_small"
-                    android:scrollbars="vertical"
-                    tools:ignore="LabelFor" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

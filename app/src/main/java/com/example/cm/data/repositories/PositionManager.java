@@ -38,7 +38,6 @@ public class PositionManager {
             @SuppressLint("MissingPermission")
             @Override
             public void onLocationChanged(@NonNull Location location) {
-                Timber.d("onLocationChanged location");
                 if (positionListener == null) {
                     return;
                 }
@@ -84,13 +83,11 @@ public class PositionManager {
     public void requestCurrentLocation(PositionListener listener) {
         positionListener = listener;
 
-        // Both variations are called since sometimes GPS Provider is available but does not return a result
-        // TODO: Check callback methods of listener if GPS provider fails and only then call with network provider
         if (hasNetworkProvider()) {
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 200, 1, locationListener);
         }
         if (hasGPSProvider()) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 200, 1, locationListener);
         }
     }
 

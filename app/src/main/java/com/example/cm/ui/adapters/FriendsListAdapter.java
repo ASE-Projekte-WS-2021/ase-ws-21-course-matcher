@@ -1,35 +1,37 @@
 package com.example.cm.ui.adapters;
 
-import android.net.Uri;
+import static com.example.cm.utils.Utils.calculateDiff;
+
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
-import com.squareup.picasso.Picasso;
+import com.example.cm.utils.Utils;
 
 import java.util.List;
 import java.util.Objects;
 
-import static com.example.cm.utils.Utils.calculateDiff;
-
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.UserViewHolder> {
 
     private final OnItemClickListener listener;
-    private List<MutableLiveData<User>> mUsers;
+    private List<User> mUsers;
 
     public FriendsListAdapter(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void setFriends(List<MutableLiveData<User>> newUsers) {
+    public void setFriends(List<User> newUsers) {
         if (mUsers == null) {
             mUsers = newUsers;
             notifyItemRangeInserted(0, newUsers.size());
@@ -47,24 +49,40 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     public UserViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
         ItemSingleFriendBinding binding = ItemSingleFriendBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+        binding.dotAvailabilityIcon.setVisibility(View.VISIBLE);
         return new UserViewHolder(binding);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
-        User user = mUsers.get(position).getValue();
+        User user = mUsers.get(position);
 
-        String profileImageUrl = Objects.requireNonNull(user).getProfileImageUrl();
-        String name = user.getFullName();
+        String profileImageString = Objects.requireNonNull(user).getProfileImageString();
+        String name = user.getDisplayName();
         String username = user.getUsername();
+        Availability availability = user.getAvailability();
 
-        if(profileImageUrl != null && !profileImageUrl.isEmpty()) {
-            holder.getProfileImage().setImageTintMode(null);
-            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+        if (profileImageString != null && !profileImageString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            holder.getProfileImage().setImageBitmap(img);
         }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
+
+        if (availability != null) {
+            switch (availability) {
+                case AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
+                    break;
+                case SOON_AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_soon_available);
+                    break;
+                case UNAVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_unavailable);
+                    break;
+            }
+        }
     }
 
     // Return the size of the list
@@ -74,10 +92,6 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             return 0;
         }
         return mUsers.size();
-    }
-
-    public interface OnItemClickListener {
-        void onItemClicked(String id);
     }
 
     /**
@@ -92,6 +106,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(String id);
     }
 
     /**
@@ -117,7 +135,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         private void onItemClicked() {
             int position = getAdapterPosition();
             if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(Objects.requireNonNull(mUsers.get(position).getValue()).getId());
+            listener.onItemClicked(mUsers.get(position).getId());
         }
 
 
@@ -134,6 +152,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
         public TextView getTvUsername() {
             return binding.tvUsername;
+        }
+
+        public ImageView getAvailabilityDot() {
+            return binding.dotAvailabilityIcon;
         }
     }
 }

@@ -1,5 +1,8 @@
 package com.example.cm.ui.adapters;
 
+import static com.example.cm.utils.Utils.calculateDiff;
+
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -7,13 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSelectFriendBinding;
-import com.squareup.picasso.Picasso;
+import com.example.cm.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +39,8 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
         this.selectedUsers = selectedUsers;
     }
 
-    public void setUsers(List<MutableLiveData<User>> newUsersMDL) {
-        List<User> newUsers = new ArrayList<>();
-        for (MutableLiveData<User> userMDL : newUsersMDL) {
-            newUsers.add(userMDL.getValue());
-        }
+    public void setUsers(List<User> users) {
+        List<User> newUsers = new ArrayList<>(users);
 
         if (mUsers == null) {
             mUsers = newUsers;
@@ -50,44 +51,6 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
         DiffUtil.DiffResult result = calculateDiff(mUsers, newUsers);
         mUsers = newUsers;
         result.dispatchUpdatesTo(this);
-    }
-
-    /**
-     * Calculate the difference between two lists and return the result
-     * Also used to animate the changes
-     * From https://stackoverflow.com/questions/49588377/how-to-set-adapter-in-mvvm-using-databinding
-     *
-     * @param oldUsers The old list of users
-     * @param newUsers The new list of users
-     * @return The result of the calculation
-     */
-    private DiffUtil.DiffResult calculateDiff(List<User> oldUsers, List<User> newUsers) {
-        return DiffUtil.calculateDiff(new DiffUtil.Callback() {
-            @Override
-            public int getOldListSize() {
-                return oldUsers.size();
-            }
-
-            @Override
-            public int getNewListSize() {
-                return newUsers.size();
-            }
-
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(oldUsers.get(oldItemPosition).getId(), newUsers.get(newItemPosition).getId());
-            }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                User newUser = newUsers.get(newItemPosition);
-                User oldUser = oldUsers.get(oldItemPosition);
-                return Objects.equals(newUser.getId(), oldUser.getId())
-                        && Objects.equals(newUser.getFirstName(), oldUser.getFirstName())
-                        && Objects.equals(newUser.getLastName(), oldUser.getLastName())
-                        && Objects.equals(newUser.getUsername(), oldUser.getUsername());
-            }
-        });
     }
 
     // Create new views (invoked by the layout manager)
@@ -103,19 +66,34 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, final int position) {
-        String profileImageUrl = mUsers.get(position).getProfileImageUrl();
-        String name = mUsers.get(position).getFirstName() + " " + mUsers.get(position).getLastName();
+        String profileImageString = mUsers.get(position).getProfileImageString();
+        String name = mUsers.get(position).getDisplayName();
         String username = mUsers.get(position).getUsername();
+        Availability availability = mUsers.get(position).getAvailability();
 
-        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-            holder.getProfileImage().setImageTintMode(null);
-            Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+        if (profileImageString != null && !profileImageString.isEmpty()) {
+            Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+            holder.getProfileImage().setImageBitmap(img);
         }
         holder.getTvName().setText(name);
         holder.getTvUsername().setText(username);
 
+
         if (selectedUsers != null) {
             holder.getCbSelect().setChecked(selectedUsers.contains(mUsers.get(position).getId()));
+        }
+        if(availability != null){
+            switch (availability) {
+                case AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
+                    break;
+                case SOON_AVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_soon_available);
+                    break;
+                case UNAVAILABLE:
+                    holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_unavailable);
+                    break;
+            }
         }
     }
 
@@ -199,6 +177,10 @@ public class InviteFriendsAdapter extends RecyclerView.Adapter<InviteFriendsAdap
 
         public CheckBox getCbSelect() {
             return binding.cbSelect;
+        }
+
+        public ImageView getAvailabilityDot(){
+            return binding.dotAvailabilityIcon;
         }
     }
 }

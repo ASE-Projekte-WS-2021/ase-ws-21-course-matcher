@@ -1,8 +1,9 @@
 package com.example.cm.ui.meetup.CreateMeetup;
 
-import android.os.Bundle;
-
 import static com.example.cm.data.models.MeetupRequest.MeetupRequestType.MEETUP_REQUEST;
+
+import android.graphics.Bitmap;
+import android.util.Base64;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -17,36 +18,44 @@ import com.example.cm.data.repositories.MeetupRequestRepository;
 import com.example.cm.data.repositories.UserRepository;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class CreateMeetupViewModel extends ViewModel {
+public class CreateMeetupViewModel extends ViewModel implements Serializable {
 
     private final UserRepository userRepository;
     private final MutableLiveData<User> currentUser;
     private final MeetupRepository meetupRepository;
     private final MutableLiveData<LatLng> meetupLatLng = new MutableLiveData<>();
     private final MutableLiveData<String> meetupLocation = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> meetupIsPrivate = new MutableLiveData<>(true);
     private final MutableLiveData<Date> meetupTimestamp = new MutableLiveData<>();
+    private final MutableLiveData<String> meetupLocationName = new MutableLiveData<>();
     private final MeetupRequestRepository meetupRequestRepository;
-    public MutableLiveData<List<MutableLiveData<User>>> users;
-    public MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> selectedUsers = new MutableLiveData<>();
+    public MutableLiveData<List<User>> users;
+    private String imageBaseString;
+    private String meetupId;
 
     public CreateMeetupViewModel() {
         userRepository = new UserRepository();
-        currentUser = userRepository.getCurrentUser();
-        users = userRepository.getFriends();
-
         meetupRepository = new MeetupRepository();
         meetupRequestRepository = new MeetupRequestRepository();
+
+        currentUser = userRepository.getCurrentUser();
+        users = userRepository.getFriends();
     }
 
+    public MutableLiveData<User> getCurrentUser() {
+        return currentUser;
+    }
 
-    public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
+    public MutableLiveData<List<User>> getUsers() {
         return users;
     }
 
@@ -81,6 +90,10 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupLocation.postValue(location);
     }
 
+    public void setMeetupLocationName(String locationName) {
+        meetupLocationName.postValue((locationName));
+    }
+
     public LiveData<Boolean> getMeetupIsPrivate() {
         return meetupIsPrivate;
     }
@@ -93,52 +106,39 @@ public class CreateMeetupViewModel extends ViewModel {
         meetupTimestamp.postValue(timestamp);
     }
 
-    public void setIsPrivate(Boolean isPrivate) {
-        meetupIsPrivate.postValue(isPrivate);
+    public void setMeetupImg(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, Constants.QUALITY_MEETUP_IMG, outputStream);
+        byte[] imageBytes = outputStream.toByteArray();
+        imageBaseString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
     }
 
-    public boolean createMeetup(Bundle bundle) {
+    public void createMeetup() {
         Objects.requireNonNull(selectedUsers.getValue());
+        meetupId = UUID.randomUUID().toString();
 
-        if (bundle == null) {
-            String meetupId = UUID.randomUUID().toString();
+        Meetup meetupToAdd = new Meetup(
+                meetupId,
+                userRepository.getFirebaseUser().getUid(),
+                meetupLatLng.getValue(),
+                meetupLocationName.getValue(),
+                meetupTimestamp.getValue(),
+                Boolean.TRUE.equals(meetupIsPrivate.getValue()),
+                selectedUsers.getValue(),
+                imageBaseString);
 
-            Meetup meetupToAdd = new Meetup(
-                    meetupId,
-                    userRepository.getFirebaseUser().getUid(),
-                    meetupLatLng.getValue(),
-                    meetupTimestamp.getValue(),
-                    Boolean.TRUE.equals(meetupIsPrivate.getValue()),
-                    selectedUsers.getValue());
-
-            boolean isSuccessful = meetupRepository.addMeetup(meetupToAdd);
-
-            if (isSuccessful) {
-                sendMeetupRequest(meetupToAdd.getId());
-                return true;
-            }
-            return false;
-        }
-
-        // add friends to existing meetup
-        else {
-            String meetupId = bundle.getString(Constants.KEY_MEETUP_ID);
-            sendMeetupRequestForExistingMeetup(meetupRepository.getMeetup(meetupId));
-            return true;
-        }
+        meetupRepository.addMeetup(meetupToAdd);
+        sendMeetupRequests();
     }
 
-    private void sendMeetupRequest(String meetupId) {
+    public void sendMeetupRequests() {
         // Create notifications for each invited user
         if (selectedUsers.getValue() != null && currentUser.getValue() != null) {
             for (String invitedFriendId : selectedUsers.getValue()) {
                 MeetupRequest request = new MeetupRequest(
                         meetupId,
                         userRepository.getFirebaseUser().getUid(),
-                        currentUser.getValue().getFullName(),
                         invitedFriendId,
-                        meetupLocation.getValue(),
-                        meetupTimestamp.getValue(),
                         MEETUP_REQUEST);
                 meetupRequestRepository.addMeetupRequest(request);
             }
@@ -146,29 +146,27 @@ public class CreateMeetupViewModel extends ViewModel {
         }
     }
 
-    private void sendMeetupRequestForExistingMeetup(MutableLiveData<Meetup> meetupMutableLiveData) {
-        // Create notifications for each invited user
-        Meetup meetup = meetupMutableLiveData.getValue(); // todo: meetup is null
-        if (selectedUsers.getValue() != null && currentUser.getValue() != null) {
-            for (String invitedFriendId : selectedUsers.getValue()) {
-                /*MeetupRequest request = new MeetupRequest(
-                        meetup.getId(),
-                        userRepository.getFirebaseUser().getUid(),
-                        currentUser.getValue().getFullName(),
-                        invitedFriendId,
-                        meetup.getLocation(),
-                        meetupTimestamp.getValue(),
-                        MEETUP_REQUEST);
-                meetupRequestRepository.addMeetupRequest(request);*/
-            }
-            selectedUsers.getValue().clear();
+    public List<User> getFilteredUsers(String query) {
+        if (users.getValue() == null) {
+            return null;
         }
+
+        List<User> filteredUsers = new ArrayList<>();
+        for (User user : users.getValue()) {
+            boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
+            boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
+
+            if (isQueryInUsername || isQueryInFullName) {
+                filteredUsers.add(user);
+            }
+        }
+
+        return filteredUsers;
     }
 
-    public void searchUsers(String query) {
-        if (users.getValue() != null) {
-            users.getValue().clear();
-            users = userRepository.getFriendsByUsername(query);
+    public void clearSelectedUsers() {
+        if (selectedUsers.getValue() != null) {
+            selectedUsers.getValue().clear();
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.cm.ui.add_friends;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.listener.RequestListener;
+import com.example.cm.data.models.FriendRequest;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentAddFriendsBinding;
 import com.example.cm.ui.adapters.AddFriendsAdapter;
 import com.example.cm.ui.adapters.AddFriendsAdapter.OnItemClickListener;
@@ -23,16 +27,14 @@ import com.example.cm.ui.add_friends.AddFriendsViewModel.OnRequestSentListener;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
 import java.util.Objects;
-
-import timber.log.Timber;
-
 
 public class AddFriendsFragment extends Fragment implements OnItemClickListener, OnRequestSentListener {
 
     private AddFriendsViewModel addFriendsViewModel;
     private FragmentAddFriendsBinding binding;
-    private AddFriendsAdapter selectFriendsAdapter;
+    private AddFriendsAdapter addFriendsAdapter;
     private Navigator navigator;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,13 +47,15 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void initUI() {
-        selectFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        addFriendsAdapter = new AddFriendsAdapter(this, requireActivity());
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
+        dividerItemDecoration.setDrawable(Objects
+                .requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
-        binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvUserList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvUserList.setHasFixedSize(true);
-        binding.rvUserList.setAdapter(selectFriendsAdapter);
+        binding.rvUserList.setAdapter(addFriendsAdapter);
         binding.btnBack.bringToFront();
     }
 
@@ -76,19 +80,37 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
 
     private void onClearInputClicked() {
         binding.etUserSearch.setText("");
-        addFriendsViewModel.searchUsers("");
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
     private void onSearchTextChanged(CharSequence charSequence) {
         String query = charSequence.toString();
-        if (query.length() > 0) {
+        toggleClearButton(query);
+        updateListByQuery(query);
+    }
+
+    private void toggleClearButton(String query) {
+        if (!query.isEmpty()) {
             binding.ivClearInput.setVisibility(View.VISIBLE);
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
         }
+    }
 
-        addFriendsViewModel.searchUsers(query);
+    private void updateListByQuery(String query) {
+        addFriendsViewModel.setSearchQuery(query);
+        List<User> filteredUsers = addFriendsViewModel.getFilteredUsers();
+        if (filteredUsers == null) {
+            return;
+        }
+        if (filteredUsers.isEmpty()) {
+            binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+            binding.rvUserList.setVisibility(View.GONE);
+            return;
+        }
+        binding.noFriendsWrapper.setVisibility(View.GONE);
+        binding.rvUserList.setVisibility(View.VISIBLE);
+        addFriendsAdapter.setUsers(filteredUsers);
     }
 
     private void initViewModel() {
@@ -98,13 +120,26 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
     }
 
     private void observeSentFriendRequests() {
-        addFriendsViewModel.getSentFriendRequestsPending().observe(getViewLifecycleOwner(), sentFriendRequests -> {
-            if (sentFriendRequests == null) {
-                return;
+        addFriendsViewModel.getSentFriendRequestsPending(new RequestListener<List<FriendRequest>>() {
+            @Override
+            public void onRequestSuccess(List<FriendRequest> sentFriendRequests) {
+                addFriendsViewModel.getReceivedFriendRequestsPending(new RequestListener<List<FriendRequest>>() {
+                    @Override
+                    public void onRequestSuccess(List<FriendRequest> receivedFriendRequests) {
+                        addFriendsAdapter.setFriendRequests(sentFriendRequests, receivedFriendRequests);
+                    }
+
+                    @Override
+                    public void onRequestError(Exception error) {
+
+                    }
+                });
             }
-            addFriendsViewModel.getReceivedFriendRequestsPending().observe(getViewLifecycleOwner(), receivedFriendRequests -> {
-                selectFriendsAdapter.setFriendRequests(sentFriendRequests, receivedFriendRequests);
-            });
+
+            @Override
+            public void onRequestError(Exception error) {
+
+            }
         });
     }
 
@@ -136,21 +171,28 @@ public class AddFriendsFragment extends Fragment implements OnItemClickListener,
         Snackbar.make(binding.getRoot(), R.string.snackbar_remove_request, Snackbar.LENGTH_LONG).show();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onFriendRequestsSet() {
-        addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
-            binding.loadingCircle.setVisibility(View.GONE);
+        if (!isAdded()) {
+            return;
+        }
 
-            if (users == null || users.size() == 0) {
-                Timber.d("No users found");
-                binding.noFriendsWrapper.setVisibility(View.VISIBLE);
-                binding.rvUserList.setVisibility(View.GONE);
-                return;
-            }
+        requireActivity().runOnUiThread(() -> {
+            addFriendsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+                binding.loadingCircle.setVisibility(View.GONE);
 
-            selectFriendsAdapter.setUsers(users);
-            binding.noFriendsWrapper.setVisibility(View.GONE);
-            binding.rvUserList.setVisibility(View.VISIBLE);
+                if (users == null || users.isEmpty()) {
+                    binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+                    binding.rvUserList.setVisibility(View.GONE);
+                    return;
+                }
+
+                addFriendsAdapter.setUsers(addFriendsViewModel.getFilteredUsers());
+                addFriendsAdapter.notifyDataSetChanged();
+                binding.noFriendsWrapper.setVisibility(View.GONE);
+                binding.rvUserList.setVisibility(View.VISIBLE);
+            });
         });
     }
 }

@@ -7,10 +7,11 @@ import java.util.List;
 
 public class UserPOJO {
     private String id;
-    private String username, firstName, lastName, email, bio, profileImageUrl;
+    private String username, displayName, email, bio, profileImageString;
     private List<String> friends;
     private List<Double> location;
     private boolean isSharingLocation;
+    private Availability availability;
 
     public UserPOJO() {
         // Required empty constructor
@@ -19,12 +20,12 @@ public class UserPOJO {
     public UserPOJO(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
-        this.firstName = user.getFirstName();
-        this.lastName = user.getLastName();
+        this.displayName = user.getDisplayName();
         this.email = user.getEmail();
         this.bio = user.getBio();
-        this.profileImageUrl = user.getProfileImageUrl();
+        this.profileImageString = user.getProfileImageString();
         this.friends = user.getFriends();
+        this.availability = user.getAvailability();
         this.isSharingLocation = user.getIsSharingLocation();
 
         this.location = new ArrayList<>();
@@ -50,20 +51,12 @@ public class UserPOJO {
         this.username = username;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getEmail() {
@@ -82,12 +75,20 @@ public class UserPOJO {
         this.bio = bio;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
+    public String getProfileImageString() {
+        return profileImageString;
     }
 
-    public void setProfileImageUrl(String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void setProfileImageString(String profileImageString) {
+        this.profileImageString = profileImageString;
+    }
+
+    public Availability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
     }
 
     public List<String> getFriends() {
@@ -118,12 +119,12 @@ public class UserPOJO {
         User user = new User();
         user.setId(this.id);
         user.setUsername(this.username);
-        user.setFirstName(this.firstName);
-        user.setLastName(this.lastName);
+        user.setDisplayName(this.displayName);
         user.setEmail(this.email);
         user.setBio(this.bio);
-        user.setProfileImageUrl(this.profileImageUrl);
+        user.setProfileImageString(this.profileImageString);
         user.setFriends(this.friends);
+        user.setAvailability(this.availability);
         user.setIsSharingLocation(this.isSharingLocation);
 
         if (this.location != null) {

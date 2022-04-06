@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class Meetup {
 
@@ -22,28 +21,26 @@ public class Meetup {
     private LatLng location;
     private Date timestamp;
     private boolean isPrivate;
+    private String locationImageString;
     private List<String> invitedFriends;
     private List<String> confirmedFriends;
     private List<String> declinedFriends;
     private List<String> lateFriends;
-    private MeetupPhase phase;
-
-    private final Calendar calendarNow = GregorianCalendar.getInstance();
-    private final Calendar calendarMeetup = GregorianCalendar.getInstance();
+    private String locationName;
 
     public Meetup() {
     }
 
-    public Meetup(String id, String requestingUser, LatLng location, Date timestamp, boolean isPrivate, List<String> invitedFriends) {
+    public Meetup(String id, String requestingUser, LatLng location, String locationName, Date timestamp, boolean isPrivate, List<String> invitedFriends, String locationImageString) {
         this.id = id;
         this.requestingUser = requestingUser;
         this.location = location;
+        this.locationName = locationName;
         this.timestamp = timestamp;
-        calendarMeetup.setTime(timestamp);
         this.isPrivate = isPrivate;
         this.invitedFriends = invitedFriends;
+        this.locationImageString = locationImageString;
         confirmedFriends = Collections.singletonList(requestingUser);
-        phase = getPhase();
     }
 
     @DocumentId
@@ -76,40 +73,26 @@ public class Meetup {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
-        calendarMeetup.setTime(timestamp);
     }
 
     @SuppressLint("DefaultLocale")
     @Exclude
     public String getFormattedTime(){
-        return String.format("%02d:%02d Uhr", calendarMeetup.get(Calendar.HOUR_OF_DAY), calendarMeetup.get(Calendar.MINUTE));
-    }
-
-    public MeetupPhase getPhase() {
-        Date now = new Date();
-        calendarNow.setTime(now);
-        // is today?
-        if (calendarNow.get(Calendar.YEAR) == calendarMeetup.get(Calendar.YEAR)
-                && calendarNow.get(Calendar.MONTH) == calendarMeetup.get(Calendar.MONTH)
-                && calendarNow.get(Calendar.DAY_OF_MONTH) == calendarMeetup.get(Calendar.DAY_OF_MONTH)) {
-            // has started?
-            if (TimeUnit.MILLISECONDS.toSeconds(now.getTime() - timestamp.getTime()) >= 0) {
-                phase = MeetupPhase.MEETUP_ACTIVE;
-            } else {
-                phase = MeetupPhase.MEETUP_UPCOMING;
-            }
-        } else {
-            phase = MeetupPhase.MEETUP_ENDED;
-        }
-        return phase;
-    }
-
-    public void setPhase(MeetupPhase phase) {
-        this.phase = phase;
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(timestamp);
+        return String.format("%02d:%02d Uhr", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
     }
 
     public LatLng getLocation() {
         return location;
+    }
+
+    public void setLocationName(String locationName){
+        this.locationName = locationName;
+    }
+
+    public String getLocationName(){
+        return locationName;
     }
 
     public void setLocation(LatLng location) {
@@ -122,6 +105,14 @@ public class Meetup {
 
     public void setPrivate(boolean aPrivate) {
         isPrivate = aPrivate;
+    }
+
+    public String getLocationImageString() {
+        return locationImageString;
+    }
+
+    public void setLocationImageString(String locationImageString) {
+        this.locationImageString = locationImageString;
     }
 
     public List<String> getInvitedFriends() {

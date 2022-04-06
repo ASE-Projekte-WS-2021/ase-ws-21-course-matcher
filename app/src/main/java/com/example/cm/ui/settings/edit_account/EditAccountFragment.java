@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -13,19 +14,18 @@ import com.example.cm.databinding.FragmentEditAccountBinding;
 import com.example.cm.utils.Navigator;
 import com.google.android.material.snackbar.Snackbar;
 
-import timber.log.Timber;
-
 public class EditAccountFragment extends Fragment {
-    FragmentEditAccountBinding binding;
-    EditAccountViewModel editAccountViewModel;
-    Navigator navigator;
+    private FragmentEditAccountBinding binding;
+    private EditAccountViewModel editAccountViewModel;
+    private Navigator navigator;
 
     public EditAccountFragment() {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentEditAccountBinding.inflate(inflater, container, false);
+
         initUI();
         initViewModel();
         initListeners();
@@ -35,10 +35,10 @@ public class EditAccountFragment extends Fragment {
 
     private void initUI() {
         binding.actionBar.tvTitle.setText(R.string.title_edit_account);
-        binding.inputEmail.inputLabel.setText(getString(R.string.input_label_email));
-        binding.inputCurrentPassword.inputLabel.setText(getString(R.string.input_label_current_password));
-        binding.inputNewPassword.inputLabel.setText(getString(R.string.input_label_new_password));
-        binding.inputNewPasswordConfirm.inputLabel.setText(getString(R.string.input_label_new_password_confirm));
+        binding.inputEmail.textInputLayout.setHint(getString(R.string.input_label_email));
+        binding.inputCurrentPassword.textInputLayout.setHint(getString(R.string.input_label_current_password));
+        binding.inputNewPassword.textInputLayout.setHint(getString(R.string.input_label_new_password));
+        binding.inputNewPasswordConfirm.textInputLayout.setHint(getString(R.string.input_label_new_password_confirm));
         // Disable editing of email field
         binding.inputEmail.inputField.setEnabled(false);
     }
@@ -72,9 +72,9 @@ public class EditAccountFragment extends Fragment {
     }
 
     private void resetPasswordFields() {
-        binding.inputCurrentPassword.inputField.setText("");
-        binding.inputNewPassword.inputField.setText("");
-        binding.inputNewPasswordConfirm.inputField.setText("");
+        binding.inputCurrentPassword.inputField.setText(requireContext().getString(R.string.empty_string));
+        binding.inputNewPassword.inputField.setText(requireContext().getString(R.string.empty_string));
+        binding.inputNewPasswordConfirm.inputField.setText(requireContext().getString(R.string.empty_string));
     }
 
     private void initListeners() {
@@ -84,6 +84,14 @@ public class EditAccountFragment extends Fragment {
     }
 
     private void onUpdatePasswordClicked() {
+        boolean isCurrentPasswordNull = binding.inputCurrentPassword.inputField.getText() == null;
+        boolean isNewPasswordNull = binding.inputNewPassword.inputField.getText() == null;
+        boolean isNewPasswordConfirmNull = binding.inputNewPasswordConfirm.inputField.getText() == null;
+
+        if (isCurrentPasswordNull || isNewPasswordNull || isNewPasswordConfirmNull) {
+            return;
+        }
+
         String currentPassword = binding.inputCurrentPassword.inputField.getText().toString().trim();
         String newPassword = binding.inputNewPassword.inputField.getText().toString().trim();
         String newPasswordConfirm = binding.inputNewPasswordConfirm.inputField.getText().toString().trim();
@@ -94,7 +102,6 @@ public class EditAccountFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Timber.d("onPause");
         editAccountViewModel.status.postValue(null);
     }
 }

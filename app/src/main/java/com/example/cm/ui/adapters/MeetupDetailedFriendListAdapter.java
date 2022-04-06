@@ -1,6 +1,6 @@
 package com.example.cm.ui.adapters;
 
-import android.util.Log;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,25 +8,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.cm.R;
+import com.example.cm.data.models.Availability;
 import com.example.cm.data.models.User;
 import com.example.cm.databinding.ItemSingleFriendBinding;
-import com.squareup.picasso.Picasso;
+import com.example.cm.utils.Utils;
 
 import java.util.List;
 import java.util.Objects;
 
 public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder> {
 
-    private final List<MutableLiveData<User>> friends;
+    private final List<User> friends;
     private final List<String> lateFriends;
+    private final User currentUser;
     private final OnItemClickListener listener;
 
-    public MeetupDetailedFriendListAdapter(List<MutableLiveData<User>> friends, List<String> lateFriends, OnItemClickListener listener) {
+    public MeetupDetailedFriendListAdapter(List<User> friends, List<String> lateFriends, User currentUser, OnItemClickListener listener) {
         this.friends = friends;
         this.lateFriends = lateFriends;
+        this.currentUser = currentUser;
         this.listener = listener;
     }
 
@@ -40,15 +43,20 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     @Override
     public void onBindViewHolder(@NonNull MeetupDetailedFriendListAdapter.MeetupDetailedFriendsListViewHolder holder, int position) {
         if (friends != null) {
-            User friend = friends.get(position).getValue();
-          
-            String fullName = Objects.requireNonNull(friend).getFullName();
-            String username = friend.getUsername();
-            String profileImageUrl = friend.getProfileImageUrl();
+            if (position == RecyclerView.NO_POSITION) {
+                return;
+            }
 
-            if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                holder.getProfileImage().setImageTintMode(null);
-                Picasso.get().load(profileImageUrl).fit().centerCrop().into(holder.getProfileImage());
+            User friend = friends.get(position);
+
+            String fullName = Objects.requireNonNull(friend).getDisplayName();
+            String username = friend.getUsername();
+            String profileImageString = friend.getProfileImageString();
+            Availability availability = friend.getAvailability();
+
+            if (profileImageString != null && !profileImageString.isEmpty()) {
+                Bitmap img = Utils.convertBaseStringToBitmap(profileImageString);
+                holder.getProfileImage().setImageBitmap(img);
             }
 
             if (lateFriends != null && lateFriends.contains(friend.getId())) {
@@ -56,6 +64,27 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
             }
             holder.getTvFullName().setText(fullName);
             holder.getTvUserName().setText(username);
+
+            boolean isFriendOfCurrentUser = currentUser.getFriends().contains(friend.getId());
+            boolean isCurrentUser = friend.getId().equals(currentUser.getId());
+
+            if (isFriendOfCurrentUser || isCurrentUser) {
+                if (availability != null) {
+                    switch (availability) {
+                        case AVAILABLE:
+                            holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_available);
+                            break;
+                        case SOON_AVAILABLE:
+                            holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_soon_available);
+                            break;
+                        case UNAVAILABLE:
+                            holder.getAvailabilityDot().setImageResource(R.drawable.ic_dot_unavailable);
+                            break;
+                    }
+                }
+            } else {
+                holder.getAvailabilityDot().setVisibility(View.INVISIBLE);
+            }
         }
     }
 
@@ -67,13 +96,11 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
         return friends.size();
     }
 
-    public interface OnItemClickListener {
-        void onItemClicked(String id);
-    }
-
     /**
-     * Fix for the bug in the RecyclerView that caused it to show incorrect data (e.g. image)
-     * Source: https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
+     * Fix for the bug in the RecyclerView that caused it to show incorrect data
+     * (e.g. image)
+     * Source:
+     * https://www.solutionspirit.com/on-scrolling-recyclerview-change-values/
      */
     @Override
     public long getItemId(int position) {
@@ -83,6 +110,10 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
     @Override
     public int getItemViewType(int position) {
         return position;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClicked(String id);
     }
 
     public class MeetupDetailedFriendsListViewHolder extends RecyclerView.ViewHolder {
@@ -104,8 +135,9 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
 
         private void onItemClicked() {
             int position = getAdapterPosition();
-            if (position == RecyclerView.NO_POSITION || listener == null) return;
-            listener.onItemClicked(friends.get(position).getValue().getId());
+            if (position == RecyclerView.NO_POSITION || listener == null)
+                return;
+            listener.onItemClicked(friends.get(position).getId());
         }
 
         public ImageView getProfileImage() {
@@ -122,6 +154,10 @@ public class MeetupDetailedFriendListAdapter extends RecyclerView.Adapter<Meetup
 
         public ImageView getIvLate() {
             return binding.ivFriendLateInfo;
+        }
+
+        public ImageView getAvailabilityDot() {
+            return binding.dotAvailabilityIcon;
         }
     }
 }

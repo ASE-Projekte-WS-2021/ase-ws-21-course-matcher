@@ -5,12 +5,19 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card"
+        android:id="@+id/meetupCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/meetup_card_margin"
         android:clickable="true"
         card_view:cardCornerRadius="@dimen/meetup_corner_radius">
+
+        <FrameLayout
+            android:id="@+id/ownMeetupMarker"
+            android:background="@color/grey_medium"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:visibility="invisible"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,6 +26,7 @@
 
             <!-- Media -->
             <ImageView
+                android:id="@+id/ivLocation"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/meetup_location_image_height"
                 android:contentDescription="@string/location"
@@ -28,21 +36,29 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/meetup_card_content_padding">
+                android:paddingBottom="@dimen/padding_medium"
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/timeText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/time"
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?android:attr/textColorSecondary" />
+                    android:background="@drawable/label_rounded_active"
+                    android:includeFontPadding="false"
+                    android:paddingHorizontal="@dimen/padding_small"
+                    android:paddingVertical="@dimen/padding_label"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginTop="@dimen/padding_small"
+                    android:textSize="@dimen/text_size_small"
+                    android:text="time"
+                    android:textAppearance="?attr/textAppearanceBody2" />
 
                 <TextView
                     android:id="@+id/locationText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/padding_half"
+                    android:layout_marginHorizontal="@dimen/padding_medium"
                     android:text="@string/location_card"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     android:textStyle="bold"
@@ -53,6 +69,7 @@
                     android:id="@+id/meetupImagesLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/padding_medium"
                     android:orientation="horizontal"></LinearLayout>
             </LinearLayout>
         </LinearLayout>

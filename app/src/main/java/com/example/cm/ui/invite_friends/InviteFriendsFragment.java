@@ -1,5 +1,6 @@
 package com.example.cm.ui.invite_friends;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,47 +12,52 @@ import android.widget.AdapterView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.cm.Constants;
 import com.example.cm.R;
+import com.example.cm.data.models.User;
 import com.example.cm.databinding.FragmentInviteFriendsBinding;
 import com.example.cm.ui.adapters.InviteFriendsAdapter;
 import com.example.cm.ui.meetup.CreateMeetup.CreateMeetupViewModel;
 import com.example.cm.utils.Navigator;
-import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
 import java.util.Objects;
 
-
-public class InviteFriendsFragment extends Fragment implements AdapterView.OnItemClickListener,
-        InviteFriendsAdapter.OnItemClickListener {
+public class InviteFriendsFragment extends Fragment implements InviteFriendsAdapter.OnItemClickListener {
 
     private CreateMeetupViewModel createMeetupViewModel;
     private FragmentInviteFriendsBinding binding;
     private InviteFriendsAdapter inviteFriendsListAdapter;
-    private Bundle bundle;
     private Navigator navigator;
+    private Bundle bundle;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInviteFriendsBinding.inflate(inflater, container, false);
         navigator = new Navigator(requireActivity());
-        bundle = this.getArguments();
-        View root = binding.getRoot();
+        bundle = getArguments();
+
         initUI();
         initViewModel();
         initListener();
-        return root;
+
+        return binding.getRoot();
     }
 
     private void initUI() {
         inviteFriendsListAdapter = new InviteFriendsAdapter(this);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(),
+                DividerItemDecoration.VERTICAL);
+
+        if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
+            dividerItemDecoration
+                    .setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+        }
+
         binding.rvUserList.addItemDecoration(dividerItemDecoration);
-        binding.rvUserList.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rvUserList.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvUserList.setHasFixedSize(true);
         binding.rvUserList.setAdapter(inviteFriendsListAdapter);
         binding.btnBack.bringToFront();
@@ -61,12 +67,8 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         binding.btnBack.setOnClickListener(v -> navigator.getNavController().popBackStack());
         binding.ivClearInput.setOnClickListener(v -> onClearInputClicked());
         binding.btnSendInvite.setOnClickListener(v -> {
-            boolean isSuccessful = createMeetupViewModel.createMeetup(bundle);
-            if (isSuccessful) {
-                navigator.getNavController().navigate(R.id.navigateToMeetupInviteSuccess);
-            } else {
-                Snackbar.make(binding.getRoot(), R.string.meetup_create_error, Snackbar.LENGTH_LONG).show();
-            }
+            createMeetupViewModel.createMeetup();
+            navigator.getNavController().navigate(R.id.navigateToMeetupInviteSuccess);
         });
         binding.etUserSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -84,8 +86,9 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void initViewModel() {
-        createMeetupViewModel = new ViewModelProvider(requireActivity()).get(CreateMeetupViewModel.class);
+        createMeetupViewModel = (CreateMeetupViewModel) bundle.getSerializable(Constants.KEY_CREATE_MEETUP_VM);
         createMeetupViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
             binding.loadingCircle.setVisibility(View.GONE);
 
@@ -96,6 +99,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
             }
 
             inviteFriendsListAdapter.setUsers(users);
+            inviteFriendsListAdapter.notifyDataSetChanged();
             binding.rvUserList.setVisibility(View.VISIBLE);
             binding.noFriendsWrapper.setVisibility(View.GONE);
         });
@@ -105,32 +109,44 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
                 return;
             }
 
-            showInvitationButton(selectedUsers.size() > 0);
+            showInvitationButton(!selectedUsers.isEmpty());
             inviteFriendsListAdapter.setSelectedUsers(selectedUsers);
         });
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
-
     private void onClearInputClicked() {
         binding.etUserSearch.setText("");
-        createMeetupViewModel.searchUsers("");
         binding.ivClearInput.setVisibility(View.GONE);
     }
 
     private void onSearchTextChanged(CharSequence charSequence) {
         String query = charSequence.toString();
-        if (query.length() > 0) {
+        toggleClearButton(query);
+        updateListByQuery(query);
+    }
+
+    private void toggleClearButton(String query) {
+        if (!query.isEmpty()) {
             binding.ivClearInput.setVisibility(View.VISIBLE);
         } else {
             binding.ivClearInput.setVisibility(View.GONE);
         }
-        createMeetupViewModel.searchUsers(query);
     }
 
+    private void updateListByQuery(String query) {
+        List<User> filteredUsers = createMeetupViewModel.getFilteredUsers(query);
+        if (filteredUsers == null) {
+            return;
+        }
+        if (filteredUsers.isEmpty()) {
+            binding.noFriendsWrapper.setVisibility(View.VISIBLE);
+            binding.rvUserList.setVisibility(View.GONE);
+            return;
+        }
+        binding.noFriendsWrapper.setVisibility(View.GONE);
+        binding.rvUserList.setVisibility(View.VISIBLE);
+        inviteFriendsListAdapter.setUsers(filteredUsers);
+    }
 
     private void showInvitationButton(boolean showButton) {
         if (showButton) {
@@ -144,6 +160,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+        createMeetupViewModel.clearSelectedUsers();
     }
 
     @Override
@@ -155,6 +172,7 @@ public class InviteFriendsFragment extends Fragment implements AdapterView.OnIte
     public void onItemClicked(String id) {
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_USER_ID, id);
-        navigator.getNavController().navigate(R.id.action_navigation_invite_friends_to_navigation_other_profile, bundle);
+        navigator.getNavController().navigate(R.id.action_navigation_invite_friends_to_navigation_other_profile,
+                bundle);
     }
 }

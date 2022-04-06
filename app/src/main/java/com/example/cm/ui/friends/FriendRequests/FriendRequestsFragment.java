@@ -22,11 +22,10 @@ import com.example.cm.ui.adapters.FriendRequestListAdapter;
 import com.example.cm.ui.adapters.SwipeToDelete;
 import com.example.cm.utils.Navigator;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
-
-public class FriendRequestsFragment extends Fragment implements
-        FriendRequestListAdapter.OnFriendRequestListener {
+public class FriendRequestsFragment extends Fragment implements FriendRequestListAdapter.OnFriendRequestListener {
 
     private FriendRequestsViewModel requestsViewModel;
     private FriendRequestListAdapter requestsListAdapter;
@@ -43,22 +42,54 @@ public class FriendRequestsFragment extends Fragment implements
     }
 
     private void initUI() {
-        requestsListAdapter = new FriendRequestListAdapter(this);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
-        dividerItemDecoration.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal)));
+
+        if (AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal) != null) {
+            dividerItemDecoration.setDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.divider_horizontal));
+        }
         binding.notificationsRecyclerView.addItemDecoration(dividerItemDecoration);
-        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
-        binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.notificationsRecyclerView.setHasFixedSize(true);
+        initAdapter();
     }
 
     private void initViewModel() {
         requestsViewModel = new ViewModelProvider(this).get(FriendRequestsViewModel.class);
         requestsViewModel.getFriendRequests().observe(getViewLifecycleOwner(), requests -> {
-            requestsListAdapter.setRequests(requests);
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
-            itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
+            List<String> userIds = getUserIds(requests);
+            requestsViewModel.setUserIds(userIds);
+
+            requestsViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+                binding.loadingCircle.setVisibility(View.GONE);
+                if (users.isEmpty()) {
+                    binding.tvNoRequestsFound.setVisibility(View.VISIBLE);
+                    return;
+                }
+                binding.tvNoRequestsFound.setVisibility(View.GONE);
+                binding.notificationsRecyclerView.setVisibility(View.VISIBLE);
+
+                initAdapter();
+                requestsListAdapter.setRequests(requests, users);
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDelete(requestsListAdapter));
+                itemTouchHelper.attachToRecyclerView(binding.notificationsRecyclerView);
+            });
         });
+    }
+
+    private void initAdapter() {
+        requestsListAdapter = new FriendRequestListAdapter(this);
+        binding.notificationsRecyclerView.setAdapter(requestsListAdapter);
+        binding.notificationsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.notificationsRecyclerView.setHasFixedSize(true);
+    }
+
+    private List<String> getUserIds(List<FriendRequest> requests) {
+        List<String> ids = new ArrayList<>();
+        for (FriendRequest request : requests) {
+            if (request != null) {
+                ids.add(request.getSenderId());
+                ids.add(request.getReceiverId());
+            }
+        }
+        return ids;
     }
 
     @Override
@@ -93,5 +124,4 @@ public class FriendRequestsFragment extends Fragment implements
     public void onUndo(FriendRequest request, int position, Request.RequestState previousState) {
         requestsViewModel.undoFriendRequest(request, position, previousState);
     }
-
 }

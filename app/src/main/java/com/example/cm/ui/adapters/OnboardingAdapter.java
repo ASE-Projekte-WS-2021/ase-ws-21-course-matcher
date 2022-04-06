@@ -17,22 +17,22 @@ public class OnboardingAdapter extends PagerAdapter {
 
     private final Context context;
     int[] images = {
-            R.drawable.ic_conversation,
-            R.drawable.ic_winke_profil,
-            R.drawable.ic_having_fun,
-            R.drawable.ic_my_location
+            R.drawable.map_ob,
+            R.drawable.profil_ob,
+            R.drawable.map_uni_ob,
+            R.drawable.meetup_ob
     };
     int[] headings = {
             R.string.start_title,
             R.string.profile_title,
-            R.string.meet_title,
-            R.string.location_title
+            R.string.location_title,
+            R.string.meet_title
     };
     int[] descs = {
             R.string.start_header,
             R.string.profile_header,
-            R.string.meet_header,
-            R.string.location_header
+            R.string.location_header,
+            R.string.meet_header
     };
 
     public OnboardingAdapter(Context context) {
@@ -54,8 +54,6 @@ public class OnboardingAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = layoutInflater.inflate(R.layout.item_onboarding, container, false);
-
-
         ImageView slideTitleImage = view.findViewById(R.id.onboarding_image);
         TextView slideTitle = view.findViewById(R.id.onboarding_title);
         TextView slideDesc = view.findViewById(R.id.onboarding_desc);
@@ -70,7 +68,6 @@ public class OnboardingAdapter extends PagerAdapter {
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-
         container.removeView((LinearLayout) object);
     }
 }

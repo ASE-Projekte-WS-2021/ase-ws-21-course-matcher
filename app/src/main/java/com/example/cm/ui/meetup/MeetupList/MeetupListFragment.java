@@ -1,5 +1,7 @@
 package com.example.cm.ui.meetup.MeetupList;
 
+import static com.example.cm.Constants.MEETUP_LIST_COLUMN_COUNT;
+
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,8 +13,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.example.cm.data.models.Meetup;
 import com.example.cm.databinding.FragmentMeetupListBinding;
 import com.example.cm.ui.adapters.MeetupListAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MeetupListFragment extends Fragment {
 
@@ -22,13 +28,15 @@ public class MeetupListFragment extends Fragment {
     @SuppressLint("NotifyDataSetChanged")
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMeetupListBinding.inflate(inflater, container, false);
+
         initUi();
         initViewModel();
+
         return binding.getRoot();
     }
-  
+
     private void initUi() {
-        GridLayoutManager gridLayout = new GridLayoutManager(getContext(), 2);
+        GridLayoutManager gridLayout = new GridLayoutManager(requireContext(), MEETUP_LIST_COLUMN_COUNT);
         binding.meetupListRecyclerView.setLayoutManager(gridLayout);
         binding.meetupListRecyclerView.setHasFixedSize(true);
     }
@@ -37,16 +45,49 @@ public class MeetupListFragment extends Fragment {
     private void initViewModel() {
         MeetupListViewModel meetupListViewModel = new ViewModelProvider(this).get(MeetupListViewModel.class);
         meetupListViewModel.getMeetups().observe(getViewLifecycleOwner(), meetups -> {
-            if (meetups.size() == 0) {
-                binding.noMeetupsWrapper.setVisibility(View.VISIBLE);
+            if (meetups.isEmpty()) {
+                binding.loadingCircle.setVisibility(View.GONE);
                 binding.meetupListRecyclerView.setVisibility(View.GONE);
+                binding.noMeetupsWrapper.setVisibility(View.VISIBLE);
                 return;
             }
-            meetupListAdapter = new MeetupListAdapter(meetups);
-            binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
-            binding.noMeetupsWrapper.setVisibility(View.GONE);
-            binding.meetupListRecyclerView.setVisibility(View.VISIBLE);
+
+            List<String> userIds = getUserIds(meetups);
+            meetupListViewModel.setUserIds(userIds);
+            meetupListViewModel.getUsers().observe(getViewLifecycleOwner(), users -> {
+                meetupListAdapter = new MeetupListAdapter(meetups, users);
+
+                binding.meetupListRecyclerView.setAdapter(meetupListAdapter);
+                binding.loadingCircle.setVisibility(View.GONE);
+                binding.noMeetupsWrapper.setVisibility(View.GONE);
+                binding.meetupListRecyclerView.setVisibility(View.VISIBLE);
+            });
         });
+    }
+
+    private List<String> getUserIds(List<Meetup> meetups) {
+        List<String> ids = new ArrayList<>();
+
+        for (Meetup meetup : meetups) {
+            if (meetup != null) {
+                List<String> confirmedFriends = meetup.getConfirmedFriends();
+                List<String> declinedFriends = meetup.getDeclinedFriends();
+                List<String> invitedFriends = meetup.getInvitedFriends();
+
+                if (confirmedFriends != null) {
+                    ids.addAll(confirmedFriends);
+                }
+
+                if (declinedFriends != null) {
+                    ids.addAll(declinedFriends);
+                }
+
+                if (invitedFriends != null) {
+                    ids.addAll(invitedFriends);
+                }
+            }
+        }
+        return ids;
     }
 
     @Override

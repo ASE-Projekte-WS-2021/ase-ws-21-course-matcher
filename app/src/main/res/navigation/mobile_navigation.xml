@@ -17,6 +17,14 @@
         android:id="@+id/action_global_navigate_to_invite_friends"
         app:destination="@+id/navigation_invite_friends" />
 
+    <action
+        android:id="@+id/action_global_navigate_to_other_profile"
+        app:destination="@+id/navigation_other_profile" />
+
+    <action
+        android:id="@+id/action_global_to_edit_profile"
+        app:destination="@id/editProfileFragment" />
+
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.example.cm.ui.home.HomeFragment"
@@ -28,6 +36,9 @@
         <action
             android:id="@+id/action_navigation_home_to_navigation_meetup"
             app:destination="@id/navigation_meetup" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_meetup_detailed"
+            app:destination="@id/navigation_meetup_detailed" />
     </fragment>
 
     <fragment
@@ -41,6 +52,9 @@
         <action
             android:id="@+id/navigateToMeetupDetailed"
             app:destination="@+id/navigation_meetup_detailed" />
+        <action
+            android:id="@+id/fromMeetupRequestToProfile"
+            app:destination="@id/navigation_other_profile" />
     </fragment>
 
     <fragment
@@ -63,11 +77,10 @@
         android:id="@+id/navigation_meetup"
         android:name="com.example.cm.ui.meetup.CreateMeetup.CreateMeetupFragment"
         android:label="Meetup"
-        tools:layout="@layout/fragment_meetup">
+        tools:layout="@layout/fragment_create_meetup">
         <action
             android:id="@+id/navigateToInviteFriends"
             app:destination="@+id/navigation_invite_friends" />
-
     </fragment>
 
     <fragment
@@ -90,6 +103,18 @@
     </fragment>
 
     <fragment
+        android:id="@+id/navigation_invite_more_friends"
+        android:name="com.example.cm.ui.meetup.MeetupTabsFragment"
+        android:label="@string/invite_more_friends"
+        tools:layout="@layout/fragment_meetup_tabs">
+        <action
+            android:id="@+id/action_navigation_invite_more_friends_to_navigation_other_profile"
+            app:destination="@id/navigation_other_profile" />
+
+
+    </fragment>
+
+    <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.cm.ui.own_profile.OwnProfileFragment"
         android:label="@string/title_profile"
@@ -97,6 +122,9 @@
         <action
             android:id="@+id/action_navigation_profile_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_ownProfileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
     </fragment>
 
     <fragment
@@ -135,30 +163,41 @@
             android:id="@+id/fromSelectFriendsToProfile"
             app:destination="@id/navigation_other_profile" />
     </fragment>
+
     <fragment
         android:id="@+id/navigation_meetup_success"
         android:name="com.example.cm.ui.meetup_invite_success.MeetupInviteSuccessFragment"
         android:label="fragment_meetup_invite_success"
         tools:layout="@layout/fragment_meetup_invite_success" />
+
     <fragment
         android:id="@+id/navigation_other_profile"
         android:name="com.example.cm.ui.other_profile.OtherProfileFragment"
-        android:label="@string/title_profile" />
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_other_profile"/>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.cm.ui.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings">
         <action
-            android:id="@+id/action_settingsFragment_to_editNotificationsFragment"
-            app:destination="@id/editNotificationsFragment" />
-        <action
             android:id="@+id/action_settingsFragment_to_editAccountFragment"
             app:destination="@id/editAccountFragment" />
         <action
             android:id="@+id/action_settingsFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
     </fragment>
+
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.cm.ui.settings.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_settings_about" />
+
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.cm.ui.settings.edit_profile.EditProfileFragment"
@@ -169,11 +208,6 @@
         android:name="com.example.cm.ui.settings.edit_account.EditAccountFragment"
         android:label="fragment_edit_account"
         tools:layout="@layout/fragment_edit_account" />
-    <fragment
-        android:id="@+id/editNotificationsFragment"
-        android:name="com.example.cm.ui.settings.edit_notifications.EditNotificationsFragment"
-        android:label="fragment_edit_notifications"
-        tools:layout="@layout/fragment_edit_notifications" />
     <fragment
         android:id="@+id/meetupLocationFragment"
         android:name="com.example.cm.ui.meetup.MeetupLocation.MeetupLocationFragment"

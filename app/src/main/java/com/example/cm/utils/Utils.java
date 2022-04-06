@@ -1,43 +1,47 @@
 package com.example.cm.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Geocoder;
-import android.os.Build;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+import android.text.Editable;
+import android.text.SpannableStringBuilder;
+import android.util.Base64;
+import android.util.Log;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.MutableLiveData;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.example.cm.R;
+import com.example.cm.data.models.MeetupPhase;
+import com.example.cm.data.models.Request;
 import com.example.cm.data.models.User;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 public class Utils {
 
-    /**
-     * Hides the keyboard
-     *
-     * @param context Context of the activity
-     * @param view    View to hide the keyboard from
-     */
-    public static void hideKeyboard(Context context, View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
+    private static final Calendar calendarNow = GregorianCalendar.getInstance();
+    private static final Calendar calendarMeetup = GregorianCalendar.getInstance();
 
     /**
      * Find the NavController for a given fragment
@@ -46,7 +50,11 @@ public class Utils {
      * @return NavController for the fragment
      */
     public static NavController findNavController(FragmentActivity activity) {
-        return Navigation.findNavController(activity, R.id.nav_host_fragment_activity_main);
+        NavHostFragment navHostFragment = (NavHostFragment) activity.getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+        if (navHostFragment != null) {
+            return navHostFragment.getNavController();
+        }
+        return null;
     }
 
     /**
@@ -79,7 +87,7 @@ public class Utils {
      * @param newUsers The new list of mutable users
      * @return The result of the calculation
      */
-    public static DiffUtil.DiffResult calculateDiff(List<MutableLiveData<User>> oldUsers, List<MutableLiveData<User>> newUsers) {
+    public static DiffUtil.DiffResult calculateDiff(List<User> oldUsers, List<User> newUsers) {
         return DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -93,18 +101,17 @@ public class Utils {
 
             @Override
             public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return Objects.equals(Objects.requireNonNull(oldUsers.get(oldItemPosition).getValue()).getId(),
-                        Objects.requireNonNull(newUsers.get(newItemPosition).getValue()).getId());
+                return Objects.equals(Objects.requireNonNull(oldUsers.get(oldItemPosition)).getId(),
+                        Objects.requireNonNull(newUsers.get(newItemPosition)).getId());
             }
 
             @Override
             public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                User newUser = newUsers.get(newItemPosition).getValue();
-                User oldUser = oldUsers.get(oldItemPosition).getValue();
+                User newUser = newUsers.get(newItemPosition);
+                User oldUser = oldUsers.get(oldItemPosition);
 
                 return Objects.equals(Objects.requireNonNull(newUser).getId(), Objects.requireNonNull(oldUser).getId())
-                        && Objects.equals(newUser.getFirstName(), oldUser.getFirstName())
-                        && Objects.equals(newUser.getLastName(), oldUser.getLastName())
+                        && Objects.equals(newUser.getDisplayName(), oldUser.getDisplayName())
                         && Objects.equals(newUser.getUsername(), oldUser.getUsername());
             }
         });
@@ -129,16 +136,110 @@ public class Utils {
     }
 
     /**
-     * Returns the current date
+     * Displays a badge in the Requests tab when open requests are available
      *
-     * @return The current date
+     * @param tab          The tab to display the badge in
+     * @param openRequests The number of open requests
+     * @param resources    The resources to get the badge color from
      */
-    public static Date getCurrentDay() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        return calendar.getTime();
+    public static void hideShowBadge(TabLayout.Tab tab, int openRequests, Resources resources) {
+        if (tab == null) {
+            return;
+        }
+        if (openRequests > 0) {
+            tab.getOrCreateBadge().setNumber(openRequests);
+            tab.getOrCreateBadge().setBackgroundColor(resources.getColor(R.color.orange500));
+            tab.getOrCreateBadge().setBadgeTextColor(resources.getColor(R.color.white));
+            tab.getOrCreateBadge().setVisible(true);
+        } else {
+            tab.getOrCreateBadge().setVisible(false);
+        }
+    }
+
+    /**
+     * Returns the amount of open requests
+     *
+     * @param requests The list of requests
+     * @param <T>      The type of the requests
+     * @return The amount of open requests
+     */
+    public static <T extends Request> int getOpenRequestCount(List<T> requests) {
+        int openRequests = 0;
+
+        for (int i = 0; i < requests.size(); i++) {
+            Request request = requests.get(i);
+            if (request == null) {
+                continue;
+            }
+            if (request.getState() == REQUEST_PENDING) {
+                openRequests++;
+            }
+        }
+        return openRequests;
+    }
+
+    public static MeetupPhase getPhaseByTimestamp(Date timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+        MeetupPhase phase;
+        Date now = new Date();
+        calendarNow.setTime(now);
+        calendarMeetup.setTime(timestamp);
+        // is today?
+        if (calendarNow.get(Calendar.YEAR) == calendarMeetup.get(Calendar.YEAR)
+                && calendarNow.get(Calendar.MONTH) == calendarMeetup.get(Calendar.MONTH)
+                && calendarNow.get(Calendar.DAY_OF_MONTH) == calendarMeetup.get(Calendar.DAY_OF_MONTH)) {
+            // has started?
+            if (TimeUnit.MILLISECONDS.toSeconds(now.getTime() - timestamp.getTime()) >= 0) {
+                phase = MeetupPhase.MEETUP_ACTIVE;
+            } else {
+                phase = MeetupPhase.MEETUP_UPCOMING;
+            }
+        } else {
+            phase = MeetupPhase.MEETUP_ENDED;
+        }
+        return phase;
+    }
+
+    /**
+     * Returns whether user has given permission to access the location
+     *
+     * @param context The context the method is called from
+     * @param type    The type of the permission
+     * @return Whether user has given permission to access the location
+     */
+    public static boolean hasLocationPermission(Context context, String type) {
+        if (type.equals(ACCESS_FINE_LOCATION)) {
+            return ContextCompat.checkSelfPermission(context, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED;
+        } else if (type.equals(ACCESS_COARSE_LOCATION)) {
+            return ContextCompat.checkSelfPermission(context, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED;
+        }
+        return false;
+    }
+
+    /**
+     * Convert a base64 string to a bitmap
+     *
+     * @param imageString The base64 string
+     * @return The converted bitmap
+     */
+    public static Bitmap convertBaseStringToBitmap(String imageString) {
+        byte[] decodedString = Base64.decode(imageString, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+    }
+
+    /**
+     * Replaces a given string with another string
+     * @param editable Editable to replace the string in
+     * @param toReplace The string to replace
+     * @param replacement String that replaces the toReplace string
+     */
+    public static void replaceIn(Editable editable, String toReplace, String replacement) {
+        if (editable.toString().contains(toReplace)) {
+            Editable replacedString = new SpannableStringBuilder(editable.toString().replace(toReplace, replacement));
+            editable.replace(0, editable.length(), replacedString);
+        }
     }
 }
+

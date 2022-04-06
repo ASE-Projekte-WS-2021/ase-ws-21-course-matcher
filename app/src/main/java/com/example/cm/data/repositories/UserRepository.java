@@ -1,12 +1,19 @@
 package com.example.cm.data.repositories;
 
+import static com.example.cm.Constants.FIELD_FRIENDS;
+import static com.example.cm.Constants.FIELD_LOCATION;
+import static com.example.cm.Constants.FIELD_PROFILE_IMAGE_STRING;
+import static com.example.cm.Constants.MAX_QUERY_LENGTH;
+
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cm.config.CollectionConfig;
+import com.example.cm.data.listener.Callback;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.User;
 import com.example.cm.data.models.UserPOJO;
 import com.example.cm.utils.Utils;
+import com.google.common.collect.Lists;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -14,12 +21,15 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.UUID;
 
 public class UserRepository extends Repository {
 
@@ -28,11 +38,18 @@ public class UserRepository extends Repository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final CollectionReference userCollection = firestore.collection(CollectionConfig.USERS.toString());
     private final MutableLiveData<User> mutableUser = new MutableLiveData<>();
-    private MutableLiveData<List<MutableLiveData<User>>> mutableUsers = new MutableLiveData<>();
+    private final HashMap<String, ListenerRegistration> registrations = new HashMap<>();
+    private MutableLiveData<List<User>> mutableUsers = new MutableLiveData<>();
+    private List<User> users = new ArrayList<>();
 
     public UserRepository() {
     }
 
+    /**
+     * Returns the UserRepository
+     *
+     * @return instance of the UserRepository
+     */
     public static UserRepository getInstance() {
         if (instance == null) {
             instance = new UserRepository();
@@ -53,13 +70,14 @@ public class UserRepository extends Repository {
     }
 
     /**
-     * Get the current user
+     * Get the current user.
+     * Used to live update the current users' data on changes
      *
      * @return MutableLiveData of current user
      */
     public MutableLiveData<User> getCurrentUser() {
         if (auth.getCurrentUser() == null) {
-            return null;
+            return mutableUser;
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
@@ -76,13 +94,13 @@ public class UserRepository extends Repository {
     }
 
     /**
-     * Get the current user
+     * Get the current user just once
      *
      * @return MutableLiveData of current user
      */
     public MutableLiveData<User> getStaticCurrentUser() {
         if (auth.getCurrentUser() == null) {
-            return null;
+            return mutableUser;
         }
 
         String currentUserId = auth.getCurrentUser().getUid();
@@ -96,6 +114,11 @@ public class UserRepository extends Repository {
         return mutableUser;
     }
 
+    /**
+     * Get the id of the currently logged in user
+     *
+     * @return id of the currently logged in user
+     */
     public String getCurrentAuthUserId() {
         if (auth.getCurrentUser() == null) {
             return null;
@@ -105,20 +128,25 @@ public class UserRepository extends Repository {
 
     /**
      * Create a user and add it to user collection
+     *
+     * @param user user to add
      */
     public void createUser(User user) {
         userCollection.document(user.getId()).set(user);
     }
 
+    /**
+     * Update the current user
+     *
+     * @param field    field to update
+     * @param value    value to update
+     * @param callback callback when update is done
+     */
     public void updateField(String field, Object value, Callback callback) {
         try {
             userCollection.document(getFirebaseUser().getUid()).update(field, value)
-                    .addOnSuccessListener(task -> {
-                        callback.onSuccess(value);
-                    })
-                    .addOnFailureListener(task -> {
-                        callback.onError(false);
-                    });
+                    .addOnSuccessListener(task -> callback.onSuccess(value))
+                    .addOnFailureListener(task -> callback.onError(false));
         } catch (Exception e) {
             callback.onError(e);
             e.printStackTrace();
@@ -127,14 +155,16 @@ public class UserRepository extends Repository {
 
     /**
      * Get a MutableLiveData-List of all mutable users
+     *
+     * @return MutableLiveData-List of all mutable users
      */
-    public MutableLiveData<List<MutableLiveData<User>>> getUsers() {
+    public MutableLiveData<List<User>> getUsers() {
         userCollection.addSnapshotListener(executorService, ((value, error) -> {
             if (error != null) {
                 return;
             }
             if (value != null && !value.isEmpty()) {
-                List<MutableLiveData<User>> users = snapshotToMutableUserList(value);
+                List<User> users = snapshotToMutableUserList(value);
                 mutableUsers.postValue(users);
             }
         }));
@@ -159,11 +189,15 @@ public class UserRepository extends Repository {
             if (error != null) {
                 return;
             }
-            if (value == null || !value.exists() || value.get("friends") == null) {
+            if (value == null || !value.exists() || value.get(FIELD_FRIENDS) == null) {
                 isUserBefriended.postValue(false);
             } else {
-                List<String> friends = Utils.castList(value.get("friends"), String.class);
-                boolean isBefriended = Objects.requireNonNull(friends).contains(userId);
+                List<String> friends = Utils.castList(value.get(FIELD_FRIENDS), String.class);
+                if (friends == null) {
+                    return;
+                }
+
+                boolean isBefriended = friends.contains(userId);
                 isUserBefriended.postValue(isBefriended);
             }
         }));
@@ -175,22 +209,22 @@ public class UserRepository extends Repository {
      *
      * @return MutableLiveData-List of mutable not-friends
      */
-    public MutableLiveData<List<MutableLiveData<User>>> getUsersNotFriends() {
+    public MutableLiveData<List<User>> getUsersNotFriends() {
         userCollection.addSnapshotListener(executorService, (value, error) -> {
-            if (error != null) {
+            if (error != null || auth.getCurrentUser() == null) {
                 return;
             }
             if (value != null && !value.isEmpty()) {
-                List<MutableLiveData<User>> users = new ArrayList<>();
+                List<User> users = new ArrayList<>();
 
                 for (DocumentSnapshot doc : value.getDocuments()) {
-                    if (!doc.getId().equals(Objects.requireNonNull(auth.getCurrentUser()).getUid())) {
-
-                        if (doc.get("friends") == null) {
-                            users.add(new MutableLiveData<>(snapshotToUser(doc)));
-                        } else if (!Objects.requireNonNull(Utils.castList(doc.get("friends"), String.class))
-                                .contains(auth.getCurrentUser().getUid())) {
-                            users.add(new MutableLiveData<>(snapshotToUser(doc)));
+                    String userId = auth.getCurrentUser().getUid();
+                    if (!doc.getId().equals(userId)) {
+                        List<String> friends = Utils.castList(doc.get(FIELD_FRIENDS), String.class);
+                        if (friends == null) {
+                            users.add(snapshotToUser(doc));
+                        } else if (!friends.contains(userId)) {
+                            users.add(snapshotToUser(doc));
                         }
                     }
                 }
@@ -200,43 +234,42 @@ public class UserRepository extends Repository {
         return mutableUsers;
     }
 
-
     /**
      * Get list of not-friends by their username
      *
      * @param query String to search for
      * @return MutableLiveData-List of mutable users with query matching username
      */
-    public MutableLiveData<List<MutableLiveData<User>>> getUsersNotFriendsByQuery(String query) {
+    public MutableLiveData<List<User>> getUsersNotFriendsByQuery(String query) {
         userCollection.addSnapshotListener(executorService, (value, error) -> {
             if (error != null) {
                 return;
             }
-            if (value != null && !value.isEmpty()) {
-
-                List<MutableLiveData<User>> users = new ArrayList<>();
-                String currentUserId = Objects.requireNonNull(auth.getCurrentUser()).getUid();
+            if (value != null && !value.isEmpty() && auth.getCurrentUser() != null) {
+                List<User> users = new ArrayList<>();
+                String currentUserId = auth.getCurrentUser().getUid();
 
                 for (int i = 0; i < value.getDocuments().size(); i++) {
                     DocumentSnapshot doc = value.getDocuments().get(i);
                     User user = snapshotToUser(doc);
+
                     boolean isCurrentUser = doc.getId().equals(currentUserId);
                     boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
-                    boolean isQueryInFullName = user.getFullName().toLowerCase().contains(query.toLowerCase());
+                    boolean isQueryInFullName = user.getDisplayName().toLowerCase().contains(query.toLowerCase());
 
                     if (isCurrentUser || (!isQueryInUsername && !isQueryInFullName)) {
                         continue;
                     }
 
-                    if (doc.get("friends") == null) {
-                        users.add(new MutableLiveData<>(user));
+                    if (doc.get(FIELD_FRIENDS) == null) {
+                        users.add(user);
                     } else {
-                        List<String> friends = Utils.castList(doc.get("friends"), String.class);
+                        List<String> friends = Utils.castList(doc.get(FIELD_FRIENDS), String.class);
                         if (friends == null) {
                             continue;
                         }
                         if (!friends.contains(currentUserId)) {
-                            users.add(new MutableLiveData<>(user));
+                            users.add(user);
                         }
                     }
                 }
@@ -266,30 +299,11 @@ public class UserRepository extends Repository {
     }
 
     /**
-     * Get user with given email
-     *
-     * @param email email of user to retrieve
-     * @return MutableLiveData of user with email
-     */
-    public MutableLiveData<User> getUserByEmail(String email) {
-        userCollection.whereEqualTo("email", email).addSnapshotListener(executorService, ((value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null && !value.isEmpty() && value.getDocuments().size() <= 1) {
-                User user = snapshotToUser(value.getDocuments().get(0));
-                mutableUser.postValue(user);
-            }
-        }));
-        return mutableUser;
-    }
-
-    /**
      * Get friends of current authorized user
      *
      * @return MutableLiveData-List of mutable friends
      */
-    public MutableLiveData<List<MutableLiveData<User>>> getFriends() {
+    public MutableLiveData<List<User>> getFriends() {
         if (auth.getCurrentUser() == null) {
             return mutableUsers;
         }
@@ -309,9 +323,37 @@ public class UserRepository extends Repository {
     }
 
     /**
-     * Get static friends list  of current authorized user
+     * Get friends of current authorized user except friends with given ids
      *
+     * @param userIds IDs of users you don't want to return
      * @return MutableLiveData-List of mutable friends
+     */
+    public MutableLiveData<List<User>> getFriendsExcept(List<String> userIds) {
+        if (auth.getCurrentUser() == null) {
+            return mutableUsers;
+        }
+        String currentUserId = auth.getCurrentUser().getUid();
+
+        userCollection.document(currentUserId).addSnapshotListener(executorService, (value, error) -> {
+            if (error != null) {
+                return;
+            }
+            if (value != null && value.exists()) {
+                User user = snapshotToUser(value);
+                List<String> friendsToReturn = user.getFriends();
+                if (userIds != null && !userIds.isEmpty()) {
+                    friendsToReturn.removeAll(userIds);
+                }
+                mutableUsers = getUsersByIds(friendsToReturn);
+            }
+        });
+        return mutableUsers;
+    }
+
+    /**
+     * Get static friends list of current authorized user
+     *
+     * @param listener listener to be called when friends are received
      */
     public void getStaticFriends(UserListener<List<User>> listener) {
         if (auth.getCurrentUser() == null) {
@@ -320,13 +362,17 @@ public class UserRepository extends Repository {
         String currentUserId = auth.getCurrentUser().getUid();
 
         userCollection.document(currentUserId).get()
-                .addOnFailureListener(executorService, (exception) -> {
-                    listener.onUserError(exception);
-                })
+                .addOnFailureListener(executorService, listener::onUserError)
                 .addOnSuccessListener(executorService, (value) -> {
                     if (value != null && value.exists()) {
                         User user = snapshotToUser(value);
                         List<String> friends = user.getFriends();
+
+                        // Handle case when user does not have friends
+                        if (friends == null || friends.isEmpty()) {
+                            listener.onUserSuccess(new ArrayList<>());
+                            return;
+                        }
                         getStaticUsersByIds(friends, listener);
                     }
                 });
@@ -338,104 +384,174 @@ public class UserRepository extends Repository {
      * @param userIds IDs of users to retrieve
      * @return MutableLiveData-List of mutable users with ids
      */
-    public MutableLiveData<List<MutableLiveData<User>>> getUsersByIds(List<String> userIds) {
+    public MutableLiveData<List<User>> getUsersByIds(List<String> userIds) {
         if (userIds == null || userIds.isEmpty()) {
             mutableUsers.postValue(new ArrayList<>());
             return mutableUsers;
         }
 
-        userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener(executorService, (value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null && !value.isEmpty()) {
-                List<MutableLiveData<User>> users = snapshotToMutableUserList(value);
-                mutableUsers.postValue(users);
-            }
-        });
+        if (!users.isEmpty()) {
+            users = new ArrayList<>();
+        }
+
+        List<String> userIdsNoDuplicates = new ArrayList<>(new HashSet<>(userIds));
+
+        List<List<String>> subLists = Lists.partition(userIdsNoDuplicates, MAX_QUERY_LENGTH);
+        for (List<String> subList : subLists) {
+            String uuid = UUID.randomUUID().toString();
+            ListenerRegistration registration = userCollection.whereIn(FieldPath.documentId(), subList).addSnapshotListener(executorService,
+                    (value, error) -> {
+                        if (error != null) {
+                            mutableUsers.postValue(new ArrayList<>());
+                            return;
+                        }
+
+                        if (value != null && !value.isEmpty()) {
+                            users.addAll(snapshotToMutableUserList(value));
+                            mutableUsers.postValue(users);
+                        }else{
+                            mutableUsers.postValue(new ArrayList<>());
+                        }
+                        removeListener(uuid);
+                    });
+            registrations.put(uuid, registration);
+        }
         return mutableUsers;
     }
 
+    /**
+     * Removes listener with given uuid
+     *
+     * @param uuid uuid of listener to be removed
+     */
+    private void removeListener(String uuid) {
+        ListenerRegistration registration = registrations.get(uuid);
+        if (registration != null) {
+            registration.remove();
+            registrations.remove(uuid);
+        }
+    }
 
     /**
-     * Get user list by list of userIds
+     * Get static user list by list of userIds
      *
-     * @param userIds IDs of users to retrieve
-     * @return MutableLiveData-List of mutable users with ids
+     * @param userIds  IDs of users to retrieve
+     * @param listener UserListener to return result
      */
     public void getStaticUsersByIds(List<String> userIds, UserListener<List<User>> listener) {
         if (userIds == null || userIds.isEmpty()) {
             return;
         }
 
-        userCollection.whereIn(FieldPath.documentId(), userIds).get()
-                .addOnFailureListener(executorService, (exception) -> {
-                    listener.onUserError(exception);
-                })
-                .addOnSuccessListener(executorService, (value) -> {
-                    if (value != null && !value.isEmpty()) {
-                        List<User> users = snapshotToUserList(value);
-                        listener.onUserSuccess(users);
+        List<List<String>> batches = Lists.partition(userIds, MAX_QUERY_LENGTH);
+        for (List<String> batch : batches) {
+            userCollection.whereIn(FieldPath.documentId(), batch).get()
+                    .addOnFailureListener(executorService, listener::onUserError)
+                    .addOnSuccessListener(executorService, (value) -> {
+                        if (value != null && !value.isEmpty()) {
+                            List<User> users = snapshotToUserList(value);
+                            listener.onUserSuccess(users);
+                        }
+                    });
+        }
+    }
+
+    /**
+     * Get a list of all usernames
+     *
+     * @param callback Callback to return list of usernames
+     */
+    public void getUsernames(UsernamesRetrievedCallback callback) {
+        List<String> usernames = new ArrayList<>();
+
+        userCollection.get().addOnCompleteListener(executorService, task -> {
+            if (task.isComplete() && FirebaseAuth.getInstance().getCurrentUser() != null) {
+                QuerySnapshot result = task.getResult();
+                List<User> users = snapshotToUserList(result);
+
+                for (User user : users) {
+                    usernames.add(user.getUsername());
+                }
+
+                String currentUsername = getCurrentUser().getValue() != null ? getCurrentUser().getValue().getUsername()
+                        : null;
+                callback.onUsernamesRetrieved(usernames, currentUsername);
+            }
+        });
+    }
+
+    /**
+     * Updates the user's profile picture
+     *
+     * @param profileImageString Base64 string of the image
+     * @param userId             ID of the user
+     */
+    public void updateProfileImage(String profileImageString, String userId) {
+        userCollection.document(userId).update(FIELD_PROFILE_IMAGE_STRING, profileImageString);
+    }
+
+    /**
+     * Add each other to friends list
+     *
+     * @param friend1Id ID of friend to add to other's friend list
+     * @param friend2Id ID of friend to add to other's friend list
+     */
+    public void addFriends(String friend1Id, String friend2Id) {
+        userCollection.document(friend1Id).update(FIELD_FRIENDS, FieldValue.arrayUnion(friend2Id));
+        userCollection.document(friend2Id).update(FIELD_FRIENDS, FieldValue.arrayUnion(friend1Id));
+    }
+
+    /**
+     * Remove each other from friends list
+     *
+     * @param friendIdToUnfriend ID of friend to remove from friend list
+     */
+    public void unfriend(String friendIdToUnfriend) {
+        if (auth.getCurrentUser() == null) {
+            return;
+        }
+        String ownId = auth.getCurrentUser().getUid();
+        userCollection.document(ownId).update(FIELD_FRIENDS, FieldValue.arrayRemove(friendIdToUnfriend));
+        userCollection.document(friendIdToUnfriend).update(FIELD_FRIENDS, FieldValue.arrayRemove(ownId));
+    }
+
+    /**
+     * Delete a user from the friends list
+     *
+     * @param userId   ID of user to delete from friends list
+     * @param listener listener to be notified when the user is deleted
+     */
+    public void deleteUserFromFriendsLists(String userId, UserListener<Boolean> listener) {
+        userCollection.get()
+                .addOnFailureListener(executorService, listener::onUserError)
+                .addOnSuccessListener(executorService, documentSnapshot -> {
+                    for (DocumentSnapshot document : documentSnapshot.getDocuments()) {
+                        User user = snapshotToUser(document);
+                        if (user.getFriends() == null) {
+                            continue;
+                        }
+
+                        if (!user.getFriends().contains(userId)) {
+                            continue;
+                        }
+                        userCollection.document(user.getId()).update(FIELD_FRIENDS, FieldValue.arrayRemove(userId));
                     }
+                    listener.onUserSuccess(true);
                 });
     }
 
     /**
-     * Get list of friends of a user by their username
+     * Deletes a user from the database
      *
-     * @param query String to search for
-     * @return MutableLiveData-List of mutable friends with query matching username
+     * @param userId   ID of user to delete
+     * @param listener Listener to notify when user is deleted
      */
-    public MutableLiveData<List<MutableLiveData<User>>> getFriendsByUsername(String query) {
-        if (auth.getCurrentUser() == null) {
-            return mutableUsers;
-        }
-        String currentUserId = auth.getCurrentUser().getUid();
-
-        userCollection.document(currentUserId).addSnapshotListener((value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null && value.exists()) {
-                User user = snapshotToUser(value);
-                List<String> friends = user.getFriends();
-                if (friends == null || friends.isEmpty()) {
-                    return;
-                }
-                mutableUsers = getUsersByIdsAndName(friends, query);
-            }
-        });
-        return mutableUsers;
-    }
-
-    /**
-     * Get users within given list with query matching name
-     *
-     * @param userIds list of users to search in
-     * @param query   String to search for
-     * @return MutableLiveData-List of mutable users within given list with query matching name
-     */
-    public MutableLiveData<List<MutableLiveData<User>>> getUsersByIdsAndName(List<String> userIds, String query) {
-        userCollection.whereIn(FieldPath.documentId(), userIds).addSnapshotListener((value, error) -> {
-            if (error != null) {
-                return;
-            }
-            if (value != null && !value.isEmpty()) {
-                List<User> users = snapshotToUserList(value);
-                List<MutableLiveData<User>> filteredUsers = new ArrayList<>();
-
-                for (User user : users) {
-                    boolean isQueryInUsername = user.getUsername().toLowerCase().contains(query.toLowerCase());
-                    boolean isQueryInFullName = user.getFullName().toLowerCase().contains(query.toLowerCase());
-
-                    if (isQueryInUsername || isQueryInFullName) {
-                        filteredUsers.add(new MutableLiveData<>(user));
-                    }
-                }
-                mutableUsers.postValue(filteredUsers);
-            }
-        });
-        return mutableUsers;
+    public void deleteUser(String userId, UserListener<Boolean> listener) {
+        userCollection.document(userId).delete()
+                .addOnFailureListener(executorService, listener::onUserError)
+                .addOnSuccessListener(executorService, documentSnapshot -> {
+                    listener.onUserSuccess(true);
+                });
     }
 
     /**
@@ -458,12 +574,10 @@ public class UserRepository extends Repository {
      * @param documents List of snapshots returned from Firestore
      * @return List of mutable users
      */
-    private List<MutableLiveData<User>> snapshotToMutableUserList(QuerySnapshot documents) {
-        List<MutableLiveData<User>> users = new ArrayList<>();
+    private List<User> snapshotToMutableUserList(QuerySnapshot documents) {
+        List<User> users = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents) {
-            MutableLiveData<User> userMLD = new MutableLiveData<>();
-            userMLD.postValue(snapshotToUser(document));
-            users.add(userMLD);
+            users.add(snapshotToUser(document));
         }
         return users;
     }
@@ -478,28 +592,12 @@ public class UserRepository extends Repository {
         UserPOJO userPOJO = document.toObject(UserPOJO.class);
         assert userPOJO != null;
         userPOJO.setId(document.getId());
-        userPOJO.setLocation((List<Double>) document.get("location"));
+        userPOJO.setLocation((List<Double>) document.get(FIELD_LOCATION));
 
         return userPOJO.toObject();
     }
 
-    /**
-     * Add each other to friends list
-     *
-     * @param friend1Id ID of friend to add to other's friend list
-     * @param friend2Id ID of friend to add to other's friend list
-     */
-    public void addFriends(String friend1Id, String friend2Id) {
-        userCollection.document(friend1Id).update("friends", FieldValue.arrayUnion(friend2Id));
-        userCollection.document(friend2Id).update("friends", FieldValue.arrayUnion(friend1Id));
-    }
-
-    public void unfriend(String friendIdToUnfriend) {
-        if (auth.getCurrentUser() == null) {
-            return;
-        }
-        String ownId = auth.getCurrentUser().getUid();
-        userCollection.document(ownId).update("friends", FieldValue.arrayRemove(friendIdToUnfriend));
-        userCollection.document(friendIdToUnfriend).update("friends", FieldValue.arrayRemove(ownId));
+    public interface UsernamesRetrievedCallback {
+        void onUsernamesRetrieved(List<String> usernames, String currentAuthUserId);
     }
 }

@@ -9,8 +9,7 @@
         android:clickable="true"
         android:focusable="true"
         android:paddingVertical="@dimen/padding_small"
-        android:paddingHorizontal="@dimen/padding_big"
-        >
+        android:paddingHorizontal="@dimen/padding_big">
 
         <ImageView
             android:id="@+id/linkIcon"

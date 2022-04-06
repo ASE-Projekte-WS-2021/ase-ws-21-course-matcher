@@ -5,35 +5,22 @@
     android:id="@+id/friendRequestLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:paddingStart="@dimen/padding_medium"
     android:paddingTop="@dimen/padding_small"
-    android:paddingEnd="@dimen/padding_small"
-    android:orientation="vertical"
-    >
+    android:paddingEnd="@dimen/padding_small">
 
     <RelativeLayout
         android:id="@+id/topRowWrapper"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/buttonWrapper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            >
-
-            <ImageView
-                android:id="@+id/acceptButton"
-                android:layout_width="@dimen/btn_size"
-                android:layout_height="@dimen/btn_size"
-                android:layout_marginEnd="@dimen/padding_small"
-                android:src="@drawable/ic_button_accept"
-                app:layout_constraintBottom_toBottomOf="@+id/senderProfileImageView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/senderProfileImageView" />
+            android:layout_centerVertical="true">
 
             <ImageView
                 android:id="@+id/declineButton"
@@ -41,6 +28,16 @@
                 android:layout_height="@dimen/btn_size"
                 android:layout_marginEnd="@dimen/medium_margin"
                 android:src="@drawable/ic_button_decline"
+                app:layout_constraintBottom_toBottomOf="@+id/senderProfileImageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/senderProfileImageView" />
+
+            <ImageView
+                android:id="@+id/acceptButton"
+                android:layout_width="@dimen/btn_size"
+                android:layout_height="@dimen/btn_size"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:src="@drawable/ic_button_accept"
                 app:layout_constraintBottom_toBottomOf="@+id/acceptButton"
                 app:layout_constraintEnd_toStartOf="@+id/acceptButton"
                 app:layout_constraintTop_toTopOf="@+id/acceptButton" />
@@ -50,10 +47,10 @@
             android:id="@+id/userContentWrapper"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_toLeftOf="@id/buttonWrapper"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_alignParentStart="true">
+            android:layout_toLeftOf="@id/buttonWrapper"
+            android:orientation="horizontal">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/senderProfileImageView"
@@ -64,7 +61,6 @@
                 android:background="@color/gray500"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_profile"
-                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearance="@style/ShapeAppearance.App.CircleImageView" />
@@ -72,19 +68,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/senderTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:includeFontPadding="false"
                     android:layout_gravity="center_vertical"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
+                    android:includeFontPadding="false"
                     android:maxLines="1"
                     android:textColor="@color/gray700"
                     android:textSize="@dimen/text_size_medium"
@@ -98,10 +93,9 @@
                     android:includeFontPadding="false"
                     android:maxLines="1"
                     android:textColor="@color/gray500"
-                    android:visibility="gone"
                     app:layout_constraintTop_toBottomOf="@+id/senderTextView"
-                    tools:layout_editor_absoluteX="10dp"
-                    tools:text="Username" />
+                    tools:layout_editor_absoluteX="@dimen/padding_small"
+                    tools:text="username" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
@@ -109,7 +103,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
+        android:paddingTop="@dimen/padding_small"
         app:layout_constraintTop_toBottomOf="@+id/topRowWrapper">
 
         <TextView
@@ -125,7 +119,7 @@
             android:textColor="@color/gray500"
             android:textSize="@dimen/text_size_small"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="ist jetzt auf deiner Freundesliste. aefeafeafja" />
+            tools:text="ist jetzt auf deiner Freundesliste." />
 
         <TextView
             android:id="@+id/sentDateTextView"
