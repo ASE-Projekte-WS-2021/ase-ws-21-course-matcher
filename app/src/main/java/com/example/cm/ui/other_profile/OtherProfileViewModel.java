@@ -51,6 +51,10 @@ public class OtherProfileViewModel extends ViewModel {
         }
     }
 
+    public void removeFriendRequest(String userIdToRemove) {
+        friendRequestRepository.deleteFriendRequest(userIdToRemove, userRepository.getFirebaseUser().getUid());
+    }
+
     public void unfriend(String userIdToUnfriend) {
         userRepository.unfriend(userIdToUnfriend);
     }
