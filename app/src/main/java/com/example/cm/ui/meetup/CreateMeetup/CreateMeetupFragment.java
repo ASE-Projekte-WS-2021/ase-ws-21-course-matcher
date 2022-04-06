@@ -164,7 +164,7 @@ public class CreateMeetupFragment extends Fragment implements OnMapReadyCallback
                 return;
             }
             marker.setDraggable(true);
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constants.CREATE_MEETUP_ZOOM_LEVEL));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Constants.CREATE_MEETUP_ZOOM_LEVEL));
         });
     }
 
