@@ -1,5 +1,7 @@
 package com.example.cm.ui.dialogs;
 
+import static com.example.cm.utils.Utils.replaceIn;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -7,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -167,6 +170,11 @@ public class EditTextDialog extends Dialog implements UserRepository.UsernamesRe
 
             @Override
             public void afterTextChanged(Editable editable) {
+                if (binding.inputField.getText() == null) {
+                    return;
+                }
+
+                replaceIn(editable, " ", "_");
             }
         });
     }

@@ -64,9 +64,8 @@
     <string name="btn_friends_text">Freunde</string>
     <string name="snackbar_no_friends_text">Erst Freunde finden?</string>
     <string name="add_snackbar_text">ADD</string>
-    <string name="snackbar_sent_requests">Anfragen wurden verschickt.</string>
-    <string name="snackbar_sent_request">Anfragen wurden verschickt.</string>
-    <string name="snackbar_remove_request">Anfragen wurden verschickt.</string>
+    <string name="snackbar_sent_request">Anfrage wurde verschickt.</string>
+    <string name="snackbar_remove_request">Anfrage wurde entfernt.</string>
 
     <string name="searchbar_text_find_friends">Freunde finden…</string>
     <string name="search_button_decription">Suchbutton</string>
@@ -226,7 +225,6 @@
     <string name="invite_more_friends">invite more friends</string>
     <string name="leave">Verlassen</string>
 
-    <string name="app_name2">Sponti</string>
     <string name="friends_title">Füge deine Freunde hinzu</string>
     <string name="friend_request_own_pending">hat noch nicht geantwortet.</string>
     <string name="friend_request_own_accepted">hat angenommen.</string>

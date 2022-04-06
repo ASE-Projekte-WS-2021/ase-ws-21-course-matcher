@@ -180,7 +180,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     private String getUsername(String userId) {
         for (User user : users) {
-            if (user.getId().equals(userId)) {
+            if (user != null && user.getId().equals(userId)) {
                 return user.getUsername();
             }
         }
@@ -189,7 +189,7 @@ public class MeetupRequestListAdapter extends RecyclerView.Adapter<MeetupRequest
 
     private Meetup getMeetup(String meetupId) {
         for (Meetup meetup : meetups) {
-            if (meetup.getId().equals(meetupId)) {
+            if (meetup != null && meetup.getId().equals(meetupId)) {
                 return meetup;
             }
         }
