@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
 import android.util.Base64;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -178,6 +179,9 @@ public class Utils {
     }
 
     public static MeetupPhase getPhaseByTimestamp(Date timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
         MeetupPhase phase;
         Date now = new Date();
         calendarNow.setTime(now);
