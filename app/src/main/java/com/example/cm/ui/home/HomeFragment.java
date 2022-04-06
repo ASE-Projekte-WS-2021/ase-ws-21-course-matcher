@@ -344,10 +344,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
                     return;
                 }
 
-                requireActivity().runOnUiThread(() -> {
-                    meetupClusterManager.clearItems();
-                    meetupClusterManager.cluster();
-                });
+                if (isAdded()) {
+                    requireActivity().runOnUiThread(() -> {
+                        meetupClusterManager.clearItems();
+                        meetupClusterManager.cluster();
+                    });
+                }
 
                 for (Meetup meetup : meetups) {
                     addMeetupMarker(meetup);
@@ -374,10 +376,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, MapUse
 
     private void addMeetupMarker(Meetup meetup) {
         MeetupClusterItem meetupMarker = getMeetupMarker(meetup);
-        requireActivity().runOnUiThread(() -> {
-            meetupClusterManager.addItem(meetupMarker);
-            meetupClusterManager.cluster();
-        });
+        if (isAdded()) {
+            requireActivity().runOnUiThread(() -> {
+                meetupClusterManager.addItem(meetupMarker);
+                meetupClusterManager.cluster();
+            });
+        }
     }
 
     private void addMarker(User user, boolean isCurrentUser) {
