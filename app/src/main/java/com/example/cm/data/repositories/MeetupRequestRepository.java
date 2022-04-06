@@ -6,10 +6,7 @@ import static com.example.cm.Constants.FIELD_MEETUP_ID;
 import static com.example.cm.Constants.FIELD_RECEIVER_ID;
 import static com.example.cm.Constants.FIELD_SENDER_ID;
 import static com.example.cm.Constants.FIELD_STATE;
-import static com.example.cm.Constants.FIELD_TIMESTAMP;
 import static com.example.cm.Constants.FIELD_TYPE;
-import static com.example.cm.data.models.MeetupPhase.MEETUP_ENDED;
-import static com.example.cm.data.models.Request.RequestState.ENDED;
 import static com.example.cm.data.models.Request.RequestState.REQUEST_PENDING;
 
 import androidx.lifecycle.MutableLiveData;
@@ -18,7 +15,6 @@ import com.example.cm.config.CollectionConfig;
 import com.example.cm.data.listener.UserListener;
 import com.example.cm.data.models.MeetupRequest;
 import com.example.cm.data.models.Request;
-import com.example.cm.utils.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -54,7 +50,6 @@ public class MeetupRequestRepository extends Repository {
         String currentUserId = auth.getCurrentUser().getUid();
 
         meetupRequestCollection.whereEqualTo(FIELD_RECEIVER_ID, currentUserId)
-                //.orderBy(FIELD_STATE, Query.Direction.DESCENDING)
                 .orderBy(FIELD_CREATED_AT, Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
@@ -73,8 +68,7 @@ public class MeetupRequestRepository extends Repository {
                         List<MeetupRequest> requestsToReturn = new ArrayList<>();
                         for (DocumentSnapshot snapshot : value.getDocuments()) {
                             MeetupRequest request = snapshotToMeetupRequest(snapshot);
-                            String meetupId = request.getMeetupId();
-                            Request.RequestState currentState = snapshot.get(FIELD_STATE, Request.RequestState.class);
+                            Request.RequestState currentState = request.getState();
 
                             if (!isToday(request)) {
                                 endedRequests.add(request);
@@ -83,11 +77,10 @@ public class MeetupRequestRepository extends Repository {
                             } else {
                                 otherRequests.add(request);
                             }
-
-                            requestsToReturn.addAll(pendingRequests);
-                            requestsToReturn.addAll(otherRequests);
-                            requestsToReturn.addAll(endedRequests);
                         }
+                        requestsToReturn.addAll(pendingRequests);
+                        requestsToReturn.addAll(otherRequests);
+                        requestsToReturn.addAll(endedRequests);
                         receivedRequests.postValue(requestsToReturn);
                     }
                 });
