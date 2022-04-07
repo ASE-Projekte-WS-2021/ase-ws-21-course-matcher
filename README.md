@@ -62,6 +62,15 @@ Lerne jeden User anhand des Profils besser kennen! Bearbeite dein Profil und än
 ## Her damit
 Lade dir die aktuelle Release-Version [hier](https://github.com/ASE-Projekte-WS-2021/ase-ws-21-course-matcher/releases/download/16/CourseMatcher-Release.apk) herunter und lade die APK-Datei auf dein Telefon. Erlaube die Installation von Anwendungen von unbekannten Entwicklern auf deinem Smartphone und öffne dort die Datei zur Installation. Jetzt musst du dir nur noch einen Account erstellen und ein Profil anlegen und schon gehts los!
 
+## Setup für Developer
+Um die App lokal ausführen zu können, muss mindestens Java-Version 11 installiert sein.
+
+In der App sind Karten mittels Google Maps eingebunden. Hierfür muss ein Google Maps API-Key in der `local.properties` Datei im Root-Verzeichnis der App wie folgt hinterlegt werden:
+`MAPS_API_KEY=yourAPIKey`
+
+Danach kann die App wie gewohnt über Android-Studio über den Emulator oder ein verbundenes Endgerät ausgeführt werden.
+
+
 # Course Matcher - Das Team
 Klare Aufgabenteilung gab es nicht. Jeder packt an, wo es gerade hakt und ordnet sich selbstständig Tickets zu, bevor diese fürs Review an die anderen weitergegeben werden.
 ## Markus Bink
